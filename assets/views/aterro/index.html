@@ -1,0 +1,26 @@
+  nome: {
+      type: 'string',
+      required: true
+    },
+    cidade: {
+      type: 'string',
+      required: true
+    },
+    responsavel: {
+      type: 'string',
+      required: true
+    },
+
+    <div class="section">
+ <div class="row section">
+  <div class="divider"></div>
+    <div class="row">
+      <div class="col s12 m12 l6">
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'},{'name': 'cidade' , 'value': 'Cidade'},{'name': 'responsavel' , 'value': 'Responsavel', 'type': 'combobox', 'api': 'Usuario', 'field': 'id', '': '' }  ]" listaname="Alerta" autopage="true" adicionar="" add="false" view="Alerta" pagesize="5"></grid-view>
+      </div>
+      <div class="col s12 m12 l6">
+      	<form-view fields="[{'name': 'parametro', 'value': 'Parametro'}, {'name': 'valor' , 'value': 'Valor'}]" label="Lista de Alerta" listaname="Alerta"  strupdate="false"></form-view>
+    	</div>
+    </div>
+  </div>
+</div>
