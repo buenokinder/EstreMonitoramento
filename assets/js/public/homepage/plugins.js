@@ -12,5 +12,7 @@ $(function() {
       $('body').addClass('loaded');      
     }, 200);
   });  
-
+  $('select').material_select();
 }); 
+
+input-character-counter

@@ -10,7 +10,7 @@
                 adicionar: '@',
                 view: '@',
                 strupdate: '@',
-                strDelete: '@',
+                strdelete: '@',
                 pagesize: '=',
                 add: '@',
                 edit: '@',
@@ -57,7 +57,7 @@
                     return true;
                 }
                  $scope.deleteDisabled = function(){
-                       if ($scope.strdelelte == 'false' )
+                       if ($scope.strdelete == 'false' )
                        return false
 
                        return true;
@@ -196,7 +196,7 @@
 
                        
 
-                var HtmlFormBody = " <div class='card-panel' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
+                var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
                 console.log($scope.strupdate);
                 if ($scope.strupdate == 'false')
                     HtmlFormBody += "";
@@ -212,7 +212,7 @@
                                  //'tableadd': { 'model': 'usuarios' , 'text': 'name', 'valuesource': 'id' }
                                   if($scope.fields[key].tableadd)
                                   {
-                                  HtmlFormBody += "<div class='form-group'>";
+                                  HtmlFormBody += "<div class='form-group' >";
                                     HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                                     HtmlFormBody += "<select  id='" + $scope.fields[key].name + "'  class='form-control emailReminder width-169 ng-pristine ng-invalid ng-invalid-required ng-touched' ng-model='combodata." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].tableadd.text + " for x in " + $scope.fields[key].tableadd.model + "' value=''></select>";
                                     HtmlFormBody += "</select>";
@@ -261,14 +261,25 @@
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
 
                                 break;
+                            case 'combobox':
+                               
+                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
+                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+                                    HtmlFormBody += "<select ng-change='changeCombo(\"" + $scope.fields[key].name.trim()  + "\","+ $scope.fields[key].model  +")' class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + " ' value=''></select>";
+
+                                    HtmlFormBody += "</div></div>";
+
+
+
+                                break;
                             default:
-                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text'   ng-model='data." + $scope.fields[key].name + "'></input><label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label></div></div>";
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' ></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label></div></div>";
                                 break;
                          }           
 
                 } 
 
-            
+     
                     HtmlFormBody +=  "<div class='row'>&nbsp;</div><div class='row'><div class='input-field col s12'><a ng-click='newitem()' ng-show='newDisabled()' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a><button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' ><span ng-show='!sennitForm.loading'>Submeter</span>";
                     HtmlFormBody += "<span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
                     HtmlFormBody +="<span ng-show='sennitForm.loading'>Aguarde...</span></button></div></div>";
@@ -283,21 +294,53 @@
             controller: function ($scope, $element, $http, $location, $routeParams, $parse) {
                 $scope.me = window.SAILS_LOCALS.me;
                 $scope.combodata = ([]);
+                $scope.combos = ([]);
+                
                 $scope.sennitForm = {
                   loading: false
                    }
 
-
+                $scope.inputClass = "";
                 $scope.data = ([]);
                 $scope.url = ([]);
+    
+                $scope.init = function(){
+                    $('input.materialize-textarea').characterCounter();
 
+                      for (var key in $scope.fields) {
+                           $scope.data[$scope.fields[key].name] ="";   
+                         switch ($scope.fields[key].type) {
+                           
+                          
+                            case 'combobox':
+                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {
 
+                                    $scope[$scope.fields[key].model]  = results.data;
+                   
+                                 });
+                                
+                                break;
+                            default:
+                            
+                                break;
+                         }           
+
+                } 
+                };
+
+                 $scope.changeCombo = function (data, combo) {
+                     console.log(combo);
+                    $scope.data[data] = combo[0].id;
+                    console.log($scope.data); 
+                };
                 $scope.newitem = function () {
                     $scope.data = ([]);
                 };
 
                 $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
+                    $scope.inputClass = "active";
+                    console.log('Mudou aqui');
                 });        
 
 
@@ -370,6 +413,7 @@
 
 		$http.put('/'+ $scope.listaname + '/' + $scope.data.id + '?'+ query)
 		.then(function onSuccess(sailsResponse){
+            $scope.inputClass = "";
 			//sennitCommunicationService.prepForBroadcastDataList($scope.data);
             Materialize.toast('Registro alterado com sucesso!', 4000);
 		})
