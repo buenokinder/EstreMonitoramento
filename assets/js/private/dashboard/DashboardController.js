@@ -1,14 +1,56 @@
 
-app.controller('DashboardController', [ '$scope', '$location', function($scope, $location){
- 
+app.controller('DashboardController', [ '$scope', '$location', '$rootScope', function($scope, $location, $rootScope){  
+  $scope.pai = undefined;
+  $scope.pathname = undefined;
+  $scope.link = "";
+
+  $scope.$watch('$routeUpdate', function(){
+    $scope.link = $location.path();
+    $scope.alteraStatusBreadcrumbs($location.path());
+  });
 
   //$scope.isAdmin =  window.SAILS_LOCALS.me.isAdmin;
-
-  
   $scope.goto = function(path){
     $location.path(path);
+    $scope.alteraStatusBreadcrumbs(path);
   }
 
+  $scope.alteraStatusBreadcrumbs = function(pathname) {    
+    switch(pathname) {
+      case "/Dashboard":
+        $scope.pathname = "Dashboard";
+        $scope.pai = undefined;
+
+        break;
+      case '/Alerta' :
+        $scope.pathname = "Alerta";
+        $scope.pai = "Dados Mestre";
+        break;
+      case '/Aterro' :
+        $scope.pathname = "Aterro";
+        $scope.pai = "Dados Mestre";
+        break;
+      case '/LinhaCorte' :
+        $scope.pathname = "Linha de Corte";
+        $scope.pai = "Dados Mestre";
+        break;
+      case '/MarcoSuperficial' :
+        $scope.pathname = "Marco Superficial";
+        $scope.pai = "Dados Mestre";
+        break;  
+      case '/Piezometro' :
+        $scope.pathname = "Piezometro";
+        $scope.pai = "Dados Mestre";
+        break;
+      case '/Usuario' :
+        $scope.pathname = "Usuário";
+        $scope.pai = "Administração";
+        break;
+      case '/':
+        $scope.pai = undefined;
+        $scope.pathname = undefined;        
+    }    
+  };  
 }]);
 
 //TimeSheet Controllers

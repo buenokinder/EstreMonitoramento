@@ -13,20 +13,46 @@
 /*----------------------------------------
   General Layout Style
 ------------------------------------------*/
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   background-color: #f9f9f9;
+  margin-bottom: 60px;
 }
 
 #main {
   padding-left: 240px;
 }
 
-footer {
+/*footer {
   padding-left: 240px;
+}*/
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
 }
 
-footer.page-footer {
-  padding-top: 0px;
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
 }
 
 select {
@@ -789,7 +815,7 @@ ul.side-nav .collapsible-header {
     Breadcrumb
 ------------------------------------------*/
 #breadcrumbs-wrapper {
-  background: #f3f3f3;
+  /*background: #f3f3f3;*/
 }
 
 h5.breadcrumbs-header {

@@ -45,7 +45,7 @@
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <ul class="left">                      
-                      <li><h1 class="logo-wrapper"><a href="#!" class="brand-logo darken-1"><img src="images/logo_estre_xs.png" alt="estre logo" style="margin-top: -10px;"></a> <span class="logo-text">Estre</span></h1></li>
+                      <li><h1 class="logo-wrapper"><a href="#/" class="brand-logo darken-1"><img src="images/logo_estre_xs.png" alt="estre logo" style="margin-top: -10px;"></a> <span class="logo-text">Estre</span></h1></li>
                     </ul>
                     <div class="header-search-wrapper hide-on-med-and-down">
                         <i class="mdi-action-search"></i>
@@ -72,23 +72,23 @@
                       </li>
                       <li class="divider"></li>
                       <li>
-                        <a href="#!"><i class="mdi-action-add-shopping-cart"></i> A new order has been placed!</a>
+                        <a href="#/"><i class="mdi-action-add-shopping-cart"></i> A new order has been placed!</a>
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>
                       </li>
                       <li>
-                        <a href="#!"><i class="mdi-action-stars"></i> Completed the task</a>
+                        <a href="#/"><i class="mdi-action-stars"></i> Completed the task</a>
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">3 days ago</time>
                       </li>
                       <li>
-                        <a href="#!"><i class="mdi-action-settings"></i> Settings updated</a>
+                        <a href="#/"><i class="mdi-action-settings"></i> Settings updated</a>
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">4 days ago</time>
                       </li>
                       <li>
-                        <a href="#!"><i class="mdi-editor-insert-invitation"></i> Director meeting started</a>
+                        <a href="#/"><i class="mdi-editor-insert-invitation"></i> Director meeting started</a>
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">6 days ago</time>
                       </li>
                       <li>
-                        <a href="#!"><i class="mdi-action-trending-up"></i> Generate monthly report</a>
+                        <a href="#/"><i class="mdi-action-trending-up"></i> Generate monthly report</a>
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">1 week ago</time>
                       </li>
                     </ul>
@@ -101,25 +101,25 @@
                   <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
                    
                     <li>
-                        <a href="/Dashboard" class="cyan-text">
+                        <a ng-click="goto('/Dashboard')" class="cyan-text">
                             <i class="mdi-action-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                    <li>
-                        <a class="right  dropdown-menu cyan-text" href="#!" data-activates="Usersdropdown">
+                        <a class="right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
                             <i class="mdi-action-account-circle"></i>
                             <span>Usuario<i class="mdi-navigation-arrow-drop-down right"></i></span>
                         </a>
                     </li>
                     <li>
-                        <a href="#!" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
+                        <a href="#/" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
                             <i class="mdi-device-now-widgets"></i>
                             <span>Dados Mestre<i class="mdi-navigation-arrow-drop-down right"></i></span>
                         </a>
                     </li>
                      <li>
-                        <a href="#!" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
+                        <a href="#/" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
                             <i class="mdi-device-now-widgets"></i>
                             <span>Administracao<i class="mdi-navigation-arrow-drop-down right"></i></span>
                         </a>
@@ -127,7 +127,7 @@
                                     
                   
                     <li>
-                        <a class="dropdown-menu cyan-text" href="#!" data-activates="Chartsdropdown">
+                        <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
                             <i class="mdi-editor-insert-chart"></i>
                             <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
                         </a>
@@ -156,8 +156,8 @@
 
                 <!-- Usersdropdown -->
                 <ul id="Usersdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a href="/Perfil"  class="white estre-green-icon">Perfil</a></li>
-                    <li><a href="/Settings"  class="white estre-green-icon">Configurações</a></li>
+                    <li><a ng-click="goto('/Perfil')"  class="white estre-green-icon">Perfil</a></li>
+                    <li><a ng-click="goto('/Settings')"  class="white estre-green-icon">Configurações</a></li>
                     <li> <a href="/logout"  class="white estre-green-icon">
                     Sair
                     </a></li>
@@ -165,9 +165,9 @@
 
                 <!-- Chartsdropdown -->
                 <ul id="Chartsdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a href="#!" class="white estre-green-icon">Relatório 1</a></li>
-                    <li><a href="#!" class="white estre-green-icon">Relatorio 2</a></li>
-                    <li><a href="#!" class="white estre-green-icon">Relatorio 3</a></li>
+                    <li><a href="#/" class="white estre-green-icon">Relatório 1</a></li>
+                    <li><a href="#/" class="white estre-green-icon">Relatorio 2</a></li>
+                    <li><a href="#/" class="white estre-green-icon">Relatorio 3</a></li>
            
                 </ul>
             <!-- HORIZONTL NAV END-->
@@ -197,19 +197,18 @@
                 <i class="mdi-action-search active"></i>
                 <input type="text" name="Search" class="header-search-input z-depth-2" placeholder="Explore Materialize">
             </div>
-          <div class="container">
-            <div class="row">
-              <div class="col s12 m12 l12">
-                <h5 class="breadcrumbs-title" style="color: #767676 !important;">Formulário - Linha de Corte</h5>
-                <ol class="breadcrumbs">
-                  <a href="#!" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-alarm-add estre-darkgreen-icon"></i> Home</a>
-                            <a href="#!" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-stars"></i> Dados Mestre</a>
-                            <a href="#!" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-language"></i> Linha de Corte</a>
-              
-                </ol>
-              </div>
+            <div class="container">
+                <div class="row">
+                  <div class="col s12 m12 l12">
+                    <h5 class="breadcrumbs-title" style="color: #767676 !important;"></h5>   
+                    <ol class="breadcrumbs">
+                        <a href="/#/" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-alarm-add estre-darkgreen-icon"></i> Home</a>
+                        <a ng-show="pai != undefined" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-stars"></i> {{pai}}</a>
+                        <a ng-show="pathname != undefined" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-language"></i> {{pathname}}</a>
+                    </ol>
+                  </div>
+                </div>
             </div>
-          </div>
         </div>
         <!--breadcrumbs end-->
                 <!--start container-->
@@ -438,7 +437,7 @@
     <!-- START FOOTER -->
     <footer class="page-footer">
    
-        <div class="footer-copyright">
+        <div class="footer-copyright estre-green">
             <div class="container">
                 Copyright © 2016 <a class="grey-text text-lighten-4" href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs" target="_blank">Sennit Tecnologia</a> All rights reserved.
                 <span class="right"> Design and Developed by <a class="grey-text text-lighten-4" href="http://www.sennit.com.br/">Sennit Tecnologia</a></span>
@@ -480,8 +479,7 @@
     <script src="/js/private/dashboard/App.js"></script>
     <script src="/js/private/dashboard/GridViewDirective.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
- <script src="/js/private/dashboard/LinhaCorteController.js"></script>
-
+    <script src="/js/private/dashboard/LinhaCorteController.js"></script>    
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
 <script>
