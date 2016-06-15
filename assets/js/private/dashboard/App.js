@@ -1,4 +1,4 @@
-var app = angular.module('DashboardModule', [
+var app = angular.module('DashboardModule', ['xeditable',
     	'ngRoute','ngMaterial',
     	'ngResource'
     	]);

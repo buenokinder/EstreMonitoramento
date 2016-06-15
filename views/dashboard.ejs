@@ -125,20 +125,29 @@
                         </a>
                     </li>
                                     
-                  
+                     <li>
+                        <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
+                            <i class="mdi-editor-insert-chart"></i>
+                            <span>Area de Trabalho<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                        </a>
+                    </li>                  
                     <li>
                         <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
                             <i class="mdi-editor-insert-chart"></i>
                             <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
                         </a>
                     </li>
+
                     
                   </ul>
                 </div>
               </nav>
 
             
-
+        <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
+                  <li><a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a></li>
+                  
+                </ul>
                 
                 <ul id="DadosMestredropdown" class="dropdown-content dropdown-horizontal-list">
                   <li><a  ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
@@ -474,7 +483,8 @@
     <script src="/js/dependencies/angular-messages.min.js"></script>
     <script src="/js/dependencies/angular-resource.min.js"></script>
     <script src="/js/dependencies/angular-route.min.js"></script>
-    
+    <link href="/js/private/dashboard/angular-xeditable/css/xeditable.css" rel="stylesheet">
+  <script src="/js/private/dashboard/angular-xeditable/js/xeditable.js"></script>
   
     <script src="/js/private/dashboard/App.js"></script>
     <script src="/js/private/dashboard/GridViewDirective.js"></script>
@@ -482,6 +492,8 @@
     <script src="/js/private/dashboard/LinhaCorteController.js"></script>    
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
+<script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
+    
 <script>
   $(document).ready(function() {
 	    $('input.materialize-textarea').characterCounter();

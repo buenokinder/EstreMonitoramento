@@ -17,10 +17,13 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
 
   $scope.alteraStatusBreadcrumbs = function(pathname) {    
     switch(pathname) {
+         case "/PluviometriaVazao":
+        $scope.pathname = "Pluviometria e Vazão";
+        $scope.pai = "Area de Trabalho";
+        break;
       case "/Dashboard":
         $scope.pathname = "Dashboard";
         $scope.pai = undefined;
-
         break;
       case '/Alerta' :
         $scope.pathname = "Alerta";
