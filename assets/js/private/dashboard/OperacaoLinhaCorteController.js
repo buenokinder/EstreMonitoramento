@@ -1,6 +1,6 @@
 
 
-app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
+app.controller('OperacaoLinhaCorteController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
 $http.get('/PluviometriaVazao').success(function(data) {
       $scope.operacaoPluviometrias = angular.fromJson(data);

@@ -8,7 +8,31 @@
 module.exports = {
 
   attributes: {
-
+    dataMedicao: {
+      type: 'string',
+      required: true
+    },
+    tipoEstaca: {
+      type: 'string',
+      required: true
+    },
+    altura: {
+      type: 'float',
+      required: true
+    },
+    comprimento: {
+      type: 'float',
+      required: true
+    },
+     aterro: {
+      model: 'Aterro'
+    },
+     usuario: {
+      model: 'Usuario'
+    },
+     linhaCorte: {
+      model: 'LinhaCorte'
+    }
   }
 };
 

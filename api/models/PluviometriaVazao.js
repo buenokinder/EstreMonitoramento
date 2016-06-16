@@ -8,7 +8,23 @@
 module.exports = {
 
   attributes: {
-
+   dataMedicao: {
+      type: 'string',
+      required: true
+    },
+    pluviometria: {
+      type: 'float',
+      required: true
+    },
+    vazao: {
+      type: 'float',
+      required: true
+    },
+     aterro: {
+      model: 'Aterro'
+    },
+     usuario: {
+      model: 'Usuario'
+    }
   }
 };
-

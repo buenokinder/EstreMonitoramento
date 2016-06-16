@@ -32,7 +32,8 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 		$routeProvider.when("/OperacaoLinhaCorte", {
-			templateUrl: "/views/pluviometriaVazao/index.html"
+			templateUrl: "/views/operacaoLinhaCorte/index.html",
+			   controller : 'OperacaoLinhaCorteController'
 		});
 		 
   $routeProvider.when("/Alerta", {

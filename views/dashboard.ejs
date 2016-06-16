@@ -60,37 +60,29 @@
                         
                         </a>
                         </li>                        
-                        <li><a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse"><i class="mdi-communication-chat estre-green-icon"></i></a>
-                        </li>
+                        
                     </ul>
                    
                     
                     <!-- notifications-dropdown -->
                     <ul id="notifications-dropdown" class="dropdown-content">
                       <li>
-                        <h5>NOTIFICATIONS <span class="new badge">5</span></h5>
+                        <h5>ALERTAS </h5>
                       </li>
                       <li class="divider"></li>
                       <li>
-                        <a href="#/"><i class="mdi-action-add-shopping-cart"></i> A new order has been placed!</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>
+                        <a href="#/"><i class="mdi-action-add-shopping-cart"></i> Alerta 1!</a>
+                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 2 horas</time>
                       </li>
                       <li>
-                        <a href="#/"><i class="mdi-action-stars"></i> Completed the task</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">3 days ago</time>
+                        <a href="#/"><i class="mdi-action-stars"></i> Tarefas Pendentesk</a>
+                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 3 dias </time>
                       </li>
                       <li>
-                        <a href="#/"><i class="mdi-action-settings"></i> Settings updated</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">4 days ago</time>
+                        <a href="#/"><i class="mdi-action-settings"></i> Atualzicao de Linha de corte</a>
+                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 4 dias</time>
                       </li>
-                      <li>
-                        <a href="#/"><i class="mdi-editor-insert-invitation"></i> Director meeting started</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">6 days ago</time>
-                      </li>
-                      <li>
-                        <a href="#/"><i class="mdi-action-trending-up"></i> Generate monthly report</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">1 week ago</time>
-                      </li>
+                      
                     </ul>
                 </div>
             </nav>
@@ -146,6 +138,7 @@
             
         <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
                   <li><a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a></li>
+                   <li><a  ng-click="goto('/OperacaoLinhaCorte')"  class="white estre-green-icon">Linha de Corte</a></li>
                   
                 </ul>
                 
@@ -493,6 +486,7 @@
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
 <script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
+<script src="/js/private/dashboard/OperacaoLinhaCorteController.js"></script>
     
 <script>
   $(document).ready(function() {

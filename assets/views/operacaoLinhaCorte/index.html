@@ -1,21 +1,23 @@
 <div class="row" ng-init="init()">
 
-    <div class="col s2 m2 l2">
+    <div class="col s1 m1 l1">
         &nbsp;
         </div>
-      <div class="col s12 m12 l8 col-lg-offset-2">
-      	<div class="card-panel ng-scope"><h4 class="header2">Pluviometria e Vazão</h4><div class="row" >
+      <div class="col s10 m10 l10 col-lg-offset-2">
+      	<div class="card-panel ng-scope"><h4 class="header2">Linha de Corte</h4><div class="row" >
 <div ng-controller="PluviometriaVazaoController">
   <table class="table table-bordered table-hover striped table-condensed">
     <tr style="font-weight: bold">
       <td style="width:15%">Data</td>
       <td style="width:20%">Usuario</td>
       <td style="width:20%">Aterro</td>
-      <td style="width:15%">Pluviometria</td>
-      <td style="width:15%">Vazão</td>
+      <td style="width:15%">Linha de Corte</td>
+      <td style="width:15%">Altura</td>
+      <td style="width:15%">Comprimento</td>
+      <td style="width:15%">Tipo Estaca</td>
            <td style="width:15%">Ações</td>
     </tr>
-
+ 
     <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias">
             <td ng-click="rowform.$show()" >
         <!-- editable username (text with validation) -->
@@ -35,17 +37,28 @@
           {{ showAterro(operacaoPluviometria) }}
         </span>
       </td>
-    
+    <td ng-click="rowform.$show()">
+        <!-- editable group (select-remote) -->
+        <span editable-select="operacaoPluviometria.linhaCorte"  e-name="linhaCorte" onshow="loadLinhaCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in linhaCortes">
+          {{ showLinhaCorte(operacaoPluviometria) }}
+        </span>
+      </td>
       <td>
         <!-- editable status (select-local) -->
-        <span editable-number="operacaoPluviometria.pluviometria" ng-click="rowform.$show()" e-name="pluviometria" e-form="rowform" >
-       {{ operacaoPluviometria.pluviometria || 'empty' }}
+        <span editable-number="operacaoPluviometria.altura" ng-click="rowform.$show()" e-name="altura" e-form="rowform" >
+       {{ operacaoPluviometria.altura || 'empty' }}
         </span>
       </td>
        <td ng-click="rowform.$show()" >
         <!-- editable status (select-local) -->
-        <span editable-number="operacaoPluviometria.vazao" e-name="vazao" e-form="rowform" >
-        {{ operacaoPluviometria.vazao || 'empty' }}
+        <span editable-number="operacaoPluviometria.comprimento" e-name="comprimento" e-form="rowform" >
+        {{ operacaoPluviometria.comprimento || 'empty' }}
+        </span>
+      </td>
+           <td ng-click="rowform.$show()" >
+        <!-- editable status (select-local) -->
+        <span editable-number="operacaoPluviometria.tipoEstaca" e-name="tipoEstaca" e-form="rowform" >
+        {{ operacaoPluviometria.tipoEstaca || 'empty' }}
         </span>
       </td>
       <td style="white-space: nowrap">
