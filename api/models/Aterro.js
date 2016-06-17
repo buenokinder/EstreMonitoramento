@@ -16,21 +16,26 @@ module.exports = {
       type: 'string',
       required: true
     },
-    responsavel: {
+    endereco: {
       type: 'string',
       required: true
     },
-    situacao: {
+    telefone: {
       type: 'string',
-      required: false
+      required: true
+    },    
+    responsavel: {
+      model: 'Usuario',
+      required: true
     },
     observacao: {
       type: 'string',
       required: false
     },
-    habilitado: {
+    situacao: {
       type: 'boolean',
-      defaultsTo: true
+      required: true,
+      defaultsTo: false
     }
     
   }
