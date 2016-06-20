@@ -330,6 +330,7 @@
 
                  $scope.changeCombo = function (data, combo) {
                      console.log(combo);
+                     console.log('data[data]', $scope.data[data])
                     $scope.data[data] = combo[0].id;
                     console.log($scope.data); 
                 };

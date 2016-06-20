@@ -39,12 +39,12 @@ module.exports = {
    	prolongamentoCortePiezometro: {
       type: 'float',
       required: true
-    }   
+    },
     habilitado: {
       type: 'boolean',
       required: true,
       defaultsTo: false
-    }
+    },
     alertas: {
       collection: 'alertasPiezometro',
       via: 'owner'
