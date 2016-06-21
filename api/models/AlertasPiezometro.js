@@ -8,11 +8,15 @@
 module.exports = {
 
   attributes: {
-    mensagem: {
-      type: 'string',
+    data: {
+      type: 'datetime',
       required: true
     },
-    medida: {
+    usuario: {
+      model: 'Usuario',
+      required: true
+    },
+    coeficienteRU: {
       type: 'float',
       required: true
     },

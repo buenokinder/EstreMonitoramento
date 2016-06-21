@@ -5,11 +5,11 @@
 
     <div class="row">
       <div class="col s12 m12 l6">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'},{'name': 'cidade' , 'value': 'Cidade'},{'name': 'endereco' , 'value': 'Endereço'},{'name': 'telefone' , 'value': 'Telefone'}, {'name': 'situacao' , 'value': 'Em Operação'} ]" listaname="Aterro" autopage="true" adicionar="" add="false" label="Lista de Aterro"  view="Aterro" pagesize="5"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'},{'name': 'cidade' , 'value': 'Cidade'} ]" listaname="Aterro" autopage="true" adicionar="" add="false" label="Lista de Aterro"  view="Aterro" pagesize="5"></grid-view>
       </div>
 
       <div class="col s12 m12 l6">
-      	<form-view fields="[{'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone'}, {'name': 'responsavel' , 'value': 'Responsavel', 'type': 'combobox', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="false"></form-view>
+      	<form-view fields="[{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' }, {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone'}, {'name': 'responsavel' , 'value': 'Responsavel', 'type': 'combobox', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="false"></form-view>
     	</div>
     </div>
   </div>

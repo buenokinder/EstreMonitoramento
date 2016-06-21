@@ -216,7 +216,7 @@
                                     HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                                     HtmlFormBody += "<select  id='" + $scope.fields[key].name + "'  class='form-control emailReminder width-169 ng-pristine ng-invalid ng-invalid-required ng-touched' ng-model='combodata." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].tableadd.text + " for x in " + $scope.fields[key].tableadd.model + "' value=''></select>";
                                     HtmlFormBody += "</select>";
-                                            HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
+                                    HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
                                     HtmlFormBody += "<button type='button' class='mb-sm btn btn-labeled btn-primary' ng-click='Associate(combodata." + $scope.fields[key].name + ",&#39;" + $scope.fields[key].name  + "&#39;,&#39;" + $scope.fields[key].name  + "&#39; ,&#39;" + $scope.fields[key].tableadd.apiadd  + "&#39;, &#39;add&#39;)' aria-label='Left Align'>";
                                     HtmlFormBody += " Add <i class='fa fa-plus'></i>";
                                     HtmlFormBody += "</button>";
@@ -257,21 +257,24 @@
                                     HtmlFormBody += "</select>";
                                     HtmlFormBody += "</div>";
                                 break;
-                            case 'checkbox':
-                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
 
+                            case 'historico' :
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
+                                HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+                                HtmlFormBody += "";
+                                HtmlFormBody += "</div></div>";                                
                                 break;
                             case 'combobox':
                                
-                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                                    HtmlFormBody += "<select ng-change='changeCombo(\"" + $scope.fields[key].name.trim()  + "\","+ $scope.fields[key].model  +")' class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + " ' value=''></select>";
-
+                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
+                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
+                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
                                     HtmlFormBody += "</div></div>";
-
-
-
                                 break;
+                            case 'checkbox':
+                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
+
+                                break;                                
                             default:
                                 HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' ></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label></div></div>";
                                 break;
@@ -301,38 +304,33 @@
                    }
 
                 $scope.inputClass = "";
-                $scope.data = ([]);
+                $scope.data = ({});
                 $scope.url = ([]);
     
                 $scope.init = function(){
                     $('input.materialize-textarea').characterCounter();
 
-                      for (var key in $scope.fields) {
-                           $scope.data[$scope.fields[key].name] ="";   
-                         switch ($scope.fields[key].type) {
-                           
-                          
-                            case 'combobox':
-                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {
+                    for (var key in $scope.fields) {
+                       // $scope.data[$scope.fields[key].name] ="";
 
-                                    $scope[$scope.fields[key].model]  = results.data;
-                   
-                                 });
-                                
+                        switch ($scope.fields[key].type) {
+
+                            case 'combobox':
+                                $scope[$scope.fields[key].model] = ([]);
+                                $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
+                                    $scope[$scope.fields[key].model]  = results.data;                   
+                                });                                
                                 break;
                             default:
-                            
-                                break;
-                         }           
+                        
+                            break;
+                        }           
+                    } 
+                }();
 
-                } 
-                };
-
-                 $scope.changeCombo = function (data, combo) {
-                     console.log(combo);
-                     console.log('data[data]', $scope.data[data])
-                    $scope.data[data] = combo[0].id;
-                    console.log($scope.data); 
+                $scope.changeCombo = function (data, combo) {                
+                    $scope.data[data] = combo;                                    
+                                   
                 };
                 $scope.newitem = function () {
                     $scope.data = ([]);
@@ -395,27 +393,33 @@
 
                     
 		if($scope.data.id){
-            var query;
+            var query = $.param($scope.data);
+
                     for (var key in $scope.data) {
                         if (key != "$$hashKey"){
                         if (query){
                             if(!Array.isArray($scope.data[key]))
                                 query += "&" + key + "="+ $scope.data[key];
+
                         }
                         else{
                             if(!Array.isArray($scope.data[key]))
                                 query = "" + key + "="+ $scope.data[key];
                         }
-                        }
+                        }                
                     }
-
+                    var inJson = angular.toJson( $scope.data);
+                     query = JSON.parse(inJson);
                       $scope.sennitForm.loading = true;
 			$scope.sennitForm.loading = true;
 
-		$http.put('/'+ $scope.listaname + '/' + $scope.data.id + '?'+ query)
-		.then(function onSuccess(sailsResponse){
+        $http({
+            method: 'PUT',
+            url: '/'+ $scope.listaname + '/' + $scope.data.id,
+            data: $scope.data
+        }).then(function onSuccess(sailsResponse){
             $scope.inputClass = "";
-			//sennitCommunicationService.prepForBroadcastDataList($scope.data);
+			// sennitCommunicationService.prepForBroadcastDataList($scope.data);
             Materialize.toast('Registro alterado com sucesso!', 4000);
 		})
 		.catch(function onError(sailsResponse){
@@ -492,9 +496,11 @@
                     }
 
                         query += "}";
-                   console.log(query);
-                     query = JSON.parse(query);
 
+                    var inJson = angular.toJson( $scope.data);
+                     query = JSON.parse(inJson);
+                   console.log('query1', query);
+  
 
 		$http.post('/'+ $scope.listaname , query)
 		.then(function onSuccess(sailsResponse){
