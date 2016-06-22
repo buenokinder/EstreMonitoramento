@@ -10,39 +10,39 @@ module.exports = {
   attributes: {
   	nome: {
       type: 'string',
-      required: true
+      required: false
     },
   	dataCriacao: {
-      type: 'datetime',
-      required: true
+      type: 'string',
+      required: false
     },
   	usuarioCriador: {
       model: 'Usuario',
-      required: true
+      required: false
     },
   	salienciaInicial: {
-      type: 'float',
-      required: true
+      type: 'string',
+      required: false
     },
   	celulaPiezometrica: {
-      type: 'float',
-      required: true
+      type: 'string',
+      required: false
     },
    	profundidadeTotalInicial: {
-      type: 'float',
-      required: true
+      type: 'string',
+      required: false
     },  
    	profundidadeTotalCamaraCarga: {
-      type: 'float',
-      required: true
+      type: 'string',
+      required: false
     },  
    	prolongamentoCortePiezometro: {
-      type: 'float',
-      required: true
+      type: 'string',
+      required: false
     },
     habilitado: {
       type: 'boolean',
-      required: true,
+      required: false,
       defaultsTo: false
     },
     alertas: {

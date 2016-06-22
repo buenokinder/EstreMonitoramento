@@ -170,7 +170,7 @@
                     });
                         } 
                  else {
-                     swal("Cancelado", "Seu registro esta seguro :)", "error");   } 
+                     swal("Cancelado", "Seu registro está seguro :)", "error");   } 
             });
                    
 
@@ -258,11 +258,18 @@
                                     HtmlFormBody += "</div>";
                                 break;
 
-                            case 'historico' :
-                                HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                                HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                                HtmlFormBody += "";
-                                HtmlFormBody += "</div></div>";                                
+                            case 'listview' :
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
+                                HtmlFormBody += "<label  ng-class='inputClass' for='"+$scope.fields[key].name+"'>" + $scope.fields[key].value + "</label>";                                    
+                                HtmlFormBody += "<input class='col s11' type='text' ng-model='data." + $scope.fields[key].name + "' ></input>";
+                                HtmlFormBody += "<div class='col s1'><a class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
+                                HtmlFormBody += "<table class='striped col s11'><thead><tr>";                               
+                                HtmlFormBody += "<th ><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th></tr></thead>";
+                                HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields[" + key + "].fields' >";
+                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td>";
+                                HtmlFormBody += "</tr></tbody></table>";
+                                HtmlFormBody += "</div></div>";
+                                
                                 break;
                             case 'combobox':
                                
@@ -314,7 +321,10 @@
                        // $scope.data[$scope.fields[key].name] ="";
 
                         switch ($scope.fields[key].type) {
-
+                            case 'historico':
+                                    // $scope[$scope.fields[key].model] = ([]);
+                                    $scope.hist = "";                               
+                                break;                            
                             case 'combobox':
                                 $scope[$scope.fields[key].model] = ([]);
                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
@@ -327,6 +337,9 @@
                         }           
                     } 
                 }();
+
+                $scope.openHistorico = function() {};
+                $scope.adicionaCoeficiente = function() {};
 
                 $scope.changeCombo = function (data, combo) {                
                     $scope.data[data] = combo;                                    
@@ -388,165 +401,158 @@
 
                 $scope.save = function () {
 
-                  $scope.sennitForm.loading = true;
-
-
-                    
-		if($scope.data.id){
-            var query = $.param($scope.data);
+                  $scope.sennitForm.loading = true;                    
+                  if($scope.data.id){
+                    var query = $.param($scope.data);
 
                     for (var key in $scope.data) {
                         if (key != "$$hashKey"){
-                        if (query){
-                            if(!Array.isArray($scope.data[key]))
-                                query += "&" + key + "="+ $scope.data[key];
+                            if (query){
+                                if(!Array.isArray($scope.data[key]))
+                                    query += "&" + key + "="+ $scope.data[key];
 
-                        }
-                        else{
-                            if(!Array.isArray($scope.data[key]))
-                                query = "" + key + "="+ $scope.data[key];
-                        }
-                        }                
+                            } else {
+                                if(!Array.isArray($scope.data[key]))
+                                    query = "" + key + "="+ $scope.data[key];                                
+                            } 
+                        }              
                     }
                     var inJson = angular.toJson( $scope.data);
-                     query = JSON.parse(inJson);
-                      $scope.sennitForm.loading = true;
-			$scope.sennitForm.loading = true;
+                    query = JSON.parse(inJson);
+                    $scope.sennitForm.loading = true;
+        			$scope.sennitForm.loading = true;
 
-        $http({
-            method: 'PUT',
-            url: '/'+ $scope.listaname + '/' + $scope.data.id,
-            data: $scope.data
-        }).then(function onSuccess(sailsResponse){
-            $scope.inputClass = "";
-			// sennitCommunicationService.prepForBroadcastDataList($scope.data);
-            Materialize.toast('Registro alterado com sucesso!', 4000);
-		})
-		.catch(function onError(sailsResponse){
+                    $http({
+                        method: 'PUT',
+                        url: '/'+ $scope.listaname + '/' + $scope.data.id,
+                        data: $scope.data
+                    }).then(function onSuccess(sailsResponse){
+                        $scope.inputClass = "";
+            			// sennitCommunicationService.prepForBroadcastDataList($scope.data);
+                        Materialize.toast('Registro alterado com sucesso!', 4000);
+            		})
+            		.catch(function onError(sailsResponse){
 
-		})
-		.finally(function eitherWay(){
-			$scope.sennitForm.loading = false;
-		})
+            		})
+            		.finally(function eitherWay(){
+            			$scope.sennitForm.loading = false;
+            		})
 
-		}else{
-	
+            		} else{
+                        var query;
+                        for (var key in $scope.data) {
 
-                    var query;
-                    for (var key in $scope.data) {
-
-                        console.log(  );
-                        console.log($scope.data[key]);
-                        if (query){
-                            if(Array.isArray($scope.data[key]))
-                            {
-                                 var loopVerify;
-                            for (var keyModel in $scope.data[key]) {
-                                console.log($scope.data[key]);
-                             if(loopVerify){
-                                  loopVerify = "passou";
-                                
-                                 query += ', "'+ $scope.data[key][keyModel].id  + '"';
-                                         
-                             }else{
-                                 loopVerify = "passou";
-                                 query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                  
-                                 
-                             }
-
-                            }
-                              query +=  "]";
-                            }else{
-                                if($scope.data[key])
+                            console.log(  );
+                            console.log($scope.data[key]);
+                            if (query){
+                                if(Array.isArray($scope.data[key]))
                                 {
-                                    query += ',"' + key + '": "'+ $scope.data[key] + '"';
-                                }else{
+                                     var loopVerify;
+                                for (var keyModel in $scope.data[key]) {
+                                    console.log($scope.data[key]);
+                                 if(loopVerify){
+                                      loopVerify = "passou";
+                                    
+                                     query += ', "'+ $scope.data[key][keyModel].id  + '"';
+                                             
+                                 }else{
+                                     loopVerify = "passou";
+                                     query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
+                                      
+                                     
+                                 }
 
-                                    query += "," + key + "="+ $scope.data[key];
                                 }
-                            
-                            }
+                                  query +=  "]";
+                                }else{
+                                    if($scope.data[key])
+                                    {
+                                        query += ',"' + key + '": "'+ $scope.data[key] + '"';
+                                    }else{
 
-                        }
-                        else{
-                        if(Array.isArray($scope.data[key]))
-                            {
-                                 var loopVerify;
-                            for (var keyModel in $scope.data[key]) {
-                                console.log($scope.data[key]);
-                             if(loopVerify){
-                                  loopVerify = "passou";
-                            
-                                  query += ',  "'+ $scope.data[key][keyModel].id + '"';       
-                             }else{
-                                 loopVerify = "passou";
-                          
-                                  query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                 
-                             }
+                                        query += "," + key + "="+ $scope.data[key];
+                                    }
+                                
+                                }
 
-                            }
-                              query +=  "]";
-                            }else{
-                            query = '{ "' + key + '": "'+ $scope.data[key] + '"';
-                            }
+                            } else{
+                                if(Array.isArray($scope.data[key]))
+                                {
+                                    var loopVerify;
+                                    for (var keyModel in $scope.data[key]) {
+                                        console.log($scope.data[key]);
+                                     if(loopVerify){
+                                          loopVerify = "passou";
+                                    
+                                          query += ',  "'+ $scope.data[key][keyModel].id + '"';       
+                                     }else{
+                                         loopVerify = "passou";
+                                  
+                                          query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
+                                         
+                                     }
+
+                                    }
+                                      query +=  "]";
+                                    }else{
+                                    query = '{ "' + key + '": "'+ $scope.data[key] + '"';
+                                    }
+                                }
+                                
                         }
-                            
-                    }
 
                         query += "}";
 
-                    var inJson = angular.toJson( $scope.data);
-                     query = JSON.parse(inJson);
-                   console.log('query1', query);
-  
+                        var inJson = angular.toJson( $scope.data);
+                        query = JSON.parse(inJson);
+                       console.log('query1', query);
+      
 
-		$http.post('/'+ $scope.listaname , query)
-		.then(function onSuccess(sailsResponse){
-              Materialize.toast('Registro incluido com sucesso!', 4000);
-			sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
-			$scope.data = ([]);
-			$scope.sennitForm.loading = false;
+                		$http.post('/'+ $scope.listaname , query)
+                		.then(function onSuccess(sailsResponse){
+                              Materialize.toast('Registro incluido com sucesso!', 4000);
+                			sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
+                			$scope.data = ([]);
+                			$scope.sennitForm.loading = false;
+                            
+                		})
+                		.catch(function onError(sailsResponse){
+
+                		
+
+                		})
+                		.finally(function eitherWay(){
+                			$scope.sennitForm.loading = false;
+                		})
+                		}
+                        };
+                        }
+
+                    }
+            }]).factory('sennitCommunicationService', function($rootScope) {
+            var sennitCommunicationService = ([]);
             
-		})
-		.catch(function onError(sailsResponse){
+            sennitCommunicationService.data = '';
 
-		
+            sennitCommunicationService.prepForBroadcast = function(data) {
+                this.data = data;
+                this.broadcastItem();
+            };
 
-		})
-		.finally(function eitherWay(){
-			$scope.sennitForm.loading = false;
-		})
-		}
-                };
-            }
+            sennitCommunicationService.prepForBroadcastDataList = function(datum) {
+                this.datum = datum;
+                this.broadcastItemReturn();
+            };
 
-        }
-    }]).factory('sennitCommunicationService', function($rootScope) {
-    var sennitCommunicationService = ([]);
-    
-    sennitCommunicationService.data = '';
+            
 
-    sennitCommunicationService.prepForBroadcast = function(data) {
-        this.data = data;
-        this.broadcastItem();
-    };
+            sennitCommunicationService.broadcastItem = function() {
+                $rootScope.$broadcast('handleBroadcast');
+            };
 
-    sennitCommunicationService.prepForBroadcastDataList = function(datum) {
-        this.datum = datum;
-        this.broadcastItemReturn();
-    };
-
-    
-
-    sennitCommunicationService.broadcastItem = function() {
-        $rootScope.$broadcast('handleBroadcast');
-    };
-
-    sennitCommunicationService.broadcastItemReturn = function() {
-        $rootScope.$broadcast('handleBroadcastItem');
-    };
+            sennitCommunicationService.broadcastItemReturn = function() {
+                $rootScope.$broadcast('handleBroadcastItem');
+            };
 
     return sennitCommunicationService;
-});;
+});

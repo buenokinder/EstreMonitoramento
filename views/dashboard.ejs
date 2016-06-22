@@ -90,49 +90,50 @@
             <!-- HORIZONTL NAV START-->
              <nav id="horizontal-nav" class="estre-green hide-on-med-and-down">
                 <div class="nav-wrapper">                  
-                  <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
-                   
-                    <li>
-                        <a ng-click="goto('/Dashboard')" class="cyan-text">
-                            <i class="mdi-action-dashboard"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                   <li>
-                        <a class="right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
-                            <i class="mdi-action-account-circle"></i>
-                            <span>Usuario<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
-                            <i class="mdi-device-now-widgets"></i>
-                            <span>Dados Mestre<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        </a>
-                    </li>
-                     <li>
-                        <a href="#/" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
-                            <i class="mdi-device-now-widgets"></i>
-                            <span>Administracao<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        </a>
-                    </li>
-                                    
-                     <li>
-                        <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
-                            <i class="mdi-editor-insert-chart"></i>
-                            <span>Area de Trabalho<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        </a>
-                    </li>                  
-                    <li>
-                        <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
-                            <i class="mdi-editor-insert-chart"></i>
-                            <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        </a>
-                    </li>
-
+                    <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">                   
+                        <li>
+                            <a href="#/" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
+                                <i class="mdi-action-assignment-ind"></i>
+                                <span>Administração<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
+                                <i class="mdi-action-settings"></i>
+                                <span>Dados Mestre<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                            </a>
+                        </li>
+                                        
+                         <li>
+                            <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
+                                <i class="mdi-hardware-desktop-windows"></i>
+                                <span>Área de Trabalho<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                            </a>
+                        </li>                  
+                        <li>
+                            <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
+                                <i class="mdi-editor-insert-chart"></i>
+                                <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a ng-click="goto('/Dashboard')" class="cyan-text">
+                                <i class="mdi-action-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
                     
-                  </ul>
+                    </ul>
+                    <ul id="ul-horizontal-nav" class="right hide-on-med-and-down">                   
+                        <li >
+                            <a class=" right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
+                                <i class="mdi-action-account-circle"></i>
+                                <span>Usuário<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                            </a>
+                        </li>                    
+                    </ul>
                 </div>
+  
               </nav>
 
             
@@ -204,9 +205,9 @@
                   <div class="col s12 m12 l12">
                     <h5 class="breadcrumbs-title" style="color: #767676 !important;"></h5>   
                     <ol class="breadcrumbs">
-                        <a href="/#/" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-alarm-add estre-darkgreen-icon"></i> Home</a>
-                        <a ng-show="pai != undefined" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-stars"></i> {{pai}}</a>
-                        <a ng-show="pathname != undefined" class="breadcrumb estre-darkgreen-icon"><i class="mdi-action-language"></i> {{pathname}}</a>
+                        <a href="/#/" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-alarm-add estre-darkgreen-icon"> </i>--> Home</a>
+                        <a ng-show="pai != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-stars"></i>  -->{{pai}}</a>
+                        <a ng-show="pathname != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-language"></i>  -->{{pathname}}</a>
                     </ol>
                   </div>
                 </div>
