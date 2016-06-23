@@ -8,9 +8,9 @@
  module.exports = {
 
   attributes: {
-    data: {
+    date: {
       type: 'datetime',
-      required: false
+      required: true
     },
     usuario: {
       model: 'Usuario',
