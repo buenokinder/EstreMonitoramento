@@ -4,10 +4,10 @@
   <div class="divider"></div>
     <div class="row">
       <div class="col s12 m12 l6">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'},{'name': 'habilitado' , 'value': 'Habilitado'}  ]" listaname="Piezometro" autopage="true"  label="Lista de Piezometro"  adicionar="" add="false" view="Piezometro" pagesize="5"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'habilitado' , 'value': 'Habilitado', 'filter': 'false'}  ]" listaname="Piezometro" autopage="true"  label="Lista de Piezometro"  adicionar="" add="false" view="Piezometro" pagesize="5"></grid-view>
       </div>
       <div class="col s12 m12 l6">
-      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial'}, {'name': 'celulaPiezometrica', 'value': 'Célula piezométrica'}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial'}, {'name': 'profundidadeTotalCamaraCarga', 'value': 'Profundidade total da câmara de carga'}, {'name': 'prolongamentoCortePiezometro', 'value': 'Prolongamento ou corte do piezômetro'}, {'name': 'alerta' , 'value': 'Coeficiente R<SUB>u</SUB>',  'model':'alertas', 'input':'coefRU', 'fields': [{'name': 'date', 'value': 'Data'}, {'name': 'coeficienteRU', 'value': 'Coeficiente'}], 'type': 'listview' }, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }]" label="Formulário de Piezometro" listaname="Piezometro"  strupdate="false"></form-view>
+      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial'}, {'name': 'celulaPiezometrica', 'value': 'Célula piezométrica'}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial'}, {'name': 'profundidadeTotalCamaraCarga', 'value': 'Profundidade total da câmara de carga'}, {'name': 'prolongamentoCortePiezometro', 'value': 'Prolongamento ou corte do piezômetro'}, {'name': 'alertas' , 'value': 'Coeficiente R<SUB>u</SUB>',  'model':'alertas', 'input':'coefRU', 'fields': [{'name': 'date', 'value': 'Data'}, {'name': 'coeficienteRU', 'value': 'Coeficiente'}], 'type': 'listview' }, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }]" label="Formulário de Piezometro" listaname="Piezometro"  strupdate="false"></form-view>
     	</div>
     </div>
   </div>

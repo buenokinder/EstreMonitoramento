@@ -21,14 +21,24 @@
                 var HtmlFormBody = "";
 
                 HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
-
-                HtmlFormBody += "<table class='striped'><thead ><tr>";
+                for (var key in $scope.fields) {
+                    if ($scope.fields[key].filter == 'true') {  
+                        $scope.habilitaBotao = true;                            
+                        HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
+                        HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                
+                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +".contains'>";
+                        HtmlFormBody += "</div>";                     
+                    }           
+                }
+                HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
+                HtmlFormBody += "<table class='striped'><thead><tr>";
                 HtmlFormBody += "<th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th></tr></thead>";
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >";
                 HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody>";
-                HtmlFormBody += "<tfoot><tr><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul>";
-                HtmlFormBody += "</div></td></tr></tfoot></table></div></div>";
+                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody><tfoot>";
+                HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul></div></td></tr>";
+                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul></div></td></tr>";
+                HtmlFormBody += "</tfoot></table></div></div>";
                 console.log(HtmlFormBody);
 
                 $element.replaceWith($compile(HtmlFormBody)($scope));
@@ -36,11 +46,52 @@
             },
             controller: function ($scope, $element, $http) {
                 $scope.data = ([]);
+                $scope.querydapesquisa = ({});
                 $scope.me = window.SAILS_LOCALS.me;
                 $scope.ActualPage = 1;
                 $scope.skip = 0;
                 $scope.TotalItens = 0;
                 $scope.TotalPages = ([]);
+                $scope.ActualPageSearch = 1;
+                $scope.skipSearch = 0;
+                $scope.TotalItensSearch = 0;
+                $scope.TotalPagesSearch = ([]);
+
+                for (var key in $scope.fields) {
+                    if ($scope.fields[key].filter == 'true') {                        
+                        $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};                        
+                    }                         
+                }
+                $scope.pesquisar = function() {
+                    $scope.querydapesquisa = JSON.stringify($scope.querydapesquisa);
+                    $scope.refreshPageSearch();                                                       
+                    $scope.habilitaPaginacao = true;
+                };
+
+                 $scope.refreshPageSearch = function () {
+                  $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
+
+                    $scope.TotalItensSearch = results.data.length;
+                    var range = [];
+                    var total = ($scope.TotalItensSearch / $scope.pagesize);
+                    for (var i = 0; i < total; i++) {
+                        range.push(i + 1);
+                    }
+                    console.log('range', range);
+                    $scope.TotalPagesSearch = range;                        
+                });
+
+                $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
+                    $scope.data = angular.fromJson(results.data);                    
+                    $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
+                });
+                $scope.PaginaSearch = function (page) {
+                    $scope.skipSearch = ((page - 1) * $scope.pagesize);
+                    $scope.ActualPageSearch = page;
+                    $scope.refreshPageSearch();
+                };
+
+                }; 
                 $scope.exibir = function(value){
 
                     if($scope.strupdate == "false")
@@ -135,9 +186,11 @@
                     $scope.refreshPage();
                 };
 
-
                 $scope.$on('handleBroadcastItem', function() {
                     $scope.data.push(angular.fromJson(sennitCommunicationService.datum.data));
+                    if($scope.data.length > 5) {
+                        $scope.refreshPage();
+                    }
                     console.log('Registro incluido com sucesso!');
                 });       
 
@@ -164,6 +217,7 @@
                                 .then(function (project) {
                                     var index = $scope.data.indexOf(item);
                                     $scope.data.splice(index, 1);
+                                    $scope.refreshPage();
                                 });
                             } else {
                                 swal("Cancelado", "Seu registro está seguro :)", "error");   
@@ -367,8 +421,19 @@
                     $scope.data[data] = combo;                                    
                                    
                 };*/
-                $scope.newitem = function () {
+                $scope.newitem = function () {                    
                     $scope.data = ([]);
+                    var newData = ({});
+                    for (var key in $scope.fields) {
+/*                        if($scope.fields[key].input)
+                            $scope.fields[key].input = "";*/
+
+                        if($scope.fields[key].model)
+                            newData[$scope.fields[key].name] = ([]);
+                        else  
+                            newData[$scope.fields[key].name] = "";                       
+                    }                    
+                    $scope.data = newData;
                 };
 
                 $scope.$on('handleBroadcast', function() {
@@ -470,6 +535,7 @@
                                     .finally(function eitherWay(){
                                         $scope.sennitForm.loading = false;
                                     })
+                                    $scope.newitem();
                                 } else {
                                     swal("Cancelado", "Seu registro não foi alterado :(", "error");
                                 } 
@@ -562,7 +628,7 @@
                                     .then(function onSuccess(sailsResponse){
                                         Materialize.toast('Registro incluido com sucesso!', 4000);
                                         sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
-                                        $scope.data = ([]);
+                                        $scope.newitem();
                                         $scope.sennitForm.loading = false;
 
                                     })
@@ -608,6 +674,7 @@
 
             sennitCommunicationService.broadcastItemReturn = function() {
                 $rootScope.$broadcast('handleBroadcastItem');
+                console.log('bla',$rootScope.bla)
             };
 
     return sennitCommunicationService;
