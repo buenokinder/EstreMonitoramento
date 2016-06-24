@@ -609,7 +609,7 @@
                         query += "}"; */                       
 
                         swal({   title: "",   
-                            text: "Você tem certeza que deseja alterar este registro?",   
+                            text: "Você tem certeza que deseja incluir este registro?",   
                             type: "info",   
                             showCancelButton: true, 
                             confirmButtonText: "Sim",   
