@@ -25,6 +25,12 @@ module.exports = {
 
     return res.view('index');
     
-  },
+  },mapa: function (req, res) {
+
+  
+
+    return res.view('mapa');
+    
+  }
 
 };

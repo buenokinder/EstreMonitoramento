@@ -24,6 +24,13 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		  templateUrl: "/views/alerta/index.html"
 		});
 
+ 
+  $routeProvider.when("/Mapa", {
+			templateUrl: "/views/mapa/index.html",
+			controller: 'MapaController'
+		}).when("/Mapa/:id", {		
+		  templateUrl: "/views/mapa/index.html"
+		});
 
  
   	$routeProvider.when("/PluviometriaVazao", {

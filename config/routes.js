@@ -36,9 +36,9 @@ module.exports.routes = {
     'POST /signup': 'UsuarioController.signup',
     'PUT /login': 'UsuarioController.login',
     'GET /logout': 'UsuarioController.logout',
-    
-    'GET /': 'PageController.showHomePage'
-
+        'GET /teste': 'AterroController.teste',
+    'GET /': 'PageController.showHomePage',
+    'GET /mapa': 'PageController.mapa'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
