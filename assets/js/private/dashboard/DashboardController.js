@@ -17,9 +17,13 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
 
   $scope.alteraStatusBreadcrumbs = function(pathname) {    
     switch(pathname) {
-         case "/PluviometriaVazao":
+      case "/OperacaoLinhaCorte":
+        $scope.pathname = "Linha de Corte";
+        $scope.pai = "Área de Trabalho";
+        break; 
+      case "/PluviometriaVazao":
         $scope.pathname = "Pluviometria e Vazão";
-        $scope.pai = "Area de Trabalho";
+        $scope.pai = "Área de Trabalho";
         break;
       case "/Dashboard":
         $scope.pathname = "Dashboard";
@@ -49,7 +53,7 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pathname = "Usuário";
         $scope.pai = "Administração";
         break;
-      case '/':
+      default:
         $scope.pai = undefined;
         $scope.pathname = undefined;        
     }    

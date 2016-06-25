@@ -1,5 +1,4 @@
 
-
     app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
         return {
             restrict: 'E',
@@ -15,21 +14,31 @@
                 add: '@',
                 edit: '@',
                 delete: '@',
-                  autopage: '@',
-                             label: '@'
+                autopage: '@',
+                label: '@'
 
             }, link: function ($scope, $element, attrs) {
                 var HtmlFormBody = "";
 
                 HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
-
-                HtmlFormBody += "<table class='striped'><thead ><tr>";
+                for (var key in $scope.fields) {
+                    if ($scope.fields[key].filter == 'true') {  
+                        $scope.habilitaBotao = true;                            
+                        HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
+                        HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                
+                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +".contains'>";
+                        HtmlFormBody += "</div>";                     
+                    }           
+                }
+                HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
+                HtmlFormBody += "<table class='striped'><thead><tr>";
                 HtmlFormBody += "<th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th></tr></thead>";
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >";
                 HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody>";
-                HtmlFormBody += "<tfoot><tr><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul>";
-                HtmlFormBody += "</div></td></tr></tfoot></table></div></div>";
+                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody><tfoot>";
+                HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul></div></td></tr>";
+                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='#'>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a href='#'>»</a></li></ul></div></td></tr>";
+                HtmlFormBody += "</tfoot></table></div></div>";
                 console.log(HtmlFormBody);
 
                 $element.replaceWith($compile(HtmlFormBody)($scope));
@@ -37,11 +46,52 @@
             },
             controller: function ($scope, $element, $http) {
                 $scope.data = ([]);
+                $scope.querydapesquisa = ({});
                 $scope.me = window.SAILS_LOCALS.me;
                 $scope.ActualPage = 1;
                 $scope.skip = 0;
                 $scope.TotalItens = 0;
                 $scope.TotalPages = ([]);
+                $scope.ActualPageSearch = 1;
+                $scope.skipSearch = 0;
+                $scope.TotalItensSearch = 0;
+                $scope.TotalPagesSearch = ([]);
+
+                for (var key in $scope.fields) {
+                    if ($scope.fields[key].filter == 'true') {                        
+                        $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};                        
+                    }                         
+                }
+                $scope.pesquisar = function() {
+                    $scope.querydapesquisa = JSON.stringify($scope.querydapesquisa);
+                    $scope.refreshPageSearch();                                                       
+                    $scope.habilitaPaginacao = true;
+                };
+
+                 $scope.refreshPageSearch = function () {
+                  $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
+
+                    $scope.TotalItensSearch = results.data.length;
+                    var range = [];
+                    var total = ($scope.TotalItensSearch / $scope.pagesize);
+                    for (var i = 0; i < total; i++) {
+                        range.push(i + 1);
+                    }
+                    console.log('range', range);
+                    $scope.TotalPagesSearch = range;                        
+                });
+
+                $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
+                    $scope.data = angular.fromJson(results.data);                    
+                    $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
+                });
+                $scope.PaginaSearch = function (page) {
+                    $scope.skipSearch = ((page - 1) * $scope.pagesize);
+                    $scope.ActualPageSearch = page;
+                    $scope.refreshPageSearch();
+                };
+
+                }; 
                 $scope.exibir = function(value){
 
                     if($scope.strupdate == "false")
@@ -136,9 +186,11 @@
                     $scope.refreshPage();
                 };
 
-
                 $scope.$on('handleBroadcastItem', function() {
                     $scope.data.push(angular.fromJson(sennitCommunicationService.datum.data));
+                    if($scope.data.length > 5) {
+                        $scope.refreshPage();
+                    }
                     console.log('Registro incluido com sucesso!');
                 });       
 
@@ -149,31 +201,29 @@
 
                 $scope.delete = function (item) {
 
-                      swal({   title: "Você tem certeza que deseja excluir?",   
-             text: "Não será mais possivel recuperar esse Registro!",   
-             type: "warning",   
-             showCancelButton: true,   
-             confirmButtonColor: "#DD6B55",   
-             confirmButtonText: "Sim, delete o registro!",   
-             cancelButtonText: "Não , cancele por favor!",   
-             closeOnConfirm: false,   
-             closeOnCancel: false }, 
-             function(isConfirm){   
-                 if (isConfirm) {     
-                      swal("Deletado!", "Seu registro foi excluido.", "success");
-                      $http.delete('/' + $scope.listaname +'/' + item.id )
-                        .then(function (project) {
-                            var index = $scope.data.indexOf(item);
-                            $scope.data.splice(index, 1);
-    
-                           
-                    });
-                        } 
-                 else {
-                     swal("Cancelado", "Seu registro esta seguro :)", "error");   } 
-            });
-                   
-
+                    swal({   title: "Você tem certeza que deseja excluir?",   
+                        text: "Não será mais possivel recuperar esse Registro!",   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Sim",   
+                        cancelButtonText: "Cancelar",   
+                        closeOnConfirm: false,   
+                        closeOnCancel: false }, 
+                        function(isConfirm){   
+                            if (isConfirm) {     
+                                swal("Deletado!", "Seu registro foi excluido.", "success");
+                                $http.delete('/' + $scope.listaname +'/' + item.id )
+                                .then(function (project) {
+                                    var index = $scope.data.indexOf(item);
+                                    $scope.data.splice(index, 1);
+                                    $scope.refreshPage();
+                                });
+                            } else {
+                                swal("Cancelado", "Seu registro está seguro :)", "error");   
+                            } 
+                        }
+                    );
                 };
             }
 
@@ -216,7 +266,7 @@
                                     HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                                     HtmlFormBody += "<select  id='" + $scope.fields[key].name + "'  class='form-control emailReminder width-169 ng-pristine ng-invalid ng-invalid-required ng-touched' ng-model='combodata." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].tableadd.text + " for x in " + $scope.fields[key].tableadd.model + "' value=''></select>";
                                     HtmlFormBody += "</select>";
-                                            HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
+                                    HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
                                     HtmlFormBody += "<button type='button' class='mb-sm btn btn-labeled btn-primary' ng-click='Associate(combodata." + $scope.fields[key].name + ",&#39;" + $scope.fields[key].name  + "&#39;,&#39;" + $scope.fields[key].name  + "&#39; ,&#39;" + $scope.fields[key].tableadd.apiadd  + "&#39;, &#39;add&#39;)' aria-label='Left Align'>";
                                     HtmlFormBody += " Add <i class='fa fa-plus'></i>";
                                     HtmlFormBody += "</button>";
@@ -257,21 +307,32 @@
                                     HtmlFormBody += "</select>";
                                     HtmlFormBody += "</div>";
                                 break;
-                            case 'checkbox':
-                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
 
+                            case 'listview' :
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
+                                HtmlFormBody += "<label  ng-class='inputClass' for='"+$scope.fields[key].name+"'>" + $scope.fields[key].value + "</label>";                                    
+                                HtmlFormBody += "<input class='col s11' type='text' ng-model='" + $scope.fields[key].input + "' ></input>";
+                                HtmlFormBody += "<div class='col s1'><a ng-click='adicionaAlertas(" + $scope.fields[key].input + ",\"" + $scope.fields[key].model.trim()  + "\",\"" + $scope.fields[key].input + "\" )' class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
+                                HtmlFormBody += "<table class='striped col s11'><thead><tr>";                               
+                                HtmlFormBody += "<th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th></tr></thead>";
+                                HtmlFormBody += "<tbody><tr ng-repeat='datum in data."+$scope.fields[key].model+"' ng-click='ViewItem(datum)' style='cursor:pointer'><td</td><td ng-repeat='field in fields[" + key + "].fields' >";
+                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.name)}}</span></td>";
+                                HtmlFormBody += "</tr></tbody></table>";
+                                HtmlFormBody += "</div></div>";
+                                // ng-show='exibir(strupdate)' td de delete
+                                // ng-show='deleteDisabled()' <A> tag
                                 break;
                             case 'combobox':
                                
-                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                                    HtmlFormBody += "<select ng-change='changeCombo(\"" + $scope.fields[key].name.trim()  + "\","+ $scope.fields[key].model  +")' class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + " ' value=''></select>";
-
+                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
+                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
+                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
                                     HtmlFormBody += "</div></div>";
-
-
-
                                 break;
+                            case 'checkbox':
+                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
+
+                                break;                                
                             default:
                                 HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' ></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label></div></div>";
                                 break;
@@ -301,40 +362,78 @@
                    }
 
                 $scope.inputClass = "";
-                $scope.data = ([]);
+                $scope.data = ({});
                 $scope.url = ([]);
-    
+
+                $scope.verifica = function (valor, nome, type) {
+
+                    if(valor.hasOwnProperty(nome)) {
+
+                        for ( key in valor){
+
+                         if(key == nome)
+                            return valor[key];
+                        }
+                    }
+                    if(nome == "date"){
+                        var data = new Date(valor);
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDate();
+                        var retorno = dia + "/" + mes + "/" + ano;
+                        return retorno;
+                    }
+                    return valor;
+                }
+
                 $scope.init = function(){
                     $('input.materialize-textarea').characterCounter();
 
-                      for (var key in $scope.fields) {
-                           $scope.data[$scope.fields[key].name] ="";   
-                         switch ($scope.fields[key].type) {
-                           
-                          
-                            case 'combobox':
-                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {
+                    for (var key in $scope.fields) {
+                       // $scope.data[$scope.fields[key].name] ="";
 
-                                    $scope[$scope.fields[key].model]  = results.data;
-                   
-                                 });
-                                
+                        switch ($scope.fields[key].type) {
+                            case 'listview':
+                                $scope.data[$scope.fields[key].model] = ([]);
+                                                                   
+                                break;                            
+                            case 'combobox':
+                                $scope[$scope.fields[key].model] = ([]);
+                                $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
+                                    $scope[$scope.fields[key].model]  = results.data;                   
+                                });                                
                                 break;
                             default:
-                            
-                                break;
-                         }           
-
-                } 
+                        
+                            break;
+                        }           
+                    } 
+                }();
+                
+                $scope.adicionaAlertas = function(coeficiente, model, input) {
+                    var date = new Date();
+                    var dateISO = date.toISOString();
+                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});
+                    $scope[input] = "";           
                 };
 
-                 $scope.changeCombo = function (data, combo) {
-                     console.log(combo);
-                    $scope.data[data] = combo[0].id;
-                    console.log($scope.data); 
-                };
-                $scope.newitem = function () {
+/*                $scope.changeCombo = function (data, combo) {                
+                    $scope.data[data] = combo;                                    
+                                   
+                };*/
+                $scope.newitem = function () {                    
                     $scope.data = ([]);
+                    var newData = ({});
+                    for (var key in $scope.fields) {
+/*                        if($scope.fields[key].input)
+                            $scope.fields[key].input = "";*/
+
+                        if($scope.fields[key].model)
+                            newData[$scope.fields[key].name] = ([]);
+                        else  
+                            newData[$scope.fields[key].name] = "";                       
+                    }                    
+                    $scope.data = newData;
                 };
 
                 $scope.$on('handleBroadcast', function() {
@@ -389,157 +488,194 @@
 
                 $scope.save = function () {
 
-                  $scope.sennitForm.loading = true;
+                 $scope.sennitForm.loading = true;                    
+                  if($scope.data.id){
+                    /* var query = $.param($scope.data);
 
-
-                    
-		if($scope.data.id){
-            var query;
                     for (var key in $scope.data) {
                         if (key != "$$hashKey"){
-                        if (query){
-                            if(!Array.isArray($scope.data[key]))
-                                query += "&" + key + "="+ $scope.data[key];
-                        }
-                        else{
-                            if(!Array.isArray($scope.data[key]))
-                                query = "" + key + "="+ $scope.data[key];
-                        }
-                        }
+                            if (query){
+                                if(!Array.isArray($scope.data[key]))
+                                    query += "&" + key + "="+ $scope.data[key];
+
+                            } else {
+                                if(!Array.isArray($scope.data[key]))
+                                    query = "" + key + "="+ $scope.data[key];                                
+                            } 
+                        }              
                     }
+                    var inJson = angular.toJson( $scope.data);
+                    query = JSON.parse(inJson);
+                    $scope.sennitForm.loading = true;*/
+        			$scope.sennitForm.loading = true;
+                    swal({   title: "",   
+                            text: "Você tem certeza que deseja alterar este registro?",   
+                            type: "warning",   
+                            showCancelButton: true, 
+                            confirmButtonText: "Sim",   
+                            cancelButtonText: "Cancelar",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false }, 
+                            function(isConfirm){   
+                                if (isConfirm) {     
+                                    swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+                                    $http({
+                                        method: 'PUT',
+                                        url: '/'+ $scope.listaname + '/' + $scope.data.id,
+                                        data: $scope.data
+                                    }).then(function onSuccess(sailsResponse){
+                                        $scope.inputClass = "";
+                                        //sennitCommunicationService.prepForBroadcastDataList($scope.data);
+                                        $scope.data = ([]);
+                                        Materialize.toast('Registro alterado com sucesso!', 4000);
+                                    })
+                                    .catch(function onError(sailsResponse){
 
-                      $scope.sennitForm.loading = true;
-			$scope.sennitForm.loading = true;
-
-		$http.put('/'+ $scope.listaname + '/' + $scope.data.id + '?'+ query)
-		.then(function onSuccess(sailsResponse){
-            $scope.inputClass = "";
-			//sennitCommunicationService.prepForBroadcastDataList($scope.data);
-            Materialize.toast('Registro alterado com sucesso!', 4000);
-		})
-		.catch(function onError(sailsResponse){
-
-		})
-		.finally(function eitherWay(){
-			$scope.sennitForm.loading = false;
-		})
-
-		}else{
-	
-
-                    var query;
-                    for (var key in $scope.data) {
-
-                        console.log(  );
-                        console.log($scope.data[key]);
-                        if (query){
-                            if(Array.isArray($scope.data[key]))
-                            {
-                                 var loopVerify;
-                            for (var keyModel in $scope.data[key]) {
-                                console.log($scope.data[key]);
-                             if(loopVerify){
-                                  loopVerify = "passou";
-                                
-                                 query += ', "'+ $scope.data[key][keyModel].id  + '"';
-                                         
-                             }else{
-                                 loopVerify = "passou";
-                                 query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                  
-                                 
-                             }
-
+                                    })
+                                    .finally(function eitherWay(){
+                                        $scope.sennitForm.loading = false;
+                                    })
+                                    $scope.newitem();
+                                } else {
+                                    swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                                } 
                             }
-                              query +=  "]";
-                            }else{
-                                if($scope.data[key])
+                        );                                            
+
+
+            		} else{
+/*                        var query;
+                        for (var key in $scope.data) {
+
+                            console.log(  );
+                            console.log($scope.data[key]);
+                            if (query){
+                                if(Array.isArray($scope.data[key]))
                                 {
-                                    query += ',"' + key + '": "'+ $scope.data[key] + '"';
-                                }else{
+                                     var loopVerify;
+                                for (var keyModel in $scope.data[key]) {
+                                    console.log($scope.data[key]);
+                                 if(loopVerify){
+                                      loopVerify = "passou";
+                                    
+                                     query += ', "'+ $scope.data[key][keyModel].id  + '"';
+                                             
+                                 }else{
+                                     loopVerify = "passou";
+                                     query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
+                                      
+                                     
+                                 }
 
-                                    query += "," + key + "="+ $scope.data[key];
                                 }
-                            
-                            }
+                                  query +=  "]";
+                                }else{
+                                    if($scope.data[key])
+                                    {
+                                        query += ',"' + key + '": "'+ $scope.data[key] + '"';
+                                    }else{
 
-                        }
-                        else{
-                        if(Array.isArray($scope.data[key]))
-                            {
-                                 var loopVerify;
-                            for (var keyModel in $scope.data[key]) {
-                                console.log($scope.data[key]);
-                             if(loopVerify){
-                                  loopVerify = "passou";
-                            
-                                  query += ',  "'+ $scope.data[key][keyModel].id + '"';       
-                             }else{
-                                 loopVerify = "passou";
-                          
-                                  query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                 
-                             }
+                                        query += "," + key + "="+ $scope.data[key];
+                                    }
+                                
+                                }
 
-                            }
-                              query +=  "]";
-                            }else{
-                            query = '{ "' + key + '": "'+ $scope.data[key] + '"';
-                            }
+                            } else{
+                                if(Array.isArray($scope.data[key]))
+                                {
+                                    var loopVerify;
+                                    for (var keyModel in $scope.data[key]) {
+                                        console.log($scope.data[key]);
+                                     if(loopVerify){
+                                          loopVerify = "passou";
+                                    
+                                          query += ',  "'+ $scope.data[key][keyModel].id + '"';       
+                                     }else{
+                                         loopVerify = "passou";
+                                  
+                                          query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
+                                         
+                                     }
+
+                                    }
+                                      query +=  "]";
+                                    }else{
+                                    query = '{ "' + key + '": "'+ $scope.data[key] + '"';
+                                    }
+                                }
+                                
                         }
-                            
+
+                        query += "}"; */                       
+
+                        swal({   title: "",   
+                            text: "Você tem certeza que deseja incluir este registro?",   
+                            type: "info",   
+                            showCancelButton: true, 
+                            confirmButtonText: "Sim",   
+                            cancelButtonText: "Cancelar",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false }, 
+                            function(isConfirm){   
+                                if (isConfirm) {     
+                                    swal("Registro Incluido!", "Seu registro foi incluido com sucesso.", "success");
+                                    var inJson = angular.toJson( $scope.data);
+                                    query = JSON.parse(inJson);
+                                    console.log('query1', query);
+
+
+                                    $http.post('/'+ $scope.listaname , query)
+                                    .then(function onSuccess(sailsResponse){
+                                        Materialize.toast('Registro incluido com sucesso!', 4000);
+                                        sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
+                                        $scope.newitem();
+                                        $scope.sennitForm.loading = false;
+
+                                    })
+                                    .catch(function onError(sailsResponse){
+
+
+
+                                    })
+                                    .finally(function eitherWay(){
+                                        $scope.sennitForm.loading = false;
+                                    })
+                                } else {
+                                    swal("Cancelado", "Seu registro não foi salvo :(", "error");   
+                                } 
+                            }
+                        );                        
+
                     }
-
-                        query += "}";
-                   console.log(query);
-                     query = JSON.parse(query);
-
-
-		$http.post('/'+ $scope.listaname , query)
-		.then(function onSuccess(sailsResponse){
-              Materialize.toast('Registro incluido com sucesso!', 4000);
-			sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
-			$scope.data = ([]);
-			$scope.sennitForm.loading = false;
-            
-		})
-		.catch(function onError(sailsResponse){
-
-		
-
-		})
-		.finally(function eitherWay(){
-			$scope.sennitForm.loading = false;
-		})
-		}
                 };
             }
 
         }
-    }]).factory('sennitCommunicationService', function($rootScope) {
-    var sennitCommunicationService = ([]);
-    
-    sennitCommunicationService.data = '';
+            }]).factory('sennitCommunicationService', function($rootScope) {
+            var sennitCommunicationService = ([]);
+            
+            sennitCommunicationService.data = '';
 
-    sennitCommunicationService.prepForBroadcast = function(data) {
-        this.data = data;
-        this.broadcastItem();
-    };
+            sennitCommunicationService.prepForBroadcast = function(data) {
+                this.data = data;
+                this.broadcastItem();
+            };
 
-    sennitCommunicationService.prepForBroadcastDataList = function(datum) {
-        this.datum = datum;
-        this.broadcastItemReturn();
-    };
+            sennitCommunicationService.prepForBroadcastDataList = function(datum) {
+                this.datum = datum;
+                this.broadcastItemReturn();
+            };
 
-    
+            
 
-    sennitCommunicationService.broadcastItem = function() {
-        $rootScope.$broadcast('handleBroadcast');
-    };
+            sennitCommunicationService.broadcastItem = function() {
+                $rootScope.$broadcast('handleBroadcast');
+            };
 
-    sennitCommunicationService.broadcastItemReturn = function() {
-        $rootScope.$broadcast('handleBroadcastItem');
-    };
+            sennitCommunicationService.broadcastItemReturn = function() {
+                $rootScope.$broadcast('handleBroadcastItem');
+                console.log('bla',$rootScope.bla)
+            };
 
     return sennitCommunicationService;
-});;
+});

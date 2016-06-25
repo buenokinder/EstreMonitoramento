@@ -8,13 +8,46 @@
 module.exports = {
 
   attributes: {
-  nome: {
+  	nome: {
       type: 'string',
-      required: true
-    }, alertas: {
+      required: false
+    },
+  	dataCriacao: {
+      type: 'string',
+      required: false
+    },
+  	usuarioCriador: {
+      model: 'Usuario',
+      required: false
+    },
+  	salienciaInicial: {
+      type: 'string',
+      required: false
+    },
+  	celulaPiezometrica: {
+      type: 'string',
+      required: false
+    },
+   	profundidadeTotalInicial: {
+      type: 'string',
+      required: false
+    },  
+   	profundidadeTotalCamaraCarga: {
+      type: 'string',
+      required: false
+    },  
+   	prolongamentoCortePiezometro: {
+      type: 'string',
+      required: false
+    },
+    habilitado: {
+      type: 'boolean',
+      required: false,
+      defaultsTo: false
+    },
+    alertas: {
       collection: 'alertasPiezometro',
       via: 'owner'
     }
   }
 };
-
