@@ -1,54 +1,20 @@
 
-
+<form action="http://localhost:1337/file/upload" enctype="multipart/form-data" method="post">
+    <input type="text" name="title"><br>
+    <input type="file" name="avatar" multiple="multiple"><br>
+    <input type="submit" value="Upload">
+    </form>
     <div ng-controller="MapaController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
 
         <div class="container">
 
-            <div class="navbar navbar-default">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="https://github.com/nervgh/angular-file-upload">Angular File Upload</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Demos <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li class="active"><a href="#">Simple example</a></li>
-                                <li><a href="../image-preview">Uploads only images (with canvas preview)</a></li>
-                                <li><a href="../without-bootstrap">Without bootstrap example</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="https://github.com/nervgh/angular-file-upload">View on Github</a></li>
-                        <li><a href="https://raw.githubusercontent.com/nervgh/angular-file-upload/master/dist/angular-file-upload.min.js">Download</a></li>
-                    </ul>
-                </div>
-            </div>
-
+      
             <div class="row">
 
                 <div class="col-md-3">
 
-                    <h3>Select files</h3>
+                    <h3>Selecione o mapa</h3>
 
-                    <div ng-show="uploader.isHTML5">
-                        <!-- 3. nv-file-over uploader="link" over-class="className" -->
-                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
-                            Base drop zone
-                        </div>
-
-                        <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                        <div nv-file-drop="" uploader="uploader" options="{ url: '/foo' }">
-                            <div nv-file-over="" uploader="uploader" over-class="another-file-over-class" class="well my-drop-zone">
-                                Another drop zone with its own settings
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                    Multiple
-                    <input type="file" nv-file-select="" uploader="uploader" multiple  /><br/>
-
-                    Single
                     <input type="file" nv-file-select="" uploader="uploader" />
                 </div>
 

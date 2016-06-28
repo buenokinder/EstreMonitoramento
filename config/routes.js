@@ -38,6 +38,7 @@ module.exports.routes = {
     'GET /logout': 'UsuarioController.logout',
         'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
+    'POST /file/upload': 'FilesController.upload',
     'GET /mapa': 'PageController.mapa'
   /***************************************************************************
   *                                                                          *
