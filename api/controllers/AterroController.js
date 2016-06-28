@@ -6,45 +6,45 @@
  */
 
 module.exports = {
-<<<<<<< HEAD
+// <<<<<<< HEAD
 
-    teste: function(req,res)
-    {
+teste: function(req,res)
+{
 
-   console.log( "JSON File:" );
-var JsonConvert = require( "./JPN.geo.json" ) ;
+    console.log( "JSON File:" );
+    var JsonConvert = require( "./JPN.geo.json" ) ;
 
-  var UtmConverter = require('utm-converter'); // Example using Node.js.
+    var UtmConverter = require('utm-converter'); // Example using Node.js.
     var converter = new UtmConverter();
-var wgsResult;
-for (var prop in JsonConvert) {
-    if (JsonConvert.hasOwnProperty(prop)) {
-        console.log(prop);
-        switch (prop) {
+    var wgsResult;
+    for (var prop in JsonConvert) {
+        if (JsonConvert.hasOwnProperty(prop)) {
+            console.log(prop);
+            switch (prop) {
 
-            case "geometries":
-            var geometries = JsonConvert[prop];
+                case "geometries":
+                var geometries = JsonConvert[prop];
 
-            for (var teste in geometries) {
-               
+                for (var teste in geometries) {
 
-                
-                for (i = 0; i < geometries[teste].coordinates.length; i++) { 
-                    console.log("teste: " +  geometries[teste].coordinates[i][0]);
-                    wgsResult = converter.toWgs({"coord":{"x": geometries[teste].coordinates[i][0] ,"y":geometries[teste].coordinates[i][1]},"zone":22,"isSouthern":true});
-                    geometries[teste].coordinates[i][0] = wgsResult.coord.longitude;
-                    geometries[teste].coordinates[i][1] = wgsResult.coord.latitude;
+
+
+                    for (i = 0; i < geometries[teste].coordinates.length; i++) { 
+                        console.log("teste: " +  geometries[teste].coordinates[i][0]);
+                        wgsResult = converter.toWgs({"coord":{"x": geometries[teste].coordinates[i][0] ,"y":geometries[teste].coordinates[i][1]},"zone":22,"isSouthern":true});
+                        geometries[teste].coordinates[i][0] = wgsResult.coord.longitude;
+                        geometries[teste].coordinates[i][1] = wgsResult.coord.latitude;
+                    }
+
+
+
                 }
-               
-                
- 
+
+                break;
+             // obj[prop] has the value
             }
-            
-            break;
-            // obj[prop] has the value
         }
     }
-}
  
     // var wgsCoord = [145.240917, -37.830436];
     
@@ -52,43 +52,36 @@ for (var prop in JsonConvert) {
     // // 
 
     // var wgsResult = converter.toWgs(utmResult);
-require('fs').writeFile(
-
-    './my.json',
-
-    JSON.stringify(JsonConvert),
-
-    function (err) {
-        if (err) {
-            console.error('Crap happens');
+    require('fs').writeFile(
+        './my.json',
+        JSON.stringify(JsonConvert),
+        function (err) {
+            if (err) {
+                console.error('Crap happens');
+            }
         }
-    }
-);
+    );
     // console.log(wgsResult);
     // // {"coord":{"longitude":145.24091699999727,"latitude":-37.83043599999867}}
     return res.json(JsonConvert);
- }
+},
+// =======
+update: function(req, res) 
+{
+    var responsavel = req.param('responsavel');		
+    var id = req.param('id');
+    Aterro.update(id, { responsavel: responsavel.id,nome: req.param('nome'),cidade: req.param('cidade'),endereco: req.param('endereco'),telefone: req.param('telefone')}, function aterroUpdate(err, newAterro) {
+            if (err) {
+                console.log("err: ", err);
+                console.log("err.invalidAttributes: ", err.invalidAttributes);
+                return res.negotiate(err);
+            }			
+            // >>>>>>> origin/master
 
-	 
-
-};
-=======
-	update: function(req, res) {
-		var responsavel = req.param('responsavel');		
-		var id = req.param('id');
-		Aterro.update(id, { responsavel: responsavel.id,nome: req.param('nome'),cidade: req.param('cidade'),endereco: req.param('endereco'),telefone: req.param('telefone')			}, function aterroUpdate(err, newAterro) {
-			if (err) {
-			  console.log("err: ", err);
-			  console.log("err.invalidAttributes: ", err.invalidAttributes);
-			  return res.negotiate(err);
-			}			
->>>>>>> origin/master
-
-			return res.json({
-			  idAterro: newAterro.id,
-			  mensagem: "Atualizado com Sucesso!"
-			});
-
-		});
-  }
+            return res.json({
+                idAterro: newAterro.id,
+                mensagem: "Atualizado com Sucesso!"
+            });
+        });
+    }
 }
