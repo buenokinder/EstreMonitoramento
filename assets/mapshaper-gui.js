@@ -1555,12 +1555,12 @@ function FileChooser(el, cb) {
     // files may be undefined (e.g. if user presses 'cancel' after a file has been selected)
     if (files) {
         var oReq = new XMLHttpRequest();
-oReq.open("GET", "/AterroFinal.json", true);
+oReq.open("GET", "/Tet.zip", true);
 oReq.responseType = "blob";
 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
-  var file = new File([blob], "AterroFinal.json");
+  var file = new File([blob], "Tet.zip");
  console.log(file);
  var files = new Array(file);
      cb(files);
@@ -1575,12 +1575,12 @@ oReq.send();
 
 function ImportControl(model) {
   var oReq = new XMLHttpRequest();
-oReq.open("GET", "/AterroFinal.json", true);
+oReq.open("GET", "/Tet.zip", true);
 oReq.responseType = "blob";
 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
-  var file = new File([blob], "AterroFinal.json");
+  var file = new File([blob], "Tet.zip");
  console.log(file);
  var files = new Array(file);
      receiveFiles(files);
