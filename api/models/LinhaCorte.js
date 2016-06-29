@@ -14,7 +14,7 @@ module.exports = {
     },
     habilitado: {
       type: 'boolean',
-      defaultsTo: true
+      defaultsTo: false
     }
   }
 };

@@ -24,7 +24,7 @@ module.exports = {
       type: 'string',
       required: true
     },    
-    responsavel: {
+    gerente: {
       model: 'Usuario',
       required: true
     },
