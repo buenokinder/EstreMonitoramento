@@ -1,19 +1,40 @@
 
 
-    <div ng-controller="MapaController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
 
-        <div class="container">
-
-       <upload-button
+<div class="section">
+ <div class="row section">
+  <div class="divider"></div>
+  <div class="row">
+        <div class="card-panel ng-scope">
+         <h4 class="header2">Aterro</h4>
+            <div class="row" >
+                    <div class='row'>
+                        <div class='input-field col s12'> 
+                            <label class='active' for='Atero'>Aterro</label>                     
+                                    <select class='browser-default active' id='Aterro' required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'>
+	                        </select>
+                        </div>
+	                </div>
+             </div>
+        </div>
+      </div>
+    <div class="row">
+      <div ng-controller="MapaController" class="col s12 m12 l6">
+      	<upload-button
           class="btn btn-primary btn-upload"
           url="/file/upload"
-          param="Mapas">
+          param="Mapas"
+          data="uploadData">
 
       </upload-button>
-
-        </div>
-
+      </div>
+      <div class="col s12 m12 l6">
+      	<iframe src="http://localhost:1337/mapa" width="100%" height="250" frameBorder="0"></iframe>
+    	</div>
     </div>
+  </div>
+</div>
+
+    
 
 
-<iframe src="http://localhost:1337/mapa" width="100%" height="250" frameBorder="0"></iframe>
