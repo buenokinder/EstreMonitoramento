@@ -13,11 +13,8 @@ module.exports = {
     if (req.session.me) {
 
       return res.view('dashboard', {
-        me: {
-          id: req.session.me,
-          name: req.session.name
-        
-        }
+        me:  req.session.me
+         
       });
 
     }

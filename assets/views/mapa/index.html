@@ -1,25 +1,49 @@
 
 
 
-<div class="section">
+<div class="section" ng-controller="MapaController"  ng-init="loadAterros()" >
  <div class="row section">
   <div class="divider"></div>
   <div class="row">
         <div class="card-panel ng-scope">
          <h4 class="header2">Aterro</h4>
             <div class="row" >
-                    <div class='row'>
-                        <div class='input-field col s12'> 
+               <div class='row'>
+                        <div class='input-field col s6'> 
                             <label class='active' for='Atero'>Aterro</label>                     
                                     <select class='browser-default active' id='Aterro' required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'>
 	                        </select>
                         </div>
 	                </div>
+              <div class='row' ng-show="(aterro!=null)">
+                <div class="input-field col s6">
+                        
+                        <h5>Aterro<h5>
+                        <h6>{{aterro.nome}}</h6>
+                      </div>
+                    
+                      <div class="input-field col s6">
+                        <h5>Endereco<h5>
+                        <h6>{{aterro.endereco}}</h6>
+                      </div>
+                      </div>
+                   
              </div>
+               <div class='row'  ng-show="(aterro!=null)">
+                <div class="input-field col s6">
+                        
+                        <h5>Telefone<h5>
+                        <h6>{{aterro.telefone}}</h6>
+                      </div>
+                    
+                      </div>
+                   
+             </div>
+
         </div>
       </div>
     <div class="row">
-      <div ng-controller="MapaController" class="col s12 m12 l6">
+      <div class="col s12 m12 l6">
       	<upload-button
           class="btn btn-primary btn-upload"
           url="/file/upload"
