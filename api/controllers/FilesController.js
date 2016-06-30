@@ -7,13 +7,14 @@
 
 module.exports = {
 	upload: function (req, res) {
-  
+    console.log( req.param("uploadData"));
+    console.log(req.uploadData);
     req.file('Mapas').upload({
       dirname: require('path').resolve(sails.config.appPath, '.tmp/public/images')
     },function (err, uploadedFiles) {
    
     var filename = uploadedFiles[0].fd.replace('/Users/carlosbueno/Documents/Git/EstreMonitoramento/.tmp/public/images/','');
-console.log(filename);
+console.log('ID: ' + req.id);
 
 
     Mapa.create({ dataCriacao : new Date(),

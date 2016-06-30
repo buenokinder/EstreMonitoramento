@@ -39,7 +39,7 @@ module.exports.routes = {
         'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
     'POST /file/upload': 'FilesController.upload',
-    'GET /mapa': 'PageController.mapa'
+    'GET /mapas': 'PageController.mapa'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
