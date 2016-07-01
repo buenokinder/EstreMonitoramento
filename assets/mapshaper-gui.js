@@ -1636,14 +1636,14 @@ El('#nav-buttons').show();
       downloadFiles(mapshaper.manifest);
       mapshaper.manifest = null;
     } else {
-      El('#import-options').show();
+ 
     }
   }
 
   function close() {
    
     El('#import-intro').hide(); // only show intro before first import
-    El('#import-buttons').show();
+  
     El('#import-options').hide();
   }
 

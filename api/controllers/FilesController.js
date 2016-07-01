@@ -13,7 +13,7 @@ module.exports = {
       dirname: require('path').resolve(sails.config.appPath, '.tmp/public/images')
     },function (err, uploadedFiles) {
    
-    var filename = uploadedFiles[0].fd.replace('/Users/user1/EstreMonitoramento/.tmp/public/images/','');
+    var filename = uploadedFiles[0].fd.replace('/Users/carlosbueno/Documents/Git/EstreMonitoramento/.tmp/public/images/','');
 
 
 

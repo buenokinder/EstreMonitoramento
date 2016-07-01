@@ -21,6 +21,8 @@
     <!--STYLES END-->
     <link href="/js/dependencies/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
 <link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+  <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = { _csrf: "<%= me %>" };
@@ -494,7 +496,7 @@
     <script src="/js/private/dashboard/Route.js"></script>
 <script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
 <script src="/js/private/dashboard/OperacaoLinhaCorteController.js"></script>
-    
+      <script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
 <script>
   $(document).ready(function() {
 	    $('input.materialize-textarea').characterCounter();
