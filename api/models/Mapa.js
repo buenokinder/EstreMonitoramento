@@ -16,7 +16,7 @@ module.exports = {
       required: false
     },
     aterro: {
-      collection: 'aterro'
+      model: 'Aterro'
     }
   }
 };

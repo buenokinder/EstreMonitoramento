@@ -73,7 +73,7 @@
                   <tr ng-repeat='mapa in mapas' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >
                     <th>{{mapa.dataCriacao}}</th>
                     <th>
-                    <a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>
+                    <a ng-click='selecionarMapa(mapa)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>
                     </th>
                 </tr>
                 </tbody>
@@ -86,7 +86,9 @@
       	<div class="card-panel ng-scope" ng-init="init()">
           <h4 class="header2">Formulário de Aterro</h4>
           <div class="row">
-            <iframe src="http://localhost:1337/mapa" width="100%" height="250" frameBorder="0"></iframe>
+
+            <my-iframe src='getSrc()'>
+            
             </div></div> <input type="hidden" name="_csrf" value="<%= _csrf %>" class="ng-scope">
     	</div>
     </div>

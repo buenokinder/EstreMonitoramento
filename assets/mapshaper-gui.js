@@ -1,3 +1,13 @@
+function queryObj() {
+    var result = {}, keyValuePairs = location.search.slice(1).split("&");
+    keyValuePairs.forEach(function(keyValuePair) {
+        keyValuePair = keyValuePair.split('=');
+        result[decodeURIComponent(keyValuePair[0])] = decodeURIComponent(keyValuePair[1]) || '';
+    });
+    return result;
+}
+var myParam = queryObj();
+console.log(myParam);
 (function(){
 
 var api = mapshaper; // assuming mapshaper is in global scope
@@ -1537,6 +1547,8 @@ function DropControl(cb) {
   }
 }
 
+
+
 // @el DOM element for select button
 // @cb function(<FileList>)
 function FileChooser(el, cb) {
@@ -1554,13 +1566,15 @@ function FileChooser(el, cb) {
     var files = e.target.files;
     // files may be undefined (e.g. if user presses 'cancel' after a file has been selected)
     if (files) {
+    var myParam = queryObj();
+console.log(myParam);
         var oReq = new XMLHttpRequest();
-oReq.open("GET", "/Tet.zip", true);
+oReq.open("GET", "/images/" +  myParam.id, true);
 oReq.responseType = "blob";
 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
-  var file = new File([blob], "Tet.zip");
+  var file = new File([blob],  myParam.id);
  console.log(file);
  var files = new Array(file);
      cb(files);
@@ -1574,13 +1588,16 @@ oReq.send();
 }
 
 function ImportControl(model) {
-  var oReq = new XMLHttpRequest();
-oReq.open("GET", "/Tet.zip", true);
-oReq.responseType = "blob";
+    var myParam = queryObj();
+    console.log(myParam);
+    
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", "/images/" +  myParam.id, true);
+    oReq.responseType = "blob";
 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
-  var file = new File([blob], "Tet.zip");
+  var file = new File([blob], myParam.id);
  console.log(file);
  var files = new Array(file);
      receiveFiles(files);
