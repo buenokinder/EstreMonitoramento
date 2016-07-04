@@ -11,14 +11,13 @@ console.log('Foi');
     };
 
     $scope.buscarMapas = function(id) {   
-
     	$scope.uploadData.id = id;
         return $http.get('/Mapa?where={"aterro": "' + id  + '"}').success(function(data) {
             $scope.mapas = data;
         });
     };
     $scope.selecionarMapa = function(mapa){
-
+        $('.card-reveal').attr('style','transform: translateY(-0%)');
         $scope.mapa = mapa;
     }
     $scope.aterro = {};
