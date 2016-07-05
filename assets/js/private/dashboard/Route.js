@@ -26,8 +26,7 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 
  
   $routeProvider.when("/Mapa", {
-			templateUrl: "/views/mapa/index.html",
-			controller: 'MapaController'
+			templateUrl: "/views/mapa/index.html"
 		}).when("/Mapa/:id", {		
 		  templateUrl: "/views/mapa/index.html"
 		});

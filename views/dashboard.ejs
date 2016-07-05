@@ -31,7 +31,8 @@
 <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
   </head>
 
-<body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="DashboardController">
+<body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="DashboardController" >
+<div ng-controller="MapaController">
     <!-- Start Page Loading -->
    <div id="loader-wrapper">
         <div id="loader"></div>        
@@ -223,56 +224,9 @@
                 <div class="container">
 
 
-         <ng-view></ng-view>
+                  <ng-view></ng-view>
 
-                    <!-- //////////////////////////////////////////////////////////////////////////// -->
-
-                    <!--card widgets start
-                    <div id="card-widgets">
-                        <div class="row">
-
-                            <div class="col s12 m12 l4">
-                                <ul id="task-card" class="collection with-header">
-                                    <li class="collection-header  estre-green-icon">
-                                        <h4 class="task-card-title  estre-green-icon">Minhas tarefas</h4>
-                                        <p class="task-card-date">MAio 26, 2016</p>
-                                    </li>
-                                    <li class="collection-item dismissable">
-                                        <input type="checkbox" id="task1" />
-                                        <label for="task1">Criar sistema da estre. <a href="#" class="secondary-content"><span class="ultra-small">Hoje</span></a>
-                                        </label>
-                                        <span class="task-cat teal">Mobile App</span>
-                                    </li>
-                                    <li class="collection-item dismissable">
-                                        <input type="checkbox" id="task2" />
-                                        <label for="task2">Checar as web apis. <a href="#" class="secondary-content"><span class="ultra-small">Amanha</span></a>
-                                        </label>
-                                        <span class="task-cat purple">Web API</span>
-                                    </li>
-                                    <li class="collection-item dismissable">
-                                        <input type="checkbox" id="task3" checked="checked" />
-                                        <label for="task3">Checar os Mockup do ABC. <a href="#" class="secondary-content"><span class="ultra-small">Segunda</span></a>
-                                        </label>
-                                        <span class="task-cat pink">Mockup</span>
-                                    </li>
-                                    <li class="collection-item dismissable">
-                                        <input type="checkbox" id="task4" checked="checked" disabled="disabled" />
-                                        <label for="task4">Feito !</label>
-                                        <span class="task-cat cyan">Mobile App</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                     
-
-                        </div>
-
-                      
-
-                    </div>
-                    card widgets end-->
-
-                    <!-- //////////////////////////////////////////////////////////////////////////// -->
+                 
 
 
                 </div>
@@ -438,8 +392,28 @@
     </div>
     <!-- END MAIN -->
 
+ <div  id="modal-bottom-sheet">
 
 
+
+        
+                <div id="modal5" class="modal bottom-sheet">
+                  <div class="modal-content">
+                    <h4>Upload de Mapa</h4>
+                    
+                    	<upload-button
+          class="dropify"
+          url="/file/upload"
+          param="Mapas"
+          data="uploadData">
+
+      </upload-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
     <!-- //////////////////////////////////////////////////////////////////////////// -->
 
     <!-- START FOOTER -->
@@ -453,7 +427,6 @@
         </div>
     </footer>
     <!-- END FOOTER -->
-
 
 
 
@@ -499,8 +472,15 @@
       <script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
 <script>
   $(document).ready(function() {
+                 $('.dropify').dropify({
+                messages: {
+                    default: 'Arraste seu Arquivo ZIP contendo os arquivos Shapefile de seu mapa',
+                    
+                }
+            });
 	    $('input.materialize-textarea').characterCounter();
   });
+
 </script>
 
   </body>

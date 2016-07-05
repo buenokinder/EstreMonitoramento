@@ -3,34 +3,48 @@
 
 
 
-<div class="section" ng-controller="MapaController"  ng-init="loadAterros()" >
+<div class="section"   ng-init="loadAterros()" >
  <div class="row section">
   <div class="divider"></div>
-      <div class='row'>
-                        <div class='input-field col s6'> 
-                            <label class='active' for='Atero'>Aterro</label>                     
-                                    <select class='browser-default active' id='Aterro' ng-change="buscarMapas(aterro.id)" required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'>
-	                        </select>
-                        </div>
-	    </div>
-      <div class="col s12 m12 l8">
+
+      <div class="col s12 m12 l12">
                                 <div class="map-card">
                                     <div class="card">
-                                        <div class="card-image waves-effect waves-block waves-light">
-                                                <my-iframe src="getSrc()" width="100%" height="400px">
+                                        <div class="card-image waves-effect waves-block waves-light" >
+                                                <my-iframe src="getSrc()" width="100%" height="400px" >
                                         </div>
                                         <div class="card-content">  
                                           
                                                        
-                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right" ng-show="aterro.nome">
                                                 <i class="mdi-action-subject"></i>
                                             </a>
-                                            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right">
+                                            
+                                            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  ng-click="addNewMapa()"  ng-show="aterro.nome">
                                             <i class="mdi-content-add"></i>
                                             </a>     
-                                            <h4 class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Detalhes do Aterro</a>
-                                            </h4>
                                             
+                                            
+                                             <div class='row'>
+                        <div class='input-field col  s2 m2 l2'> 
+
+                            <a class='dropdown-button waves-effect waves-light btn'  data-activates='dropdown1'>Selecione Aterro</a>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <li ng-repeat="aterro in aterros"><a ng-click="selecionarAterro(aterro)">{{aterro.nome}}</a></li>
+    
+  </ul>
+                            <!--<label class='active' for='Atero'>Aterro</label>                     
+                                    <select class='browser-default active' id='Aterro' ng-change="buscarMapas(aterro.id)" required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'>
+	                        </select>-->
+                        </div>
+
+                        
+                     
+	    </div>
+         <h4 class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Detalhes do Aterro</a>
+                                            </h4>
               <div class='row' ng-show="aterro.nome">
                 <div class="input-field col s6">
                         <h6>Aterro - {{aterro.nome}}</h6>
@@ -47,18 +61,12 @@
                         <h6>Telefone {{aterro.telefone}}</h6>
                       </div>
                          <div class="input-field col s6">
-                     	<upload-button
-          class="dropify"
-          url="/file/upload"
-          param="Mapas"
-          data="uploadData">
-
-      </upload-button>
+                     
       </div>
        </div>
                                         </div>
                                         <div class="card-reveal">
-                                            <span class="card-title grey-text text-darken-4">Company Name LLC <i class="mdi-navigation-close right"></i></span>                   
+                                            <span class="card-title grey-text text-darken-4">Lista de Mapas por Data <i class="mdi-navigation-close right"></i></span>                   
                                             <div class='row' ng-init='init()'>
   
   
@@ -93,8 +101,23 @@
         
             
          <input type="hidden" name="_csrf" value="<%= _csrf %>" class="ng-scope">
-    
+
     </div>
-  
+
+<script>
+  $(document).ready(function() {
+      $('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false, // Does not change width of dropdown to that of the activator
+      hover: true, // Activate on hover
+      gutter: 0, // Spacing from edge
+      belowOrigin: false, // Displays dropdown below the button
+      alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    }
+  );
+  });
+
+</script>
 
 
