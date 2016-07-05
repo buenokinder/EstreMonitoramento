@@ -36,7 +36,7 @@
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >";
                 HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                 HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody><tfoot>";
-                HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td></tr>";
+                HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td></tr>";
                 HtmlFormBody += "</tfoot></table></div></div>";
                 console.log(HtmlFormBody);
@@ -185,7 +185,16 @@
                     $scope.ActualPage = page;
                     $scope.refreshPage();
                 };
+                $scope.voltaUmaPagina = function(page) {
+                    var anterior = page - 1;
+                    $scope.Pagina(anterior);
+                };
 
+                $scope.avancaUmaPagina = function(page) {
+                    var posterior = page + 1;
+
+                    $scope.Pagina(posterior);
+                };
                 $scope.$on('handleBroadcastItem', function() {
                     $scope.data.push(angular.fromJson(sennitCommunicationService.datum.data));
                     
@@ -334,7 +343,7 @@
 
                                 break;                                
                             default:
-                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' ></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label></div></div>";
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' "+$scope.fields[key].uiMask+"></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                                 break;
                          }           
 
