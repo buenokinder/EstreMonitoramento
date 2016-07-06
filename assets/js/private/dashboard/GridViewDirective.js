@@ -34,7 +34,7 @@
                 HtmlFormBody += "<table class='striped'><thead><tr>";
                 HtmlFormBody += "<th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th></tr></thead>";
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >";
-                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                 HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody><tfoot>";
                 HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td></tr>";
@@ -44,7 +44,7 @@
                 $element.replaceWith($compile(HtmlFormBody)($scope));
 
             },
-            controller: function ($scope, $element, $http) {
+            controller: function ($scope, $element, $http, $filter) {
                 $scope.data = ([]);
                 $scope.querydapesquisa = ({});
                 $scope.me = window.SAILS_LOCALS.me;
@@ -112,7 +112,7 @@
 
                        return true;
                 };
-     $scope.verifica = function (valor, nome, type) {
+     $scope.verifica = function (valor, nome, type, filtro) {
 
         if(valor.hasOwnProperty(nome)) {
 
@@ -131,7 +131,10 @@
              var retorno = dia + "/" + mes + "/" + ano;
             return retorno;
          }
-         return valor;
+         if(filtro)
+            return $filter(filtro)(valor);
+         else 
+            return valor;
      }
                 $scope.init = function () {
 

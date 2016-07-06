@@ -9,8 +9,8 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
     });
 
     $routeProvider.when('/LinhaCorte', {
-        templateUrl: '/views/linhaCorte/index.html',
-        controller : 'LinhaCorteController'
+        templateUrl: '/views/linhaCorte/index.html'
+        // controller : 'LinhaCorteController'
     }).when('#/LinhaCorte/:id',{
         templateUrl: '/views/linhaCorte/index.html',
         controller : 'LinhaCorteController'
