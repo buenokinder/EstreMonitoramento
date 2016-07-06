@@ -1,4 +1,3 @@
-
     app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
         return {
             restrict: 'E',
@@ -32,15 +31,15 @@
                 }
                 HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
                 HtmlFormBody += "<table class='striped'><thead><tr>";
-                HtmlFormBody += "<th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th></tr></thead>";
+                HtmlFormBody += "<th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th><th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Editar</th></tr></thead>";
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >";
                 HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(strupdate)'><a ng-click='select(datum)' ><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td></tr></tbody><tfoot>";
+                HtmlFormBody += "</td></tr></tbody><tfoot>";
                 HtmlFormBody += "<tr ng-hide='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='6' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td></tr>";
                 HtmlFormBody += "</tfoot></table></div></div>";
                 console.log(HtmlFormBody);
-
+                // <a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>
                 $element.replaceWith($compile(HtmlFormBody)($scope));
 
             },
@@ -112,8 +111,7 @@
 
                        return true;
                 };
-     $scope.verifica = function (valor, nome, type, filtro) {
-
+     $scope.verifica = function (valor, nome, type, filtro) {        
         if(valor.hasOwnProperty(nome)) {
 
             for ( key in valor){
@@ -131,6 +129,14 @@
              var retorno = dia + "/" + mes + "/" + ano;
             return retorno;
          }
+         if(typeof valor === "boolean"){            
+            if(valor == true) {
+                return "✔";
+            }
+            else {
+                return "✖";
+            }
+        }
          if(filtro)
             return $filter(filtro)(valor);
          else 
@@ -334,20 +340,20 @@
                                 // ng-show='exibir(strupdate)' td de delete
                                 // ng-show='deleteDisabled()' <A> tag
                                 break;
+                            // case 'checkbox':
+                            //     HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
+
+                            //     break;                                
                             case 'combobox':
                                
-                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
+                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'> {{"+$scope.fields[key].model+"}}";
                                     HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
                                     HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
                                     HtmlFormBody += "</div></div>";
                                 break;
-                            case 'checkbox':
-                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
-
-                                break;                                
-                            default:
-                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' "+$scope.fields[key].uiMask+"></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
-                                break;
+                            // default:
+                            //     HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' "+$scope.fields[key].uiMask+"></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                            //     break;
                          }           
 
                 } 
@@ -410,17 +416,21 @@
                                                                    
                                 break;                            
                             case 'combobox':
+                            console.log('entrei entrei entrei')
                                 $scope[$scope.fields[key].model] = ([]);
                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
-                                    $scope[$scope.fields[key].model]  = results.data;                   
-                                });                                
+                                    $scope[$scope.fields[key].model]  = results.data;  
+                                    $scope.testestestse = results.data;                 
+                                    console.log("combo, combo", results.data);
+                                });
+
                                 break;
                             default:
                         
                             break;
-                        }           
+                        }
                     } 
-                }();
+                }
                 
                 $scope.adicionaAlertas = function(coeficiente, model, input) {
                     var date = new Date();

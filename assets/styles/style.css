@@ -833,7 +833,9 @@ h5.breadcrumbs-header {
 .breadcrumbs > li {
   display: inline-block;
 }
-
+.breadcrumbs > a {
+  font-size: 16px;
+}
 .breadcrumbs > li + li:before {
   padding: 0 5px;
   color: #ccc;
@@ -856,8 +858,8 @@ h5.breadcrumbs-header {
 }
 
 .breadcrumb:before {
-  content: "\e7c3";
-  font-family: "Material-Design-Icons";
+  content: "›";
+  font-size: 16px;
 }
 
 /*----------------------------------------
