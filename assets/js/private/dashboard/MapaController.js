@@ -1,8 +1,12 @@
+app.filter("asDate", function () {
+    return function (input) {
+      var d = new Date(input);
+      d.setDate(d.getDate() + 1);
+      return d;        
+    }
+});
 
 app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http, $sce){
-
-
-
     $scope.aterros = [];
     $scope.mapas = [];
     $scope.loadAterros = function() {
@@ -65,10 +69,12 @@ $scope.selecionarAterro = function(aterro) {
         Materialize.toast('Upload de Mapa efetuado com sucesso!', 4000)
         $('#modal5').closeModal();
          return $http.get('/Mapa?where={"aterro": "' + $scope.aterro.id  + '"}&sort=dataCriacao DESC&limit=1').success(function(data) {
-            if(data.length > 0)
-                $scope.mapa = data[0];
-                else
-                $scope.mapa = null;
+            if(data.length > 0) {
+              $scope.mapa = data[0];
+              $scope.mapas.push(data[0]);
+            }
+            else
+            $scope.mapa = null;
 
         });
     }
