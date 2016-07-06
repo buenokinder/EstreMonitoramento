@@ -41,11 +41,11 @@ $scope.selecionarAterro = function(aterro) {
         console.log(aterro);
          $scope.aterro =  aterro;
           $scope.buscarMapas(aterro.id);
-var drEvent = $('.dropify').dropify();
 
-drEvent.on('dropify.afterClear', function(event, element){
-    alert('File deleted');
-});
+
+
+
+
           $scope.uploadData = aterro;
         return $http.get('/Mapa?where={"aterro": "' + aterro.id  + '"}&sort=dataCriacao DESC&limit=1').success(function(data) {
             if(data.length > 0)
@@ -60,6 +60,22 @@ drEvent.on('dropify.afterClear', function(event, element){
         $('.card-reveal').attr('style','transform: translateY(-0%)');
         $scope.mapa = mapa;
     }
+
+    $scope.onComplete = function(response){
+        Materialize.toast('Upload de Mapa efetuado com sucesso!', 4000)
+        $('#modal5').closeModal();
+         return $http.get('/Mapa?where={"aterro": "' + $scope.aterro.id  + '"}&sort=dataCriacao DESC&limit=1').success(function(data) {
+            if(data.length > 0)
+                $scope.mapa = data[0];
+                else
+                $scope.mapa = null;
+
+        });
+    }
+
+ 
+
+
     $scope.aterro = {};
     $scope.uploadData = {
         id:  'teasddda'

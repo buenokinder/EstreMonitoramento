@@ -3,7 +3,7 @@ function queryObj() {
     keyValuePairs.forEach(function(keyValuePair) {
         keyValuePair = keyValuePair.split('=');
         result[decodeURIComponent(keyValuePair[0])] = decodeURIComponent(keyValuePair[1]) || '';
-    });
+   });
     return result;
 }
 var myParam = queryObj();
@@ -3196,7 +3196,7 @@ function Popup() {
     if (rows > 0) {
       tableEl.appendTo(el);
     } else {
-      el.html('<div class="note">This layer is missing attribute data.</div>');
+      el.html('<div class="note"></div>');
     }
   }
 

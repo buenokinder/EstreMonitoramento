@@ -76,14 +76,14 @@
                 <table class='striped'><thead>
                   <tr>
                   <th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' />Data</th>
-                  <th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th  ng-show='exibir(strupdate)'>Ações</th>
+                  <th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value | date: 'dd/MM/yyyy' }}</th><th  ng-show='exibir(strupdate)'>Ações</th>
                   </tr>
                 </thead>
           
           
                 <tbody>
                   <tr ng-repeat='mapa in mapas' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >
-                    <th>{{mapa.dataCriacao}}</th>
+                    <th>{{mapa.dataCriacao  | date: 'dd/MM/yyyy' }}</th>
                     <th>
                     <a ng-click='selecionarMapa(mapa)' ><i class='mdi-action-search' aria-hidden='true'></i></a>
                     </th>
