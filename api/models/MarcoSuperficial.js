@@ -6,15 +6,15 @@ module.exports = {
       type: 'string',
       required: true
     },
-    coordenadasNorte: {
+    norte: {
       type: 'float',
       required: true
     },
-    coordenadasEste: {
+    este: {
       type: 'float',
       required: true
     },
-    coordenadasCota: {
+    cota: {
       type: 'float',
       required: true
     },
