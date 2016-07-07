@@ -1,3 +1,10 @@
+app.filter("asDate", function () {
+    return function (input) {
+      var d = new Date(input);
+      d.setDate(d.getDate() + 1);
+      return d;        
+    }
+});
 
 app.controller('DashboardController', [ '$scope', '$location', '$rootScope', function($scope, $location, $rootScope){  
   $scope.pai = undefined;

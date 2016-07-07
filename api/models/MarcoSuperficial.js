@@ -19,8 +19,9 @@ module.exports = {
       required: true
     },
     dataInstalacao: {
-      type: 'datetime',
-      required: true
+      type: 'date',
+      required: true,
+      defaultsTo: new Date(0)
     },
     habilitado: {
       type: 'boolean',
