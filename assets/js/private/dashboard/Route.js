@@ -31,6 +31,14 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		  templateUrl: "/views/mapa/index.html"
 		});
 
+		$routeProvider.when("/MedicaoMarcoSuperficial", {
+			templateUrl: "/views/MedicaoMarcoSuperficial/index.html",
+			 controller : 'MedicaoMarcoSuperficialController'
+		});
+
+
+		
+
  
   	$routeProvider.when("/PluviometriaVazao", {
 			templateUrl: "/views/pluviometriaVazao/index.html",

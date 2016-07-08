@@ -1,0 +1,10 @@
+medição
+
+<div ng-controller="MedicaoMarcoSuperficialController" class="container">
+  <h1>Selecione o arquivo</h1>
+    <input type="file" on-read-file="showContent($fileContent)" />
+    <div ng-if="content">
+        <h2>Marcos contido  no arquivo:</h2>
+        <pre>{{ content }}</pre>
+    </div>
+</div>
