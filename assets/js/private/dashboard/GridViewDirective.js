@@ -248,7 +248,7 @@
             }
 
         }
-    }]).directive('formView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService) {
+    }]).directive('formView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService,$http) {
         return {
             restrict: 'E',
             scope: {
@@ -261,7 +261,7 @@
                 label: '@'
 
 
-            }, link: function ($scope, $element, attrs) {
+            }, link: function ($scope, $element, attrs, $http) {
 
 
                        
@@ -347,10 +347,10 @@
 
                                 break;                                
                             case 'combobox':
-                               
+                                    $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                                     HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
-                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in modelComboBox track by x." + $scope.fields[key].fieldid + "'></select>";
+                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
                                     HtmlFormBody += "</div></div>";
                                 break;
                             default:
@@ -378,21 +378,17 @@
                 $scope.combos = ([]);
                 $scope.modelComboBox = ([]);
                 $scope.sennitForm = {
-                  loading: false
-                   }
-
+                    loading: false
+                }
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
 
                 $scope.verifica = function (valor, nome, type) {
-
                     if(valor.hasOwnProperty(nome)) {
-
                         for ( key in valor){
-
-                         if(key == nome)
-                            return valor[key];
+                            if(key == nome)
+                                return valor[key];
                         }
                     }
                     if(nome == "date"){
@@ -405,10 +401,15 @@
                     }
                     return valor;
                 }
+                
+                $scope.getCombo = function(field) {                    
+                    $http.get("/"+ field.api).then(function (results) {                                
+                        $scope[field.model]  = results.data;                          
+                    });
+                };
 
                 $scope.init = function(){
                     $('input.materialize-textarea').characterCounter();
-
                     for (var key in $scope.fields) {
                        // $scope.data[$scope.fields[key].name] ="";
 
@@ -417,16 +418,14 @@
                                 $scope.data[$scope.fields[key].model] = ([]);
                                                                    
                                 break;                            
-                            case 'combobox':
-                            console.log('entrei entrei entrei')
-                                $scope[$scope.fields[key].model] = ([]);
+                            /*case 'combobox':                                
+                                
                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
                                     $scope[$scope.fields[key].model]  = results.data;  
-                                    $scope.modelComboBox = results.data;
                                     console.log("combo, combo", $scope[$scope.fields[key].model]);
                                 });
 
-                                break;
+                                break;*/
                             default:
                         
                             break;
