@@ -8,12 +8,12 @@
 module.exports = {
 	upload: function (req, res) {
     var parameters = req.allParams();
-   
+   console.log(sails.config.appPath);
     req.file('Mapas').upload({
       dirname: require('path').resolve(sails.config.appPath, '.tmp/public/images')
     },function (err, uploadedFiles) {
    
-    var filename = uploadedFiles[0].fd.replace('/Users/carlosbueno/Documents/Git/EstreMonitoramento/.tmp/public/images/','');
+    var filename = uploadedFiles[0].fd.replace('/Users/user1/EstreMonitoramento/.tmp/public/images/','');
 
 
 
