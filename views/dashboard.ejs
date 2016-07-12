@@ -175,9 +175,9 @@
 
                 <!-- Chartsdropdown -->
                 <ul id="Chartsdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a href="#/" class="white estre-green-icon">Relatório 1</a></li>
-                    <li><a href="#/" class="white estre-green-icon">Relatorio 2</a></li>
-                    <li><a href="#/" class="white estre-green-icon">Relatorio 3</a></li>
+                    <li><a ng-click="goto('/Template')" class="white estre-green-icon">Template</a></li>
+                    <li><a ng-click="goto('/')" class="white estre-green-icon">Relatórios</a></li>
+                    <li><a ng-click="goto('/')" class="white estre-green-icon">Parametrização</a></li>
            
                 </ul>
             <!-- HORIZONTL NAV END-->
@@ -448,7 +448,12 @@
         <script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>   
     <script type="text/javascript" src="/js/plugins.js"></script>
     <script src="/js/dependencies/custom-script.js"></script>
-  
+    <link rel='stylesheet' href='/js/dependencies/font-awesome/css/font-awesome.css'>
+
+    <link rel='stylesheet' href='/js/dependencies/textangular/dist/textAngular.css'>
+    <script src='/js/dependencies/textangular/dist/textAngular-rangy.min.js'></script>
+    <script src='/js/dependencies/textangular/dist/textAngular-sanitize.min.js'></script>
+    <script src='/js/dependencies/textangular/dist/textAngular.min.js'></script>
     <script src="/js/dependencies/angular-animate.min.js"></script>
     <script src="/js/dependencies/angular-aria.min.js"></script>
     <script src="/js/dependencies/angular-cookies.min.js"></script>
@@ -467,14 +472,15 @@
     <script src="/js/private/dashboard/GridViewDirective.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
         <script src="/js/private/dashboard/MapaController.js"></script>  
-    <script src="/js/private/dashboard/LinhaCorteController.js"></script>    
+    <script src="/js/private/dashboard/LinhaCorteController.js"></script>  
+    <script src="/js/private/dashboard/TemplateUpdateController.js"></script>  
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
 <script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
 <script src="/js/private/dashboard/OperacaoLinhaCorteController.js"></script>
 <script src="/js/private/dashboard/OperacaoLinhaCorteController.js"></script>
 <script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
-
+<script src="/js/private/dashboard/TemplateUpdateController.js"></script>
       <script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
 <script>
   $(document).ready(function() {

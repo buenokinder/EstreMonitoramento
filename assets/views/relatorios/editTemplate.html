@@ -1,0 +1,41 @@
+<div class='card-panel' ng-init='init()' >
+<h4 class='header2'>Formulário de Template</h4>
+<div class='row'>
+	<form class='col s12'  ng-submit='save()' id='sign-up-form'>
+		<div class='row'>
+			<div class='input-field col s12'>
+				<input type='text' ng-model="data.nome"></input>
+				<label  ng-class='inputClass'>Nome</label>
+			</div>
+			<div class='input-field col s12'>
+				<input type='text' ng-model="data.data" ui-date-mask></input>
+				<label  ng-class='inputClass'>Data</label>
+			</div>			
+			<div class='input-field col s12'>
+				<input type='text' ng-model="data.descricao"></input>
+				<label  ng-class='inputClass'>Descrição</label>
+			</div>			
+		</div>
+		<div class='row'>
+			<div class='collection-item dismissable'>
+				<div class='input-field col s12'>
+					<label >Corpo</label><br><br>
+					<text-angular  ng-model='data.corpo'></text-angular>
+				</div>
+			</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<div class='row'>
+			<div class='input-field col s12'>
+				<button  type='submit' ng-click="save()" class='btn cyan waves-effect waves-light right' >
+				<span ng-show='!sennitForm.loading'>Submeter</span>
+				<span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' >
+					
+				</span>
+				<span ng-show='sennitForm.loading'>Aguarde...</span>
+				</button>
+			</div>
+		</div>
+		<input type='hidden' name='_csrf' value='<%= _csrf %>' />
+	</form>
+</div>

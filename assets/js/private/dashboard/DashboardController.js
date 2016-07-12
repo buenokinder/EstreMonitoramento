@@ -48,6 +48,10 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pathname = "Linha de Corte";
         $scope.pai = "Dados Mestre";
         break;
+      case '/Template' :
+        $scope.pathname = "Template";
+        $scope.pai = "Relatórios";
+        break;        
       case '/MarcoSuperficial' :
         $scope.pathname = "Marco Superficial";
         $scope.pai = "Dados Mestre";

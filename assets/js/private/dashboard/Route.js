@@ -16,7 +16,14 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
         controller : 'LinhaCorteController'
     });
 
-    
+    $routeProvider.when("/Template", {
+			templateUrl: "/views/relatorios/template.html"
+		}).when("/Template/new", {		
+		  templateUrl: "/views/relatorios/newTemplate.html"
+		}).when("/Template/:id", {		
+		  templateUrl: "/views/relatorios/editTemplate.html",
+		  controller: "TemplateUpdateController"
+		});
  
   $routeProvider.when("/Alerta", {
 			templateUrl: "/views/alerta/index.html"
@@ -35,10 +42,6 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 			templateUrl: "/views/MedicaoMarcoSuperficial/index.html",
 			 controller : 'MedicaoMarcoSuperficialController'
 		});
-
-
-		
-
  
   	$routeProvider.when("/PluviometriaVazao", {
 			templateUrl: "/views/pluviometriaVazao/index.html",

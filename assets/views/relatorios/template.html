@@ -1,0 +1,32 @@
+<style type="text/css">
+/* Editor styling */
+.ta-toolbar {    
+    padding: 10px 10px 5px;
+    background-color: #eee;
+    margin-left: 0px; /* Override bootstrap */
+    border: 1px solid #bebebe;
+}
+
+.ta-editor, .white-box {
+    padding: 10px;
+    padding-bottom: 0;
+    background-color: #FFF;
+    border: 1px solid #bebebe;
+}
+
+textarea.ta-bind {
+  width: 100%;
+}
+
+</style>
+
+<div class="section">
+  <div class="row section">
+  <div class="divider"></div>
+    <div class="row">
+      <div class="col s12 m12">
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'data' , 'value': 'Data', 'uiFilter': 'date'}, {'name': 'descricao' , 'value': 'Descrição'}  ]" listaname="Template"  label="Lista de Template"  autopage="true" adicionar="" add="false"  update='true' strupdate="false" strdelete="false" view="Template" pagesize="5"></grid-view>
+      </div>
+    </div>
+  </div>
+</div>
