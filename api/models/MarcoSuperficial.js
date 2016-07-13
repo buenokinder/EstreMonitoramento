@@ -4,7 +4,8 @@ module.exports = {
   attributes: {
     nome: {
       type: 'string',
-      required: true
+      required: true,
+       unique: true
     },
     norte: {
       type: 'float',

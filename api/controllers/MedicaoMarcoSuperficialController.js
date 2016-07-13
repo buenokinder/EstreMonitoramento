@@ -12,7 +12,7 @@ module.exports = {
     var parameters = req.allParams();
  
     MarcoSuperficial.findOne({
-        nome: req.param('marco')
+        nome: parameters.nome
     }, function foundUser(err, marco) {
       console.log(marco);
       console.log('indo');
@@ -20,13 +20,7 @@ module.exports = {
             return res.negotiate(err);
         }
         if (!marco) {
-          console.log({
-              nome: parameters.nome,
-              norte: parameters.norte,
-              este:  parameters.este,
-              cota:  parameters.cota,
-              aterro:  parameters.aterro
-            });
+         
              MarcoSuperficial.create({
               nome: parameters.nome,
               norte: parameters.norte,
@@ -34,12 +28,31 @@ module.exports = {
               cota:  parameters.cota,
               aterro:  parameters.aterro
             }, function userCreated(err, marcoSuperficial) {
-              console.log(err);
+               if (err) {
+            return res.negotiate(err);
+        }
+        if (!marcoSuperficial) {
+            
+        }
              
             });
             return res.notFound('Could not find Finn, sorry.');
         }else{
- return res.notFound('Could not find Finn, sorry.');
+               MedicaoMarcoSuperficial.create({
+                    nome: parameters.nome,
+                    norte: parameters.norte,
+                    este:  parameters.este,
+                    cota:  parameters.cota,
+                    aterro:  parameters.aterro
+                }, function userCreated(err, marcoSuperficial) {
+               if (err) {
+            return res.negotiate(err);
+        }
+        if (!marcoSuperficial) {
+        }
+             
+            });
+           
 
         }
 
