@@ -14,8 +14,7 @@ module.exports = {
     MarcoSuperficial.findOne({
         nome: parameters.nome
     }, function foundUser(err, marco) {
-      console.log(marco);
-      console.log('indo');
+  
         if (err) {
             return res.negotiate(err);
         }
@@ -38,17 +37,18 @@ module.exports = {
             });
             return res.notFound('Could not find Finn, sorry.');
         }else{
+          
                MedicaoMarcoSuperficial.create({
-                    nome: parameters.nome,
                     norte: parameters.norte,
                     este:  parameters.este,
                     cota:  parameters.cota,
-                    aterro:  parameters.aterro
-                }, function userCreated(err, marcoSuperficial) {
+                    marcoSuperficial:  marco.id
+                }, function userCreated(err, medicao) {
                if (err) {
-            return res.negotiate(err);
+           console.log('erro');
         }
-        if (!marcoSuperficial) {
+        if (!medicao) {
+            console.log('foi');
         }
              
             });
