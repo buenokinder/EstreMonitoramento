@@ -11,7 +11,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http',   functi
             var colunas = linha.split(';');
 
 
-            $http.post('/MedicaoMarcoSuperficial', { 'marco': colunas[0] , 'norte': colunas[1], 'este': colunas[2] , 'cota': colunas[3] });
+            $http.post('/MedicaoMarcoSuperficial', { 'nome': colunas[0] , 'norte': colunas[1], 'este': colunas[2] , 'cota': colunas[3], aterro: '577fa8ef71a649a105219ef9' }).success(function(data, status){
+        console.log(data);
+    
+    })
+    .error(function(data, status){
+        console.log("Fail... :-(");
+    });;
             
         }
         $scope.content = $fileContent;

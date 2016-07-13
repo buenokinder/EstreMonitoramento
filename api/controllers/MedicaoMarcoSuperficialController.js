@@ -10,76 +10,36 @@ module.exports = {
 {
     
     var parameters = req.allParams();
-    
+ 
     MarcoSuperficial.findOne({
         nome: req.param('marco')
     }, function foundUser(err, marco) {
+      console.log(marco);
+      console.log('indo');
         if (err) {
             return res.negotiate(err);
         }
         if (!marco) {
-
-    nome: {
-      type: 'string',
-      required: true
-    },
-    norte: {
-      type: 'float',
-      required: true
-    },
-    este: {
-      type: 'float',
-      required: true
-    },
-    cota: {
-      type: 'float',
-      required: true
-    },
-    dataInstalacao: {
-      type: 'date',
-      required: true,
-      defaultsTo: new Date(0)
-    },
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    }
-
+          console.log({
+              nome: parameters.nome,
+              norte: parameters.norte,
+              este:  parameters.este,
+              cota:  parameters.cota,
+              aterro:  parameters.aterro
+            });
              MarcoSuperficial.create({
-              nome: req.param('name'),
-              norte: req.param('email'),
-              este:  req.param('email'),
-              cota:  req.param('email'),
-              dataInstalacao: new Date,
-              habilitado: true
-            }, function userCreated(err, newUser) {
-              if (err) {
-
-                console.log("err: ", err);
-                console.log("err.invalidAttributes: ", err.invalidAttributes)
-
-            
-                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-                  && err.invalidAttributes.email[0].rule === 'unique') {
-                  return res.emailAddressInUse();
-                }
-
-               
-                return res.negotiate(err);
-              }
-
+              nome: parameters.nome,
+              norte: parameters.norte,
+              este:  parameters.este,
+              cota:  parameters.cota,
+              aterro:  parameters.aterro
+            }, function userCreated(err, marcoSuperficial) {
+              console.log(err);
              
-              req.session.me = newUser.id;
-
-             
-              return res.json({
-                id: newUser.id
-              });
             });
             return res.notFound('Could not find Finn, sorry.');
         }else{
-
+ return res.notFound('Could not find Finn, sorry.');
 
         }
 

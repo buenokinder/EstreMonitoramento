@@ -27,6 +27,9 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: false
+    },
+    aterro: {
+      model: 'Aterro'
     }
 
   }
