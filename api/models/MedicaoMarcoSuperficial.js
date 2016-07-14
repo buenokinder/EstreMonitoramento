@@ -14,15 +14,15 @@ module.exports = {
       defaultsTo: new Date(0)
     },
     norte: {
-      type: 'float',
+      type: 'string',
       required: true
     },
     este: {
-      type: 'float',
+      type: 'string',
       required: true
     },   
     cota: {
-      type: 'float',
+      type: 'string',
       required: true
     }, 
     marcoSuperficial: {

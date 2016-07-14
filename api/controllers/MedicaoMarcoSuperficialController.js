@@ -37,7 +37,12 @@ module.exports = {
             });
             return res.notFound('Could not find Finn, sorry.');
         }else{
-          
+          console.log({
+                    norte: parameters.norte,
+                    este:  parameters.este,
+                    cota:  parameters.cota,
+                    marcoSuperficial:  marco.id
+                });
                MedicaoMarcoSuperficial.create({
                     norte: parameters.norte,
                     este:  parameters.este,
@@ -45,11 +50,9 @@ module.exports = {
                     marcoSuperficial:  marco.id
                 }, function userCreated(err, medicao) {
                if (err) {
-           console.log('erro');
+           return res.negotiate(err);
         }
-        if (!medicao) {
-            console.log('foi');
-        }
+       
              
             });
            
@@ -57,20 +60,8 @@ module.exports = {
         }
 
     });
-    // var gerente = req.param('gerente');		
-    // var id = req.param('id');
-    // Aterro.update(id, { gerente: gerente.id,nome: req.param('nome'),cidade: req.param('cidade'),endereco: req.param('endereco'),telefone: req.param('telefone')}, function aterroUpdate(err, newAterro) {
-    //         if (err) {
-    //             console.log("err: ", err);
-    //             console.log("err.invalidAttributes: ", err.invalidAttributes);
-    //             return res.negotiate(err);
-    //         }			
-
-    //         return res.json({
-    //             idAterro: newAterro.id,
-    //             mensagem: "Atualizado com Sucesso!"
-    //         });
-    //     });
+  
+     res.json('Ok'); 
     }
 };
 
