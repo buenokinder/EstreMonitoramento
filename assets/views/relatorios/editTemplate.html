@@ -1,3 +1,84 @@
+<style type="text/css">
+	/* Editor styling */
+	.ta-toolbar {    
+	    padding: 10px 10px 5px !important;
+	    background-color: #eee;
+	    margin-left: 0px; /* Override bootstrap */
+	    border: 1px solid #bebebe;
+	}
+
+	.ta-editor, .white-box {
+	    padding: 10px;
+	    padding-bottom: 0;
+	    background-color: #FFF;
+	    border: 1px solid #bebebe;
+	}
+
+	textarea.ta-bind {
+	  width: 100%;
+	}
+    .ta-editor {
+        min-height: 300px;
+        height: auto;
+        overflow: auto;
+        font-family: inherit;
+        font-size: 100%;
+    }
+	.btn {
+	  display: inline-block;
+	  padding: 6px 12px;
+	  margin-bottom: 0;
+	  font-size: 14px;
+	  font-weight: normal;
+	  line-height: 1.42857143;
+	  text-align: center;
+	  white-space: nowrap;
+	  vertical-align: middle;
+	  -ms-touch-action: manipulation;
+	      touch-action: manipulation;
+	  cursor: pointer;
+	  -webkit-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+	          user-select: none;
+	  background-image: none;
+	  border: 1px solid transparent;
+	  border-radius: 4px;
+	}
+	.ta-toolbar .btn-group {
+	margin-bottom: 5px;
+}
+.btn-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+.btn-group>.btn:hover, .btn-group-vertical>.btn:hover, .btn-group>.btn:focus, .btn-group-vertical>.btn:focus, .btn-group>.btn:active, .btn-group-vertical>.btn:active, .btn-group>.btn.active, .btn-group-vertical>.btn.active {
+    z-index: 2;
+}
+.btn-group>.btn, .btn-group-vertical>.btn {
+    position: relative;
+    float: left;
+}
+.btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    background-image: none;
+}
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    color: #333;
+    background-color: #ebebeb;
+    border-color: #adadad;
+}
+.btn:active, .btn.active {
+    outline: 0;
+    background-image: none;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+</style>
+
+
 <div class='card-panel' ng-init='init()' >
 <h4 class='header2'>Formulário de Template</h4>
 <div class='row'>

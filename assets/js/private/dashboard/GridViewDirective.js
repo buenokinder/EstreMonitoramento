@@ -355,7 +355,7 @@
 
                                 break;
                             case 'textAngular':
-                                HtmlFormBody += "<div class='row'>{{"+$scope.fields[key].name+"}}<div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></text-angular></div></div></div>";
+                                HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
                                 break;                                                        
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
@@ -476,6 +476,7 @@
                             $scope[$scope.fields[key].name] = "";          
                     }                    
                     $scope.data = newData;
+                    $scope.inputClass = "disabled";
                 };
 
                 $scope.$on('handleBroadcast', function() {
