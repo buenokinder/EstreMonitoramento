@@ -8,25 +8,23 @@ module.exports = {
        unique: true
     },
     norte: {
-      type: 'float',
+      type: 'string',
       required: true
     },
     este: {
-      type: 'float',
+      type: 'string',
       required: true
     },
     cota: {
-      type: 'float',
+      type: 'string',
       required: true
     },
     dataInstalacao: {
       type: 'date',
-      required: true,
       defaultsTo: new Date(0)
     },
     habilitado: {
       type: 'boolean',
-      required: true,
       defaultsTo: false
     },
     aterro: {

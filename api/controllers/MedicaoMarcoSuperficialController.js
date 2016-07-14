@@ -10,16 +10,22 @@ module.exports = {
 {
     
     var parameters = req.allParams();
- 
+ console.log(parameters);
     MarcoSuperficial.findOne({
         nome: parameters.nome
     }, function foundUser(err, marco) {
-  
+        console.log(marco);
         if (err) {
             return res.negotiate(err);
         }
         if (!marco) {
-         
+         console.log({
+              nome: parameters.nome,
+              norte: parameters.norte,
+              este:  parameters.este,
+              cota:  parameters.cota,
+              aterro:  parameters.aterro
+            });
              MarcoSuperficial.create({
               nome: parameters.nome,
               norte: parameters.norte,
@@ -35,7 +41,7 @@ module.exports = {
         }
              
             });
-            return res.notFound('Could not find Finn, sorry.');
+         
         }else{
           console.log({
                     norte: parameters.norte,
