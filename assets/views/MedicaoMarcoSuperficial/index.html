@@ -1,10 +1,28 @@
-medição
-
 <div ng-controller="MedicaoMarcoSuperficialController" class="container">
   <h1>Selecione o arquivo</h1>
     <input type="file" on-read-file="showContent($fileContent)" />
     <div ng-if="content">
-        <h2>Marcos contido  no arquivo:</h2>
-        <pre>{{ content }}</pre>
+        <h2>Marcos processado no arquivo:</h2>
+        
+
+        <table class='striped'><thead>
+                  <tr>
+                  <th class='text-center ng-binding ng-scope'>Marco Superficial</th>
+                  <th class='text-center ng-binding ng-scope' >Norte</th>
+                    <th class='text-center ng-binding ng-scope' >Leste</th>
+                      <th class='text-center ng-binding ng-scope' >Cota</th>
+                  </tr>
+                </thead>
+          
+          
+                <tbody>
+                  <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
+                    <th class="ng-scope">{{medicao.nome}}</th>
+                   <th class="ng-scope">{{medicao.norte}}</th>
+                   <th class="ng-scope">{{medicao.este}}</th>
+                   <th class="ng-scope">{{medicao.cota}}</th>
+                </tr>
+                </tbody>
+                </table>
     </div>
 </div>
