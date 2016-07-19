@@ -13,26 +13,17 @@ module.exports = {
       required: true,
       defaultsTo: new Date(0)
     },
-    nomeTopografo: {
+    norte: {
       type: 'string',
       required: true
     },
-    nomeAuxiliar: {
+    este: {
       type: 'string',
       required: true
     },   
-    temperatura: {
+    cota: {
       type: 'string',
-      required: true
-    }, 
-    medicaoMarcoSuperficialDetalhes: {
-      model: 'medicaoMarcoSuperficialDetalhes',
-      required: true
-    }, 
-    marcoSuperficial: {
-      model: 'marcoSuperficial',
       required: true
     }
   }
 };
-

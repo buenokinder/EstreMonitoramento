@@ -1,3 +1,31 @@
+<div class="section">
+ <div class="row section">
+  <div class="divider"></div>
+
+
+    <div class="row">
+      <div class="col s12 m12 l6">
+        
+
+      	<grid-view fields="[{'name': 'data' , 'value': 'Data/Hora'},{'name': 'topografo' , 'value': 'Topógrafo' } ]" listaname="MedicoesMarcoSuperficial" autopage="true" adicionar="" add="false" label="Lista de Medições"  view="MedicoesMarcoSuperficial" pagesize="5">
+       </grid-view>
+      </div>
+
+      <div class="col s12 m12 l6">
+      
+    	</div>
+    </div>
+  </div>
+</div>
+ <div id="modalView" class="modal modal-fixed-footer">
+              <div class="modal-content">
+                	<form-view fields="[ {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone', 'uiMask': 'ui-br-phone-number'}, {'name': 'gerente' , 'value': 'Gerente do Aterro', 'type': 'combobox', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' },{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="false"></form-view>
+              </div>
+              <div class="modal-footer">
+                <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Disagree</a>
+                <a href="#" class="waves-effect waves-green btn-flat modal-action modal-close">Agree</a>
+              </div>
+            </div>
 <div ng-controller="MedicaoMarcoSuperficialController" class="container">
   <h1>Selecione o arquivo</h1>
     <input type="file" on-read-file="showContent($fileContent)" />
@@ -25,4 +53,26 @@
                 </tbody>
                 </table>
     </div>
+    <div>
+<table class='striped'><thead>
+                  <tr>
+                  <th class='text-center ng-binding ng-scope'>Data/Hora</th>
+                  <th class='text-center ng-binding ng-scope' >Topógrafo</th>
+                    <th class='text-center ng-binding ng-scope' >Auxiliar</th>
+                      <th class='text-center ng-binding ng-scope' >Temperatura</th>
+                     
+                  </tr>
+                </thead>
+          
+          
+                <tbody>
+                  <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
+                    <th class="ng-scope">{{medicao.data}}</th>
+                   <th class="ng-scope">{{medicao.topografo}}</th>
+                   <th class="ng-scope">{{medicao.este}}</th>
+                   <th class="ng-scope">{{medicao.cota}}</th>
+                </tr>
+                </tbody>
+                </table>
+      </div>
 </div>
