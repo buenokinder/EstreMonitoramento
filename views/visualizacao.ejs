@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="VisualizacaoApp">
+	<head>
+		<title>Visualização</title>
+	</head>
+	<style type="text/css">
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}		
+	</style>
+	<body ng-controller="ViewTemplateController">
+		<div ng-init='init()' >
+			<div>
+				<p ng-bind-html="data.corpo"></p>						
+			</div>
+		</div>
+		<script src="/js/dependencies/angular.min.js"></script>		
+		<script src="/js/dependencies/angular-sanitize.min.js"></script>
+    <script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
+		<script src="/js/private/dashboard/ViewRelatorioController.js"></script>
+	</body>
+</html>

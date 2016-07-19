@@ -36,10 +36,11 @@ module.exports.routes = {
     'POST /signup': 'UsuarioController.signup',
     'PUT /login': 'UsuarioController.login',
     'GET /logout': 'UsuarioController.logout',
-        'GET /teste': 'AterroController.teste',
+    'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
+    'GET /visualizacao': 'PageController.visualizacao',
     'POST /MedicaoMarcoSuperficial': 'MedicaoMarcoSuperficialController.medicao'
   /***************************************************************************
   *                                                                          *
