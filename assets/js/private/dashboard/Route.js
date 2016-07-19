@@ -16,15 +16,22 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
         controller : 'LinhaCorteController'
     });
 
-    $routeProvider.when("/Template", {
-			templateUrl: "/views/relatorios/template.html"
-		}).when("/Template/new", {		
-		  templateUrl: "/views/relatorios/newTemplate.html"
-		}).when("/Template/:id", {		
-		  templateUrl: "/views/relatorios/editTemplate.html",
-		  controller: "TemplateUpdateController"
-		});
- 
+  $routeProvider.when("/Template", {
+		templateUrl: "/views/relatorios/template.html"
+	}).when("/Template/new", {		
+	  templateUrl: "/views/relatorios/newTemplate.html"
+	}).when("/Template/:id", {		
+	  templateUrl: "/views/relatorios/editTemplate.html",
+	  controller: "TemplateUpdateController"
+	});
+  
+  $routeProvider.when("/Relatorio", {
+		templateUrl: "/views/relatorios/relatorio.html"
+	}).when("/Relatorio/:id", {		
+	  templateUrl: "/views/relatorios/viewRelatorio.html",
+	  controller: "ViewRelatorioController"
+	});
+
   $routeProvider.when("/Alerta", {
 			templateUrl: "/views/alerta/index.html"
 		}).when("/Alerta/:id", {		
