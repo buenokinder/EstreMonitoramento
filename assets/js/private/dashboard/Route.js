@@ -8,12 +8,12 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
       controller : 'DashboardController'
     });
 
-    $routeProvider.when('/LinhaCorte', {
-        templateUrl: '/views/linhaCorte/index.html'
+    $routeProvider.when('/SessaoCorte', {
+        templateUrl: '/views/sessaoCorte/index.html'
         // controller : 'LinhaCorteController'
-    }).when('#/LinhaCorte/:id',{
-        templateUrl: '/views/linhaCorte/index.html',
-        controller : 'LinhaCorteController'
+    }).when('#/SessaoCorte/:id',{
+        templateUrl: '/views/sessaoCorte/index.html',
+        controller : 'SessaoCorteController'
     });
 
   $routeProvider.when("/Template", {

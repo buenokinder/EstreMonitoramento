@@ -8,14 +8,22 @@
 module.exports = {
 
   attributes: {
-   parametro: {
+   nivel: {
       type: 'string',
       required: true
     },
-    valor: {
-      type: 'float',
+    velocidade: {
+      type: 'string',
       required: true
-    }
+    },
+    periodicidade: {
+      type: 'string',
+      required: true
+    },
+    criterios: {
+      type: 'string',
+      required: true
+    } 
   }
 };
 

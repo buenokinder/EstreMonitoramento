@@ -343,12 +343,12 @@
                             case 'listview' :
                                 HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
                                 HtmlFormBody += "<label  ng-class='inputClass' for='"+$scope.fields[key].name+"'>" + $scope.fields[key].value + "</label>";                                    
-                                HtmlFormBody += "<input class='col s11' type='text' ng-model='" + $scope.fields[key].input + "' ></input>";
+                                HtmlFormBody += "<input class='col s11' type='text' ng-model='" + $scope.fields[key].input + "' "+ $scope.fields[key].uiMask+"></input>";
                                 HtmlFormBody += "<div class='col s1'><a ng-click='adicionaAlertas(" + $scope.fields[key].input + ",\"" + $scope.fields[key].model.trim()  + "\",\"" + $scope.fields[key].input + "\" )' class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
                                 HtmlFormBody += "<table class='striped col s11'><thead><tr>";                               
                                 HtmlFormBody += "<th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th></tr></thead>";
                                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data."+$scope.fields[key].model+"' ng-click='ViewItem(datum)' style='cursor:pointer'><td</td><td ng-repeat='field in fields[" + key + "].fields' >";
-                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.name)}}</span></td>";
+                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
                                 HtmlFormBody += "</tr></tbody></table>";
                                 HtmlFormBody += "</div></div>";
                                 // ng-show='exibir(strupdate)' td de delete
@@ -360,7 +360,9 @@
                                 break;
                             case 'textAngular':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
-                                break;                                                        
+                                break;
+                            case 'dataCriacao':                                
+                                break;                                                                                       
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
@@ -387,7 +389,7 @@
                     $element.replaceWith($compile(HtmlFormBody)($scope));
                 
             },
-            controller: function ($scope, $element, $http, $location, $routeParams, $parse) {
+            controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
                 $scope.me = window.SAILS_LOCALS.me;
                 $scope.combodata = ([]);
                 $scope.combos = ([]);
@@ -399,23 +401,40 @@
                 $scope.data = ({});
                 $scope.url = ([]);
 
-                $scope.verifica = function (valor, nome, type) {
+                $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
+
                         for ( key in valor){
-                            if(key == nome)
-                                return valor[key];
+
+                         if(key == nome)
+                             return valor[key];
                         }
                     }
-                    if(nome == "date"){
+                     if(type == "date"){
+
                         var data = new Date(valor);
-                        var ano = data.getFullYear();
-                        var mes = data.getMonth() + 1;
-                        var dia = data.getDate();
-                        var retorno = dia + "/" + mes + "/" + ano;
+                         var ano = data.getFullYear();
+                           var mes = data.getMonth() + 1;
+                           var dia = data.getDay();
+                         var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
+                     }
+                    if(type == "usuario"){
+                        return valor.name;            
+                     }
+                     if(typeof valor === "boolean"){            
+                        if(valor == true) {
+                            return "✔";
+                        }
+                        else {
+                            return "✖";
+                        }
                     }
-                    return valor;
-                }
+                     if(filtro)
+                        return $filter(filtro)(valor);
+                     else 
+                        return valor;
+                 }
                 
                 $scope.getCombo = function(field) {                    
                     $http.get("/"+ field.api).then(function (results) {                                
@@ -436,7 +455,11 @@
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
-                                break;                             
+                                break;
+                            case 'dataCriacao':
+                                $scope.data[$scope.fields[key].name] = new Date();
+                                                                   
+                                break;                                                           
                             /*case 'combobox':                                
                                 
                                 $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
@@ -452,11 +475,11 @@
                     } 
                 }
                 
-                $scope.adicionaAlertas = function(coeficiente, model, input) {
+                $scope.adicionaAlertas = function(coeficiente, model, input) {                    
                     var date = new Date();
                     var dateISO = date.toISOString();
-                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});
-                    $scope[input] = "";           
+                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});                    
+                    $scope[input] = "";                            
                 };
                 $scope.change = function(model, data) {
                     console.log('model = ', model, "data = ", data);
