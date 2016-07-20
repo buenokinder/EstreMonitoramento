@@ -44,8 +44,8 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pathname = "Aterro";
         $scope.pai = "Dados Mestre";
         break;
-      case '/LinhaCorte' :
-        $scope.pathname = "Linha de Corte";
+      case '/SessaoCorte' :
+        $scope.pathname = "Sessão de Corte";
         $scope.pai = "Dados Mestre";
         break;
       case '/Template' :

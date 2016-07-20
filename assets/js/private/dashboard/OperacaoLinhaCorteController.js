@@ -19,10 +19,10 @@ $http.get('/PluviometriaVazao').success(function(data) {
       $scope.aterros = data;
     });
   };
-  $scope.linhaCortes = ([]);
-  $scope.loadLinhaCorte = function() {
-    return $scope.linhaCortes.length ? null : $http.get('/LinhaCorte').success(function(data) {
-      $scope.linhaCortes = data;
+  $scope.sessaoCortes = ([]);
+  $scope.loadSessaoCorte = function() {
+    return $scope.sessaoCortes.length ? null : $http.get('/SessaoCorte').success(function(data) {
+      $scope.sessaoCortes = data;
     });
   };
 

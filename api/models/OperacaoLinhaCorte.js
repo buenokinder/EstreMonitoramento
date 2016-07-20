@@ -30,8 +30,8 @@ module.exports = {
      usuario: {
       model: 'Usuario'
     },
-     linhaCorte: {
-      model: 'LinhaCorte'
+     sessaoCorte: {
+      model: 'sessaoCorte'
     }
   }
 };

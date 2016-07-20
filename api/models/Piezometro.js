@@ -10,11 +10,11 @@ module.exports = {
   attributes: {
   	nome: {
       type: 'string',
-      required: false
+      required: true
     },
   	dataCriacao: {
-      type: 'string',
-      required: false
+      type: 'date',
+      required: true
     },
   	usuarioCriador: {
       model: 'Usuario',
@@ -22,27 +22,24 @@ module.exports = {
     },
   	salienciaInicial: {
       type: 'string',
-      required: false
+      required: true
     },
   	celulaPiezometrica: {
       type: 'string',
-      required: false
+      required: true
     },
    	profundidadeTotalInicial: {
       type: 'string',
-      required: false
+      required: true
     },  
    	profundidadeTotalCamaraCarga: {
       type: 'string',
-      required: false
+      required: true
     },  
-   	prolongamentoCortePiezometro: {
-      type: 'string',
-      required: false
-    },
+
     habilitado: {
       type: 'boolean',
-      required: false,
+      required: true,
       defaultsTo: false
     },
     alertas: {
@@ -51,3 +48,8 @@ module.exports = {
     }
   }
 };
+/*    prolongamentoCortePiezometro: {
+      type: 'string',
+      required: true
+    },*/
+ 
