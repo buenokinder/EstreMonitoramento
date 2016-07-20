@@ -24,6 +24,10 @@ module.exports = {
     cota: {
       type: 'string',
       required: true
+    }, 
+    marcoSuperficial: {
+      model: 'marcoSuperficial',
+      required: true
     }
   }
 };

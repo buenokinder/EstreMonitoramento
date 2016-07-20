@@ -28,10 +28,6 @@ module.exports = {
     medicaoMarcoSuperficialDetalhes: {
       model: 'medicaoMarcoSuperficialDetalhes',
       required: true
-    }, 
-    marcoSuperficial: {
-      model: 'marcoSuperficial',
-      required: true
     }
   }
 };
