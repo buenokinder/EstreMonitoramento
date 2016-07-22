@@ -76,8 +76,9 @@
                 };
                 $scope.modalViewmodal = function()
                 {
-                    console.log('Marco');
-                    $("#modalView").show();
+                 
+                     $('#modalView').openModal();
+                    
                 }
 
                  $scope.refreshPageSearch = function () {
@@ -270,6 +271,7 @@
                 datasource: '=',
                 listaname: '@',
                 strupdate: '@',
+                nocard: '@',
                 strnew: '@',
                 redirecionar: '@',  
                 label: '@'
@@ -277,10 +279,11 @@
 
             }, link: function ($scope, $element, attrs, $http) {
 
-
-                       
-
                 var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
+                       
+                if ($scope.nocard)
+                    HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
+                
                 console.log($scope.strupdate);
                 if ($scope.strupdate == 'false')
                     HtmlFormBody += "";

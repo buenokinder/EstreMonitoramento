@@ -1,7 +1,7 @@
 
 
-app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http',   function($scope, $http){
-
+app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
+    $scope.data = [];
     $scope.medicoes = [];
       $scope.showContent = function($fileContent){
 
@@ -22,5 +22,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http',   functi
         }
         $scope.content = $fileContent;
     };
+
+     $scope.$on('handleBroadcast', function() {
+                    $scope.data = sennitCommunicationService.data;
+                    $scope.inputClass = "active";
+                    console.log('Mudou aqui');
+    }); 
    
 }]);
