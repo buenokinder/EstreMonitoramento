@@ -54,7 +54,9 @@ body > .container {
 code {
   font-size: 80%;
 }
-
+.OK {
+  background: green;
+}
 select {
   background-color: transparent;
   width: 100%;

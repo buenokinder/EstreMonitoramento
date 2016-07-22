@@ -1,5 +1,5 @@
 {
-  "name": "activityoverlord20",
+  "name": "EstreMonitoramento",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -43,11 +43,8 @@
     "debug": "node debug app.js"
   },
   "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jgalt/activityoverlord20.git"
-  },
-  "author": "jgalt",
+  "repository": {},
+  "author": "Sennit Tecnologia",
   "license": "",
   "devDependencies": {
     "mkdirp": "^0.5.1",
