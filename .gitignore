@@ -1,3 +1,4 @@
 /.tmp/*
 /node_modules/*
+/config/bootstrap.js
 views/signup.ejs
