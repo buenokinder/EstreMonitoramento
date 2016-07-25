@@ -24,8 +24,8 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
 
   $scope.alteraStatusBreadcrumbs = function(pathname) {    
     switch(pathname) {
-      case "/OperacaoLinhaCorte":
-        $scope.pathname = "Linha de Corte";
+      case "/OperacaoSecaoCorte":
+        $scope.pathname = "Seção de Corte";
         $scope.pai = "Área de Trabalho";
         break; 
       case "/PluviometriaVazao":
@@ -44,8 +44,8 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pathname = "Aterro";
         $scope.pai = "Dados Mestre";
         break;
-      case '/SessaoCorte' :
-        $scope.pathname = "Sessão de Corte";
+      case '/SecaoCorte' :
+        $scope.pathname = "Seção de Corte";
         $scope.pai = "Dados Mestre";
         break;
       case '/Template' :

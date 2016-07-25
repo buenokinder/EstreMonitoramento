@@ -8,12 +8,12 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
       controller : 'DashboardController'
     });
 
-    $routeProvider.when('/SessaoCorte', {
-        templateUrl: '/views/sessaoCorte/index.html'
+    $routeProvider.when('/SecaoCorte', {
+        templateUrl: '/views/secaoCorte/index.html'
         // controller : 'LinhaCorteController'
-    }).when('#/SessaoCorte/:id',{
-        templateUrl: '/views/sessaoCorte/index.html',
-        controller : 'SessaoCorteController'
+    }).when('#/SecaoCorte/:id',{
+        templateUrl: '/views/secaoCorte/index.html',
+        controller : 'SecaoCorteController'
     });
 
   $routeProvider.when("/Template", {
@@ -58,9 +58,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 			        controller : 'PluviometriaVazaoController'
 		});
 
-		$routeProvider.when("/OperacaoLinhaCorte", {
-			templateUrl: "/views/operacaoLinhaCorte/index.html",
-			   controller : 'OperacaoLinhaCorteController'
+		$routeProvider.when("/OperacaoSecaoCorte", {
+			templateUrl: "/views/operacaoSecaoCorte/index.html",
+			   controller : 'OperacaoSecaoCorteController'
 		});
 		 
   $routeProvider.when("/Alerta", {

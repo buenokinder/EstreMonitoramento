@@ -1,6 +1,6 @@
 
 
-app.controller('OperacaoLinhaCorteController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
+app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
 $http.get('/PluviometriaVazao').success(function(data) {
       $scope.operacaoPluviometrias = angular.fromJson(data);
@@ -19,10 +19,10 @@ $http.get('/PluviometriaVazao').success(function(data) {
       $scope.aterros = data;
     });
   };
-  $scope.sessaoCortes = ([]);
-  $scope.loadSessaoCorte = function() {
-    return $scope.sessaoCortes.length ? null : $http.get('/SessaoCorte').success(function(data) {
-      $scope.sessaoCortes = data;
+  $scope.secaoCortes = ([]);
+  $scope.loadSecaoCorte = function() {
+    return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte').success(function(data) {
+      $scope.secaoCortes = data;
     });
   };
 

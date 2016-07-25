@@ -4,14 +4,14 @@
         &nbsp;
         </div>
       <div class="col s10 m10 l10 col-lg-offset-2">
-      	<div class="card-panel ng-scope"><h4 class="header2">Sessao de Corte</h4><div class="row" >
+      	<div class="card-panel ng-scope"><h4 class="header2">Operação Seção de Corte</h4><div class="row" >
 <div ng-controller="PluviometriaVazaoController">
   <table class="table table-bordered table-hover striped table-condensed">
     <tr style="font-weight: bold">
       <td style="width:15%">Data</td>
       <td style="width:20%">Usuario</td>
       <td style="width:20%">Aterro</td>
-      <td style="width:15%">Sessao de Corte</td>
+      <td style="width:15%">Seção de Corte</td>
       <td style="width:15%">Altura</td>
       <td style="width:15%">Comprimento</td>
       <td style="width:15%">Tipo Estaca</td>
@@ -39,8 +39,8 @@
       </td>
     <td ng-click="rowform.$show()">
         <!-- editable group (select-remote) -->
-        <span editable-select="operacaoPluviometria.sessaoCorte"  e-name="sessaoCorte" onshow="loadSessaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in sessaoCortes | filter: {habilitado: true}">
-          {{ showSessaoCorte(operacaoPluviometria) }}
+        <span editable-select="operacaoPluviometria.secaoCorte"  e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in secaoCortes | filter: {habilitado: true}">
+          {{ showSecaoCorte(operacaoPluviometria) }}
         </span>
       </td>
       <td>

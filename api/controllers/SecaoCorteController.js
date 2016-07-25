@@ -1,7 +1,7 @@
 /**
- * SessaoCorteController
+ * SecaoCorteController
  *
- * @description :: Server-side logic for managing Sessaocortes
+ * @description :: Server-side logic for managing Secaocortes
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
