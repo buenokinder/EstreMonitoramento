@@ -54,9 +54,27 @@ body > .container {
 code {
   font-size: 80%;
 }
-.OK {
-  background: green;
+.aceitavel {
+  background: rgb(146, 208, 80);
 }
+
+.regular {
+  background: rgb(255, 255, 0);
+}
+
+.atencao {
+  background: rgb(255, 158, 0);
+}
+
+.intervencao {
+  background: rgb(255, 0, 0);
+}
+
+.paralisacao {
+  background: rgb(0, 0, 0);
+  color: white;
+}
+
 select {
   background-color: transparent;
   width: 100%;

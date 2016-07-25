@@ -80,19 +80,33 @@
                      $('#modalView').openModal();
                     
                 }
-                $scope.trocaCor = function(data) {
-                    console.log('data', data);
-                    if(data.nivel) {
+                
+                $scope.trocaCor = function(field, data) {
+                    var keys = Object.keys(data);
+                    if(keys[0] == field.name) {
                         switch(data.nivel) {
-                            case 'ok': 
-                                return "OK";
+                            case 'Aceitável': 
+                                return "aceitavel";
                                 break;
+                            case 'Regular': 
+                                return "regular";
+                                break;
+                            case 'Atenção': 
+                                return "atencao";
+                                break;
+                            case 'Intervenção': 
+                                return "intervencao";
+                                break;
+                            case 'Paralisação': 
+                                return "paralisacao";
+                                break; 
                             default:
                                 console.log();
                                 break;
                         }
                     }
                 }
+
                  $scope.refreshPageSearch = function () {
                   $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
 
