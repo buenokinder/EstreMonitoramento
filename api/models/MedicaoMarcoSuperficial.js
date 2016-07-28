@@ -26,7 +26,8 @@ module.exports = {
       required: true
     }, 
     medicaoMarcoSuperficialDetalhes: {
-      model: 'medicaoMarcoSuperficialDetalhes'
+      collection: 'medicaoMarcoSuperficialDetalhes',
+      via: 'owner'
     }
   }
 };

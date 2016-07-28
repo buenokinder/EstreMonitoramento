@@ -3,6 +3,7 @@
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
     $scope.medicoes = [];
+    $scope.verMedicoes = false;
       $scope.showContent = function($fileContent){
 
         var linhas = $fileContent.split('\n');
@@ -11,7 +12,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             var colunas = linha.split(';');
 
 
-            $http.post('/MedicaoMarcoSuperficial', { 'nome': colunas[0] , 'norte': colunas[1], 'este': colunas[2] , 'cota': colunas[3], aterro: '577fa8ef71a649a105219ef9' }).success(function(data, status){
+            $http.post('/MedicaoMarcoSuperficialDetalhes', { 'nome': colunas[0] , 'norte': colunas[1], 'este': colunas[2] , 'cota': colunas[3], aterro: '577fa8ef71a649a105219ef9' }).success(function(data, status){
         console.log(data);
     
     })
@@ -26,7 +27,23 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
      $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
                     $scope.inputClass = "active";
-                    console.log('Mudou aqui');
+                    $scope.verMedicoes = true;
     }); 
+
+     $scope.uploadDetalhes = function(){
+         $('.dropify').dropify({
+                messages: {
+                    default: 'Arraste seu Arquivo',
+                    
+                }
+            });
+          $('#modalUpload').openModal();
+    
+    };
+
+    $scope.addNewMapa = function(){
+          $('#modalMedicaoUpload').openModal();
+    
+    };
    
 }]);

@@ -41,7 +41,27 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		  templateUrl: "/views/alerta/index.html"
 		});
 
+
+		$routeProvider.when("/PocosVisita", {
+			templateUrl: "/views/pocosvisita/index.html"
+		}).when("/PocosVisita/:id", {		
+		  templateUrl: "/views/pocosvisita/index.html"
+		});
  
+ $routeProvider.when("/FatorSeguranca", {
+			templateUrl: "/views/fatorseguranca/index.html"
+		}).when("/FatorSeguranca/:id", {		
+		  templateUrl: "/views/fatorseguranca/index.html"
+		});
+ 
+
+ $routeProvider.when("/Bombeamento", {
+			templateUrl: "/views/bombeamento/index.html"
+		}).when("/Bombeamento/:id", {		
+		  templateUrl: "/views/bombeamento/index.html"
+		});
+ 
+
   $routeProvider.when("/Mapa", {
 			templateUrl: "/views/mapa/index.html"
 		}).when("/Mapa/:id", {		

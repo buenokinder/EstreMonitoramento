@@ -40,8 +40,8 @@ module.exports.routes = {
     'GET /': 'PageController.showHomePage',
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
-    'GET /visualizacao': 'PageController.visualizacao',
-    'POST /MedicaoMarcoSuperficialDetalhes': 'MedicaoMarcoSuperficialController.medicao'
+    'GET /visualizacao': 'PageController.visualizacao'
+    //'POST /MedicaoMarcoSuperficialDetalhes': 'MedicaoMarcoSuperficialController.medicao'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

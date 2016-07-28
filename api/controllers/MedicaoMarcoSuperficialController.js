@@ -49,7 +49,7 @@ module.exports = {
                     cota:  parameters.cota,
                     marcoSuperficial:  marco.id
                 });
-               MedicaoMarcoSuperficial.create({
+               MedicaoMarcoSuperficialDetalhes.create({
                     norte: parameters.norte,
                     este:  parameters.este,
                     cota:  parameters.cota,

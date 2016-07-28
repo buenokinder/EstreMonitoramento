@@ -28,6 +28,10 @@ module.exports = {
     marcoSuperficial: {
       model: 'marcoSuperficial',
       required: true
+    },
+    owner: {
+      model: 'medicaoMarcoSuperficial'
+
     }
   }
 };
