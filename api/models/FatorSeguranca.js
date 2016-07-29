@@ -8,7 +8,21 @@
 module.exports = {
 
   attributes: {
-
+    analise: {
+      type: 'string',
+      required: true
+    },
+    mes: {
+      type: 'string'
+    },
+    valor: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+    secao: {
+      model: 'secaoFatorSeguranca',
+      required: true
+    }
   }
 };
 

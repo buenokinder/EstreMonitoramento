@@ -1,0 +1,17 @@
+<div class="section">
+ <div class="row section">
+  <div class="divider"></div>
+
+
+    <div class="row">
+      <div class="col s12 m12 l6">
+      	<grid-view fields="[{'name': 'analise' , 'value': 'Analise' },{'name': 'mes' , 'value': 'Mes'} ]" listaname="fatorseguranca" autopage="true" adicionar="" add="false" label="Lista de Fator de Segurança"  view="FatorSeguranca" pagesize="5"></grid-view>
+      </div>
+
+      <div class="col s12 m12 l6">
+      	<form-view fields="[ {'name': 'analise', 'value': 'Analise', 'length': '20'}, {'name': 'mes' , 'value': 'Mes'}, {'name': 'valor' , 'value': 'valor'},
+        {'name': 'secao' , 'value': 'Seção', 'type': 'combobox', 'text': 'nome', 'api': 'SecaoFatorSeguranca', 'model': 'secao',  'fieldid': 'id', 'fieldname': 'nome' } ]" label="Formulário de Fator de Segurança" listaname="fatorseguranca"  strupdate="false"></form-view>
+    	</div>
+    </div>
+  </div>
+</div>

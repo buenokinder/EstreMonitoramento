@@ -1,14 +1,26 @@
-/**
- * Bombeamento.js
- *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
- */
-
 module.exports = {
 
   attributes: {
-
+    data: {
+      type: 'date',
+      required: true
+    },
+  	bomba: {
+      type: 'string',
+      required: true
+    },
+    numeros: {
+      type: 'float',
+      required: true
+    },
+    ciclos: {
+      type: 'float',
+      required: true
+    }
+    ,
+    litros: {
+      type: 'float',
+      required: true
+    }
   }
 };
-

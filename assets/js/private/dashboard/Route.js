@@ -101,6 +101,30 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		  templateUrl: "/views/marcosuperficial/index.html"
 		});
 
+		$routeProvider.when("/PocosVisita", {
+			templateUrl: "/views/pocosvisita/index.html"
+		}).when("/PocosVisita/:id", {		
+		  templateUrl: "/views/pocosvisita/index.html"
+		});
+
+		$routeProvider.when("/Bombeamento", {
+			templateUrl: "/views/bombeamento/index.html"
+		}).when("/Bombeamento/:id", {		
+		  templateUrl: "/views/bombeamento/index.html"
+		});
+
+	
+
+
+		
+		$routeProvider.when("/SecaoFatorSeguranca", {
+			templateUrl: "/views/SecaoFatorSeguranca/index.html"
+		}).when("/SecaoFatorSeguranca/:id", {		
+		  templateUrl: "/views/SecaoFatorSeguranca/index.html"
+		});
+
+		
+
 	  $routeProvider.when("/Piezometro", {
 			templateUrl: "/views/piezometro/index.html"
 		}).when("/Piezometro/:id", {		
