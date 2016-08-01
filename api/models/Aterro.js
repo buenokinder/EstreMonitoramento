@@ -24,9 +24,9 @@ module.exports = {
       type: 'string',
       required: true
     },    
-    gerente: {
-      model: 'Usuario',
-      required: true
+    usuarios: {
+      collection: 'Usuarios',
+      via: 'aterro'
     },
     observacao: {
       type: 'string',
@@ -36,6 +36,10 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: false
+    },
+    alertas: {
+      collection: 'alertasPiezometro',
+      via: 'owner'
     }
     
   }

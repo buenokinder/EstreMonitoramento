@@ -8,6 +8,11 @@
 module.exports = {
 
   attributes: {
+    data: {
+      type: 'date',
+      required: true
+
+    },
    dataMedicao: {
       type: 'string',
       required: true

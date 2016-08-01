@@ -1,5 +1,37 @@
 <div class="row" ng-init="init()">
 
+<h1>File load and save</h1>
+<p>Upload file here</p>
+<input id="readfile" type="file" custom-on-change="loadFile"/>
+
+<div id="res"></div>
+
+<script>
+
+
+
+
+// function uploadFile(event,cb) {
+// 	var files = event.target.files;
+// 	var reader = new FileReader();
+// 	var name = files[0].name;
+// 	reader.onload = function(e) {
+// 		var data = e.target.result;
+// 		cb(data);
+// 	};
+// 	reader.readAsBinaryString(files[0]);	
+// };
+
+		// if(name.substr(-5).toLowerCase() == '.xlsx') {
+		// 	workbook = XLSX.read(data, {type: 'binary'});
+		// } else if(name.substr(-4).toLowerCase() == '.xls') {
+		// 	workbook = XLS.read(data, {type: 'binary'});
+		// } else {
+		// 	alertify.error('Неправильный формат файла. Допустимые форматы: xlsx и xls');
+		// 	return;
+		// }
+
+</script>
     <div class="col s2 m2 l2">
         &nbsp;
         </div>

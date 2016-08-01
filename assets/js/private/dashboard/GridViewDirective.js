@@ -470,11 +470,23 @@
                         return valor;
                  }
                 
-                $scope.getCombo = function(field) {                    
-                    $http.get("/"+ field.api).then(function (results) {                                
-                        $scope[field.model]  = results.data;                          
-                    });
+                $scope.getCombo = function(field) {  
+                    if(field.datarest)
+                    {
+                        console.log('Data Rest');
+                        console.log(field.datarest);
+                         $scope[field.model] = JSON.parse(field.datarest) ;
+                         console.log($scope[field.model]);
+                    }
+                    else{                  
+                        $http.get("/"+ field.api).then(function (results) {                                
+                            $scope[field.model]  = results.data;                          
+                        });
+                    }
                 };
+
+             
+
 
                 $scope.init = function(){
                     $('input.materialize-textarea').characterCounter();
@@ -801,4 +813,12 @@
       template: '<iframe class="frame" height="{{height}}" width="{{width}}" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="{{scrolling}}" src="{{src()}}"></iframe>',
       link : linkFn
     };
-  });;
+  }).directive('customOnChange', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var onChangeFunc = scope.$eval(attrs.customOnChange);
+      element.bind('change', onChangeFunc);
+    }
+  };
+});

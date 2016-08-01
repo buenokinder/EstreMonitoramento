@@ -37,6 +37,14 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: false
+    },
+    role: {
+      type: 'string',
+      enum: ['pending', 'approved', 'denied']
+
+    },
+    aterro: {
+      type: 'Aterro'
     }
   }
 };

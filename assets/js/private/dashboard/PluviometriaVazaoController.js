@@ -13,6 +13,19 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
       $scope.aterros = data;
     });
 
+var data;
+$scope.excel;
+$scope.loadFile = function() {
+	console.log('loadFile');
+	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
+		
+		$scope.excel = angular.fromJson(res);// JSON.stringify(res);
+    angular.forEach($scope.excel, function(genre, index){
+      if(index != 0)
+           console.log(genre);
+    });
+	});
+}
   $scope.aterros = [];
   $scope.loadAterros = function() {
     return $scope.aterros.length ? null : $http.get('/Aterro').success(function(data) {

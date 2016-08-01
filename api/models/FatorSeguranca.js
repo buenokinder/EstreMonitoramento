@@ -15,9 +15,11 @@ module.exports = {
     mes: {
       type: 'string'
     },
-    valor: {
-      type: 'boolean',
-      defaultsTo: false
+    valorRu: {
+      type: 'float'
+    },
+    valorLp: {
+      type: 'float'
     },
     secao: {
       model: 'secaoFatorSeguranca',
