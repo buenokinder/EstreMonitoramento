@@ -16,6 +16,7 @@
                 add: '@',
                 edit: '@',
                 delete: '@',
+                relatorio: '@',
                 autopage: '@',
                 label: '@'
 
@@ -35,14 +36,23 @@
                 // <th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th> <td><input type='checkbox' /></td>
                 HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
                 HtmlFormBody += "<table class='striped'><thead><tr>";
-                HtmlFormBody += "<th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer; text-align:center;'>{{field.value}}</th><th  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>Editar</th><th  ng-show='exibir(update)' style='text-align:center;'>Ações</th><th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
+                HtmlFormBody += "<th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer; text-align:center;'>{{field.value}}</th>";
+                HtmlFormBody += "<th  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>Editar</th>";
+                HtmlFormBody += "<th  ng-show='exibir(update)' style='text-align:center;'>Ações</th>";
+                HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
+                HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
+
                 HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
-                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td><td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a> <a href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
+                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
+                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
+                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                HtmlFormBody += "</td>";
+                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
+                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
-                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(update)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
-                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(update)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "</tfoot></table></div></div>";
 
                 console.log($scope.popup);
@@ -50,7 +60,7 @@
                     HtmlFormBody +=  "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
 
                 console.log(HtmlFormBody);
-                // <a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>
+                // 
                 $element.replaceWith($compile(HtmlFormBody)($scope));
 
             },
@@ -462,7 +472,7 @@
                          var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
                      }
-                    if(type == "usuario"){
+                    if(type == "usuarios"){
                         return valor.name;            
                      }
                      if(typeof valor === "boolean"){            
@@ -479,7 +489,7 @@
                         return valor;
                  }
                 
-                $scope.getCombo = function(field) {  
+                $scope.getCombo = function(field) {                    
                     if(field.datarest)
                     {
                         console.log('Data Rest');
@@ -488,6 +498,7 @@
                          console.log($scope[field.model]);
                     }
                     else{                  
+                        console.log('field', field);
                         $http.get("/"+ field.api).then(function (results) {                                
                             $scope[field.model]  = results.data;                          
                         });

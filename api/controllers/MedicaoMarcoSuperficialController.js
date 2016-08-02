@@ -22,14 +22,14 @@ module.exports = {
          console.log({
               nome: parameters.nome,
               norte: parameters.norte,
-              este:  parameters.este,
+              leste:  parameters.leste,
               cota:  parameters.cota,
               aterro:  parameters.aterro
             });
              MarcoSuperficial.create({
               nome: parameters.nome,
               norte: parameters.norte,
-              este:  parameters.este,
+              leste:  parameters.leste,
               cota:  parameters.cota,
               aterro:  parameters.aterro
             }, function userCreated(err, marcoSuperficial) {
@@ -45,13 +45,13 @@ module.exports = {
         }else{
           console.log({
                     norte: parameters.norte,
-                    este:  parameters.este,
+                    leste:  parameters.leste,
                     cota:  parameters.cota,
                     marcoSuperficial:  marco.id
                 });
                MedicaoMarcoSuperficialDetalhes.create({
                     norte: parameters.norte,
-                    este:  parameters.este,
+                    leste:  parameters.leste,
                     cota:  parameters.cota,
                     marcoSuperficial:  marco.id
                 }, function userCreated(err, medicao) {

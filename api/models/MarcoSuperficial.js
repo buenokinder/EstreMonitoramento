@@ -11,7 +11,7 @@ module.exports = {
       type: 'string',
       required: true
     },
-    este: {
+    leste: {
       type: 'string',
       required: true
     },

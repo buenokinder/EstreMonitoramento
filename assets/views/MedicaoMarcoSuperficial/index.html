@@ -38,7 +38,7 @@
 
             <div>
 
-                	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'este' , 'value': 'Este' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicoesMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="true" popup="true" label="Lista de Detalhes de Medições'"  view="MedicoesMarcoSuperficialDetalhes" pagesize="5">
+                	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicoesMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="true" popup="true" label="Lista de Detalhes de Medições'"  view="MedicoesMarcoSuperficialDetalhes" pagesize="5">
        </grid-view>
             </div>
 
@@ -67,7 +67,7 @@
                   <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
                     <th class="ng-scope">{{medicao.nome}}</th>
                    <th class="ng-scope">{{medicao.norte}}</th>
-                   <th class="ng-scope">{{medicao.este}}</th>
+                   <th class="ng-scope">{{medicao.leste}}</th>
                    <th class="ng-scope">{{medicao.cota}}</th>
                 </tr>
                 </tbody>
@@ -91,7 +91,7 @@
                   <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
                     <th class="ng-scope">{{medicao.data}}</th>
                    <th class="ng-scope">{{medicao.topografo}}</th>
-                   <th class="ng-scope">{{medicao.este}}</th>
+                   <th class="ng-scope">{{medicao.leste}}</th>
                    <th class="ng-scope">{{medicao.cota}}</th>
                 </tr>
                 </tbody>

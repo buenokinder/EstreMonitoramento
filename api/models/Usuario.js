@@ -19,6 +19,11 @@ module.exports = {
       required: true,
       unique: true
     },
+    habilitado: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: false
+    }
 
  
     encryptedPassword: {

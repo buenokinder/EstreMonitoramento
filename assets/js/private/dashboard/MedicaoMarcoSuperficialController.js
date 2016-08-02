@@ -12,7 +12,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             var colunas = linha.split(';');
 
 
-            $http.post('/MedicaoMarcoSuperficialDetalhes', { 'nome': colunas[0] , 'norte': colunas[1], 'este': colunas[2] , 'cota': colunas[3], aterro: '577fa8ef71a649a105219ef9' }).success(function(data, status){
+            $http.post('/MedicaoMarcoSuperficialDetalhes', { 'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3], aterro: '577fa8ef71a649a105219ef9' }).success(function(data, status){
         console.log(data);
     
     })
