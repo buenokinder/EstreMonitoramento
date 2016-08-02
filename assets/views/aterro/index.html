@@ -5,12 +5,13 @@
 
     <div class="row">
       <div class="col s12 m12 l6">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco', 'value': 'Endereço'}, {'name': 'telefone', 'value': 'Telefone', 'uiFilter': 'brPhoneNumber'}, {'name': 'gerente', 'value': 'Gerente', 'type': 'usuario'}, {'name': 'situacao', 'value': 'Situação'} ]" listaname="Aterro" autopage="true" adicionar="" add="false" label="Lista de Aterro"  view="Aterro" pagesize="5"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco', 'value': 'Endereço'}, {'name': 'telefone', 'value': 'Telefone', 'uiFilter': 'brPhoneNumber'}, {'name': 'situacao', 'value': 'Situação'} ]" listaname="Aterro" autopage="true" adicionar="" add="false" label="Lista de Aterro"  view="Aterro" pagesize="5"></grid-view>
       </div>
 
       <div class="col s12 m12 l6">
-      	<form-view fields="[ {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone', 'uiMask': 'ui-br-phone-number'}, {'name': 'gerente' , 'value': 'Gerente do Aterro', 'type': 'combobox', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' },{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="false"></form-view>
+      	<form-view fields="[ {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone', 'uiMask': 'ui-br-phone-number'}, {'name': 'usuarios' , 'value': 'Gerente do Aterro', 'type': 'comboboxmulti', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' },{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="false"></form-view>
     	</div>
+       
     </div>
   </div>
 </div>

@@ -404,6 +404,15 @@
                                     HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
                                     HtmlFormBody += "</div></div>";
                                 break;
+                            case 'comboboxmulti':
+                                    $scope.getCombo($scope.fields[key]);
+                                    HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
+                                    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
+                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "' multiple></select>";
+                                    HtmlFormBody += "</div></div>";
+                                break;
+
+                                
                             default:
                                 HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' "+$scope.fields[key].uiMask+"></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                                 break;

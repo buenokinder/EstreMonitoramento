@@ -33,19 +33,19 @@ module.exports = {
       defaultsTo: new Date(0)
     },
     
-    admin: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-    role: {
+    perfil: {
       type: 'string',
-      enum: ['pending', 'approved', 'denied']
+      enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
 
     },
-    aterro: {
-      type: 'Aterro'
+    aterros: {
+      collection: 'Aterro',
+      via: 'usuarios'
     }
+
+   
+
+    
   }
 };
 

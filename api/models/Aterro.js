@@ -25,8 +25,8 @@ module.exports = {
       required: true
     },    
     usuarios: {
-      collection: 'Usuarios',
-      via: 'aterro'
+      collection: 'Usuario',
+      via: 'aterros'
     },
     observacao: {
       type: 'string',
@@ -38,7 +38,7 @@ module.exports = {
       defaultsTo: false
     },
     alertas: {
-      collection: 'alertasPiezometro',
+      collection: 'Piezometro',
       via: 'owner'
     }
     

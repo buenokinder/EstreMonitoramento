@@ -45,6 +45,9 @@ module.exports = {
     alertas: {
       collection: 'alertasPiezometro',
       via: 'owner'
+    },
+    owner: {
+      model: 'Aterro'
     }
   }
 };

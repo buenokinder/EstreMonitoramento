@@ -14,6 +14,12 @@ module.exports = {
 
   login: function (req, res) {
     console.log('veio');
+
+    // Usuario.find().populate('aterro').exec(function(err, users) {
+    //     console.log(users);
+ 
+    // })
+
     Usuario.findOne({
       email: req.param('email')
     }, function foundUser(err, user) {
@@ -36,9 +42,9 @@ module.exports = {
         success: function (){
 
   
-          req.session.me = user.id;
-          req.session.name = user.name;
-         
+          req.session.me = user;
+        //   req.session.name = user.name;
+        //  req.session.aterro = user.aterro;
           return res.ok();
         }
       });
@@ -73,6 +79,7 @@ module.exports = {
             Usuario.create({
               name: req.param('name'),
               email: req.param('email'),
+              perfil: req.param('perfil'),
               encryptedPassword: encryptedPassword,
               lastLoggedIn: new Date(),
               gravatarUrl: gravatarUrl
