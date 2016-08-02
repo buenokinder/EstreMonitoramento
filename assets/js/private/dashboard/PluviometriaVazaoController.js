@@ -2,10 +2,13 @@
 
 app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
-  $http.get('/PluviometriaVazao').success(function(data) {
-      $scope.operacaoPluviometrias = angular.fromJson(data);
+  $scope.mes;
+  $scope.meses= [{ id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}];;
+  $scope.ano;
+  $scope.anos = [{ id: 2016}, {id: 2017}];
+  
 
-    });
+
   $http.get('/Usuario').success(function(data) {
       $scope.usuarios = angular.fromJson(data);
     });
@@ -13,16 +16,46 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
       $scope.aterros = data;
     });
 
-var data;
+$scope.usuario = window.SAILS_LOCALS;
 $scope.excel;
+  $scope.filter = function(){
+    $scope.ano 
+    $scope.mes
+    $http.get('/PluviometriaVazao?$filter=').success(function(data) {
+      $scope.operacaoPluviometrias = angular.fromJson(data);
+
+    });
+  }
+   $scope.uploadPluviometria = function(){
+         $('.dropify').dropify({
+                messages: {
+                    default: 'Arraste seu Arquivo',
+                    
+                }
+            });
+          $('#modalPluviometria').openModal();
+    
+    };
 $scope.loadFile = function() {
-	console.log('loadFile');
+	var dateObj = new Date();
+var month = dateObj.getUTCMonth() + 1; 
+
+var year = dateObj.getUTCFullYear();
+
+
+
 	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
-		
+		console.log('Buscando');
 		$scope.excel = angular.fromJson(res);// JSON.stringify(res);
-    angular.forEach($scope.excel, function(genre, index){
+    angular.forEach($scope.excel, function(registro, index){
       if(index != 0)
-           console.log(genre);
+      {
+        var registroPluviometria = {dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: month , ano: year };
+ 
+       $http.post('/PluviometriaVazao', registroPluviometria);
+
+      }
+           
     });
 	});
 }

@@ -22,7 +22,7 @@ module.exports = {
 
     Usuario.findOne({
       email: req.param('email')
-    }, function foundUser(err, user) {
+    }).populate('aterros').exec( function foundUser(err, user) {
       if (err) return res.negotiate(err);
       if (!user) return res.notFound();
 
@@ -40,11 +40,19 @@ module.exports = {
         },
 
         success: function (){
-
+console.log(user);
   
           req.session.me = user;
-        //   req.session.name = user.name;
-        //  req.session.aterro = user.aterro;
+          req.session.name = user.name;
+          if(user.aterros.length > 0){
+
+req.session.me.aterro = user.aterros[0];
+
+          }
+            
+          else
+            req.session.me.aterro = "";
+
           return res.ok();
         }
       });

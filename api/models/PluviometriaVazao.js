@@ -10,10 +10,19 @@ module.exports = {
   attributes: {
     data: {
       type: 'date',
-      required: true
+      required: true,
+      defaultsTo: new Date(0)
 
     },
-   dataMedicao: {
+   dia: {
+      type: 'string',
+      required: true
+    },
+    mes: {
+      type: 'string',
+      required: true
+    },
+    ano: {
       type: 'string',
       required: true
     },
