@@ -2,11 +2,20 @@
 
 app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
-  $scope.mes;
+  $scope.mes = { id: 1};
   $scope.meses= [{ id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}];;
-  $scope.ano;
+  $scope.ano = { id: 2016};
   $scope.anos = [{ id: 2016}, {id: 2017}];
   
+
+$scope.changeAno = function(ano) {
+    
+    $http.get('/PluviometriaVazao?where={ "mes": "' + $scope.mes.id + '","ano": "' + ano.id  + '"}').success(function(data) {
+      console.log( angular.fromJson(data));
+      $scope.operacaoPluviometrias = angular.fromJson(data);
+
+    });
+};
 
 
   $http.get('/Usuario').success(function(data) {
@@ -18,14 +27,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
 
 $scope.usuario = window.SAILS_LOCALS;
 $scope.excel;
-  $scope.filter = function(){
-    $scope.ano 
-    $scope.mes
-    $http.get('/PluviometriaVazao?$filter=').success(function(data) {
-      $scope.operacaoPluviometrias = angular.fromJson(data);
-
-    });
-  }
+  
    $scope.uploadPluviometria = function(){
          $('.dropify').dropify({
                 messages: {
@@ -37,12 +39,6 @@ $scope.excel;
     
     };
 $scope.loadFile = function() {
-	var dateObj = new Date();
-var month = dateObj.getUTCMonth() + 1; 
-
-var year = dateObj.getUTCFullYear();
-
-
 
 	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
 		console.log('Buscando');
@@ -50,7 +46,9 @@ var year = dateObj.getUTCFullYear();
     angular.forEach($scope.excel, function(registro, index){
       if(index != 0)
       {
-        var registroPluviometria = {dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: month , ano: year };
+
+
+        var registroPluviometria = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
  
        $http.post('/PluviometriaVazao', registroPluviometria);
 
@@ -62,7 +60,7 @@ var year = dateObj.getUTCFullYear();
   $scope.aterros = [];
   $scope.loadAterros = function() {
     return $scope.aterros.length ? null : $http.get('/Aterro').success(function(data) {
-      $scope.aterros = data;
+      $scope.aterros = angular.fromJson(data); 
     });
   };
 

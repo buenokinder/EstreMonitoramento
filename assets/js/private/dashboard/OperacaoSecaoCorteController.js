@@ -1,11 +1,9 @@
 
 
 app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
-  $scope.operacaoPluviometrias = []; 
-$http.get('/PluviometriaVazao').success(function(data) {
-      $scope.operacaoPluviometrias = angular.fromJson(data);
+  $scope.operacaoSecaoCortes = []; 
+  $scope.usuario = window.SAILS_LOCALS;
 
-    });
   $http.get('/Usuario').success(function(data) {
       $scope.usuarios = angular.fromJson(data);
     });
@@ -19,45 +17,39 @@ $http.get('/PluviometriaVazao').success(function(data) {
       $scope.aterros = data;
     });
   };
-  $scope.secaoCortes = ([]);
+
+  $http.get('/SecaoCorte').success(function(data) {
+      $scope.secaoCortes = data;
+      
+    });
+
+
+   $scope.secaoCortes = ([]);
+  $scope.init = function(){
+
+    $http.get('/OperacaoSecaoCorte').success(function(data) {
+      $scope.operacaoSecaoCortes = angular.fromJson(data);
+
+    });
+  };
   $scope.loadSecaoCorte = function() {
     return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte').success(function(data) {
       $scope.secaoCortes = data;
+      
     });
   };
 
-    $scope.usuarios = [];
-  $scope.loadUsuarios = function() {
-    console.log('teste');
-    return $scope.usuarios.length ? null : $http.get('/Usuario').success(function(data) {
-      $scope.usuarios = data;
-    });
-  };
 
-  $scope.showAterro = function(aterro) {
-    if(aterro.aterro && $scope.aterros.length) {
-      var selected = $filter('filter')($scope.aterros, {id: aterro.aterro.id});
+
+$scope.showSecaoCorte = function(data) {
+  console.log( $scope.secaoCortes.length);
+    if(data.secaoCorte && $scope.secaoCortes.length) {
+      var selected = $filter('filter')($scope.secaoCortes, {id: data.secaoCorte.id});
       return selected.length ? selected[0].nome : 'Not set';
     } else {
-      return aterro.nome || 'Not set';
+      return data.nome || 'Not set';
     }
   };
-
-  $scope.showUsuario = function(user) {
-
-    
-    if(user && $scope.usuarios.length) {
-      console.log({id: user.usuario.id});
-      console.log($scope.usuarios);
-      
-      var selected = $filter('filter')($scope.usuarios, {id: user.usuario.id});
-      console.log(selected);
-      return selected.length ? selected[0].name : 'Not set';
-    } else {
-      return user.name || 'Not set';
-    }
-  };
-
 
   $scope.checkName = function(data, id) {
     if (id === 2 && data !== 'awesome') {
@@ -65,27 +57,39 @@ $http.get('/PluviometriaVazao').success(function(data) {
     }
   };
 
-  $scope.savePluviometria = function(data, id) {
+  $scope.saveSecaoCorte = function(data, id) {
 
     angular.extend(data, {id: id});
+    angular.extend(data, {dataMedicao: new Date()});
     console.log(data);
-    return $http.post('/PluviometriaVazao', data);
+    return $http.post('/OperacaoSecaoCorte', data);
   };
 
-
-  $scope.removePluviometria = function(index) {
-    $scope.operacaoPluviometrias.splice(index, 1);
+$scope.dataAtualFormatada = function(data){
+    
+    var dia = data.getDate();
+    if (dia.toString().length == 1)
+      dia = "0"+dia;
+    var mes = data.getMonth()+1;
+    if (mes.toString().length == 1)
+      mes = "0"+mes;
+    var ano = data.getFullYear();  
+    return dia+"/"+mes+"/"+ano;
+}
+  $scope.removeSecaoCorte = function(index) {
+    $scope.operacaoSecaoCortes.splice(index, 1);
   };
 
-  $scope.addPluviometria = function() {
+  $scope.addSecaoCorte = function() {
     $scope.inserted = {
-      dataMedicao: null,
-      aterro: null,
-      usuario: null,
-      pluviometria: null,
-      vazao: null 
+      dataMedicao: new Date(),
+      aterro: $scope.usuario._aterro,
+      usuario: $scope.usuario._id,
+      tipoEstaca: null,
+      altura: null ,
+      comprimento: null
     };
-    $scope.operacaoPluviometrias.push($scope.inserted);
+    $scope.operacaoSecaoCortes.push($scope.inserted);
   };
    
 }]);

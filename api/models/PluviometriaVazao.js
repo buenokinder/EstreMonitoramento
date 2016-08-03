@@ -9,6 +9,12 @@ module.exports = {
 
   attributes: {
     data: {
+      type: 'string',
+      required: true,
+      unique: true
+
+    },
+    dataInserted: {
       type: 'date',
       required: true,
       defaultsTo: new Date(0)
