@@ -58,10 +58,12 @@ $scope.showSecaoCorte = function(data) {
   };
 
   $scope.saveSecaoCorte = function(data, id) {
+    if(id)
+      angular.extend(data, {id: id});
+    else
+      angular.extend(data, {dataMedicao: new Date()});
 
-    angular.extend(data, {id: id});
-    angular.extend(data, {dataMedicao: new Date()});
-    console.log(data);
+    
     return $http.post('/OperacaoSecaoCorte', data);
   };
 

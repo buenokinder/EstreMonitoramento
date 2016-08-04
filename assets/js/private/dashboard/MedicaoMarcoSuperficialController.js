@@ -4,6 +4,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.data = [];
     $scope.medicoes = [];
     $scope.verMedicoes = false;
+      $scope.usuario = window.SAILS_LOCALS;
+      
       $scope.showContent = function($fileContent){
 
         var linhas = $fileContent.split('\n');
