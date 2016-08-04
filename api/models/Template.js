@@ -8,16 +8,16 @@
 module.exports = {
 
   attributes: {
-   	data: {
+   	dataInicio: {
+      type: 'date',
+      required: true,
+      defaultsTo: new Date(0)
+    },	dataFim: {
       type: 'date',
       required: true,
       defaultsTo: new Date(0)
     },
     nome: {
-      type: 'string',
-      required: true
-    },
-    descricao: {
       type: 'string',
       required: true
     },   
