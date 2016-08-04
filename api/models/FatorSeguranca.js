@@ -9,11 +9,11 @@ module.exports = {
 
   attributes: {
     analise: {
-      type: 'string',
+      type: 'json',
       required: true
     },
     mes: {
-      type: 'string'
+      type: 'json'
     },
     valorRu: {
       type: 'float'
