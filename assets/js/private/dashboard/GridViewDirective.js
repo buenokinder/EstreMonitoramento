@@ -178,7 +178,7 @@
             var data = new Date(valor);
              var ano = data.getFullYear();
                var mes = data.getMonth() + 1;
-               var dia = data.getDay();
+               var dia = data.getDate();
              var retorno = dia + "/" + mes + "/" + ano;
             return retorno;
          }
@@ -601,11 +601,9 @@
 
                
                 $scope.verificaBotaoSubmit = function(){
-                    console.log(typeof $scope.data.id ); 
-                        if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
-                            return false;
+                    if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
+                        return false;
                    
-                        console.log('True');
                         return true;
                 };
                 
@@ -841,4 +839,226 @@
       element.bind('change', onChangeFunc);
     }
   };
+}).directive('editView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService,$http) {
+        return {
+            restrict: 'E',
+            scope: {
+                fields: '=',
+                datasource: '=',
+                listaname: '@',
+                strupdate: '@',
+                nocard: '@',
+                strnew: '@',
+                redirecionar: '@',  
+                label: '@'
+
+
+            }, link: function ($scope, $element, attrs, $http) {
+                
+                var HtmlFormBody = '<form editable-form name="editableForm" onaftersave="save()">';
+
+                for (var key in $scope.fields) {
+                    HtmlFormBody+='<p>';
+                    HtmlFormBody+='<b>'+$scope.fields[key].value+': </b>';
+
+                    if($scope.fields[key].type=='date'){
+                        HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                        HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                        HtmlFormBody+='</span>';
+                    }else{
+                        HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                    }
+                    
+                    HtmlFormBody+='</p>';
+                }
+
+                HtmlFormBody += '<div class="buttons">';
+                    HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">';
+                      HtmlFormBody += 'Editar';
+                    HtmlFormBody += '</button>';
+
+                    HtmlFormBody += '<span ng-show="editableForm.$visible">';
+                      HtmlFormBody += '<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting" style="margin-right:10px;">';
+                        HtmlFormBody += 'Salvar';
+                      HtmlFormBody += '</button>';
+                      
+                      HtmlFormBody += '<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">';
+                        HtmlFormBody += 'Cancelar';
+                      HtmlFormBody += '</button>';
+                    HtmlFormBody += '</span>';
+                  HtmlFormBody += '</div>';                  
+                HtmlFormBody += '</form>';
+                
+                $element.replaceWith($compile(HtmlFormBody)($scope));
+                
+            },
+            controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
+                $scope.me = window.SAILS_LOCALS.me;
+                $scope.combodata = ([]);
+                $scope.combos = ([]);
+                $scope.modelComboBox = ([]);
+                $scope.sennitForm = {
+                    loading: false
+                }
+                $scope.inputClass = "";
+                $scope.data = ({});
+                $scope.url = ([]);
+
+                $scope.opened = {};
+
+                $scope.open = function($event, elementOpened) {
+                  $event.preventDefault();
+                  $event.stopPropagation();
+
+                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
+                };  
+
+                $scope.verifica = function (valor, nome, type, filtro) {        
+                    if(valor.hasOwnProperty(nome)) {
+                        for ( key in valor){
+
+                         if(key == nome)
+                             return valor[key];
+                        }
+                    }
+                    
+                    if(type == "date"){
+
+                        var data = new Date(valor);
+                         var ano = data.getFullYear();
+                           var mes = data.getMonth() + 1;
+                           var dia = data.getDay();
+                         var retorno = dia + "/" + mes + "/" + ano;
+                        return retorno;
+                    }
+
+                    if(type == "usuarios"){
+                        return valor.name;            
+                    }
+
+                    if(typeof valor === "boolean"){            
+                        if(valor == true) {
+                            return "✔";
+                        }
+                        else {
+                            return "✖";
+                        }
+                    }
+                    
+                    if(filtro)
+                        return $filter(filtro)(valor);
+                     else 
+                        return valor;
+                 }
+
+
+                $scope.init = function(){
+                    $('input.materialize-textarea').characterCounter();
+                    for (var key in $scope.fields) {
+                       // $scope.data[$scope.fields[key].name] ="";
+
+                        switch ($scope.fields[key].type) {
+                            case 'listview':
+                                $scope.data[$scope.fields[key].model] = ([]);
+                                                                   
+                                break;
+                            case 'textAngular':
+                                $scope.data[$scope.fields[key].name] = "";
+                                                                   
+                                break;
+                            case 'dataCriacao':
+                                $scope.data[$scope.fields[key].name] = new Date();
+                                                                   
+                                break;                                                           
+
+                            default:
+                        
+                            break;
+                        }
+                    } 
+                }
+                
+                $scope.adicionaAlertas = function(coeficiente, model, input) {                    
+                    var date = new Date();
+                    var dateISO = date.toISOString();
+                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});                    
+                    $scope[input] = "";                            
+                };
+                $scope.change = function(model, data) {
+                    console.log('model = ', model, "data = ", data);
+                    $scope.data[model] = data;
+                }
+
+
+                $scope.$on('handleBroadcast', function() {
+                    $scope.data = sennitCommunicationService.data;
+                    $scope.inputClass = "active";
+                });        
+               
+
+                $scope.save = function () {
+
+                    $scope.sennitForm.loading = true;                    
+                    if($scope.data.id){
+                        $scope.sennitForm.loading = true;
+
+                        swal({   title: "",   
+                            text: "Você tem certeza que deseja alterar este registro?",   
+                            type: "warning",   
+                            showCancelButton: true, 
+                            confirmButtonText: "Sim",   
+                            cancelButtonText: "Cancelar",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false }, 
+                            function(isConfirm){   
+                                if (isConfirm) {     
+                                    $http({
+                                        method: 'PUT',
+                                        url: '/'+ $scope.listaname + '/' + $scope.data.id,
+                                        data: $scope.data
+                                    }).then(function onSuccess(sailsResponse){
+                                        $scope.inputClass = null;
+                                        //$scope.data = ([]);
+                                        $scope.inputClass = "disabled";
+                                        swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+                                        Materialize.toast('Registro alterado com sucesso!', 4000);
+                                    })
+                                    .catch(function onError(sailsResponse){
+
+                                    })
+                                    .finally(function eitherWay(){
+                                        $scope.sennitForm.loading = false;
+                                    })
+                                } else {
+                                        swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                                } 
+                            }
+                        );                                            
+                    } 
+                };
+            }
+        }}]).factory('sennitCommunicationService', function($rootScope) {
+            var sennitCommunicationService = ([]);
+            
+            sennitCommunicationService.data = '';
+
+            sennitCommunicationService.prepForBroadcast = function(data) {
+                this.data = data;
+                this.broadcastItem();
+            };
+
+            sennitCommunicationService.prepForBroadcastDataList = function(datum) {
+                this.datum = datum;
+                this.broadcastItemReturn();
+            };
+
+            sennitCommunicationService.broadcastItem = function() {
+                $rootScope.$broadcast('handleBroadcast');
+            };
+
+            sennitCommunicationService.broadcastItemReturn = function() {
+                $rootScope.$broadcast('handleBroadcastItem');
+            };
+
+    return sennitCommunicationService;
 });
