@@ -25,12 +25,13 @@
               <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
 
               <div>
-                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="true" popup="true" label="Lista de Detalhes de Medições"  
-                    view="MedicaoMarcoSuperficialDetalhes" parentkey="marcoSuperficial" pagesize="5">
+                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="false" popup="true" label="Lista de Detalhes de Medições"  
+                    view="MedicaoMarcoSuperficialDetalhes" parentkey="marcoSuperficial" pagesize="5" editinline="true">
                     </grid-view>
               </div>
 
-            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  ng-click="addNewMapa()"  ng-show="aterro.nome">
+            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  
+            ng-click="addNewMapa()"  ng-show="aterro.nome">
                   <i class="mdi-content-add"></i>
             </a>     
             <div id="modalUpload" class="modal modal-fixed-footer">
@@ -52,10 +53,10 @@
 
                       <tbody>
                         <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
-                            <th class="ng-scope">{{medicao.nome}}</th>
-                           <th class="ng-scope">{{medicao.norte}}</th>
-                           <th class="ng-scope">{{medicao.leste}}</th>
-                           <th class="ng-scope">{{medicao.cota}}</th>
+                            <tr class="ng-scope">{{medicao.nome}}</tr>
+                            <tr class="ng-scope">{{medicao.norte}}</tr>
+                            <tr class="ng-scope">{{medicao.leste}}</tr>
+                            <tr class="ng-scope">{{medicao.cota}}</tr>
                         </tr>
                       </tbody>
                     </table>

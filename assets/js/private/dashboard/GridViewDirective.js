@@ -19,7 +19,8 @@
                 relatorio: '@',
                 autopage: '@',
                 label: '@',
-                parentkey: '@'
+                parentkey: '@',
+                editinline: '='
 
             }, link: function ($scope, $element, attrs) {
                 var HtmlFormBody = "";
@@ -42,19 +43,93 @@
                 HtmlFormBody += "<th  ng-show='exibir(update)' style='text-align:center;'>Ações</th>";
                 HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
                 HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
+                
+                if($scope.editinline){
+                    HtmlFormBody += "<tbody>";
+                    HtmlFormBody +=     "<tr ng-repeat='datum in data' style='cursor:pointer'>";
+                    HtmlFormBody +=         "<td ng-repeat='field in fields' ng-click='edited=datum;rowform.$show()' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
+                    HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-show='true'>{{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}</span>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>";
+                    HtmlFormBody +=             "<a ng-click='select(datum)'>";
+                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                    HtmlFormBody +=         "</td>";                
+                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
+                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
+                    HtmlFormBody +=             "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
+                    HtmlFormBody +=             "<a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                    HtmlFormBody +=         "</td>";                
+                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'>";
+                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
+                    HtmlFormBody +=         "</td>"
+                    HtmlFormBody +=         "<td style='white-space: nowrap'>";
+                    HtmlFormBody +=             "<form editable-form name='rowform' ng-show='rowform.$visible' class='form-buttons form-inline' onbeforesave='save(datum)' ng-show='rowform.$visible' shown='edited == datum'>";
+                    HtmlFormBody +=                 "<button type='submit' ng-disabled='rowform.$waiting' style='border:none; background: none !important;' >";
+                    HtmlFormBody +=                     "<i class='mdi-navigation-check estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
+                    HtmlFormBody +=                 "</button>";
+                    HtmlFormBody +=                 "<a ng-disabled='rowform.$waiting' ng-click='rowform.$cancel()' >";
+                    HtmlFormBody +=                     "<i class='mdi-navigation-close estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
+                    HtmlFormBody +=                 "</a>";
+                    HtmlFormBody +=             "</form>";
+                    HtmlFormBody +=             "<div class='buttons' ng-show='!rowform.$visible'>";
+                    HtmlFormBody +=                 "<a ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody +=             "</div>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=     "</tr>";
+                    HtmlFormBody += "</tbody>";
+                    HtmlFormBody += "<tfoot>";
+                    HtmlFormBody +=     "<tr ng-hide='habilitaPaginacao'>";
+                    HtmlFormBody +=         "<td colspan='3' class='row'>";
+                    HtmlFormBody +=             "<div>";
+                    HtmlFormBody +=                 "<ul class='pagination'>";
+                    HtmlFormBody +=                     "<li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li>";
+                    HtmlFormBody +=                     "<li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+                    HtmlFormBody +=                     "<li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li>";
+                    HtmlFormBody +=                 "</ul>";
+                    HtmlFormBody +=             "</div>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=         "<td>";
+                    HtmlFormBody +=             "<div class='row pull-right'><div class='input-field col s2'>";
+                    HtmlFormBody +=                 "<a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
+                    HtmlFormBody +=             "</div>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=     "</tr>";
+                    HtmlFormBody +=     "<tr ng-show='habilitaPaginacao'>";
+                    HtmlFormBody +=         "<td colspan='3' class='row'>";
+                    HtmlFormBody +=             "<div>";
+                    HtmlFormBody +=                 "<ul class='pagination'>";
+                    HtmlFormBody +=                     "<li><a>«</a></li>";
+                    HtmlFormBody +=                     "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
+                    HtmlFormBody +=                     "<li><a >»</a></li>";
+                    HtmlFormBody +=                 "</ul>";
+                    HtmlFormBody +=             "</div>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=         "<td>";
+                    HtmlFormBody +=             "<div class='row pull-right'>";
+                    HtmlFormBody +=                 "<div class='input-field col s2'>";
+                    HtmlFormBody +=                     "<a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
+                    HtmlFormBody +=                 "</div>";
+                    HtmlFormBody +=         "</td>";
+                    HtmlFormBody +=     "</tr>";
+                    HtmlFormBody += "</tfoot>";
+                }else{
+                    HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
+                    HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
+                    HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody += "</td>";
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
+                    HtmlFormBody += "</tr></tbody><tfoot>";
+                    HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                    HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                    HtmlFormBody += "</tfoot>";
+                }
+                HtmlFormBody += "</table></div></div>";
 
-                HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
-                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
-                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                HtmlFormBody += "</td>";
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
-                HtmlFormBody += "</tr></tbody><tfoot>";
-                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
-                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
-                HtmlFormBody += "</tfoot></table></div></div>";
 
                 if($scope.popup == 'true')
                     HtmlFormBody +=  "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
@@ -74,6 +149,7 @@
                 $scope.skipSearch = 0;
                 $scope.TotalItensSearch = 0;
                 $scope.TotalPagesSearch = ([]);
+                $scope.edited = ([]);
 
                 for (var key in $scope.fields) {
                     if ($scope.fields[key].filter == 'true') {                        
@@ -92,6 +168,18 @@
                     
                 }
                 
+                $scope.save = function(data){
+                    
+                    if($scope.parentkey!==undefined){
+                        var name ="'"+$scope.parentkey+"'";
+
+                        angular.extend(data, {name: $scope.$parent.data.id});  
+                    
+                    }
+
+                    return $http.post('/'+$scope.listaname, data);
+                }
+
                 $scope.trocaCor = function(field, data) {
                     var keys = Object.keys(data);
                     if(keys[0] == field.name) {
