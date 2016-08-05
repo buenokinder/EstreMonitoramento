@@ -207,12 +207,7 @@
 
                     var parent="";
                     var countUrl = "/"+ $scope.listaname + "/count";
-
-                    var plus = "";
-                    if($scope.listaname.indexOf("?") < 0)    
-                         plus +=   "?";
-                    else
-                        plus +=   "&";
+                    var plus = ($scope.listaname.indexOf("?") < 0)? "?":"&";
 
                     if($scope.parentkey!==undefined){
                         parent = $scope.parentkey + "=" +id;
