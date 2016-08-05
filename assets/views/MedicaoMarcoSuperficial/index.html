@@ -1,85 +1,71 @@
+
 <div class="section">
- <div class="row section">
-  <div class="divider"></div>
+  <div class="row section">
+      <div class="divider"></div>
+      <div class="row">
+        <div class="col s12 m12 l6">
+         <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false"  strupdate="true" popup="true" label="Lista de Medições"  view="MedicoesMarcoSuperficial" pagesize="5">
+         </grid-view>
+       </div>
+
+        <div class="col s12 m12 l6">
+
+          <div ng-controller="MedicaoMarcoSuperficialController" ng-show="verMedicoes" class="container">
+            <div class="card-panel ng-scope">
+               <div class="card-content black-text">
+                  <p>Detalhes da Medição</p>
 
 
-    <div class="row">
-      <div class="col s12 m12 l6">
-        
+                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' } ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
 
-      	<grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false"  strupdate="true" popup="true" label="Lista de Medições"  view="MedicoesMarcoSuperficial" pagesize="5">
-       </grid-view>
-        <!--<div id="modalView" class="modal modal-fixed-footer">
-              <div class="modal-content">
-              
+               </div>
+             
+            </div>
+            <div class="card-panel ng-scope">
+              <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
+
+              <div>
+                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="true" popup="true" label="Lista de Detalhes de Medições"  
+                    view="MedicaoMarcoSuperficialDetalhes" parentkey="marcoSuperficial" pagesize="5">
+                    </grid-view>
               </div>
-              <div class="modal-footer">
-                <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Disagree</a>
-                <a href="#" class="waves-effect waves-green btn-flat modal-action modal-close">Agree</a>
-              </div>
-            </div>-->
-      </div>
 
-      <div class="col s12 m12 l6">
+            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  ng-click="addNewMapa()"  ng-show="aterro.nome">
+                  <i class="mdi-content-add"></i>
+            </a>     
+            <div id="modalUpload" class="modal modal-fixed-footer">
+         
+                <div class="modal-content">
+                  <input type="file"  class="dropify" data-height="300" on-read-file="showContent($fileContent)" />
+                  <div ng-if="content">
+                    <h2>Marcos processado no arquivo:</h2>
 
-        <div ng-controller="MedicaoMarcoSuperficialController" ng-show="verMedicoes" class="container">
-          <div class="card-panel ng-scope">
-             <div class="card-content black-text">
-                <p>Detalhes da Medição</p>
+                    <table class='striped'>
+                      <thead>
+                        <tr>
+                        <th class='text-center ng-binding ng-scope'>Marco Superficial</th>
+                        <th class='text-center ng-binding ng-scope' >Norte</th>
+                          <th class='text-center ng-binding ng-scope' >Leste</th>
+                            <th class='text-center ng-binding ng-scope' >Cota</th>
+                        </tr>
+                      </thead>
 
+                      <tbody>
+                        <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
+                            <th class="ng-scope">{{medicao.nome}}</th>
+                           <th class="ng-scope">{{medicao.norte}}</th>
+                           <th class="ng-scope">{{medicao.leste}}</th>
+                           <th class="ng-scope">{{medicao.cota}}</th>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
 
-                  <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' } ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
-
-             </div>
-           
-          </div>
-          <div class="card-panel ng-scope">
-            <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
-
-            <div>
-
-                	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicoesMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="true" popup="true" label="Lista de Detalhes de Medições"  view="MedicoesMarcoSuperficialDetalhes" pagesize="5">
-                  </grid-view>
+                </div>
             </div>
 
-          <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  ng-click="addNewMapa()"  ng-show="aterro.nome">
-                                            <i class="mdi-content-add"></i>
-                                            </a>     
-     <div id="modalUpload" class="modal modal-fixed-footer">
-       
-              <div class="modal-content">
-    <input type="file"  class="dropify" data-height="300" on-read-file="showContent($fileContent)" />
-    <div ng-if="content">
-      <h2>Marcos processado no arquivo:</h2>
-
-      <table class='striped'>
-        <thead>
-          <tr>
-          <th class='text-center ng-binding ng-scope'>Marco Superficial</th>
-          <th class='text-center ng-binding ng-scope' >Norte</th>
-            <th class='text-center ng-binding ng-scope' >Leste</th>
-              <th class='text-center ng-binding ng-scope' >Cota</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
-              <th class="ng-scope">{{medicao.nome}}</th>
-             <th class="ng-scope">{{medicao.norte}}</th>
-             <th class="ng-scope">{{medicao.leste}}</th>
-             <th class="ng-scope">{{medicao.cota}}</th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    </div>
-    </div>
-
-      </div>
-</div>
-
-
+          </div>
+        </div>
     	</div>
     </div>
   </div>
