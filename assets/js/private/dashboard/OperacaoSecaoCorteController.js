@@ -3,7 +3,7 @@
 app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoSecaoCortes = []; 
   $scope.usuario = window.SAILS_LOCALS;
-
+  console.log('usuario', $scope.usuario);
   $http.get('/Usuario').success(function(data) {
       $scope.usuarios = angular.fromJson(data);
     });

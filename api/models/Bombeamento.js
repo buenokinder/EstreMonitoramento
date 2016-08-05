@@ -1,3 +1,4 @@
+
 module.exports = {
 
   attributes: {
@@ -20,6 +21,10 @@ module.exports = {
     ,
     litros: {
       type: 'float',
+      required: true
+    },    
+    aterro: {
+      model: 'Aterro',
       required: true
     }
   }

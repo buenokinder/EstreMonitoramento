@@ -1,13 +1,14 @@
 
+
 <div class="section">
  <div class="row section">
   <div class="divider"></div>
-    <div class="row">
+    <div class="row">    
       <div class="col s12 m12 l6">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'}, {'name': 'dataCriacao', 'value': 'Data de Criação','uiFilter': 'date'},{'name': 'habilitado' , 'value': 'Habilitado'}]" listaname="Piezometro" autopage="true"  label="Lista de Piezometro"  adicionar="" add="false" view="Piezometro" pagesize="5" strupdate="true"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome'}, {'name': 'dataCriacao', 'value': 'Data de Criação','uiFilter': 'date'},{'name': 'aterro' , 'value': 'Aterro', 'sub':'nome','filter': 'true'},{'name': 'habilitado' , 'value': 'Habilitado'}]" listaname="Piezometro" autopage="true"  label="Lista de Piezômetro"  adicionar="" add="false" view="Piezometro" pagesize="5" strupdate="true"></grid-view>
       </div>
       <div class="col s12 m12 l6">
-      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial'}, {'name': 'celulaPiezometrica', 'value': 'Célula Piezométrica '}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial '}, {'name': 'profundidadeTotalCamaraCarga', 'value': 'Prof. Média da Câmara de Carga '}, {'name': 'owner' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'alertas', 'value': 'Alertas', 'model': 'alertas','input': 'alerta' ,'uiMask':'ui-number-mask=1','type':'listview', fields: [ {'name': 'coeficienteRU', 'value': 'CoeficienteRU', 'uiFilter':'number'}, {'name': 'date', 'value': 'Data', 'uiFilter': 'date'}]}, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }, {'name': 'dataCriacao', 'type': 'dataCriacao'}]" label="Formulário de Piezometro" listaname="Piezometro"  strupdate="false"></form-view>
+      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial'}, {'name': 'celulaPiezometrica', 'value': 'Célula Piezométrica '}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial '}, {'name': 'profundidadeTotalCamaraCarga', 'value': 'Prof. Média da Câmara de Carga '}, {'name': 'owner' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'alertas', 'value': 'Alertas', 'model': 'alertas','input': 'alerta' ,'uiMask':'ui-number-mask=1','type':'listview', fields: [ {'name': 'coeficienteRU', 'value': 'CoeficienteRu', 'uiFilter':'number'}, {'name': 'date', 'value': 'Data', 'uiFilter': 'date'}]}, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }, {'name': 'dataCriacao', 'type': 'dataCriacao'}]" label="Formulário de Piezômetro" listaname="Piezometro"  strupdate="false"></form-view>
     	</div>
     </div>
   </div>
