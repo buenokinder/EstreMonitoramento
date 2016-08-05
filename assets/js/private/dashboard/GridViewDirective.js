@@ -1,5 +1,5 @@
 
-    app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
+ app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
         return {
             restrict: 'E',
             scope: {
@@ -18,7 +18,8 @@
                 delete: '@',
                 relatorio: '@',
                 autopage: '@',
-                label: '@'
+                label: '@',
+                parentkey: '@'
 
             }, link: function ($scope, $element, attrs) {
                 var HtmlFormBody = "";
@@ -55,12 +56,9 @@
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "</tfoot></table></div></div>";
 
-                console.log($scope.popup);
                 if($scope.popup == 'true')
                     HtmlFormBody +=  "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
-
-                console.log(HtmlFormBody);
-                // 
+               
                 $element.replaceWith($compile(HtmlFormBody)($scope));
 
             },
@@ -114,101 +112,109 @@
                                 return "paralisacao";
                                 break; 
                             default:
-                                console.log();
                                 break;
                         }
                     }
                 }
 
-                 $scope.refreshPageSearch = function () {
-                  $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
+                $scope.refreshPageSearch = function () {
+                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
+                        $scope.TotalItensSearch = results.data.length;
+                        var range = [];
+                        var total = ($scope.TotalItensSearch / $scope.pagesize);
+                        for (var i = 0; i < total; i++) {
+                            range.push(i + 1);
+                        }
+                        $scope.TotalPagesSearch = range;                        
+                    });
 
-                    $scope.TotalItensSearch = results.data.length;
-                    var range = [];
-                    var total = ($scope.TotalItensSearch / $scope.pagesize);
-                    for (var i = 0; i < total; i++) {
-                        range.push(i + 1);
-                    }
-                    console.log('range', range);
-                    $scope.TotalPagesSearch = range;                        
-                });
-
-                $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
-                    $scope.data = angular.fromJson(results.data);                    
-                    $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
-                });
-                $scope.PaginaSearch = function (page) {
-                    $scope.skipSearch = ((page - 1) * $scope.pagesize);
-                    $scope.ActualPageSearch = page;
-                    $scope.refreshPageSearch();
-                };
+                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
+                        $scope.data = angular.fromJson(results.data);                    
+                        $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
+                    });
+                    $scope.PaginaSearch = function (page) {
+                        $scope.skipSearch = ((page - 1) * $scope.pagesize);
+                        $scope.ActualPageSearch = page;
+                        $scope.refreshPageSearch();
+                    };
 
                 }; 
                 $scope.exibir = function(value){                    
-                    if(value == undefined || value == "false" || value == false)
-                        return false;
-
-                    return true;
+                    return (value != undefined && value != "false" && value != false);
                 }
 
                 $scope.exibirAdd = function(){
-
                     if($scope.add == "false")
                         return false;
 
                     return true;
                 }
-                 $scope.deleteDisabled = function(){
-                       if ($scope.strdelete == 'false' )
-                       return false
-
-                       return true;
+                
+                $scope.deleteDisabled = function(){
+                    return ($scope.strdelete != 'false' )
                 };
-     $scope.verifica = function (valor, nome, type, filtro) {        
-        if(valor.hasOwnProperty(nome)) {
+                
+                $scope.verifica = function (valor, nome, type, filtro) {        
+                    if(valor.hasOwnProperty(nome)) {
 
-            for ( key in valor){
+                        for ( key in valor){
 
-             if(key == nome)
-                 return valor[key];
-            }
-        }
-         if(type == "date"){
-
-            var data = new Date(valor);
-             var ano = data.getFullYear();
-               var mes = data.getMonth() + 1;
-               var dia = data.getDay();
-             var retorno = dia + "/" + mes + "/" + ano;
-            return retorno;
-         }
-        if(type == "usuario"){
-            return valor.name;            
-         }
-         if(typeof valor === "boolean"){            
-            if(valor == true) {
-                return "✔";
-            }
-            else {
-                return "✖";
-            }
-        }
-         if(filtro)
-            return $filter(filtro)(valor);
-         else 
-            return valor;
-     }
+                         if(key == nome)
+                             return valor[key];
+                        }
+                    }
+                    if(type == "date"){
+                        var data = new Date(valor);
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDate();
+                        var retorno = dia + "/" + mes + "/" + ano;
+                        return retorno;
+                    }
+                    if(type == "usuario"){
+                        return valor.name;            
+                    }
+                    if(typeof valor === "boolean"){            
+                        if(valor == true) {
+                            return "✔";
+                        }
+                        else {
+                            return "✖";
+                        }
+                    }
+                    
+                    return (filtro)? $filter(filtro)(valor):valor;
+                }
+                
                 $scope.init = function () {
+                    
+                    var isChild = $scope.parentkey !== undefined;
 
+                    if(isChild){
+                        $scope.$watch('$parent.data', function (newValue, oldValue) {
+                            if(newValue!==undefined && newValue!=null && newValue.id!==undefined){
+                                $scope.refreshPage(newValue.id);    
+                            }
+                            
+                        });                             
+                    }else{
+                        $scope.refreshPage();
+                    }
 
-
-
-                    $scope.refreshPage();
                 };
 
-                     $scope.refreshPage = function () {
-                  
-                     $http.get("/"+ $scope.listaname + "/count" ).then(function (results) {
+                $scope.refreshPage = function (id) {
+
+                    var parent="";
+                    var countUrl = "/"+ $scope.listaname + "/count";
+                    var plus = ($scope.listaname.indexOf("?") < 0)? "?":"&";
+
+                    if($scope.parentkey!==undefined){
+                        parent = $scope.parentkey + "=" +id;
+                        countUrl+=plus + parent;
+                    }
+
+                    $http.get(countUrl).then(function (results) {
 
                         $scope.TotalItens = results.data.count;
                         var range = [];
@@ -218,8 +224,7 @@
                         }
                         $scope.TotalPages = range;
                     });
-                    console.log('Total de Registros: ' + $scope.TotalPages );
-                    console.log('Pagina Atual: ' + $scope.ActualPage );
+
                     var query;
                     for (var key in $scope.fields) {
                         if (query)
@@ -231,18 +236,10 @@
                     if ($scope.fields.length)
                         query = query.substring(0, query.length - 1);
 
-                    var plus = "";
-                    if($scope.listaname.indexOf("?") < 0)    
-                         plus +=   "?";
-                    else
-                        plus +=   "&";
 
-                    $http.get("/"+ $scope.listaname + plus + "skip="+  $scope.skip  +"&limit="+ $scope.pagesize ).then(function(results) {
+                    $http.get("/"+ $scope.listaname + plus + "skip="+  $scope.skip + '&'+ parent +"&limit="+ $scope.pagesize ).then(function(results) {
                         $scope.data = angular.fromJson(results.data);
-                        console.log($scope.data );
                     });
-
-
                 };
 
                 $scope.Pagina = function (page) {
@@ -262,14 +259,10 @@
                 };
                 $scope.$on('handleBroadcastItem', function() {
                     $scope.data.push(angular.fromJson(sennitCommunicationService.datum.data));
-                    
-                        $scope.refreshPage();
-                    
-                    console.log('Registro incluido com sucesso!');
+                    $scope.refreshPage();
                 });       
 
                 $scope.select = function(msg) {
-                    console.log('mseg', msg);
                     sennitCommunicationService.prepForBroadcast(msg);
                 };
 
@@ -323,14 +316,12 @@
                 if ($scope.nocard)
                     HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
                 
-                console.log($scope.strupdate);
+
                 if ($scope.strupdate == 'false')
                     HtmlFormBody += "";
                 else
                     HtmlFormBody += "";
                 for (var key in $scope.fields) {
-                    console.log(key);
-                    console.log($scope.fields[key].type);
                          switch ($scope.fields[key].type) {
                                  
                             case 'table-add-remove':
@@ -437,7 +428,6 @@
             
 
                     HtmlFormBody += "</div></div></div> <input type='hidden' name='_csrf' value='<%= _csrf %>' /></form></div>";
-                    console.log(HtmlFormBody);
 
                     $element.replaceWith($compile(HtmlFormBody)($scope));
                 
@@ -492,13 +482,9 @@
                 $scope.getCombo = function(field) {                    
                     if(field.datarest)
                     {
-                        console.log('Data Rest');
-                        console.log(field.datarest);
                          $scope[field.model] = JSON.parse(field.datarest) ;
-                         console.log($scope[field.model]);
                     }
                     else{                  
-                        console.log('field', field);
                         $http.get("/"+ field.api).then(function (results) {                                
                             $scope[field.model]  = results.data;                          
                         });
@@ -548,7 +534,6 @@
                     $scope[input] = "";                            
                 };
                 $scope.change = function(model, data) {
-                    console.log('model = ', model, "data = ", data);
                     $scope.data[model] = data;
                 }
 /*                $scope.changeCombo = function (data, combo) {                
@@ -575,7 +560,6 @@
                 $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
                     $scope.inputClass = "active";
-                    console.log('Mudou aqui');
                 });        
 
 
@@ -583,7 +567,6 @@
                   
                     var idAssossiate = "id";
                     var dataAssossiate = '{ "'+ id + '": "' + value[idAssossiate]+ '" , "id": "'+ $routeParams.id + '"}';     
-                    console.log(model);
                     $http.post('/' + api , dataAssossiate)
                         .then(function (project) {
                             if(type == "add")
@@ -601,11 +584,9 @@
 
                
                 $scope.verificaBotaoSubmit = function(){
-                    console.log(typeof $scope.data.id ); 
-                        if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
-                            return false;
+                    if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
+                        return false;
                    
-                        console.log('True');
                         return true;
                 };
                 
@@ -626,7 +607,6 @@
 
                  $scope.sennitForm.loading = true;                    
                   if($scope.data.id){
-                    console.log('data update', $scope.data)
                     /* var query = $.param($scope.data);
 
                     for (var key in $scope.data) {
@@ -760,7 +740,6 @@
                                     swal("Registro Incluido!", "Seu registro foi incluido com sucesso.", "success");
                                     var inJson = angular.toJson( $scope.data);
                                     query = JSON.parse(inJson);
-                                    console.log('query1', query);
 
 
                                     $http.post('/'+ $scope.listaname , query)
@@ -841,4 +820,225 @@
       element.bind('change', onChangeFunc);
     }
   };
+}).directive('editView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService,$http) {
+        return {
+            restrict: 'E',
+            scope: {
+                fields: '=',
+                datasource: '=',
+                listaname: '@',
+                strupdate: '@',
+                nocard: '@',
+                strnew: '@',
+                redirecionar: '@',  
+                label: '@'
+
+
+            }, link: function ($scope, $element, attrs, $http) {
+                
+                var HtmlFormBody = '<form editable-form name="editableForm" onaftersave="save()">';
+
+                for (var key in $scope.fields) {
+                    HtmlFormBody+='<p>';
+                    HtmlFormBody+='<b>'+$scope.fields[key].value+': </b>';
+
+                    if($scope.fields[key].type=='date'){
+                        HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                        HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                        HtmlFormBody+='</span>';
+                    }else{
+                        HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                    }
+                    
+                    HtmlFormBody+='</p>';
+                }
+
+                HtmlFormBody += '<div class="buttons">';
+                    HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">';
+                      HtmlFormBody += 'Editar';
+                    HtmlFormBody += '</button>';
+
+                    HtmlFormBody += '<span ng-show="editableForm.$visible">';
+                      HtmlFormBody += '<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting" style="margin-right:10px;">';
+                        HtmlFormBody += 'Salvar';
+                      HtmlFormBody += '</button>';
+                      
+                      HtmlFormBody += '<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">';
+                        HtmlFormBody += 'Cancelar';
+                      HtmlFormBody += '</button>';
+                    HtmlFormBody += '</span>';
+                  HtmlFormBody += '</div>';                  
+                HtmlFormBody += '</form>';
+                
+                $element.replaceWith($compile(HtmlFormBody)($scope));
+                
+            },
+            controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
+                $scope.me = window.SAILS_LOCALS.me;
+                $scope.combodata = ([]);
+                $scope.combos = ([]);
+                $scope.modelComboBox = ([]);
+                $scope.sennitForm = {
+                    loading: false
+                }
+                $scope.inputClass = "";
+                $scope.data = ({});
+                $scope.url = ([]);
+
+                $scope.opened = {};
+
+                $scope.open = function($event, elementOpened) {
+                  $event.preventDefault();
+                  $event.stopPropagation();
+
+                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
+                };  
+
+                $scope.verifica = function (valor, nome, type, filtro) {        
+                    if(valor.hasOwnProperty(nome)) {
+                        for ( key in valor){
+
+                         if(key == nome)
+                             return valor[key];
+                        }
+                    }
+                    
+                    if(type == "date"){
+
+                        var data = new Date(valor);
+                         var ano = data.getFullYear();
+                           var mes = data.getMonth() + 1;
+                           var dia = data.getDay();
+                         var retorno = dia + "/" + mes + "/" + ano;
+                        return retorno;
+                    }
+
+                    if(type == "usuarios"){
+                        return valor.name;            
+                    }
+
+                    if(typeof valor === "boolean"){            
+                        if(valor == true) {
+                            return "✔";
+                        }
+                        else {
+                            return "✖";
+                        }
+                    }
+                    
+                    if(filtro)
+                        return $filter(filtro)(valor);
+                     else 
+                        return valor;
+                 }
+
+
+                $scope.init = function(){
+                    $('input.materialize-textarea').characterCounter();
+                    for (var key in $scope.fields) {
+                       // $scope.data[$scope.fields[key].name] ="";
+
+                        switch ($scope.fields[key].type) {
+                            case 'listview':
+                                $scope.data[$scope.fields[key].model] = ([]);
+                                                                   
+                                break;
+                            case 'textAngular':
+                                $scope.data[$scope.fields[key].name] = "";
+                                                                   
+                                break;
+                            case 'dataCriacao':
+                                $scope.data[$scope.fields[key].name] = new Date();
+                                                                   
+                                break;                                                           
+
+                            default:
+                        
+                            break;
+                        }
+                    } 
+                }
+                
+                $scope.adicionaAlertas = function(coeficiente, model, input) {                    
+                    var date = new Date();
+                    var dateISO = date.toISOString();
+                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});                    
+                    $scope[input] = "";                            
+                };
+                $scope.change = function(model, data) {
+                    $scope.data[model] = data;
+                }
+
+
+                $scope.$on('handleBroadcast', function() {
+                    $scope.data = sennitCommunicationService.data;
+                    $scope.inputClass = "active";
+                });        
+               
+
+                $scope.save = function () {
+
+                    $scope.sennitForm.loading = true;                    
+                    if($scope.data.id){
+                        $scope.sennitForm.loading = true;
+
+                        swal({   title: "",   
+                            text: "Você tem certeza que deseja alterar este registro?",   
+                            type: "warning",   
+                            showCancelButton: true, 
+                            confirmButtonText: "Sim",   
+                            cancelButtonText: "Cancelar",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false }, 
+                            function(isConfirm){   
+                                if (isConfirm) {     
+                                    $http({
+                                        method: 'PUT',
+                                        url: '/'+ $scope.listaname + '/' + $scope.data.id,
+                                        data: $scope.data
+                                    }).then(function onSuccess(sailsResponse){
+                                        $scope.inputClass = null;
+                                        //$scope.data = ([]);
+                                        $scope.inputClass = "disabled";
+                                        swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+                                        Materialize.toast('Registro alterado com sucesso!', 4000);
+                                    })
+                                    .catch(function onError(sailsResponse){
+
+                                    })
+                                    .finally(function eitherWay(){
+                                        $scope.sennitForm.loading = false;
+                                    })
+                                } else {
+                                        swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                                } 
+                            }
+                        );                                            
+                    } 
+                };
+            }
+        }}]).factory('sennitCommunicationService', function($rootScope) {
+            var sennitCommunicationService = ([]);
+            
+            sennitCommunicationService.data = '';
+
+            sennitCommunicationService.prepForBroadcast = function(data) {
+                this.data = data;
+                this.broadcastItem();
+            };
+
+            sennitCommunicationService.prepForBroadcastDataList = function(datum) {
+                this.datum = datum;
+                this.broadcastItemReturn();
+            };
+
+            sennitCommunicationService.broadcastItem = function() {
+                $rootScope.$broadcast('handleBroadcast');
+            };
+
+            sennitCommunicationService.broadcastItemReturn = function() {
+                $rootScope.$broadcast('handleBroadcastItem');
+            };
+
+    return sennitCommunicationService;
 });

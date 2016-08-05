@@ -20,15 +20,14 @@ module.exports = {
     nomeAuxiliar: {
       type: 'string',
       required: true
-    },   
+    },
     temperatura: {
       type: 'string',
       required: true
-    }, 
+    },
     medicaoMarcoSuperficialDetalhes: {
       collection: 'medicaoMarcoSuperficialDetalhes',
       via: 'owner'
     }
   }
 };
-

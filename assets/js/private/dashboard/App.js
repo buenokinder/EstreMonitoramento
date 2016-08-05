@@ -1,4 +1,4 @@
-var app = angular.module('DashboardModule', ['xeditable',
+var app = angular.module('DashboardModule', ['xeditable','ui.bootstrap',
     	'ngRoute','ngMaterial', 'lr.upload',
     	'ngResource','leaflet-directive', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
     	]);

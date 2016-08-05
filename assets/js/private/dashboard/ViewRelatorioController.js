@@ -46,7 +46,7 @@ console.log($scope.corpo );
             },
             templateUrl: 'views/reports/grafico.html',
             link: function ($scope, $element, attrs) {
-	
+
             }
 
         }
