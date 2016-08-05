@@ -24,6 +24,10 @@ module.exports = {
     secao: {
       model: 'secaoFatorSeguranca',
       required: true
+    },
+    aterro: {
+      model:'Aterro',
+      required: true
     }
   }
 };

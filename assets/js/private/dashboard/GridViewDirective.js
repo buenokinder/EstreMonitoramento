@@ -26,10 +26,14 @@
                 HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
                 for (var key in $scope.fields) {
                     if ($scope.fields[key].filter == 'true') {  
-                        $scope.habilitaBotao = true;                            
+                        $scope.habilitaBotao = true;                     
+                        $scope.modelComSub = "querydapesquisa." + $scope.fields[key].name + ".contains." + $scope.fields[key].sub;
+                        $scope.modelSemSub = "querydapesquisa."+ $scope.fields[key].name +".contains";
+                        $scope.query = $scope.fields[key].sub ? $scope.modelComSub : $scope.modelSemSub;
+                        console.log('model', $scope.model);           
                         HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
                         HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                
-                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +".contains'>";
+                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='"+ $scope.query + "'>";
                         HtmlFormBody += "</div>";                     
                     }           
                 }
@@ -66,7 +70,7 @@
             },
             controller: function ($scope, $element, $http, $filter) {
                 $scope.data = ([]);
-                $scope.querydapesquisa = ({});
+                $scope.querydapesquisa = ( {} );
                 $scope.me = window.SAILS_LOCALS.me;
                 $scope.ActualPage = 1;
                 $scope.skip = 0;
@@ -77,14 +81,23 @@
                 $scope.TotalItensSearch = 0;
                 $scope.TotalPagesSearch = ([]);
 
-                for (var key in $scope.fields) {
-                    if ($scope.fields[key].filter == 'true') {                        
-                        $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};                        
-                    }                         
-                }
+                // for (var key in $scope.fields) {
+                //     if ($scope.fields[key].filter == 'true') {
+                //         if($scope.fields[key].sub) {
+                //             $scope.querydapesquisa[$scope.fields[key].sub] = {'contains': $scope[$scope.fields[key].name]};
+                //             console.log('querydapesquisa', $scope.querydapesquisa)
+                //         } 
+                //         // else {
+                //         //     $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};    
+                //         // }                  
+                                                
+                //     }                         
+                // }
                 $scope.pesquisar = function() {
                     $scope.querydapesquisa = JSON.stringify($scope.querydapesquisa);
-                    $scope.refreshPageSearch();                                                       
+                    $scope.querydapesquisa = $scope.querydapesquisa.replace(/"/g, '\'');
+                    console.log('query', $scope.querydapesquisa);
+                    $scope.refreshPageSearch($scope.querydapesquisa);                                                       
                     $scope.habilitaPaginacao = true;
                 };
                 $scope.modalViewmodal = function()
@@ -120,8 +133,9 @@
                     }
                 }
 
-                 $scope.refreshPageSearch = function () {
-                  $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
+                 $scope.refreshPageSearch = function (query) {
+                    console.log('query', query);
+                  $http.get('/'+ $scope.view +'?where='+ query).then(function (results) {
 
                     $scope.TotalItensSearch = results.data.length;
                     var range = [];
@@ -134,7 +148,8 @@
                 });
 
                 $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
-                    $scope.data = angular.fromJson(results.data);                    
+                    $scope.data = angular.fromJson(results.data);
+                    console.log('data', $scope.data);                   
                     $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
                 });
                 $scope.PaginaSearch = function (page) {

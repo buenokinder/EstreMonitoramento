@@ -19,6 +19,10 @@ module.exports = {
     nivelChorume: {
       type: 'string',
       required: true
+    },
+    aterro: {
+      model:'Aterro',
+      required: true
     }
   }
 };

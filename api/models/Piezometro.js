@@ -48,6 +48,10 @@ module.exports = {
     },
     owner: {
       model: 'Aterro'
+    },
+    aterro: {
+      model: 'Aterro',
+      required: true
     }
   }
 };
