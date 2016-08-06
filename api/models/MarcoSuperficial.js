@@ -29,8 +29,7 @@ module.exports = {
       defaultsTo: false
     },
     aterro: {
-      model: 'Aterro',
-      required: true
+      model: 'Aterro'
     }
 
   }

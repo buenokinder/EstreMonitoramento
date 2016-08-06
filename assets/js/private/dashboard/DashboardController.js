@@ -54,7 +54,7 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pai = "Relatórios";
         break;        
       case '/MarcoSuperficial' :
-        $scope.pathname = "Marco Superficial";
+        $scope.pathname = "Marco Superficial e Inclinômetro";
         $scope.pai = "Dados Mestre";
         break;  
       case '/Piezometro' :

@@ -96,9 +96,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 	  $routeProvider.when("/MarcoSuperficial", {
-			templateUrl: "/views/marcosuperficial/index.html"
+			templateUrl: "/views/marcoSuperficial/index.html"
 		}).when("/MarcoSuperficial/:id", {		
-		  templateUrl: "/views/marcosuperficial/index.html"
+		  templateUrl: "/views/marcoSuperficial/index.html"
 		});
 
 		$routeProvider.when("/PocosVisita", {
