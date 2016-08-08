@@ -22,8 +22,7 @@ module.exports = {
       required: true
     },
     aterro: {
-      model:'Aterro',
-      required: true
+      model:'Aterro'
     }
   }
 };
