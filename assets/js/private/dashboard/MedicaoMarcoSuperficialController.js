@@ -38,6 +38,16 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
+    $scope.removeFile = function (){
+        $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
+          $scope.medicoes = ([]);
+          swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
+        }, function(){
+          swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
+        });
+
+    };
+
 
     $scope.saveObsOperacional = function (){
         swal({  title: "",   
