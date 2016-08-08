@@ -6,68 +6,65 @@
  */
 
 module.exports = {
-	medicao: function(req, res) 
-{
-    
-    var parameters = req.allParams();
- console.log(parameters);
-    MarcoSuperficial.findOne({
-        nome: parameters.nome
-    }, function foundUser(err, marco) {
-        console.log(marco);
-        if (err) {
-            return res.negotiate(err);
-        }
-        if (!marco) {
-         console.log({
-              nome: parameters.nome,
-              norte: parameters.norte,
-              leste:  parameters.leste,
-              cota:  parameters.cota,
-              aterro:  parameters.aterro
+
+  medicao: function(req, res) 
+  {
+      
+      var parameters = req.allParams();
+      console.log(parameters);
+      MarcoSuperficial.findOne({
+          nome: parameters.nome
+      }, function foundUser(err, marco) {
+          console.log(marco);
+          if (err) {
+              return res.negotiate(err);
+          }
+          if (!marco) {
+            console.log({
+                nome: parameters.nome,
+                norte: parameters.norte,
+                leste:  parameters.leste,
+                cota:  parameters.cota,
+                aterro:  parameters.aterro
             });
-             MarcoSuperficial.create({
-              nome: parameters.nome,
-              norte: parameters.norte,
-              leste:  parameters.leste,
-              cota:  parameters.cota,
-              aterro:  parameters.aterro
+               
+            MarcoSuperficial.create({
+                nome: parameters.nome,
+                norte: parameters.norte,
+                leste:  parameters.leste,
+                cota:  parameters.cota,
+                aterro:  parameters.aterro
             }, function userCreated(err, marcoSuperficial) {
-               if (err) {
-            return res.negotiate(err);
-        }
-        if (!marcoSuperficial) {
-            
-        }
-             
+              if (err) {
+                return res.negotiate(err);
+              }
+              if (!marcoSuperficial) {
+                  
+              }
             });
-         
-        }else{
-          console.log({
-                    norte: parameters.norte,
-                    leste:  parameters.leste,
-                    cota:  parameters.cota,
-                    marcoSuperficial:  marco.id
-                });
-               MedicaoMarcoSuperficialDetalhes.create({
-                    norte: parameters.norte,
-                    leste:  parameters.leste,
-                    cota:  parameters.cota,
-                    marcoSuperficial:  marco.id
-                }, function userCreated(err, medicao) {
-               if (err) {
-           return res.negotiate(err);
-        }
-       
-             
-            });
-           
+          }else{
+            console.log({
+                      norte: parameters.norte,
+                      leste:  parameters.leste,
+                      cota:  parameters.cota,
+                      marcoSuperficial:  marco.id
+                  });
+                 MedicaoMarcoSuperficialDetalhes.create({
+                      norte: parameters.norte,
+                      leste:  parameters.leste,
+                      cota:  parameters.cota,
+                      marcoSuperficial:  marco.id
+                  }, function userCreated(err, medicao) {
+                      if (err) {
+                        return res.negotiate(err);
+                      }       
+                  });
+          }
 
-        }
+      });
+    
+       res.json('Ok'); 
+  }
 
-    });
-  
-     res.json('Ok'); 
-    }
 };
 

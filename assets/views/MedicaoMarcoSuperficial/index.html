@@ -16,7 +16,7 @@
                   <p>Detalhes da Medição</p>
 
 
-                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' } ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
+                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor'} ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
 
                </div>
              
@@ -52,14 +52,24 @@
                       </thead>
 
                       <tbody>
-                        <tr ng-repeat='medicao in medicoes' ng-click='ViewItem(datum)' style='cursor:pointer'>
-                            <tr class="ng-scope">{{medicao.nome}}</tr>
-                            <tr class="ng-scope">{{medicao.norte}}</tr>
-                            <tr class="ng-scope">{{medicao.leste}}</tr>
-                            <tr class="ng-scope">{{medicao.cota}}</tr>
+                        <tr ng-repeat='medicao in medicoes'>
+                            <td class="ng-scope">{{medicao.nome}}</td>
+                            <td class="ng-scope">{{medicao.norte}}</td>
+                            <td class="ng-scope">{{medicao.leste}}</td>
+                            <td class="ng-scope">{{medicao.cota}}</td>
                         </tr>
                       </tbody>
                     </table>
+
+                    <div class="row col-xs-12 col-md-6">
+                      <p><b>Observação do operacional</b></p>
+                      <textarea class="form-group" rows="15" cols="40">
+                        
+                      </textarea>
+
+                      <button type="submit" class="btn btn-primary" style="margin-right:10px;">Salvar</button>
+                    </div>
+
                   </div>
 
                 </div>

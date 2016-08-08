@@ -46,18 +46,17 @@
                 
                 if($scope.editinline){
                     HtmlFormBody += "<tbody>";
-                    HtmlFormBody +=     "<tr ng-repeat='datum in data' style='cursor:pointer'>";
+                    HtmlFormBody +=     "<tr ng-repeat='datum in data' style='cursor:pointer' title='Clique para editar'>";
                     HtmlFormBody +=         "<td ng-repeat='field in fields' ng-click='edited=datum;rowform.$show()' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
                     HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-show='true'>{{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}</span>";
                     //HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-model='edited.{{field.name}}' ng-init='edited.{{field.name}}={{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}' ng-show='true'>edited.{{field.name}}</span>";
                     HtmlFormBody +=         "</td>";
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>";
-                    HtmlFormBody +=             "<a ng-click='select(datum)'>";
-                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                    HtmlFormBody +=             "<a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                     HtmlFormBody +=         "</td>";                
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
                     HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
-                    HtmlFormBody +=             "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody +=             "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
                     HtmlFormBody +=         "</td>";
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
                     HtmlFormBody +=             "<a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -170,8 +169,6 @@
                 }
                 
                 $scope.save = function(data){
-                    
-
 
                     swal({   title: "",   
                         text: "Você tem certeza que deseja alterar este registro?",   
@@ -196,19 +193,21 @@
                                     data: data
                                 }).then(function onSuccess(sailsResponse){
                                     $scope.inputClass = null;
-                                    //$scope.data = ([]);
                                     $scope.inputClass = "disabled";
                                     swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                     Materialize.toast('Registro alterado com sucesso!', 4000);
+                                    return true;
                                 })
                                 .catch(function onError(sailsResponse){
-
+                                    swal("Erro", "Seu registro não foi alterado :(", "error");
+                                    return false;
                                 })
                                 .finally(function eitherWay(){
                                     $scope.sennitForm.loading = false;
                                 })
                             } else {
                                     swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                                    return false;
                             } 
                         }
                     );   
@@ -328,6 +327,8 @@
                 };
 
                 $scope.refreshPage = function (id) {
+                    if(id == undefined && undefined!=$scope.parentkey)
+                        id = $scope.$parent.data.id;
 
                     var parent="";
                     var countUrl = "/"+ $scope.listaname + "/count";
@@ -966,14 +967,21 @@
                     HtmlFormBody+='<p>';
                     HtmlFormBody+='<b>'+$scope.fields[key].value+': </b>';
 
-                    if($scope.fields[key].type=='date'){
-                        HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
-                        HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
-                        HtmlFormBody+='</span>';
-                    }else{
-                        HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                    switch($scope.fields[key].type){
+                        case'date':
+                            HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                            HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                            HtmlFormBody+='</span>';                        
+                            break;
+                        case 'textarea':
+                            HtmlFormBody+='<span editable-textarea="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-rows="'+$scope.fields[key].rows+'" e-cols="'+$scope.fields[key].cols+'" e-style="width: '+$scope.fields[key].width+'; height:' +$scope.fields[key].height+ '" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            break;
+
+                        default:
+                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            break;
                     }
-                    
+
                     HtmlFormBody+='</p>';
                 }
 

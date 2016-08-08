@@ -1,27 +1,42 @@
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
-    $scope.medicoes = [];
+    $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
       
     $scope.showContent = function($fileContent){
 
-        var linhas = $fileContent.split('\n');
-        for(var i = 0;i < linhas.length;i++){
-            var linha = linhas[i];
-            var colunas = linha.split(';');
-            var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
-            var params = {'marcoSuperficial':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
-            $scope.medicoes.push(medicao);
+        var upload = function(ret){
+            var linhas = $fileContent.split('\n');
+            for(var i = 0;i < linhas.length;i++){
+                var linha = linhas[i];
+                var colunas = linha.split(';');
+                var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
+                var params = {'marcoSuperficial':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
+                $scope.medicoes.push(medicao);
 
-            $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
-   
-            }).error(function(data, status){
-                swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
-            });;
-        }
-        
-        $scope.content = $fileContent;
+                $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
+       
+                }).error(function(data, status){
+                    swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
+                });
+            }
+            $scope.content = $fileContent;
+        };
+
+        var erro = function(err){
+          swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
+        };
+
+        $scope.deleteAllDetalhes({id:$scope.data.id}, upload, erro);
+    };
+
+    $scope.deleteAllDetalhes = function (data, callback){
+      $http.post('/MedicaoMarcoSuperficialDetalhes/deleteall', data).success(function (response) {
+          callback(response, null);
+      }).error(function (err, status) {
+          callback(err, status);
+      });
     };
 
     $scope.$on('handleBroadcast', function() {
