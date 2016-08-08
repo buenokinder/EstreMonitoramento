@@ -3,9 +3,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
-      
+    
     $scope.showContent = function($fileContent){
-
         var upload = function(ret){
             var linhas = $fileContent.split('\n');
             for(var i = 0;i < linhas.length;i++){
@@ -37,6 +36,41 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       }).error(function (err, status) {
           callback(err, status);
       });
+    };
+
+
+    $scope.saveObsOperacional = function (){
+        swal({  title: "",   
+                text: "Você tem certeza que deseja inserir a observação ?",   
+                type: "warning",   
+                showCancelButton: true, 
+                confirmButtonText: "Sim",   
+                cancelButtonText: "Cancelar",   
+                closeOnConfirm: false,   
+                closeOnCancel: false }, 
+                function(isConfirm){   
+                    if (isConfirm) {     
+                        $http({
+                            method: 'PUT',
+                            url: '/MedicaoMarcoSuperficial/' + $scope.data.id,
+                            data: $scope.data
+                        }).then(function onSuccess(sailsResponse){
+                            $scope.inputClass = null;
+                            $scope.inputClass = "disabled";
+                            swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+                            Materialize.toast('Registro alterado com sucesso!', 4000);
+                        })
+                        .catch(function onError(sailsResponse){
+
+                        })
+                        .finally(function eitherWay(){
+                            $scope.sennitForm.loading = false;
+                        })
+                    } else {
+                            swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                    } 
+                }
+        );   
     };
 
     $scope.$on('handleBroadcast', function() {

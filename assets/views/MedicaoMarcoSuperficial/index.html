@@ -62,12 +62,9 @@
                     </table>
 
                     <div class="row col-xs-12 col-md-6">
-                      <p><b>Observação do operacional</b></p>
-                      <textarea class="form-group" rows="15" cols="40">
-                        
-                      </textarea>
-
-                      <button type="submit" class="btn btn-primary" style="margin-right:10px;">Salvar</button>
+                      <p><b>Observação do operacional:</b></p>
+                      <textarea ng-model="data.obsOperacional" class="form-group" rows="15" cols="40" style="margin: 0px; height: 85px; width: 714px;"></textarea>
+                      <button ng-click="saveObsOperacional()" type="submit" class="btn btn-primary" style="margin-right:10px;">Submeter</button>
                     </div>
 
                   </div>
