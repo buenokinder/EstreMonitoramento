@@ -61,7 +61,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
-    
+    $scope.closeMedicao = function(){
+      $('#modalView').closeModal();
+    };
+
     $scope.addMedicao = function (){
       swal({  title: "",   
               text: "Você tem certeza que deseja inserir a medição ?",   
@@ -82,6 +85,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           $scope.inputClass = "disabled";
                           $scope.refreshChilds = true;
                           $scope.verMedicoes = false;
+                          $scope.closeMedicao();
                           $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
