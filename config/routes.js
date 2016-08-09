@@ -38,6 +38,8 @@ module.exports.routes = {
     'GET /logout': 'UsuarioController.logout',
     'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
+    'GET /SecaoCorte/filter': 'SecaoCorteController.search',
+
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
     'GET /visualizacao': 'PageController.visualizacao'
