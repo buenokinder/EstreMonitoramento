@@ -31,9 +31,17 @@
                         $scope.habilitaBotao = true;                            
                         HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
                         HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                
-                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +".contains'>";
+                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +"'>";
                         HtmlFormBody += "</div>";                     
-                    }           
+                    }
+                    if($scope.fields[key].combo == 'true') {
+                        $scope.habilitaBotao = true;
+                        $scope.getCombo($scope.fields[key]);
+                        HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
+                        HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                  
+                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'></select>";
+                        HtmlFormBody += "</div>";
+                    }     
                 }
                 // <th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th> <td><input type='checkbox' /></td>
                 HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
@@ -151,16 +159,42 @@
                 $scope.TotalPagesSearch = ([]);
                 $scope.edited = ([]);
 
-                for (var key in $scope.fields) {
-                    if ($scope.fields[key].filter == 'true') {                        
-                        $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};                        
-                    }                         
-                }
                 $scope.pesquisar = function() {
-                    $scope.querydapesquisa = JSON.stringify($scope.querydapesquisa);
-                    $scope.refreshPageSearch();                                                       
-                    $scope.habilitaPaginacao = true;
+                    console.log('query', $scope.querydapesquisa);
+                    var query = "";
+                    for (var key in $scope.querydapesquisa) {
+                        query += key + "=" + $scope.querydapesquisa[key] + "&";
+                    }
+                    console.log('query query', query);
+
+                    $http({
+                        method: 'GET',
+                        url: '/'+ $scope.view + '/searchCount?' + query,                    
+                    }).then(function onSuccess(sailsResponse){
+                        $scope.refreshPageCountSearch(sailsResponse.data);     
+
+                        $http({
+                            method: 'GET',
+                            url: '/'+ $scope.view + '/search?' + query + "skip="+  $scope.skipSearch + "&limit="+ $scope.pagesize,                    
+                        }).then(function onSuccess(sailsResponse){
+                            $scope.refreshPageSearch(sailsResponse.data);     
+                            $scope.habilitaPaginacao = true;
+                        })
+                        .catch(function onError(sailsResponse){
+                            // $scope.sennitForm.loading = false;
+                        })
+                        .finally(function eitherWay(){
+                            // $scope.sennitForm.loading = false;
+                        });
+                    })
+                    .catch(function onError(sailsResponse){
+                        // $scope.sennitForm.loading = false;
+                    })
+                    .finally(function eitherWay(){
+                        // $scope.sennitForm.loading = false;
+                    });
                 };
+
                 $scope.modalViewmodal = function()
                 {
                     $('#modalView').openModal();
@@ -239,28 +273,27 @@
                 };
                 
 
-                $scope.refreshPageSearch = function () {
-                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
-                        $scope.TotalItensSearch = results.data.length;
-                        var range = [];
-                        var total = ($scope.TotalItensSearch / $scope.pagesize);
-                        for (var i = 0; i < total; i++) {
-                            range.push(i + 1);
-                        }
-                        $scope.TotalPagesSearch = range;                        
-                    });
-
-                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
-                        $scope.data = angular.fromJson(results.data);                    
-                        $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
-                    });
-                    $scope.PaginaSearch = function (page) {
-                        $scope.skipSearch = ((page - 1) * $scope.pagesize);
-                        $scope.ActualPageSearch = page;
-                        $scope.refreshPageSearch();
-                    };
-
+                $scope.refreshPageCountSearch = function (results) {
+                    $scope.TotalItensSearch = results;
+                    var range = [];
+                    var total = ($scope.TotalItensSearch / $scope.pagesize);
+                    for (var i = 0; i < total; i++) {
+                        range.push(i + 1);
+                    }
+                    $scope.TotalPagesSearch = range;    
                 }; 
+
+
+                $scope.refreshPageSearch = function (results) {
+                    $scope.data = angular.fromJson(results);
+                }; 
+
+                $scope.PaginaSearch = function (page) {
+                    $scope.skipSearch = ((page - 1) * $scope.pagesize);
+                    $scope.ActualPageSearch = page;
+                    $scope.pesquisar();
+                };
+
                 $scope.exibir = function(value){                    
                     return (value != undefined && value != "false" && value != false);
                 }
@@ -277,6 +310,7 @@
                 };
                 
                 $scope.verifica = function (valor, nome, type, filtro) {        
+                    if(valor == null) return;
                     if(valor.hasOwnProperty(nome)) {
 
                         for ( key in valor){
@@ -305,8 +339,19 @@
                         }
                     }
                     
-                    return (filtro)? $filter(filtro)(valor):valor;
+                    return (filtro) ? $filter(filtro)(valor):valor;
                 }
+                $scope.getCombo = function(field) {                    
+                    if(field.datarest)
+                    {
+                         $scope[field.model] = JSON.parse(field.datarest) ;
+                    }
+                    else{                  
+                        $http.get("/"+ field.api).then(function (results) {                                
+                            $scope[field.model]  = results.data;                          
+                        });
+                    }
+                };
                 
 
                 $scope.init = function () {

@@ -3,7 +3,7 @@
   <div class="divider"></div>
     <div class="row">
       <div class="col s12 m12 l6">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'habilitado' , 'value': 'Habilitado'}, {'name':'aterro', 'value':'Aterro', 'sub': 'nome', 'filter': 'true', 'combo':'true'}  ]" listaname="SecaoCorte" autopage="true"  label="Lista de Seção de Corte" adicionar="" add="false" view="SecaoCorte" pagesize="5" strupdate="true"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'habilitado' , 'value': 'Habilitado'}, {'name': 'aterro' , 'value': 'Aterro', 'sub':'nome', 'type': 'combobox', 'combo':'true', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome'}  ]" listaname="SecaoCorte" autopage="true"  label="Lista de Seção de Corte" adicionar="" add="false" view="SecaoCorte" pagesize="5" strupdate="true"></grid-view>
       </div>
       <div class="col s12 m12 l6">
       	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }]" label="Formulário de Seção de Corte" listaname="SecaoCorte"  strupdate="false"></form-view>
