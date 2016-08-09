@@ -1,21 +1,44 @@
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
+    $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
+    $scope.refreshChilds = false;
+
+   // $scope.totalMedicaoUpload = 0;
+
+    $scope.removeFile = function(){
+        $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
+          $scope.medicoes = ([]);
+          swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
+        }, function(){
+          swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
+        });
+    };
     
+
+
     $scope.showContent = function($fileContent){
+
+
         var upload = function(ret){
-            var linhas = $fileContent.split('\n');
+            $scope.medicoes = ([]);
+
+            var linhas = $fileContent.split('\n');  
+
             for(var i = 0;i < linhas.length;i++){
                 var linha = linhas[i];
                 var colunas = linha.split(';');
+                
+                if(colunas.length <4) continue;
+
                 var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
                 var params = {'marcoSuperficial':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
                 $scope.medicoes.push(medicao);
 
                 $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
-       
+                    $scope.refreshChilds = true;
                 }).error(function(data, status){
                     swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
                 });
@@ -38,17 +61,45 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
-    $scope.removeFile = function (){
-        $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
-          $scope.medicoes = ([]);
-          swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
-        }, function(){
-          swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
-        });
+    
+    $scope.addMedicao = function (){
+      swal({  title: "",   
+              text: "Você tem certeza que deseja inserir a medição ?",   
+              type: "warning",   
+              showCancelButton: true, 
+              confirmButtonText: "Sim",   
+              cancelButtonText: "Cancelar",   
+              closeOnConfirm: false,   
+              closeOnCancel: false }, 
+              function(isConfirm){   
+                  if (isConfirm) {     
+                      $http({
+                          method: 'POST',
+                          url: '/MedicaoMarcoSuperficial/',
+                          data: $scope.inserted
+                      }).then(function onSuccess(sailsResponse){
+                          $scope.inputClass = null;
+                          $scope.inputClass = "disabled";
+                          $scope.refreshChilds = true;
+                          $scope.verMedicoes = false;
+                          $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
+                          swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
+                          Materialize.toast('Registro inserido com sucesso!', 4000);
+                      })
+                      .catch(function onError(sailsResponse){
 
+                      })
+                      .finally(function eitherWay(){
+                          $scope.sennitForm.loading = false;
+                      })
+                  } else {
+                          swal("Cancelado", "Seu registro não foi inserido :(", "error");
+                  } 
+              }
+      );   
     };
 
-
+    
     $scope.saveObsOperacional = function (){
         swal({  title: "",   
                 text: "Você tem certeza que deseja inserir a observação ?",   
