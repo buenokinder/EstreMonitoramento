@@ -6,21 +6,18 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
 
-   // $scope.totalMedicaoUpload = 0;
-
     $scope.removeFile = function(){
         $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
           $scope.medicoes = ([]);
+          $scope.refreshChilds = true;
+          $scope.content = null;
           swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
         }, function(){
           swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
         });
     };
-    
-
 
     $scope.showContent = function($fileContent){
-
 
         var upload = function(ret){
             $scope.medicoes = ([]);
@@ -33,15 +30,50 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 
                 if(colunas.length <4) continue;
 
-                var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
-                var params = {'marcoSuperficial':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
-                $scope.medicoes.push(medicao);
 
-                $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
+
+
+                $http.get('/MarcoSuperficial/?nome='+colunas[0]).success(function(ret, status){
                     $scope.refreshChilds = true;
+                    console.log("ret", ret);
+
+                    if(null!=ret && ret.length>0){
+
+                        /*var RESULTADO_DA_BUSCA_DO_MARCO_SUPERFICIAL_POR_NOME = 
+                        {
+                          "id" : "57a355d0bbf6d954160aaaae"
+                        };*/
+
+                          //OWNER ESTÁ NULL
+                          
+                        var marcoSuperficial = ret[0];
+                        var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
+                        var params = {'marcoSuperficial':marcoSuperficial, 'owner':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
+                        $scope.medicoes.push(medicao);
+
+                        $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
+                            $scope.refreshChilds = true;
+                        }).error(function(data, status){
+                            swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
+                        });                      
+                    }else{
+                      swal("Erro", "Ocorreu uma falha ao importar o marco '" + colunas[0] + "' :(", "error");
+                    }
+
+
                 }).error(function(data, status){
                     swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
                 });
+
+
+
+
+
+
+
+
+
+
             }
             $scope.content = $fileContent;
         };
@@ -143,6 +175,16 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       $scope.inputClass = "active";
       $scope.verMedicoes = true;
     }); 
+
+    $(".dropify").on('dropify.afterClear', function(e){
+      $scope.removeFile();
+    });
+
+
+    $(".dropify").on('afterClear', function(e){
+      console.log("file removed --");
+      $scope.removeFile();
+    });
 
     $scope.uploadDetalhes = function(){
        $('.dropify').dropify({
