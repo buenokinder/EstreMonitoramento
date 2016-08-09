@@ -163,9 +163,7 @@
                 };
                 $scope.modalViewmodal = function()
                 {
-                 
-                     $('#modalView').openModal();
-                    
+                    $('#modalView').openModal();
                 }
                 
                 $scope.save = function(data){
@@ -238,7 +236,8 @@
                                 break;
                         }
                     }
-                }
+                };
+                
 
                 $scope.refreshPageSearch = function () {
                     $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
@@ -309,8 +308,16 @@
                     return (filtro)? $filter(filtro)(valor):valor;
                 }
                 
+
                 $scope.init = function () {
                     
+                    $scope.$watch('$parent.refreshChilds', function (newValue, oldValue) {
+                        if(newValue==true){
+                            $scope.refreshPage();   
+                            $scope.$parent.refreshChilds = false; 
+                        }
+                    });  
+
                     var isChild = $scope.parentkey !== undefined;
 
                     if(isChild){
@@ -318,12 +325,10 @@
                             if(newValue!==undefined && newValue!=null && newValue.id!==undefined){
                                 $scope.refreshPage(newValue.id);    
                             }
-                            
                         });                             
                     }else{
                         $scope.refreshPage();
                     }
-
                 };
 
                 $scope.refreshPage = function (id) {
@@ -969,16 +974,26 @@
 
                     switch($scope.fields[key].type){
                         case'date':
+                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'">';
+                            HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                            HtmlFormBody+='</span>';                        
+                            break;
+                        case'datepicker':
                             HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
                             HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                             HtmlFormBody+='</span>';                        
                             break;
+
                         case 'textarea':
                             HtmlFormBody+='<span editable-textarea="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-rows="'+$scope.fields[key].rows+'" e-cols="'+$scope.fields[key].cols+'" e-style="width: '+$scope.fields[key].width+'; height:' +$scope.fields[key].height+ '" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
                             break;
 
                         default:
-                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            if($scope.fields[key].readonly==true){
+                                HtmlFormBody+='<span e-readonly="true">{{data.'+$scope.fields[key].name+'}}</span>';        
+                            }else{
+                                HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            }
                             break;
                     }
 
