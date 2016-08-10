@@ -571,8 +571,11 @@
                             case 'textAngular':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
                                 break;
-                            case 'dataCriacao':                                
-                                break;                                                                                       
+                            case'datepicker':
+                                HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                                HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                                HtmlFormBody+='</span>';                        
+                            break;                                                                                                                   
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
@@ -618,7 +621,14 @@
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
+                $scope.opened = {};
 
+                $scope.open = function($event, elementOpened) {
+                  $event.preventDefault();
+                  $event.stopPropagation();
+
+                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
+                };  
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
 
@@ -683,18 +693,6 @@
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
                                 break;
-                            case 'dataCriacao':
-                                $scope.data[$scope.fields[key].name] = new Date();
-                                                                   
-                                break;                                                           
-                            /*case 'combobox':                                
-                                
-                                $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
-                                    $scope[$scope.fields[key].model]  = results.data;  
-                                    console.log("combo, combo", $scope[$scope.fields[key].model]);
-                                });
-
-                                break;*/
                             default:
                         
                             break;
@@ -711,25 +709,17 @@
                 $scope.change = function(model, data) {
                     $scope.data[model] = data;
                 }
-/*                $scope.changeCombo = function (data, combo) {                
-                    $scope.data[data] = combo;                                    
-                                   
-                };*/
+
+
                 $scope.newitem = function () {                    
                     $scope.data = ([]);
                     var newData = ({});
-                    for (var key in $scope.fields) {
-/*                        if($scope.fields[key].input)
-                            $scope.fields[key].input = "";*/
-
-                        if($scope.fields[key].model)
-                            newData[$scope.fields[key].name] = ([]);
-                        else  
-                            newData[$scope.fields[key].name] = "";
-                            $scope[$scope.fields[key].name] = "";          
+                    for (var key in $scope.fields) {                        
+                        newData[$scope.fields[key].name] = "";
+                        $scope[$scope.fields[key].name] = "";          
                     }                    
                     $scope.data = newData;
-                    $scope.inputClass = "disabled";
+                    $scope.inputClass = "";
                 };
 
                 $scope.$on('handleBroadcast', function() {
@@ -782,23 +772,6 @@
 
                  $scope.sennitForm.loading = true;                    
                   if($scope.data.id){
-                    /* var query = $.param($scope.data);
-
-                    for (var key in $scope.data) {
-                        if (key != "$$hashKey"){
-                            if (query){
-                                if(!Array.isArray($scope.data[key]))
-                                    query += "&" + key + "="+ $scope.data[key];
-
-                            } else {
-                                if(!Array.isArray($scope.data[key]))
-                                    query = "" + key + "="+ $scope.data[key];                                
-                            } 
-                        }              
-                    }
-                    var inJson = angular.toJson( $scope.data);
-                    query = JSON.parse(inJson);
-                    $scope.sennitForm.loading = true;*/
                     $scope.sennitForm.loading = true;
                     swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
@@ -837,71 +810,7 @@
                         );                                            
 
 
-                    } else{
-/*                        var query;
-                        for (var key in $scope.data) {
-
-                            console.log(  );
-                            console.log($scope.data[key]);
-                            if (query){
-                                if(Array.isArray($scope.data[key]))
-                                {
-                                     var loopVerify;
-                                for (var keyModel in $scope.data[key]) {
-                                    console.log($scope.data[key]);
-                                 if(loopVerify){
-                                      loopVerify = "passou";
-                                    
-                                     query += ', "'+ $scope.data[key][keyModel].id  + '"';
-                                             
-                                 }else{
-                                     loopVerify = "passou";
-                                     query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                      
-                                     
-                                 }
-
-                                }
-                                  query +=  "]";
-                                }else{
-                                    if($scope.data[key])
-                                    {
-                                        query += ',"' + key + '": "'+ $scope.data[key] + '"';
-                                    }else{
-
-                                        query += "," + key + "="+ $scope.data[key];
-                                    }
-                                
-                                }
-
-                            } else{
-                                if(Array.isArray($scope.data[key]))
-                                {
-                                    var loopVerify;
-                                    for (var keyModel in $scope.data[key]) {
-                                        console.log($scope.data[key]);
-                                     if(loopVerify){
-                                          loopVerify = "passou";
-                                    
-                                          query += ',  "'+ $scope.data[key][keyModel].id + '"';       
-                                     }else{
-                                         loopVerify = "passou";
-                                  
-                                          query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                         
-                                     }
-
-                                    }
-                                      query +=  "]";
-                                    }else{
-                                    query = '{ "' + key + '": "'+ $scope.data[key] + '"';
-                                    }
-                                }
-                                
-                        }
-
-                        query += "}"; */                       
-
+                    } else{                    
                         swal({   title: "",   
                             text: "Você tem certeza que deseja incluir este registro?",   
                             type: "info",   
@@ -1138,11 +1047,7 @@
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
-                                break;
-                            case 'dataCriacao':
-                                $scope.data[$scope.fields[key].name] = new Date();
-                                                                   
-                                break;                                                           
+                                break;                                                          
 
                             default:
                         
