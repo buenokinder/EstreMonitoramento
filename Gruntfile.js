@@ -37,34 +37,6 @@ module.exports = function(grunt) {
 	}
 
 
-	grunt.initConfig({
-	  watch: {
-	    gruntfile: {
-	      files: 'Gruntfile.js',
-	      tasks: ['jshint:gruntfile'],
-	    },	  	
-	    options: {
-	      livereload: 1337,
-	    },	  	
-	    scripts: {
-	      files: ['assets/js/private/dashboard/*.js'],
-	      tasks: ['jshint'],
-	      options: {
-	        spawn: false,
-	      }
-	    }
-	  },
-	  jshint: {
-	    all: {
-	      src: ['assets/js/private/dashboard/*.js'],
-	    }
-	  }
-	});
-
-	
-	grunt.event.on('watch', function(action, filepath) {
-	  grunt.config('jshint.all.src', filepath);
-	});
 	/**
 	 * Loads Grunt configuration modules from the specified
 	 * relative path. These modules should export a function

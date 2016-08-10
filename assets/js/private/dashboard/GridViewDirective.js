@@ -27,6 +27,11 @@
 
                 HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
                 for (var key in $scope.fields) {
+                    
+                    if($scope.fields[key].readonly == undefined){
+                        $scope.fields[key].readonly=false;
+                    }
+
                     if ($scope.fields[key].filter == 'true') {  
                         $scope.habilitaBotao = true;                            
                         HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
@@ -52,13 +57,15 @@
                 HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
                 HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
                 
+
                 if($scope.editinline){
                     HtmlFormBody += "<tbody>";
                     HtmlFormBody +=     "<tr ng-repeat='datum in data' style='cursor:pointer' title='Clique para editar'>";
+
                     HtmlFormBody +=         "<td ng-repeat='field in fields' ng-click='edited=datum;rowform.$show()' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
                     HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-show='true'>{{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}</span>";
-                    //HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-model='edited.{{field.name}}' ng-init='edited.{{field.name}}={{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}' ng-show='true'>edited.{{field.name}}</span>";
                     HtmlFormBody +=         "</td>";
+
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>";
                     HtmlFormBody +=             "<a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                     HtmlFormBody +=         "</td>";                
@@ -219,10 +226,16 @@
                                     angular.extend(data, item);  
                                 }
 
+                               var params = {};
+                                for(var field in $scope.fields){
+                                    params[$scope.fields[field].name] = data[$scope.fields[field].name];
+                                }
+
                                 $http({
                                     method: 'PUT',
                                     url: '/'+ $scope.listaname + '/' + data.id,
-                                    data: data
+                                    data: params
+                                    //data: data
                                 }).then(function onSuccess(sailsResponse){
                                     $scope.inputClass = null;
                                     $scope.inputClass = "disabled";
@@ -1098,10 +1111,10 @@
                     if(type == "date"){
 
                         var data = new Date(valor);
-                         var ano = data.getFullYear();
-                           var mes = data.getMonth() + 1;
-                           var dia = data.getDay();
-                         var retorno = dia + "/" + mes + "/" + ano;
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDay();
+                        var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
                     }
 
@@ -1168,9 +1181,13 @@
 
                 $scope.save = function () {
 
-                    $scope.sennitForm.loading = true;                    
                     if($scope.data.id){
                         $scope.sennitForm.loading = true;
+
+                        var params = {};
+                        for(var field in $scope.fields){
+                            params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                        }
 
                         swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
@@ -1185,10 +1202,9 @@
                                     $http({
                                         method: 'PUT',
                                         url: '/'+ $scope.listaname + '/' + $scope.data.id,
-                                        data: $scope.data
+                                        data: params
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
-                                        //$scope.data = ([]);
                                         $scope.inputClass = "disabled";
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);

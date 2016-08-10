@@ -25,6 +25,14 @@ module.exports = {
       type: 'string',
       required: true
     },
+    obsOperacional:{
+      type: 'string',
+      required: false      
+    },
+    obsGestor:{
+      type: 'string',
+      required: false      
+    },    
     medicaoMarcoSuperficialDetalhes: {
       collection: 'medicaoMarcoSuperficialDetalhes',
       via: 'owner'

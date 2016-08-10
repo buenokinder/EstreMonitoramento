@@ -102,8 +102,8 @@
               <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
 
               <div>
-                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco'},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="false" popup="true" label="Lista de Detalhes de Medições"  
-                    view="MedicaoMarcoSuperficialDetalhes" parentkey="marcoSuperficial" pagesize="5" editinline="true">
+                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="false" popup="true" label="Lista de Detalhes de Medições"  
+                    view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true">
                     </grid-view>
               </div>
 

@@ -17,8 +17,18 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         });
     };
 
-    $scope.getMarcoSuperficial = function(nomeMarcosuperficial) {
-      $http.get('/MarcoSuperficial/?nome='+nomeMarcosuperficial).success(callback(ret, status)).error(callback(err, status));
+    $scope.getMarcoSuperficial = function(nomeMarcosuperficial, callback) {
+      $http.get('/MarcoSuperficial/?nome='+nomeMarcosuperficial).success(function (response, status) {
+
+          //if(null==ret || ret.length==0){
+            //$scope.createMarcoSuperficial(marco, callback);
+          //}else{
+            callback(response, status);  
+          //}
+          
+      }).error(function (err, status) {
+          callback(err, status);
+      });
     };
 
     $scope.saveMedicaoMarcoSuperficialDetalhes = function(medicaoMarcoSuperficialDetalhes){
@@ -32,6 +42,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
             $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
                 $scope.refreshChilds = true;
+                $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
             }).error(function(data, status){
                 swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
             }); 
@@ -45,7 +56,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
         var extractMedicaoMarcoSuperficialDetalhes = function(ret){
             $scope.medicoes = ([]);
-
             var linhas = $fileContent.split('\n');  
 
             for(var i = 0;i < linhas.length;i++){
@@ -56,7 +66,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
                 var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
                 var medicaoMarcoSuperficialDetalhes = {'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
-                $scope.medicoes.push(medicao);
+                
                 $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
             }
             $scope.content = $fileContent;
@@ -134,7 +144,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                         $http({
                             method: 'PUT',
                             url: '/MedicaoMarcoSuperficial/' + $scope.data.id,
-                            data: $scope.data
+                            data: {'obsOperacional': $scope.data.obsOperacional}
                         }).then(function onSuccess(sailsResponse){
                             $scope.inputClass = null;
                             $scope.inputClass = "disabled";
