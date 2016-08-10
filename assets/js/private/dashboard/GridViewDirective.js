@@ -1141,12 +1141,10 @@
                                 break;
                             case 'dataCriacao':
                                 $scope.data[$scope.fields[key].name] = new Date();
-                                                                   
                                 break;                                                           
 
                             default:
-                        
-                            break;
+                                break;
                         }
                     } 
                 }
