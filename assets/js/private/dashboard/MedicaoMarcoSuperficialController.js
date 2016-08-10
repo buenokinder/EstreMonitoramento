@@ -17,9 +17,33 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         });
     };
 
+    $scope.getMarcoSuperficial = function(nomeMarcosuperficial) {
+      $http.get('/MarcoSuperficial/?nome='+nomeMarcosuperficial).success(callback(ret, status)).error(callback(err, status));
+    };
+
+    $scope.saveMedicaoMarcoSuperficialDetalhes = function(medicaoMarcoSuperficialDetalhes){
+
+      $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes.nome, function(ret, status){
+
+          if(null!=ret && ret.length>0){
+
+            medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = ret[0];
+            medicaoMarcoSuperficialDetalhes['owner'] = $scope.data;
+
+            $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
+                $scope.refreshChilds = true;
+            }).error(function(data, status){
+                swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+            }); 
+          }else{
+            swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+          }
+      });
+    };
+
     $scope.showContent = function($fileContent){
 
-        var upload = function(ret){
+        var extractMedicaoMarcoSuperficialDetalhes = function(ret){
             $scope.medicoes = ([]);
 
             var linhas = $fileContent.split('\n');  
@@ -30,50 +54,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 
                 if(colunas.length <4) continue;
 
-
-
-
-                $http.get('/MarcoSuperficial/?nome='+colunas[0]).success(function(ret, status){
-                    $scope.refreshChilds = true;
-                    console.log("ret", ret);
-
-                    if(null!=ret && ret.length>0){
-
-                        /*var RESULTADO_DA_BUSCA_DO_MARCO_SUPERFICIAL_POR_NOME = 
-                        {
-                          "id" : "57a355d0bbf6d954160aaaae"
-                        };*/
-
-                          //OWNER ESTÁ NULL
-                          
-                        var marcoSuperficial = ret[0];
-                        var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
-                        var params = {'marcoSuperficial':marcoSuperficial, 'owner':$scope.data, 'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
-                        $scope.medicoes.push(medicao);
-
-                        $http.post('/MedicaoMarcoSuperficialDetalhes', params).success(function(data, status){
-                            $scope.refreshChilds = true;
-                        }).error(function(data, status){
-                            swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
-                        });                      
-                    }else{
-                      swal("Erro", "Ocorreu uma falha ao importar o marco '" + colunas[0] + "' :(", "error");
-                    }
-
-
-                }).error(function(data, status){
-                    swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
-                });
-
-
-
-
-
-
-
-
-
-
+                var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
+                var medicaoMarcoSuperficialDetalhes = {'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
+                $scope.medicoes.push(medicao);
+                $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
             }
             $scope.content = $fileContent;
         };
@@ -82,7 +66,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
         };
 
-        $scope.deleteAllDetalhes({id:$scope.data.id}, upload, erro);
+        $scope.deleteAllDetalhes({id:$scope.data.id}, extractMedicaoMarcoSuperficialDetalhes, erro);
     };
 
     $scope.deleteAllDetalhes = function (data, callback){
