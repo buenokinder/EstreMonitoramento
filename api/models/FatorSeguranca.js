@@ -23,12 +23,10 @@ module.exports = {
       type: 'float'
     },
     secao: {
-      model: 'secaoFatorSeguranca',
-      required: true
+      model: 'secaoFatorSeguranca'
     },
     aterro: {
-      model:'Aterro',
-      required: true
+      model:'Aterro'
     }
   }
 };
