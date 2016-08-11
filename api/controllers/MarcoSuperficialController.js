@@ -24,7 +24,7 @@ module.exports = {
 				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
 				//var sortString= 'dataInstalacao ASC';
 				var sortString = req.param('o');
-				marcoSuperficial.sort('kjasdkjlkjasd asdlkjsad');
+				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
 					total = marcosSuperficiais.length;
