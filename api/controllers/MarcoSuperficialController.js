@@ -15,9 +15,9 @@ module.exports = {
 	    {
 			var total=0;
 			var totalCarregados=0;
-			Math.__proto__.graus = function(angulo){
-				return angulo * (180/Math.PI);
-			}
+			// Math.__proto__.graus = function(angulo){
+			// 	return angulo * (180/Math.PI);
+			// }
 
 			Alerta.find({}, function(err, alertas){
 				console.log("alertas", alertas);

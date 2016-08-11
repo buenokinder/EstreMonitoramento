@@ -54,7 +54,7 @@ function getParameterByName(name, url) {
             },
             templateUrl: 'views/reports/grafico.html',
             link: function ($scope, $element, attrs) {
-
+ if($scope.tipo == 'fatorsegurancames'){
                 $('#container').highcharts({
         chart: {
             zoomType: 'xy'
@@ -123,7 +123,7 @@ function getParameterByName(name, url) {
             }
         }]
     });
-    
+
         $('#container').highcharts({
         title: {
             text: 'MSD 01 - Vertical',
