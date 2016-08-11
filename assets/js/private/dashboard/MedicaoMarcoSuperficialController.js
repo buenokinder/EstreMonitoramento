@@ -26,7 +26,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           console.log("marcoSuperficial", $scope.monitoramentos.marcoSuperficial);
 
           var getDateQuery = function(date){
-            if(null==value || undefined == value || ''==value)
+            if(null==date || undefined == date || ''==date)
                 return '';
 
              var value = date.split('/');
