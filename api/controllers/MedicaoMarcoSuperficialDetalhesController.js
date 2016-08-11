@@ -4,7 +4,8 @@ module.exports = {
      	var parameters = req.allParams();
 
 		MedicaoMarcoSuperficialDetalhes.destroy({
-		    marcoSuperficial: parameters.id
+			owner: parameters.id
+		    //marcoSuperficial: parameters.id
 		}, function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);

@@ -27,13 +27,26 @@
 
                 HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
                 for (var key in $scope.fields) {
+                    
+                    if($scope.fields[key].readonly == undefined){
+                        $scope.fields[key].readonly=false;
+                    }
+
                     if ($scope.fields[key].filter == 'true') {  
                         $scope.habilitaBotao = true;                            
                         HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
                         HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                
-                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +".contains'>";
+                        HtmlFormBody += "<input type='text' class='form-control' id='" + $scope.fields[key].name + "' ng-model='querydapesquisa." + $scope.fields[key].name +"'>";
                         HtmlFormBody += "</div>";                     
-                    }           
+                    }
+                    if($scope.fields[key].combo == 'true') {
+                        $scope.habilitaBotao = true;
+                        $scope.getCombo($scope.fields[key]);
+                        HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
+                        HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                  
+                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'></select>";
+                        HtmlFormBody += "</div>";
+                    }     
                 }
                 // <th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' /></th> <td><input type='checkbox' /></td>
                 HtmlFormBody += "<div ng-show='habilitaBotao' class='right col s1'><a ng-click='pesquisar()' class='btn-floating btn-small waves-effect waves-light'><i class='mdi-action-search'></i></a></div>";
@@ -44,13 +57,15 @@
                 HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
                 HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
                 
+
                 if($scope.editinline){
                     HtmlFormBody += "<tbody>";
                     HtmlFormBody +=     "<tr ng-repeat='datum in data' style='cursor:pointer' title='Clique para editar'>";
+
                     HtmlFormBody +=         "<td ng-repeat='field in fields' ng-click='edited=datum;rowform.$show()' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
                     HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-show='true'>{{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}</span>";
-                    //HtmlFormBody +=             "<span editable-text='datum.{{field.name}}' e-name='{{field.name}}' e-form='rowform' ng-model='edited.{{field.name}}' ng-init='edited.{{field.name}}={{verifica(datum[field.name],field.sub, field.type, field.uiFilter)}}' ng-show='true'>edited.{{field.name}}</span>";
                     HtmlFormBody +=         "</td>";
+
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>";
                     HtmlFormBody +=             "<a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                     HtmlFormBody +=         "</td>";                
@@ -151,21 +166,45 @@
                 $scope.TotalPagesSearch = ([]);
                 $scope.edited = ([]);
 
-                for (var key in $scope.fields) {
-                    if ($scope.fields[key].filter == 'true') {                        
-                        $scope.querydapesquisa[$scope.fields[key].name] = {'contains': $scope[$scope.fields[key].name]};                        
-                    }                         
-                }
                 $scope.pesquisar = function() {
-                    $scope.querydapesquisa = JSON.stringify($scope.querydapesquisa);
-                    $scope.refreshPageSearch();                                                       
-                    $scope.habilitaPaginacao = true;
+                    console.log('query', $scope.querydapesquisa);
+                    var query = "";
+                    for (var key in $scope.querydapesquisa) {
+                        query += key + "=" + $scope.querydapesquisa[key] + "&";
+                    }
+                    console.log('query query', query);
+
+                    $http({
+                        method: 'GET',
+                        url: '/'+ $scope.view + '/searchCount?' + query,                    
+                    }).then(function onSuccess(sailsResponse){
+                        $scope.refreshPageCountSearch(sailsResponse.data);     
+
+                        $http({
+                            method: 'GET',
+                            url: '/'+ $scope.view + '/search?' + query + "skip="+  $scope.skipSearch + "&limit="+ $scope.pagesize,                    
+                        }).then(function onSuccess(sailsResponse){
+                            $scope.refreshPageSearch(sailsResponse.data);     
+                            $scope.habilitaPaginacao = true;
+                        })
+                        .catch(function onError(sailsResponse){
+                            // $scope.sennitForm.loading = false;
+                        })
+                        .finally(function eitherWay(){
+                            // $scope.sennitForm.loading = false;
+                        });
+                    })
+                    .catch(function onError(sailsResponse){
+                        // $scope.sennitForm.loading = false;
+                    })
+                    .finally(function eitherWay(){
+                        // $scope.sennitForm.loading = false;
+                    });
                 };
+
                 $scope.modalViewmodal = function()
                 {
-                 
-                     $('#modalView').openModal();
-                    
+                    $('#modalView').openModal();
                 }
                 
                 $scope.save = function(data){
@@ -187,10 +226,16 @@
                                     angular.extend(data, item);  
                                 }
 
+                               var params = {};
+                                for(var field in $scope.fields){
+                                    params[$scope.fields[field].name] = data[$scope.fields[field].name];
+                                }
+
                                 $http({
                                     method: 'PUT',
                                     url: '/'+ $scope.listaname + '/' + data.id,
-                                    data: data
+                                    data: params
+                                    //data: data
                                 }).then(function onSuccess(sailsResponse){
                                     $scope.inputClass = null;
                                     $scope.inputClass = "disabled";
@@ -238,30 +283,30 @@
                                 break;
                         }
                     }
-                }
+                };
+                
 
-                $scope.refreshPageSearch = function () {
-                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa).then(function (results) {
-                        $scope.TotalItensSearch = results.data.length;
-                        var range = [];
-                        var total = ($scope.TotalItensSearch / $scope.pagesize);
-                        for (var i = 0; i < total; i++) {
-                            range.push(i + 1);
-                        }
-                        $scope.TotalPagesSearch = range;                        
-                    });
-
-                    $http.get('/'+ $scope.view +'?where='+$scope.querydapesquisa + "&skip="+  $scope.skipSearch  +"&limit="+ $scope.pagesize ).then(function(results) {
-                        $scope.data = angular.fromJson(results.data);                    
-                        $scope.querydapesquisa = JSON.parse($scope.querydapesquisa);
-                    });
-                    $scope.PaginaSearch = function (page) {
-                        $scope.skipSearch = ((page - 1) * $scope.pagesize);
-                        $scope.ActualPageSearch = page;
-                        $scope.refreshPageSearch();
-                    };
-
+                $scope.refreshPageCountSearch = function (results) {
+                    $scope.TotalItensSearch = results;
+                    var range = [];
+                    var total = ($scope.TotalItensSearch / $scope.pagesize);
+                    for (var i = 0; i < total; i++) {
+                        range.push(i + 1);
+                    }
+                    $scope.TotalPagesSearch = range;    
                 }; 
+
+
+                $scope.refreshPageSearch = function (results) {
+                    $scope.data = angular.fromJson(results);
+                }; 
+
+                $scope.PaginaSearch = function (page) {
+                    $scope.skipSearch = ((page - 1) * $scope.pagesize);
+                    $scope.ActualPageSearch = page;
+                    $scope.pesquisar();
+                };
+
                 $scope.exibir = function(value){                    
                     return (value != undefined && value != "false" && value != false);
                 }
@@ -278,6 +323,7 @@
                 };
                 
                 $scope.verifica = function (valor, nome, type, filtro) {        
+                    if(valor == null) return;
                     if(valor.hasOwnProperty(nome)) {
 
                         for ( key in valor){
@@ -306,11 +352,30 @@
                         }
                     }
                     
-                    return (filtro)? $filter(filtro)(valor):valor;
+                    return (filtro) ? $filter(filtro)(valor):valor;
                 }
+                $scope.getCombo = function(field) {                    
+                    if(field.datarest)
+                    {
+                         $scope[field.model] = JSON.parse(field.datarest) ;
+                    }
+                    else{                  
+                        $http.get("/"+ field.api).then(function (results) {                                
+                            $scope[field.model]  = results.data;                          
+                        });
+                    }
+                };
                 
+
                 $scope.init = function () {
                     
+                    $scope.$watch('$parent.refreshChilds', function (newValue, oldValue) {
+                        if(newValue==true){
+                            $scope.refreshPage();   
+                            $scope.$parent.refreshChilds = false; 
+                        }
+                    });  
+
                     var isChild = $scope.parentkey !== undefined;
 
                     if(isChild){
@@ -318,12 +383,10 @@
                             if(newValue!==undefined && newValue!=null && newValue.id!==undefined){
                                 $scope.refreshPage(newValue.id);    
                             }
-                            
                         });                             
                     }else{
                         $scope.refreshPage();
                     }
-
                 };
 
                 $scope.refreshPage = function (id) {
@@ -521,8 +584,11 @@
                             case 'textAngular':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
                                 break;
-                            case 'dataCriacao':                                
-                                break;                                                                                       
+                            case'datepicker':
+                                HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                                HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                                HtmlFormBody+='</span>';                        
+                            break;                                                                                                                   
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
@@ -568,7 +634,14 @@
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
+                $scope.opened = {};
 
+                $scope.open = function($event, elementOpened) {
+                  $event.preventDefault();
+                  $event.stopPropagation();
+
+                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
+                };  
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
 
@@ -633,18 +706,6 @@
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
                                 break;
-                            case 'dataCriacao':
-                                $scope.data[$scope.fields[key].name] = new Date();
-                                                                   
-                                break;                                                           
-                            /*case 'combobox':                                
-                                
-                                $http.get("/"+ $scope.fields[key].api).then(function (results) {                                
-                                    $scope[$scope.fields[key].model]  = results.data;  
-                                    console.log("combo, combo", $scope[$scope.fields[key].model]);
-                                });
-
-                                break;*/
                             default:
                         
                             break;
@@ -661,25 +722,17 @@
                 $scope.change = function(model, data) {
                     $scope.data[model] = data;
                 }
-/*                $scope.changeCombo = function (data, combo) {                
-                    $scope.data[data] = combo;                                    
-                                   
-                };*/
+
+
                 $scope.newitem = function () {                    
                     $scope.data = ([]);
                     var newData = ({});
-                    for (var key in $scope.fields) {
-/*                        if($scope.fields[key].input)
-                            $scope.fields[key].input = "";*/
-
-                        if($scope.fields[key].model)
-                            newData[$scope.fields[key].name] = ([]);
-                        else  
-                            newData[$scope.fields[key].name] = "";
-                            $scope[$scope.fields[key].name] = "";          
+                    for (var key in $scope.fields) {                        
+                        newData[$scope.fields[key].name] = "";
+                        $scope[$scope.fields[key].name] = "";          
                     }                    
                     $scope.data = newData;
-                    $scope.inputClass = "disabled";
+                    $scope.inputClass = "";
                 };
 
                 $scope.$on('handleBroadcast', function() {
@@ -732,23 +785,6 @@
 
                  $scope.sennitForm.loading = true;                    
                   if($scope.data.id){
-                    /* var query = $.param($scope.data);
-
-                    for (var key in $scope.data) {
-                        if (key != "$$hashKey"){
-                            if (query){
-                                if(!Array.isArray($scope.data[key]))
-                                    query += "&" + key + "="+ $scope.data[key];
-
-                            } else {
-                                if(!Array.isArray($scope.data[key]))
-                                    query = "" + key + "="+ $scope.data[key];                                
-                            } 
-                        }              
-                    }
-                    var inJson = angular.toJson( $scope.data);
-                    query = JSON.parse(inJson);
-                    $scope.sennitForm.loading = true;*/
                     $scope.sennitForm.loading = true;
                     swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
@@ -787,71 +823,7 @@
                         );                                            
 
 
-                    } else{
-/*                        var query;
-                        for (var key in $scope.data) {
-
-                            console.log(  );
-                            console.log($scope.data[key]);
-                            if (query){
-                                if(Array.isArray($scope.data[key]))
-                                {
-                                     var loopVerify;
-                                for (var keyModel in $scope.data[key]) {
-                                    console.log($scope.data[key]);
-                                 if(loopVerify){
-                                      loopVerify = "passou";
-                                    
-                                     query += ', "'+ $scope.data[key][keyModel].id  + '"';
-                                             
-                                 }else{
-                                     loopVerify = "passou";
-                                     query += ',"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                      
-                                     
-                                 }
-
-                                }
-                                  query +=  "]";
-                                }else{
-                                    if($scope.data[key])
-                                    {
-                                        query += ',"' + key + '": "'+ $scope.data[key] + '"';
-                                    }else{
-
-                                        query += "," + key + "="+ $scope.data[key];
-                                    }
-                                
-                                }
-
-                            } else{
-                                if(Array.isArray($scope.data[key]))
-                                {
-                                    var loopVerify;
-                                    for (var keyModel in $scope.data[key]) {
-                                        console.log($scope.data[key]);
-                                     if(loopVerify){
-                                          loopVerify = "passou";
-                                    
-                                          query += ',  "'+ $scope.data[key][keyModel].id + '"';       
-                                     }else{
-                                         loopVerify = "passou";
-                                  
-                                          query = '{"' + key + '":  "'+ $scope.data[key][keyModel].id + '"';
-                                         
-                                     }
-
-                                    }
-                                      query +=  "]";
-                                    }else{
-                                    query = '{ "' + key + '": "'+ $scope.data[key] + '"';
-                                    }
-                                }
-                                
-                        }
-
-                        query += "}"; */                       
-
+                    } else{                    
                         swal({   title: "",   
                             text: "Você tem certeza que deseja incluir este registro?",   
                             type: "info",   
@@ -969,16 +941,26 @@
 
                     switch($scope.fields[key].type){
                         case'date':
+                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'">';
+                            HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                            HtmlFormBody+='</span>';                        
+                            break;
+                        case'datepicker':
                             HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
                             HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                             HtmlFormBody+='</span>';                        
                             break;
+
                         case 'textarea':
                             HtmlFormBody+='<span editable-textarea="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-rows="'+$scope.fields[key].rows+'" e-cols="'+$scope.fields[key].cols+'" e-style="width: '+$scope.fields[key].width+'; height:' +$scope.fields[key].height+ '" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
                             break;
 
                         default:
-                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            if($scope.fields[key].readonly==true){
+                                HtmlFormBody+='<span e-readonly="true">{{data.'+$scope.fields[key].name+'}}</span>';        
+                            }else{
+                                HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
+                            }
                             break;
                     }
 
@@ -1038,10 +1020,10 @@
                     if(type == "date"){
 
                         var data = new Date(valor);
-                         var ano = data.getFullYear();
-                           var mes = data.getMonth() + 1;
-                           var dia = data.getDay();
-                         var retorno = dia + "/" + mes + "/" + ano;
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDay();
+                        var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
                     }
 
@@ -1078,15 +1060,17 @@
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
+<<<<<<< HEAD
                                 break;
                             case 'dataCriacao':
                                 $scope.data[$scope.fields[key].name] = new Date();
-                                                                   
                                 break;                                                           
+=======
+                                break;                                                          
+>>>>>>> c3c9074821cf53133cabc7fb286c2a0b9832a98d
 
                             default:
-                        
-                            break;
+                                break;
                         }
                     } 
                 }
@@ -1110,9 +1094,13 @@
 
                 $scope.save = function () {
 
-                    $scope.sennitForm.loading = true;                    
                     if($scope.data.id){
                         $scope.sennitForm.loading = true;
+
+                        var params = {};
+                        for(var field in $scope.fields){
+                            params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                        }
 
                         swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
@@ -1127,10 +1115,9 @@
                                     $http({
                                         method: 'PUT',
                                         url: '/'+ $scope.listaname + '/' + $scope.data.id,
-                                        data: $scope.data
+                                        data: params
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
-                                        //$scope.data = ([]);
                                         $scope.inputClass = "disabled";
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);

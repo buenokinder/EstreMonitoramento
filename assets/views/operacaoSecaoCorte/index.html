@@ -1,77 +1,97 @@
 <div class="row" ng-init="init()">
 
-    <div class="col s1 m1 l1">
-        &nbsp;
-        </div>
-      <div class="col s10 m10 l10 col-lg-offset-2">
-      	<div class="card-panel ng-scope"><h4 class="header2">Operação Seção de Corte</h4><div class="row" >
-<div >
-  <table class="table table-bordered table-hover striped table-condensed">
-    <tr style="font-weight: bold">
-      <td style="width:15%">Data</td>
-      
-      <td style="width:15%">Seção de Corte</td>
-      <td style="width:15%">Altura</td>
-      <td style="width:15%">Comprimento</td>
-      <td style="width:15%">Tipo Estaca</td>
-      <td style="width:15%">Ações</td>
-    </tr>
- 
-    <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
-            <td ng-click="rowform.$show()" >
-        <!-- editable username (text with validation) -->
-        <span   editable-select="operacaoSecaoCorte.dataMedicao" edit-disabled="true"  e-required>
-          {{ operacaoSecaoCorte.dataMedicao | date : 'dd/MM/yyyy' }}
-        </span>
-      </td>
-        
-    <td ng-click="rowform.$show()">
-        <!-- editable group (select-remote) -->
-        <span editable-select="operacaoSecaoCorte.secaoCorte"  e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in secaoCortes | filter: {habilitado: true}">
-          {{ showSecaoCorte(operacaoSecaoCorte) }}
-        </span>
-      </td>
-      <td>
-        <!-- editable status (select-local) -->
-        <span editable-number="operacaoSecaoCorte.altura" ng-click="rowform.$show()" e-name="altura" e-form="rowform" >
-       {{ operacaoSecaoCorte.altura || 'empty' }}
-        </span>
-      </td>
-       <td ng-click="rowform.$show()" >
-        <!-- editable status (select-local) -->
-        <span editable-number="operacaoSecaoCorte.comprimento" e-name="comprimento" e-form="rowform" >
-        {{ operacaoSecaoCorte.comprimento || 'empty' }}
-        </span>
-      </td>
-           <td ng-click="rowform.$show()" >
-        <!-- editable status (select-local) -->
-        <span editable-text="operacaoSecaoCorte.tipoEstaca" e-name="tipoEstaca" e-form="rowform" >
-        {{ operacaoSecaoCorte.tipoEstaca || 'empty' }}
-        </span>
-      </td>
-      <td style="white-space: nowrap">
-        <!-- form -->
-        <form editable-form name="rowform" onbeforesave="saveSecaoCorte($data, operacaoSecaoCorte.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">
-          <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;" >
-              <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
-          </button>
-          <a ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" >
-              <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
-          </a>
-        </form>
-        <div class="buttons" ng-show="!rowform.$visible">
-          <!--<a ng-click="rowform.$show()"><i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i></a>-->
-          <a ng-click="removeSecaoCorte($index)"><i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i></a>
-        </div>  
-      </td>
-    </tr>
-  </table>
+  <div class="col s1 m1 l1">
+    &nbsp;
+  </div>
+  <div class="col s10 m10 l10 col-lg-offset-2">
+    <div class="card-panel ng-scope">
+      <h4 class="header2">
+        Operação Seção de Corte
+      </h4>
+      <div class="row" >
+        <div >
+          <table class="table table-bordered table-hover table-condensed">
+            <tr style="font-weight: bold">
+              <td style="width:15%">Data</td>
 
-  <a class="btn-floating btn-large waves-effect waves-light" ng-click="addSecaoCorte()"><i class="mdi-content-add"></i></a>
-</div>
-</div>
-</div>
-</div>
+              <td style="width:15%">Seção de Corte</td>
+              <td style="width:15%">Altura</td>
+              <td style="width:15%">Comprimento</td>
+              <td style="width:15%">Tipo Estaca</td>
+              <td style="width:15%">Usuário Criador</td>
+              <td style="width:15%">Aterro</td>
+
+              <td style="width:15%">Ações</td>
+            </tr>
+
+            <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
+              <td >
+                <!-- editable username (text with validation) -->
+                <span   editable-select="operacaoSecaoCorte.dataMedicao" edit-disabled="true"  e-name="dataMedicao" e-required e-form="rowform">
+                {{ operacaoSecaoCorte.dataMedicao | date : 'dd/MM/yyyy' }}
+                </span>
+              </td>
+
+              <td>
+                <!-- editable group (select-remote) -->
+                <span editable-select="operacaoSecaoCorte.secaoCorte" e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in secaoCortes | filter:{habilitado: true}">
+                  {{ showSecaoCorte(operacaoSecaoCorte) }}
+                </span>              
+              </td>
+              <td>
+                <!-- editable status (select-local) -->
+                <span editable-number="operacaoSecaoCorte.altura" e-name="altura" e-form="rowform" >
+                {{ operacaoSecaoCorte.altura || 'empty' }}
+                </span>
+              </td>
+              <td >
+                <!-- editable status (select-local) -->
+                <span editable-number="operacaoSecaoCorte.comprimento" e-name="comprimento" e-form="rowform" >
+                {{ operacaoSecaoCorte.comprimento || 'empty' }}
+                </span>
+              </td>
+              <td >
+                <!-- editable status (select-local) -->
+                <span editable-text="operacaoSecaoCorte.tipoEstaca" e-name="tipoEstaca" e-form="rowform" >
+                  {{ operacaoSecaoCorte.tipoEstaca || 'empty' }}
+                </span>
+              </td>
+              <td>
+
+                <!-- editable status (select-local) -->                
+                <span  editable-text="operacaoSecaoCorte.usuario" e-name="usuario" e-form="rowform" edit-disabled="true">
+                  {{ showUsuario(operacaoSecaoCorte) }}
+                </span>                
+              </td>
+              <td>
+                <!-- editable status (select-local) -->                
+                <span editable-text="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
+                  {{ showAterro(operacaoSecaoCorte) }}
+                </span>
+              </td>
+              <td style="white-space: nowrap">
+                <!-- form -->
+                <form editable-form name="rowform" onbeforesave="saveSecaoCorte($data, operacaoSecaoCorte.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">
+                  <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;" >
+                    <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                  </button>
+                  <a ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" >
+                    <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                  </a>
+                </form>
+                <div class="buttons" ng-show="!rowform.$visible">
+                  <a ng-click="rowform.$show()"><i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i></a>
+                  <a ng-click="removeSecaoCorte(operacaoSecaoCorte.id, $index)"><i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i></a>
+                </div>  
+              </td>
+            </tr>
+          </table>
+
+          <a class="btn-floating btn-large waves-effect waves-light" ng-click="addSecaoCorte()"><i class="mdi-content-add"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
