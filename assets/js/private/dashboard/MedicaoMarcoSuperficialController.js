@@ -52,6 +52,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
+    function parseMedicao(value){
+      if(undefined == value || null==value || value=='')return 0;
+
+      var ret = parseFloat(value.replace('\r','').trim()), 
+
+      return ret;
+    }
     $scope.showContent = function($fileContent){
 
         var extractMedicaoMarcoSuperficialDetalhes = function(ret){
@@ -64,7 +71,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 
                 if(colunas.length <4) continue;
 
-                var medicao = {'nome': colunas[0] , 'norte': colunas[1], 'leste': colunas[2] , 'cota': colunas[3]};
+                var medicao = {'nome': colunas[0] , 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]) , 'cota': parseMedicao(colunas[3])};
                 var medicaoMarcoSuperficialDetalhes = {'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
                 
                 $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);

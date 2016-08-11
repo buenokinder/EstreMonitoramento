@@ -1059,15 +1059,11 @@
                                 break;
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
-                                                                   
-<<<<<<< HEAD
                                 break;
                             case 'dataCriacao':
                                 $scope.data[$scope.fields[key].name] = new Date();
                                 break;                                                           
-=======
-                                break;                                                          
->>>>>>> c3c9074821cf53133cabc7fb286c2a0b9832a98d
+
 
                             default:
                                 break;
