@@ -100,6 +100,7 @@ module.exports = {
 
 				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
+				console.log("sortString",sortString);
 				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
@@ -155,9 +156,6 @@ module.exports = {
 						                retorno.sentidoDeslocamentoNorteSul = "Norte";
 						            else
 						                retorno.sentidoDeslocamentoNorteSul = "Sul";
-
-						            console.log("retorno.sentidoDeslocamentoDirerencaEste",retorno.sentidoDeslocamentoDirerencaEste);
-						            console.log("retorno.sentidoDeslocamentoDirerencaEste >0",retorno.sentidoDeslocamentoDirerencaEste>0);
 
 						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
 						                retorno.sentidoDeslocamentoLesteOeste = "Leste";

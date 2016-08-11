@@ -1,8 +1,15 @@
+<style>
+  table, th, td {
+        font-size: 9px;
+        border:solid 1px!important;
+  }
+</style>
+
 <div class="section">
  <div class="row section">
   <div class="divider"></div>
     <div class="row">
-      <div class="col s12 m12 l6">
+      <div class="col s12 m12">
         <div class="card-panel ng-scope">
           <h4 class="header2">Monitoramentos</h4>
           <div class="row">
@@ -26,9 +33,12 @@
 
             <div class="form-group col m3" id="sign-up-form">
               <label ng-class="inputClass" for="aterro">Ordenação</label>
-              <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="marcoSuperficial" required="" ng-model="monitoramentos.marcoSuperficial" ng-options="x.id as x.nome for x in monitoramentos.marcosSuperficiais" aria-invalid="true">
-                <option value="?" selected="selected"></option>
-              </select>
+                  <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required" id="ordenacao" required="" ng-model="monitoramentos.ordenacao" aria-invalid="true">
+                  
+                  <option value="?" selected="selected"></option>
+                  <option label="Data Crescente" value="dataInstalacao ASC">Data Crescente</option>
+                  <option label="Data Decrescente" value="dataInstalacao DESC">Data Decrescente</option>
+                  </select>
             </div>  
 
             <div class="right col s1" aria-hidden="false">
@@ -37,7 +47,7 @@
             </div>
           </div>
           <div class="row">
-            <table  class="table table-bordered">
+            <table  class="table table-bordered" ng-show="monitoramentos.pesquisa!=null && monitoramentos.pesquisa.length>0">
               
               <thead>
                 <tr>

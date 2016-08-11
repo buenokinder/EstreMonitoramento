@@ -12,7 +12,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       marcoSuperficial:([]),
       marcosSuperficiais:([]),
       monitoramentos:([]),
-      pesquisa: ([]),
+      pesquisa: null,
+      ordenacao:'dataInstalacao ASC',
       init: function(){
 
           var getDatePtBr = function(date){
@@ -36,7 +37,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       },
 
       pesquisar:function(){
-          var query="?";
+          var query="?order="+$scope.monitoramentos.ordenacao;
 
           var getDateQuery = function(date){
             if(null==date || undefined == date || ''==date)
@@ -46,7 +47,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
              return value[2] + '-' + value[1] + '-' + value[0];
           }
 
-          query+="dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
+          query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
           if(null!=$scope.monitoramentos.marcoSuperficial && undefined != $scope.monitoramentos.marcoSuperficial && ''!=$scope.monitoramentos.marcoSuperficial){
@@ -55,6 +56,17 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
           $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
                $scope.monitoramentos.pesquisa = response;
+
+
+              var $table = $('.table');
+              var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
+
+              $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
+
+              $fixedColumn.find('tr').each(function (i, elem) {
+                  $(this).height($table.find('tr:eq(' + i + ')').height());
+              });
+               
           });        
       }
     };
