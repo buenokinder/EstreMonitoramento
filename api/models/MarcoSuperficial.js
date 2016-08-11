@@ -98,54 +98,6 @@ module.exports = {
       });
     }
 
-    /*medicoes: function(){
-      var medicaoAtual = this;
-
-      var deltaParcialNorte = Math.pow((medicaoAtual.norte - MedicaoAnterior[0].norte), 2);
-      var deltaParcialEste = Math.pow((medicaoAtual.leste - MedicaoAnterior[0].leste), 2);
-      var deltaTotalNorte = Math.pow((medicaoAtual.norte - MedicaoInicial.norte), 2);
-      var deltaTotalEste = Math.pow((medicaoAtual.leste - MedicaoInicial.leste), 2);
-
-      DataAtual = Math.floor(medicaoAtual.data.getTime() / (3600  24  1000));
-      DataAnterior = Math.floor(MedicaoAnterior[0].data.getTime() / (3600  24  1000));
-      DiferencaDatas = DataAtual - DataAnterior;
-
-      //return Math.abs(MedicaoAtual.data- MedicaoAnterior[0].data);
-      retorno.deslocamentoVerticalParcial = (medicaoAtual.cota - MedicaoAnterior[0].cota) * 100;
-      retorno.deslocamentoVerticalTotal = (medicaoAtual.cota - MedicaoInicial.cota) * 100;
-      retorno.deslocamentoHorizontalParcial = Math.sqrt((deltaParcialNorte + deltaParcialEste) * 100);
-      retorno.deslocamentoHorizontalTotal = Math.sqrt((deltaTotalNorte + deltaTotalEste) * 100);
-      retorno.velocidadeHorizontal = (retorno.deslocamentoHorizontalParcial / DiferencaDatas);
-      retorno.velocidadeVertical = (retorno.deslocamentoVerticalParcial / DiferencaDatas);
-
-      retorno.sentidoDeslocamentoDirerencaNorte = (medicaoAtual.norte - MedicaoInicial.norte) * 100;
-      retorno.sentidoDeslocamentoDirerencaEste = (medicaoAtual.este - MedicaoInicial.este) * 100;
-
-      retorno.velocidadeVertical = (retorno.deslocamentoVerticalParcial / DiferencaDatas);
-
-      if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
-          retorno.sentidoDeslocamentoNorteSul = "Norte";
-      else
-          retorno.sentidoDeslocamentoNorteSul = "Sul";
-
-      if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
-          retorno.sentidoDeslocamentoNorteSul = "Norte";
-      else
-          retorno.sentidoDeslocamentoNorteSul = "Sul";
-
-
-      retorno.criterioAlertaHorizontalMetodologia1 = "Ok"
-      for (i = 0; i < alertas.length; i++) {
-          if (retorno.velocidadeHorizontal > alertas[i])
-              retorno.criterioAlertaHorizontalMetodologia1 = alertas[i].parametro;
-
-          if (retorno.velocidadeHorizontal > alertas[i])
-              retorno.criterioAlertaHorizontalVertical1 = alertas[i].parametro;
-      }
-
-
-      this.deslocamentos =  [{p:1, a:2}, {p:2, a:3}];
-    }   */ 
   }
 };
 

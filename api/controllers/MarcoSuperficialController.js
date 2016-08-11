@@ -15,15 +15,20 @@ module.exports = {
 	    {
 			var total=0;
 			var totalCarregados=0;
-			// Math.__proto__.graus = function(angulo){
-			// 	return angulo * (180/Math.PI);
-			// }
+
+			var graus = function(angulo){
+				return angulo * (180/Math.PI);
+			}
+
 
 			Alerta.find({}, function(err, alertas){
-				console.log("alertas", alertas);
-				MarcoSuperficial.find({})
-				.populate('aterro')
-				.exec(function result(err, marcosSuperficiais) {
+
+				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
+				//var sortString= 'dataInstalacao ASC';
+				var sortString = req.param('o');
+				marcoSuperficial.sort(sortString);
+
+				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
 					total = marcosSuperficiais.length;
 
 					var endLoadDetalhe = function(marcosSuperficiais, index, detalhes)
@@ -100,11 +105,6 @@ module.exports = {
 
 						            }
 
-
-
-
-
-
 						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
 						            retorno.criterioAlertaHorizontalVertical1 = "Ok";
 						            for (k = 0; k < alertas.length; k++) {
@@ -150,7 +150,7 @@ module.exports = {
 
 						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste/retorno.deslocamentoHorizontalTotal),2);
 						            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
-						            retorno.vetorDeslocamentoAngulo = parseFloat(Math.graus(angulo),2);
+						            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo),2);
 
 									marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento=retorno;
 								}
@@ -164,6 +164,10 @@ module.exports = {
 					var initLoadDetalhe = function(index){
 						marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index);
 					};
+
+					if(null==marcosSuperficiais || marcosSuperficiais.length==0){
+						return resolve(marcosSuperficiais);
+					}
 
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index);

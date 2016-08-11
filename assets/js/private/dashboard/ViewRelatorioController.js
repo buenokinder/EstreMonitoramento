@@ -1,3 +1,4 @@
+
 angular.module('VisualizacaoApp', ['ngSanitize' ]).controller('ViewTemplateController', ['$scope', '$http', '$element','$compile', function($scope, $http, $element, $compile) {
 		
 function getParameterByName(name, url) {
