@@ -17,12 +17,12 @@
 
             <div class="form-group col m2" id="sign-up-form">
               <label ng-class="inputClass" for="nome" class="">Data Inicial</label>
-              <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataInicial" ng-model="monitoramentos.dataInicial | date : 'dd/MM/yyyy'" aria-invalid="false">
+              <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataInicial" ng-model="monitoramentos.dataInicial" aria-invalid="false">
             </div>
 
             <div class="form-group col m2" id="sign-up-form">
               <label ng-class="inputClass" for="nome" class="">Data Final</label>
-              <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataFinal" ng-model="monitoramentos.dataFinal | date : 'dd/MM/yyyy'" aria-invalid="false">
+              <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataFinal" ng-model="monitoramentos.dataFinal" aria-invalid="false">
             </div>
 
             <div class="right col s1" aria-hidden="false">
@@ -33,25 +33,68 @@
 
 
           <div class="row">
-              <table class="table table-bordered table-hover table-condensed">
-                <tbody>
-                  <tr style="font-weight: bold">
-                    <td>Marco</td>
-                    <td>Data</td>
-                    <td>Altura</td>
-                    <td>Comprimento</td>
-                    <td>Tipo Estaca</td>
-                    <td>Usuário Criador</td>
-                    <td>Aterro</td>
-                    <td>Ações</td>
-                  </tr>
+              <table  class="table table-bordered table-hover table-condensed">
+                
+                <thead>
+                  <tr>
+                    <th>MARCO</th>
+                    <th>DATA</th>
+                    <th>COORDENADAS</th>
+                    <th>DESLOCAMENTOS</th>
+                    <th>VELOCIDADE</th>
+                    <th>A</th>
 
+                    <th>MARCO</th>
+                    <th>DATA</th>
+                    <th>COORDENADAS</th>
+                    <th>DESLOCAMENTOS</th>
+                    <th>VELOCIDADE</th>
+                    <th>A</th>
+
+                    <th>MARCO</th>
+                    <th>DATA</th>
+                    <th>COORDENADAS</th>
+                    <th>DESLOCAMENTOS</th>
+                    <th>VELOCIDADE</th>
+                    <th>A</th>
+
+                    <th>MARCO</th>
+                    <th>DATA</th>
+                    <th>COORDENADAS</th>
+                    <th>DESLOCAMENTOS</th>
+                    <th>VELOCIDADE</th>
+                    <th>A</th>
+                    <th>A</th>                                                                                
+                  </tr>
+                </thead>
+                <tbody>
                   <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
-                    <td>
-                      <span class="ng-scope ng-binding">
-                      {{monitoramento.marcoSuperficial}}
-                      </span>
-                    </td>
+                    <td>{{monitoramento.marcoSuperficial}}</td>
+                    <td>{{monitoramento.data | date:'dd/MM/yyyy'}}</td>
+                    <td>{{monitoramento.norte}}</td>
+                    <td>{{monitoramento.leste}}</td>
+                    <td>{{monitoramento.cota}}</td>
+                    <td>{{monitoramento.deslocamentoHorizontalParcial}}</td>
+                    <td>{{monitoramento.deslocamentoHorizontalTotal}}</td>
+                    <td>{{monitoramento.deslocamentoVerticalParcial}}</td>
+                    <td>{{monitoramento.deslocamentoVerticalTotal}}</td>
+                    <td>{{monitoramento.velocidadeHorizontal}}</td>
+                    <td>{{monitoramento.velocidadeVertical}}</td>
+                    <td>{{monitoramento.criterioAlertaHorizontalMetodologia1}}</td>
+                    <td>{{monitoramento.criterioAlertaVerticalMetodologia1}}</td>
+                    <td>{{monitoramento.criterioAlertaHorizontalMetodologia2}}</td>
+                    <td>{{monitoramento.criterioAlertaVerticalMetodologia2}}</td>
+                    <td>{{monitoramento.nomeTopografo}}</td>
+                    <td>{{monitoramento.nomeAuxiliar}}</td>
+                    <td>{{monitoramento.nomeAuxiliar}}</td>
+
+                    <td>{{monitoramento.sentidoDeslocamentoDirerencaNorte}}</td>
+                    <td>{{monitoramento.sentidoDeslocamentoDirerencaEste}}</td>
+                    <td>{{monitoramento.sentidoDeslocamentoNorteSul}}</td>
+                    <td>{{monitoramento.sentidoDeslocamentoLesteOeste}}</td>
+                    <td>{{monitoramento.sentido}}</td>
+                    <td>{{monitoramento.vetorDeslocamentoSeno}}</td>
+                    <td>{{monitoramento.vetorDeslocamentoAngulo}}</td>
 
                   </tr>
                 </tbody>

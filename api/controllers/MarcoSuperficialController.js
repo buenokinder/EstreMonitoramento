@@ -35,7 +35,7 @@ module.exports = {
 			item.nomeTopografo = null;
 			item.nomeAuxiliar = null;
 			item.criterioAlertaHorizontalMetodologia1= null;
-			item.criterioAlertaHorizontalVertical1= null;
+			item.criterioAlertaVerticalMetodologia1= null;
 			item.criterioAlertaHorizontalMetodologia2= null;
 			item.criterioAlertaVerticalMetodologia2= null;
 			item.vetorDeslocamentoSeno = null;
@@ -65,7 +65,7 @@ module.exports = {
 				item.sentidoDeslocamentoLesteOeste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoLesteOeste;
 				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
 				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
-				item.criterioAlertaHorizontalVertical1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalVertical1;
+				item.criterioAlertaVerticalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
 				item.criterioAlertaHorizontalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia2;
 				item.criterioAlertaVerticalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia2;
 				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
@@ -94,21 +94,12 @@ module.exports = {
 
 				var filtro ={};
 				
-				if(req.param('id')!=undefined){
-					filtro.id = req.param('id');				
+				if(req.param('ms')!=undefined){
+					filtro.id = req.param('ms');				
 				}
 
-				if(req.param('id')!=undefined){
-					filtro.id = req.param('id');				
-				}
-
-				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
-<<<<<<< HEAD
+				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
-=======
-				//var sortString= 'dataInstalacao ASC';
-				var sortString = req.param('o');
->>>>>>> 2016_08_08__2016_08_12
 				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
@@ -188,13 +179,13 @@ module.exports = {
 						            }
 
 						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
-						            retorno.criterioAlertaHorizontalVertical1 = "Ok";
+						            retorno.criterioAlertaVerticalMetodologia1 = "Ok";
 						            for (k = 0; k < alertas.length; k++) {
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
 						                    retorno.criterioAlertaHorizontalMetodologia1 = alertas[k].nivel;
 
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
-						                    retorno.criterioAlertaHorizontalVertical1 = alertas[k].nivel;
+						                    retorno.criterioAlertaVerticalMetodologia1 = alertas[k].nivel;
 						            }
 
 						            if (retorno.velocidadeHorizontal <=1){
@@ -247,14 +238,14 @@ module.exports = {
 						return resolve(marcosSuperficiais);
 					}
 
-					var dataInicial =new Date(0);
+					var dataInicial =new Date(new Date().setDate(new Date().getDate()-30));
 					var dataFinal =new Date();
 
-					if(req.param('dtIni')!=undefined){
+					if(undefined!=req.param('dtIni') && ''!=req.param('dtIni')){
 						dataInicial = new Date(req.param('dtIni'));				
 					}
 
-					if(req.param('dtFim')!=undefined){
+					if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
 						dataFinal = new Date(req.param('dtFim'));				
 					}
 

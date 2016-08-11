@@ -7,21 +7,40 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.refreshChilds = false;
 
     $scope.monitoramentos = {
-      dataInicial:new Date(new Date().setDate(new Date().getDate()-30)),
-      dataFinal:new Date(),
+      dataInicial:(new Date(new Date().setDate(new Date().getDate()-30))).toString(),
+      dataFinal:(new Date()).toString(),
       marcoSuperficial:([]),
       marcosSuperficiais:([]),
       monitoramentos:([]),
       pesquisa: ([]),
       init: function(){
           $http.get('/MarcoSuperficial').success(function(response, status){
+
+
                $scope.monitoramentos.marcosSuperficiais = response;
           });
       },
 
       pesquisar:function(){
+          var query="?";
+          console.log("marcoSuperficial", $scope.monitoramentos.marcoSuperficial);
 
-          $http.get('/MarcoSuperficial/monitoramentos').success(function(response, status){
+          var getDateQuery = function(date){
+            if(null==value || undefined == value || ''==value)
+                return '';
+
+             var value = date.split('/');
+             return value[2] + '-' + value[1] + '-' + value[0];
+          }
+
+          query+="dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
+          query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
+
+          if(null!=$scope.monitoramentos.marcoSuperficial && undefined != $scope.monitoramentos.marcoSuperficial && ''!=$scope.monitoramentos.marcoSuperficial){
+            query+="&ms="+$scope.monitoramentos.marcoSuperficial;
+          }
+
+          $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
                $scope.monitoramentos.pesquisa = response;
           });        
       }
