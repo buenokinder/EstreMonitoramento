@@ -156,10 +156,13 @@ module.exports = {
 						            else
 						                retorno.sentidoDeslocamentoNorteSul = "Sul";
 
+						            console.log("retorno.sentidoDeslocamentoDirerencaEste",retorno.sentidoDeslocamentoDirerencaEste);
+						            console.log("retorno.sentidoDeslocamentoDirerencaEste >0",retorno.sentidoDeslocamentoDirerencaEste>0);
+
 						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
-						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
-						            else
 						                retorno.sentidoDeslocamentoLesteOeste = "Leste";
+						            else
+						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
 
 
 						            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Leste")
@@ -248,6 +251,8 @@ module.exports = {
 					if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
 						dataFinal = new Date(req.param('dtFim'));				
 					}
+					console.log("dataInicial",dataInicial);
+					console.log("dataFinal",dataFinal);
 
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index, dataInicial, dataFinal);

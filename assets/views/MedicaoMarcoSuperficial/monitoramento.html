@@ -23,6 +23,14 @@
               <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataFinal" ng-model="monitoramentos.dataFinal" aria-invalid="false">
             </div>
 
+
+            <div class="form-group col m3" id="sign-up-form">
+              <label ng-class="inputClass" for="aterro">Ordenação</label>
+              <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="marcoSuperficial" required="" ng-model="monitoramentos.marcoSuperficial" ng-options="x.id as x.nome for x in monitoramentos.marcosSuperficiais" aria-invalid="true">
+                <option value="?" selected="selected"></option>
+              </select>
+            </div>  
+
             <div class="right col s1" aria-hidden="false">
               <a ng-click="monitoramentos.pesquisar()" class="btn-floating btn-small waves-effect waves-light">
               <i class="mdi-action-search"></i></a>

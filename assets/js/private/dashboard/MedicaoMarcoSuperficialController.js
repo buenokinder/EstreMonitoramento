@@ -7,23 +7,36 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.refreshChilds = false;
 
     $scope.monitoramentos = {
-      dataInicial:(new Date(new Date().setDate(new Date().getDate()-30))).toString(),
-      dataFinal:(new Date()).toString(),
+      dataInicial:'',
+      dataFinal:'',
       marcoSuperficial:([]),
       marcosSuperficiais:([]),
       monitoramentos:([]),
       pesquisa: ([]),
       init: function(){
+
+          var getDatePtBr = function(date){
+            if(null==date || undefined == date || ''==date)
+                return '';
+
+              var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+
+             return value;
+          }
+
+          var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
+          var dtFim = new Date();
+
+          $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
+          $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
+
           $http.get('/MarcoSuperficial').success(function(response, status){
-
-
                $scope.monitoramentos.marcosSuperficiais = response;
           });
       },
 
       pesquisar:function(){
           var query="?";
-          console.log("marcoSuperficial", $scope.monitoramentos.marcoSuperficial);
 
           var getDateQuery = function(date){
             if(null==date || undefined == date || ''==date)
