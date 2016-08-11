@@ -53,9 +53,17 @@ function getParameterByName(name, url) {
                 tipo: '@',
                 filter: '='
             },
+            
             templateUrl: 'views/reports/grafico.html',
             link: function ($scope, $element, attrs) {
- if($scope.tipo == 'fatorsegurancames'){
+                $scope.data = ([]);
+                if($scope.tipo == 'marcovertical'){
+		            $http.get("/MarcoSuperficial/monitoramentos/").then(function (results) {                                
+				        $scope.data  = results.data;
+                        console.log($scope.data[2]);
+                    });
+                };
+
                 $('#container').highcharts({
         chart: {
             zoomType: 'xy'
