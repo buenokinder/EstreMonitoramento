@@ -1,0 +1,576 @@
+<div ng-init="init()">
+
+<div  style="width: 350px;" ng-show="(tipo=='marcosuperficialdeslocamento')">
+<table>
+	<thead>
+		
+		<tr>
+			<th  style="text-align: center;">MARCO SUPERFICIAL</th>
+			<th  style="text-align: center;">DESLOC. HORIZONTAL (m)</th>
+            <th  style="text-align: center;">DESLOC. VERTICAL (M)</th>
+		</tr>
+        
+	</thead>
+	<tbody>
+		<tr >
+			<th style="text-align: center;">MS 32
+			</th>
+           
+				<th style="text-align: center;">0.10
+			</th>
+            	<th style="text-align: center;">-0.02
+			</th>
+		</tr>
+		
+
+	</tbody>
+</table>
+</div>
+
+<div  style="width: 350px;" ng-show="(tipo=='fatorsegurancasecao')">
+<table>
+	<thead>
+		
+		<tr>
+			<th rowspan="2"  style="text-align: center;">SEÇÃO </th>
+			<th rowspan="2"  style="text-align: center;">FACE</th>
+            <th  rowspan="2"  style="text-align: center;">CENÁRIO DE SATURAÇÃO</th>
+            <th colspan="3" style="text-align: center;">FATORES DE SEGURANÇA - 2016</th>
+		</tr>
+        	<tr>
+			<th  style="text-align: center;">FEVEREIRO</th>
+			<th  style="text-align: center;">MARÇO</th>
+            <th  style="text-align: center;">ABRIL</th>
+ 
+            
+		</tr>
+        
+	</thead>
+	<tbody>
+			<tr>
+			<th  style="text-align: center;">AA</th>
+			<th  style="text-align: center;">NORDESTE</th>
+            <th  style="text-align: center;">30%</th>
+            <th  style="text-align: center;">30%</th>
+            <th  style="text-align: center;">30%</th>
+            <th  style="text-align: center;">30%</th>
+            
+		</tr>
+		
+
+	</tbody>
+</table>
+</div>
+
+<div  style="width: 350px;" ng-show="(tipo=='fatorsegurancames')">
+<table>
+	<thead>
+		
+		<tr>
+			<th rowspan="2"  style="text-align: center;">CENÁRIOS DE SATURAÇÃO (%)</th>
+			<th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA</th>
+		</tr>
+        <tr>
+            <th style="text-align: center;">Valor Ru</th>
+            <th style="text-align: center;">Valor Lp</th>
+        </tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="fator in fatorsegurancaMes">
+			<th style="text-align: center;">{{fator.analise.nome}}
+			</th>
+           
+				<th style="text-align: center;">{{fator.valorRu}}
+			</th>
+            	<th style="text-align: center;">{{fator.valorLp}}
+			</th>
+		</tr>
+		
+
+	</tbody>
+</table>
+</div>
+<div style="width: 250px;" ng-show="(tipo=='fatorseguranca')">
+<table>
+	<thead>
+		<th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA POR TEMPO</th>
+		<tr>
+			<th style="text-align: center;" rowspan="2">Mês/2015</th>
+
+			<th style="text-align: center;">FATOR DE SEGURANÇA</th>
+		</tr>
+        <tr>
+            <th style="text-align: center;">Valor</th>
+      
+        </tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="fator in fatorsegurancaMes">
+			<th style="text-align: center;">{{fator.mes.nome}}
+			</th>
+           
+            	<th style="text-align: center;">{{fator.valorLp}}
+			</th>
+		</tr>
+		
+
+	</tbody>
+</table>
+</div>
+
+<div  style="width: 650px;" ng-show="(tipo=='kaiamoto')">
+<table>
+	<thead>
+		<th colspan="4" style="text-align: center;">CRITÉRIO DE ALERTA DEFINIDOS POR KAIMOTO (2008)</th>
+        
+		
+	</thead>
+	<tbody>
+        	<th colspan="4" style="text-align: center;">DESLOCAMENTO HORIZONTAL (mm/dia)</th>
+		<tr>
+			<th class="verde" style="text-align: center;">Condição Mínima (1)
+			</th>
+		    <th style="background-color: yellow;text-align: center;">Atenção (2)
+			</th>
+            <th style="background-color: orange;text-align: center;">Alerta (3)
+			</th>
+            <th style="background-color: red;text-align: center;">Intervenção (4)
+			</th>
+		</tr>
+		<tr>
+			<th style="text-align: center;">x < 10
+			</th>
+		    <th style="text-align: center;">10 < x <= 20
+			</th>
+            <th style="text-align: center;">20 < x <= 50
+			</th>
+            <th style="text-align: center;">x > 50
+			</th>
+		</tr>	
+        	<th colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
+	<tr>
+			<th style="background-color: green;text-align: center;">Condição Mínima (1)
+			</th>
+		    <th style="background-color: yellow;text-align: center;">Atenção (2)
+			</th>
+            <th style="background-color: orange;text-align: center;">Alerta (3)
+			</th>
+            <th style="background-color: red;text-align: center;">Intervenção (4)
+			</th>
+		</tr>
+		<tr>
+			<th>x < 20
+			</th>
+		    <th>20 < x <= 40
+			</th>
+            <th>40 < x <= 100
+			</th>
+            <th>x > 100
+			</th>
+		</tr>	
+	</tbody>
+</table>
+</div>
+
+<div style="width: 650px;" ng-show="(tipo=='boskov')">
+<table  width=300 height=100>
+	<thead>
+		<th colspan="4"  style="text-align: center;">CRITÉRIOS DE ALTERTA DEFINIDOS POR BOSCOV (2008)</th>
+		<tr>
+			<th style="text-align: center;">
+                Níveis de alerta
+            </th>
+			<th style="text-align: center;">Velocidade dos Deslocamentos Horizontal e Vertical (cm/dia)</th>
+            <th style="text-align: center;">Periodicidade Recomendada para as Leituras</th>
+            <th style="text-align: center;">Critérios de Decisão e Ações Preventivas</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+		    <th style="background-color: green;text-align: center;">
+                Aceitável
+            </th>
+			<th style="text-align: center;">Velocidade menor do que 0,25</th>
+            <th style="text-align: center;">Semanal</th>
+            <th style="text-align: center;">Estável</th>
+		</tr>
+			<tr>
+		    <th style="background-color: yellow;text-align: center;">
+                Regular
+            </th>
+			<th style="text-align: center;">Velocidade entre 0,25 e 1,0</th>
+            <th style="text-align: center;">Semanal</th>
+            <th style="text-align: center;">Aceitavel</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: orange;text-align: center;">
+                Atenção
+            </th>
+			<th style="text-align: center;">Velocidade entre 1,0 e 4,0</th>
+            <th style="text-align: center;">2 dias</th>
+            <th style="text-align: center;">Verificação "in situ" de eventuais problemas</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: red;text-align: center;">
+                Intervenção
+            </th>
+			<th style="text-align: center;">Velocidade entre 4 e 14,0</th>
+            <th style="text-align: center;">Diária</th>
+            <th style="text-align: center;">Paralisação imediata das operações no aterro e intervenções localizadas</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: black; color: white;text-align: center;">
+                Paralisação
+            </th>
+			<th style="text-align: center;">Velocidade maior do que 14,0</th>
+            <th style="text-align: center;">Diária</th>
+            <th style="text-align: center;">Definição de estado de alerta, paralisação imediata da operações, acionamento da Defesa Civil para as providencias cabíveis.</th>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+
+<div style="width: 650px;" ng-show="(tipo=='criteriosalertamacico')">
+<table  width=300 height=100>
+	<thead>
+		<th colspan="4"  style="text-align: center;">CRITÉRIOS DE AÇÃO EM FUNÇÃO DA SATURAÇÃO DO MACIÇO - {{ aterro }}</th>
+		<tr>
+			<th style="text-align: center;">
+                Níveis de alerta
+            </th>
+			<th style="text-align: center;">SATURAÇÃO (S)</th>
+            <th style="text-align: center;">FATOR DE SEGURANÇA (FS)</th>
+            <th style="text-align: center;">AÇÕES PREVENTIVAS</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+		    <th style="background-color: green;text-align: center;">
+                OK
+            </th>
+			<th style="text-align: center;">S <= 50%</th>
+            <th style="text-align: center;">FS <= 1,5</th>
+            <th style="text-align: center;">Estável - Inspeção técnica mensal</th>
+		</tr>
+			<tr>
+		    <th style="background-color: yellow;text-align: center;">
+                ATENÇÃO
+            </th>
+			<th style="text-align: center;">54% < S <= 58%</th>
+            <th style="text-align: center;">1,40 < FS <= 1,5</th>
+            <th style="text-align: center;">Insepeção técnica semanal e ações de drenagem.</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: orange;text-align: center;">
+                ALERTA
+            </th>
+			<th style="text-align: center;">58% < S <= 68%</th>
+            <th style="text-align: center;">1,20 < FS < 1,40</th>
+            <th style="text-align: center;">Insepeção técnica diária e intensificação das ações de drenagem</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: red;text-align: center;">
+                Intervenção
+            </th>
+		<th style="text-align: center;">68% < S <= 76%</th>
+            <th style="text-align: center;">1,00 < FS < 1,20</th>
+            <th style="text-align: center;">Paralisação imediata dos trabalhos com ações de drenagem e demais medidas</th>
+		</tr>
+        		<tr>
+		    <th style="background-color: black; color: white;text-align: center;">
+                Paralisação
+            </th>
+			<th style="text-align: center;">S > 78%</th>
+            <th style="text-align: center;">FS > 1,00</th>
+            <th style="text-align: center;">Definição de estado de alerta, paralisação imediata da operações, acionamento da Defesa Civil para as providencias cabíveis.</th>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficial')">
+<table  width=300 height=100>
+	<thead>
+		<th colspan="11"  style="text-align: center;background-color: green;">MONITORAMENTO GEOTÉCNICO DO {{ nomeAterro}}</th>
+		<tr>
+			<th style="text-align: center;" rowspan="3">
+               Marco
+            </th>
+			<th style="text-align: center;" rowspan="3">Data</th>
+            <th style="text-align: center;" rowspan="2" colspan="3">Coordenadas</th>
+            <th style="text-align: center;" colspan="4">Deslocamentos</th>
+             <th style="text-align: center;" colspan="2">Velocidade</th>
+		</tr>
+        		<tr>
+			<th style="text-align: center;" colspan="2">
+               Horizontal
+            </th>
+			<th style="text-align: center;" colspan="2">Vertical</th>
+            <th style="text-align: center;">Horizontal</th>
+            <th style="text-align: center;">Vertical</th>
+           
+		</tr>
+        		</tr>
+        		<tr>
+			<th style="text-align: center;">
+               Norte (m)
+            </th>
+			<th style="text-align: center;">Este (m)</th>
+            <th style="text-align: center;">Cota (m)</th>
+            <th style="text-align: center;">Parcial (cm)</th>
+           <th style="text-align: center;">Total (cm)</th>
+           <th style="text-align: center;">Parcial (cm)</th>
+           <th style="text-align: center;">Total (cm)</th>
+           <th style="text-align: center;">(cm/dia)</th>
+           <th style="text-align: center;">(cm/dia)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+		</tr>
+	<tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+		</tr>
+        <tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+		</tr>
+        <tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+		</tr>		
+	</tbody>
+</table>
+</div>
+
+
+
+<div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficialdeslocamento')">
+<table  width=300 height=100>
+	<thead>
+		<th colspan="15"  style="text-align: center;background-color: green;">MONITORAMENTO GEOTÉCNICO DO {{ nomeAterro}}</th>
+		<tr>
+			<th style="text-align: center;" rowspan="3">
+               Marco
+            </th>
+			<th style="text-align: center;" rowspan="3">Data</th>
+            <th style="text-align: center;" rowspan="2" colspan="3">Coordenadas</th>
+            <th style="text-align: center;" colspan="4">Deslocamentos</th>
+             <th style="text-align: center;" colspan="2">Velocidade</th>
+                <th style="text-align: center;" rowspan="2" colspan="2">Critério de Alerta Metodologia 1</th>
+                   <th style="text-align: center;" rowspan="2" colspan="2">Critério de Alerta Metodologia 2</th>
+		</tr>
+        		<tr>
+			<th style="text-align: center;" colspan="2">
+               Horizontal
+            </th>
+			<th style="text-align: center;" colspan="2">Vertical</th>
+            <th style="text-align: center;">Horizontal</th>
+            <th style="text-align: center;">Vertical</th>
+           
+		</tr>
+        		</tr>
+        		<tr>
+			<th style="text-align: center;">
+               Norte (m)
+            </th>
+			<th style="text-align: center;">Este (m)</th>
+            <th style="text-align: center;">Cota (m)</th>
+            <th style="text-align: center;">Parcial (cm)</th>
+           <th style="text-align: center;">Total (cm)</th>
+           <th style="text-align: center;">Parcial (cm)</th>
+           <th style="text-align: center;">Total (cm)</th>
+           <th style="text-align: center;">Horizontal</th>
+           <th style="text-align: center;">Vertical</th>
+           <th style="text-align: center;">Horizontal</th>
+           <th style="text-align: center;">Vertical</th>
+           <th style="text-align: center;">Horizontal</th>
+           <th style="text-align: center;">Vertical</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                      <th style="text-align: center;background-color: orange;">ALERTA</th>
+  <th style="text-align: center;background-color: yellow;">ATENÇÃO</th>
+  <th style="text-align: center;background-color: GREEN;">COND MIN</th>
+    <th style="text-align: center;background-color: green;">COND MIN</th>
+		</tr>
+	<tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                           <th style="text-align: center;background-color: orange;">ALERTA</th>
+  <th style="text-align: center;background-color: yellow;">ATENÇÃO</th>
+  <th style="text-align: center;background-color: GREEN;">COND MIN</th>
+    <th style="text-align: center;background-color: green;">COND MIN</th>
+		</tr>
+        <tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                           <th style="text-align: center;background-color: green;">OK</th>
+  <th style="text-align: center;background-color: yellow;">ATENÇÃO</th>
+  <th style="text-align: center;background-color: GREEN;">COND MIN</th>
+    <th style="text-align: center;background-color: green;">COND MIN</th>
+		</tr>
+        <tr>
+		    <th style="">
+                <b>MS 01</b>
+            </th>
+			<th style="text-align: center;">03/02/2016</th>
+            <th style="text-align: center;">7,397,479.6850</th>
+              <th style="text-align: center;">297,479.6850</th>
+                <th style="text-align: center;">797.1413</th>
+                  <th style="text-align: center;">0.57</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                    <th style="text-align: center;">29.82</th>
+                      <th style="text-align: center;background-color: yellow;">ATENÇÃO</th>
+                           <th style="text-align: center;background-color: orange;">ALERTA</th>
+
+  <th style="text-align: center;background-color: GREEN;">COND MIN</th>
+    <th style="text-align: center;background-color: green;">COND MIN</th>
+		</tr>		
+	</tbody>
+</table>
+</div>
+
+
+</div>
+
+<div  style="width: 650px;" ng-show="(tipo=='fatorsegurancanbr')">
+<table>
+	<thead>
+		<th colspan="4" style="text-align: center;">FATOR DE SEGURANÇA</th>
+        
+		
+	</thead>
+	<tbody>
+        	
+		<tr>
+			<th class="verde" style="text-align: center;">BOM</th>
+		    <th style="background-color: yellow;text-align: center;">ATENÇÃO
+			</th>
+            <th style="background-color: orange;text-align: center;">ALERTA
+			</th>
+            <th style="background-color: red;text-align: center;">INTERVENÇÃO
+			</th>
+		</tr>
+		<tr>
+			<th style="text-align: center;">FS > 1,5
+			</th>
+		    <th style="text-align: center;">1,3 < FS < 1,4
+			</th>
+            <th style="text-align: center;">1,2 < FS < 1,3
+			</th>
+            <th style="text-align: center;">1,0 < FS < 1,2
+			</th>
+		</tr>	
+        	<th colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
+	<tr>
+			<th style="background-color: green;text-align: center;">Condição Mínima (1)
+			</th>
+		    <th style="background-color: yellow;text-align: center;">Atenção (2)
+			</th>
+            <th style="background-color: orange;text-align: center;">Alerta (3)
+			</th>
+            <th style="background-color: red;text-align: center;">Intervenção (4)
+			</th>
+		</tr>
+		<tr>
+			<th>x < 20
+			</th>
+		    <th>20 < x <= 40
+			</th>
+            <th>40 < x <= 100
+			</th>
+            <th>x > 100
+			</th>
+		</tr>	
+	</tbody>
+</table>
+</div>

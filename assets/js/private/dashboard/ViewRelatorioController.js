@@ -1,34 +1,46 @@
 angular.module('VisualizacaoApp', ['ngSanitize' ]).controller('ViewTemplateController', ['$scope', '$http', '$element','$compile', function($scope, $http, $element, $compile) {
 		
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
-
-$scope.myJson = {  
-  type : 'line' ,  
-  series : [  
-    { values : [ 54 , 23 , 34 , 23 , 43 ] },  
-    { values : [ 10 , 15 , 16 , 20 , 40 ] }  
-  ]  
-};  
         $scope.data = ([]);
 		$scope.corpo = "";
-		$scope.id = location.search;
-		$scope.id = $scope.id.replace("?id=","");		
-		var grafico = function(id){
-
-			console.log(id);
-		}
+		$scope.id = getParameterByName('id');
+        $scope.aterro = getParameterByName('aterro');
+		
         String.prototype.replaceAll = function(s,r){return this.split(s).join(r)}
 		$scope.init = function() {			
 			$http.get("/Template/"+ $scope.id).then(function (results) {                                
 				$scope.data  = results.data;
 				$scope.corpo = results.data.corpo; 
-				var respostas = $scope.corpo.split('{{')[1].split('}}');
-				console.log('{{'+ respostas[0] +'}}');
-				
-					$scope.corpo  =    $scope.corpo.replaceAll('{{'+ respostas[0] +'}}', '<grafico></grafico>  ')
-			     console.log($scope.corpo);
-                  $element.replaceWith($compile($scope.corpo )($scope));
-                   //   $compile($scope.corpo )($scope);
+				var respostas = $scope.corpo.split('{{');
+
+                function myFunction(item, index) {
+                    if(index != 0){
+                        var tipo = item.split('}}')[0];
+                        if(tipo.indexOf('tabela(') !== -1){
+                            var parametro = tipo.split('\'')[1];
+                            console.log(parametro);
+                   
+				     	    $scope.corpo  =    $scope.corpo.replaceAll('{{'+ item.split('}}')[0] +'}}', '<tabela tipo=\''+parametro+'\'></tabela>  ');
+                        }
+                        if(tipo.indexOf('grafico(') !== -1){
+                            var parametro = tipo.split('\'')[1];
+                            console.log(parametro);
+                            $scope.corpo  =    $scope.corpo.replaceAll('{{'+ item.split('}}')[0] +'}}', '<grafico tipo=\''+parametro+'\'></grafico>  ');
+                        }
+                    }
+                }
+                respostas.forEach(myFunction);
+                $element.replaceWith($compile($scope.corpo )($scope));
+             
 			});
 		};
 		$scope.init();
@@ -37,124 +49,85 @@ $scope.myJson = {
             restrict: 'E',
             scope: {
                 id: '=',
-                type: '=',
+                tipo: '@',
                 filter: '='
             },
             templateUrl: 'views/reports/grafico.html',
             link: function ($scope, $element, attrs) {
-$scope.myDataSource = {
-                    chart: {
-                        caption: "Teste Estre",
-                        subCaption: "Top 5 Teste",
-                        numberPrefix: "$",
-                        theme: "ocean"
-                    },
-                    data:[{
-                        label: "Marco 1",
-                        value: "880000"
-                    },
-                    {
-                        label: "Marco 2",
-                        value: "730000"
-                    },
-                    {
-                        label: "Marco 3",
-                        value: "590000"
-                    },
-                    {
-                        label: "Marco 5",
-                        value: "520000"
-                    },
-                    {
-                        label: "Marco 9",
-                        value: "330000"
-                    }]
-                };
+ $('#container').highcharts({
+        title: {
+            text: 'MSD 01 - Vertical',
+            x: -20 //center
+        },
+        
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            title: {
+                text: 'Deslocamentos (cm)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '°C'
+        },
+       
+        series: [{
+            name: 'DESLOCAMENTO VERTICAL TOTAL',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+        }, {
+            name: 'DESLOCAMENTO VERTICAL PARCIAL',
+            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+        }, {
+            name: 'CRITERIO DE ALERTA 2',
+            data: [1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25]
+        }, {
+            name: 'CRITERIO DE ALERTA 3',
+            data: [3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25]
+        },  {
+            name: 'VELOCIDADE VERTICAL',
+            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+        }]
+    });   
+        }
+    }}]).directive('tabela', [ '$compile', '$http', function ($compile, $http) {
+        return {
+            restrict: 'E',
+            scope: {
+                id: '=',
+                tipo: '@',
+                filter: '='
+            },
+            templateUrl: 'views/reports/tabela.html',
+            link: function ($scope, $element, attrs) {
+            $scope.fatorsegurancaMes = ({});
 
+             
+ if($scope.tipo == 'fatorsegurancames'){
+                    $http.get("/FatorSeguranca/").then(function (results) {   
+                        $scope.fatorsegurancaMes = results.data;
+                    });
+                }
 
-
-
-                var chartoptions = {
-                    chart: {
-                        zoomType: 'xy'
-                    },
-                    title: {
-                        text: 'Template'
-                    },
-                    subtitle: {
-                        text: ''
-                    },
-                    xAxis: [{
-                        categories: [$scope.myDataSource.data[0].label, $scope.myDataSource.data[1].label, $scope.myDataSource.data[2].label, $scope.myDataSource.data[3].label, $scope.myDataSource.data[4].label],
-                        crosshair: true
-                    }],
-                    yAxis: [{
-                        title: {
-                            text: 'Volume',
-                            style: {
-                                color: '#000'
-                            }
-                        },
-                        labels: {
-                            format: 'R$ {value}',
-                            style: {
-                                color: '#000'
-                            }
-                        },
-                        opposite: true
-                    },
-                    { //  Secondary yAxis
-
-                        title: {
-                            text: '%',
-                            style: {
-                                color: '#000'
-                            }
-                        },
-
-                        labels: {
-                            format: '{value}%',
-                            style: {
-                                color: '#000'
-                            }
-                        }
-                    }
-                ],
-                tooltip: {
-                    shared: true
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'left',
-                    //x: 120,
-                    //y: 100,
-                    x: 0,
-                    y: 0,
-                    verticalAlign: 'top',
-                    floating: true,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                },
-                series: [
-
-                    {
-                        name: 'Volume',
-                        type: 'column',
-                        color: '#bbb',
-                        data: [$scope.myDataSource.data[0].value, $scope.myDataSource.data[1].value, $scope.myDataSource.data[2].value, $scope.myDataSource.data[3].value,$scope.myDataSource.data[4].value],
-                        tooltip: {valuePrefix: 'R$ '}
-                    },
-
-                    {
-                        name: 'Liquidez',
-                        type: 'spline',
-                        color: '#f00',
-                        yAxis: 1,
-                        data: [$scope.myDataSource.data[0].value, $scope.myDataSource.data[1].value, $scope.myDataSource.data[2].value, $scope.myDataSource.data[3].value,$scope.myDataSource.data[4].value],
-                        tooltip: { valueSuffix: '%' }
-                    }
-                ]
-            };
-
-            $('#grafico').highcharts(chartoptions);    
+                 if($scope.tipo == 'fatorseguranca'){
+                    $http.get("/FatorSeguranca/").then(function (results) {   
+                        $scope.fatorsegurancaMes = results.data;
+                    });
+                }
+              
+            $scope.init = function(){
+                console.log('foi');
+                if($scope.tipo == 'fatorsegurancames'){
+                    $http.get("/FatorSeguranca/").then(function (results) {   
+                        $scope.fatorsegurancaMes = results.data;
+                    });
+                }
+            }
         }
     }}]);
