@@ -8,110 +8,181 @@
 var Promise = require('bluebird');
 
 module.exports = {
-	
 
-	listCalculado: function(req, res){
+	monitoramentos: function(req, res){
 
 		var execute = new Promise( function( resolve, reject )
 	    {
 			var total=0;
 			var totalCarregados=0;
+			Math.__proto__.graus = function(angulo){
+				return angulo * (180/Math.PI);
+			}
 
-			MarcoSuperficial.find({})
-			.populate('aterro')
-			.exec(function result(err, marcosSuperficiais) {
-				total = marcosSuperficiais.length;
+			Alerta.find({}, function(err, alertas){
+				console.log("alertas", alertas);
+				MarcoSuperficial.find({})
+				.populate('aterro')
+				.exec(function result(err, marcosSuperficiais) {
+					total = marcosSuperficiais.length;
 
-				var endLoadDetalhe = function(marcosSuperficiais, index, detalhes){
-					marcosSuperficiais[index].medicaoMarcoSuperficialDetalhes = detalhes;
-					totalCarregados+=1;
-					if(total==totalCarregados){
+					var endLoadDetalhe = function(marcosSuperficiais, index, detalhes)
+					{
+						marcosSuperficiais[index].medicaoMarcoSuperficialDetalhes = detalhes;
+						totalCarregados+=1;
+						if(total==totalCarregados){
+								
+							for(var i=0;i<marcosSuperficiais.length;i++){
 
-						for(var i=0;i<marcosSuperficiais.length;i++){
+								var MedicaoInicial = marcosSuperficiais[i];
+								MedicaoInicial.data = MedicaoInicial.dataInstalacao;
 
-						    var retorno = {
-						        deslocamentoHorizontalParcial: [],
-						        deslocamentoHorizontalTotal: ([]),
-						        velocidadeHorizontal: ([]),
-						        velocidadeVertical: ([]),
-						        criterioAlerta: Math.pow(2, 2)
-						    };
+								for(var j=0;j<marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length;j++){
+								    var retorno = {
+								        deslocamentoHorizontalParcial: [],
+								        deslocamentoHorizontalTotal: ([]),
+								        velocidadeHorizontal: ([]),
+								        velocidadeVertical: ([]),
+								        criterioAlerta: Math.pow(2, 2)
+								    };
 
-							var MedicaoInicial = marcosSuperficiais[i];
-							MedicaoInicial.data = MedicaoInicial.createdAt;
+									var MedicaoAtual = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
+									var MedicaoAnterior = j==0?MedicaoInicial:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1];
+									
+									MedicaoAtual.data = MedicaoAtual.owner.data;
+									MedicaoAnterior.data= j==0?MedicaoInicial.data:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1].owner.data;
 
-							for(var j=0;j<marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length;j++){
+									var deltaParcialNorte = Math.pow((MedicaoAtual.norte - MedicaoAnterior.norte), 2);
+									var deltaParcialEste = Math.pow((MedicaoAtual.leste - MedicaoAnterior.leste), 2);
+									var deltaTotalNorte = Math.pow((MedicaoAtual.norte - MedicaoInicial.norte), 2);
+									var deltaTotalEste = Math.pow((MedicaoAtual.leste - MedicaoInicial.leste), 2);
 
-								var MedicaoAtual = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
-								var MedicaoAnterior = j==0?MedicaoInicial:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1];
+			            			DataAtual = Math.floor(MedicaoAtual.data.getTime() / (3600 *24 *1000));
+						            DataAnterior = Math.floor(MedicaoAnterior.data.getTime() / (3600*24*1000));
+						            DiferencaDatas = DataAtual - DataAnterior;
 
-								var deltaParcialNorte = Math.pow((MedicaoAtual.norte - MedicaoAnterior.norte), 2);
-								var deltaParcialEste = Math.pow((MedicaoAtual.leste - MedicaoAnterior.leste), 2);
-								var deltaTotalNorte = Math.pow((MedicaoAtual.norte - MedicaoInicial.norte), 2);
-								var deltaTotalEste = Math.pow((MedicaoAtual.leste - MedicaoInicial.leste), 2);
+									retorno.deslocamentoVerticalParcial = parseFloat((MedicaoAtual.cota - MedicaoAnterior.cota) * 100).toFixed(2);
+									retorno.deslocamentoVerticalTotal = parseFloat((MedicaoAtual.cota - MedicaoInicial.cota) * 100).toFixed(2);
+									retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(2);
+									retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(2);
+									retorno.velocidadeHorizontal = parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(2);
+									retorno.velocidadeVertical = parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(2);
 
-								retorno.deslocamentoHorizontalParcial.push(deltaParcialNorte);
-								retorno.deslocamentoHorizontalParcial.push(deltaParcialNorte);
-					            /*DataAtual = Math.floor(MedicaoAtual.data.getTime() / (3600 *24 *1000));
-					            DataAnterior = Math.floor(MedicaoAnterior.data.getTime() / (3600*24*1000));
-					            DiferencaDatas = DataAtual - DataAnterior;
-								*/
+						            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((MedicaoAtual.norte - MedicaoInicial.norte) * 100).toFixed(2);
+						            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((MedicaoAtual.leste - MedicaoInicial.leste) * 100).toFixed(2);
+						            
+
+						            if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
+						                retorno.sentidoDeslocamentoNorteSul = "Norte";
+						            else
+						                retorno.sentidoDeslocamentoNorteSul = "Sul";
+
+						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
+						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
+						            else
+						                retorno.sentidoDeslocamentoLesteOeste = "Leste";
 
 
+						            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Leste")
+						            {
+						            	retorno.sentido = 	"Sudeste";
+						            }
+						            else{
+							            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Oeste"){
+							            	retorno.sentido = "Sudoeste";
+							            }else{
+							            	if(retorno.sentidoDeslocamentoNorteSul=="Norte" && retorno.sentidoDeslocamentoLesteOeste=="Leste"){
+							            		retorno.sentido = "Nordeste";
+							            	}else{
+							            		retorno.sentido = "Noroeste";
+							            	}
+							            }
+
+						            }
+
+
+
+
+
+
+						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
+						            retorno.criterioAlertaHorizontalVertical1 = "Ok";
+						            for (k = 0; k < alertas.length; k++) {
+						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
+						                    retorno.criterioAlertaHorizontalMetodologia1 = alertas[k].nivel;
+
+						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
+						                    retorno.criterioAlertaHorizontalVertical1 = alertas[k].nivel;
+						            }
+
+						            if (retorno.velocidadeHorizontal <=1){
+						            	retorno.criterioAlertaHorizontalMetodologia2 ="COND. MIN.";
+
+						            }else{
+						             	if(1<retorno.velocidadeHorizontal && retorno.velocidadeHorizontal<=2){
+											retorno.criterioAlertaHorizontalMetodologia2 ="ATENÇÃO";
+										}else{
+							             	if(2<retorno.velocidadeHorizontal && retorno.velocidadeHorizontal<=5){
+												retorno.criterioAlertaHorizontalMetodologia2 ="ALERTA";
+											}						            	
+											else{
+												retorno.criterioAlertaHorizontalMetodologia2 ="INTERVENÇÃO";
+											}											
+										}
+						            }
+
+
+						            if (retorno.velocidadeVertical <=2){
+						            	retorno.criterioAlertaVerticalMetodologia2 ="COND. MIN.";
+
+						            }else{
+						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
+											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
+										}else{
+							             	if(4<retorno.velocidadeVertical && retorno.velocidadeVertical<=10){
+												retorno.criterioAlertaVerticalMetodologia2 ="ALERTA";
+											}						            	
+											else{
+												retorno.criterioAlertaVerticalMetodologia2 ="INTERVENÇÃO";
+											}											
+										}
+						            }
+
+						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste/retorno.deslocamentoHorizontalTotal),2);
+						            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
+						            retorno.vetorDeslocamentoAngulo = parseFloat(Math.graus(angulo),2);
+
+									marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento=retorno;
+								}
 							}
 
-							marcosSuperficiais[i].deslocamentos=retorno;
 
-						}
+							return resolve(marcosSuperficiais);
+						}					
+					};
+
+					var initLoadDetalhe = function(index){
+						marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index);
+					};
+
+					for(var index=0;index<marcosSuperficiais.length;index++){
+						initLoadDetalhe(index);
+					}
+				});
 
 
-						return resolve(marcosSuperficiais);
-					}					
-				};
-
-				var initLoadDetalhe = function(index){
-					marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index);
-				};
-
-				for(var index=0;index<marcosSuperficiais.length;index++){
-					initLoadDetalhe(index);
-				}
 			});
+
+
+
 
 	    });
 
 		execute.then(function(results){
 		    res.json(results);
-		})
+		});
 
-/*
 
-var total=0;
-		var totalCarregados=0;
-		var retorno =([]);
-		MarcoSuperficial.find({})
-			.populate('aterro')
-			.exec(function result(err, ret) {
-				total = ret.length;
-
-				var endLoadDetalhe = function(ret, indexDetalhe, result){
-					ret[indexDetalhe].medicaoMarcoSuperficialDetalhes = result;
-					totalCarregados+=1;
-					if(total==totalCarregados){
-						res.json(ret);		
-					}					
-				};
-
-				var initLoadDetalhe = function(indexDetalhe){
-					ret[indexDetalhe].loadDetalhes(endLoadDetalhe, ret, indexDetalhe);
-				};
-
-				for(var i=0;i<ret.length;i++){
-					initLoadDetalhe(i);
-				}
-			});
-
-			*/
 	},
 
 	search: function(req, res) {
