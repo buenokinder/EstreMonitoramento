@@ -20,7 +20,6 @@ module.exports = {
 			}
 
 			Alerta.find({}, function(err, alertas){
-				console.log("alertas", alertas);
 				MarcoSuperficial.find({})
 				.populate('aterro')
 				.exec(function result(err, marcosSuperficiais) {
