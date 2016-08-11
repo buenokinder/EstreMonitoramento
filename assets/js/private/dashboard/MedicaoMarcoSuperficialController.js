@@ -55,7 +55,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     function parseMedicao(value){
       if(undefined == value || null==value || value=='')return 0;
 
-      var ret = parseFloat(value.replace('\r','').trim()), 
+      var ret = parseFloat(value.replace('\r','').trim());
 
       return ret;
     }
