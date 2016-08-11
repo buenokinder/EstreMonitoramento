@@ -28,11 +28,13 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   f
     $http.get('/OperacaoSecaoCorte').success(function(data) {
       $scope.operacaoSecaoCortes = angular.fromJson(data);
       angular.forEach($scope.operacaoSecaoCortes, function(value, key) {
-        value["secaoCorte"] = value["secaoCorte"].id;
-        value["usuario"] = value["usuario"].id;
-        value["aterro"] = value["aterro"].id;
-      });
-      console.log('operacao', $scope.operacaoSecaoCortes);
+        if(value["secaoCorte"])
+          value["secaoCorte"] = value["secaoCorte"].id;
+        if(value["usuario"])
+          value["usuario"] = value["usuario"].id;
+        if(value["aterro"])
+          value["aterro"] = value["aterro"].id;
+      });      
     });
   };
   $scope.loadSecaoCorte = function() {
