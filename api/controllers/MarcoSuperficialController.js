@@ -9,7 +9,76 @@ var Promise = require('bluebird');
 
 module.exports = {
 
+	summarizeMonitoramento:function(marcosSuperficiais){
+
+		var result = [];
+
+		for(var i=0;i<marcosSuperficiais.length;i++){
+			var item = {};
+			item.marcoSuperficial = marcosSuperficiais[i].nome;
+			item.data = marcosSuperficiais[i].data;
+			item.norte = marcosSuperficiais[i].norte;
+			item.leste = marcosSuperficiais[i].leste;
+			item.cota = marcosSuperficiais[i].cota;
+			item.deslocamentoHorizontalParcial = null;
+			item.deslocamentoHorizontalTotal = null;
+			item.velocidadeHorizontal = null;
+			item.velocidadeVertical = null;
+			item.criterioAlerta= null;
+			item.deslocamentoVerticalParcial= null;
+			item.deslocamentoVerticalTotal= null;
+			item.sentidoDeslocamentoDirerencaNorte= null;
+			item.sentidoDeslocamentoDirerencaEste= null;
+			item.sentidoDeslocamentoNorteSul= null;
+			item.sentidoDeslocamentoLesteOeste= null;
+			item.sentido= null;
+			item.nomeTopografo = null;
+			item.nomeAuxiliar = null;
+			item.criterioAlertaHorizontalMetodologia1= null;
+			item.criterioAlertaHorizontalVertical1= null;
+			item.criterioAlertaHorizontalMetodologia2= null;
+			item.criterioAlertaVerticalMetodologia2= null;
+			item.vetorDeslocamentoSeno = null;
+			item.vetorDeslocamentoAngulo = null;
+
+			result.push(item);
+
+			for(var j=0;j<marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length;j++){
+				var item = {};
+				item.marcoSuperficial = marcosSuperficiais[i].nome;
+				item.norte = marcosSuperficiais[i].norte;
+				item.leste = marcosSuperficiais[i].leste;
+				item.cota = marcosSuperficiais[i].cota;
+				item.data = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data
+				item.nomeTopografo = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeTopografo;
+				item.nomeAuxiliar =marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeAuxiliar;
+				item.deslocamentoHorizontalParcial = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalParcial;
+				item.deslocamentoHorizontalTotal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalTotal;
+				item.velocidadeHorizontal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.velocidadeHorizontal;
+				item.velocidadeVertical = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.velocidadeVertical;
+				item.criterioAlerta= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlerta;
+				item.deslocamentoVerticalParcial= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoVerticalParcial;
+				item.deslocamentoVerticalTotal= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoVerticalTotal;
+				item.sentidoDeslocamentoDirerencaNorte= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoDirerencaNorte;
+				item.sentidoDeslocamentoDirerencaEste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoDirerencaEste;
+				item.sentidoDeslocamentoNorteSul= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoNorteSul;
+				item.sentidoDeslocamentoLesteOeste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoLesteOeste;
+				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
+				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
+				item.criterioAlertaHorizontalVertical1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalVertical1;
+				item.criterioAlertaHorizontalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia2;
+				item.criterioAlertaVerticalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia2;
+				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
+				item.vetorDeslocamentoAngulo =  marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoAngulo;
+				result.push(item);
+			}
+		}
+
+		return result;
+	},
+
 	monitoramentos: function(req, res){
+		var _that = this;
 
 		var execute = new Promise( function( resolve, reject )
 	    {
@@ -21,10 +90,19 @@ module.exports = {
 
 			Alerta.find({}, function(err, alertas){
 
+				var filtro ={};
+				
+				if(req.param('id')!=undefined){
+					filtro.id = req.param('id');				
+				}
+
+				if(req.param('id')!=undefined){
+					filtro.id = req.param('id');				
+				}
+
 				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
-				//var sortString= 'dataInstalacao ASC';
-				var sortString = req.param('o');
-				marcoSuperficial.sort('kjasdkjlkjasd asdlkjsad');
+				var sortString = req.param('order');
+				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
 					total = marcosSuperficiais.length;
@@ -100,7 +178,6 @@ module.exports = {
 							            		retorno.sentido = "Noroeste";
 							            	}
 							            }
-
 						            }
 
 						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
@@ -115,7 +192,6 @@ module.exports = {
 
 						            if (retorno.velocidadeHorizontal <=1){
 						            	retorno.criterioAlertaHorizontalMetodologia2 ="COND. MIN.";
-
 						            }else{
 						             	if(1<retorno.velocidadeHorizontal && retorno.velocidadeHorizontal<=2){
 											retorno.criterioAlertaHorizontalMetodologia2 ="ATENÇÃO";
@@ -129,10 +205,8 @@ module.exports = {
 										}
 						            }
 
-
 						            if (retorno.velocidadeVertical <=2){
 						            	retorno.criterioAlertaVerticalMetodologia2 ="COND. MIN.";
-
 						            }else{
 						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
 											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
@@ -154,21 +228,31 @@ module.exports = {
 								}
 							}
 
-
-							return resolve(marcosSuperficiais);
+							return resolve(_that.summarizeMonitoramento(marcosSuperficiais));
 						}					
 					};
 
-					var initLoadDetalhe = function(index){
-						marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index);
+					var initLoadDetalhe = function(index, dataInicial, dataFinal){
+						marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index, dataInicial, dataFinal);
 					};
 
 					if(null==marcosSuperficiais || marcosSuperficiais.length==0){
 						return resolve(marcosSuperficiais);
 					}
 
+					var dataInicial =new Date(0);
+					var dataFinal =new Date();
+
+					if(req.param('dtIni')!=undefined){
+						dataInicial = new Date(req.param('dtIni'));				
+					}
+
+					if(req.param('dtFim')!=undefined){
+						dataFinal = new Date(req.param('dtFim'));				
+					}
+
 					for(var index=0;index<marcosSuperficiais.length;index++){
-						initLoadDetalhe(index);
+						initLoadDetalhe(index, dataInicial, dataFinal);
 					}
 				});
 

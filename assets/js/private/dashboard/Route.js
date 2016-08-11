@@ -16,6 +16,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
         controller : 'SecaoCorteController'
     });
 
+
+
+
   $routeProvider.when("/Template", {
 		templateUrl: "/views/relatorios/template.html"
 	}).when("/Template/new", {		
@@ -73,6 +76,11 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 			 controller : 'MedicaoMarcoSuperficialController'
 		});
  
+	 	$routeProvider.when('/MonitoramentoMarcoSuperficial', {
+		    templateUrl: '/views/MedicaoMarcoSuperficial/monitoramento.html',
+		    controller : 'MedicaoMarcoSuperficialController'
+		});
+
   	$routeProvider.when("/PluviometriaVazao", {
 			templateUrl: "/views/pluviometriaVazao/index.html",
 			        controller : 'PluviometriaVazaoController'

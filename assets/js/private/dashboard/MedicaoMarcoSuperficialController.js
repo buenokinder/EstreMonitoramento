@@ -6,6 +6,29 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
 
+    $scope.monitoramentos = {
+      dataInicial:new Date(new Date().setDate(new Date().getDate()-30)),
+      dataFinal:new Date(),
+      marcoSuperficial:([]),
+      marcosSuperficiais:([]),
+      monitoramentos:([]),
+      pesquisa: ([]),
+      init: function(){
+          $http.get('/MarcoSuperficial').success(function(response, status){
+               $scope.monitoramentos.marcosSuperficiais = response;
+          });
+      },
+
+      pesquisar:function(){
+
+          $http.get('/MarcoSuperficial/monitoramentos').success(function(response, status){
+               $scope.monitoramentos.pesquisa = response;
+          });        
+      }
+    };
+
+    $scope.monitoramentos.init();
+
     $scope.removeFile = function(){
         $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
           $scope.medicoes = ([]);
@@ -17,14 +40,32 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         });
     };
 
-    $scope.getMarcoSuperficial = function(nomeMarcosuperficial, callback) {
-      $http.get('/MarcoSuperficial/?nome='+nomeMarcosuperficial).success(function (response, status) {
+    $scope.createMarcoSuperficial = function(marcoSuperficial, callback){
+          $http.post('/MarcoSuperficial', marcoSuperficial).success(function(response, status){
+              callback(response, status);
+          }).error(function(err, status){
+              swal("Erro", "Ocorreu uma falha ao importar o marco superficial '" + marcoSuperficial.nome + "' :(", "error");
+              callback(err, status);
+          }); 
+    };
 
-          //if(null==ret || ret.length==0){
-            //$scope.createMarcoSuperficial(marco, callback);
-          //}else{
-            callback(response, status);  
-          //}
+    $scope.getMarcoSuperficial = function(medicaoMarcoSuperficialDetalhes, callback) {
+      $http.get('/MarcoSuperficial/?nome='+medicaoMarcoSuperficialDetalhes.nome).success(function (response, status) {
+
+          if(null==response || response.length==0){
+            var marcosuperficial={};
+            marcosuperficial.nome = medicaoMarcoSuperficialDetalhes.nome;
+            marcosuperficial.leste = medicaoMarcoSuperficialDetalhes.leste;
+            marcosuperficial.norte = medicaoMarcoSuperficialDetalhes.norte;
+            marcosuperficial.cota = medicaoMarcoSuperficialDetalhes.cota;
+            marcosuperficial.habilitado = true;
+            marcosuperficial.dataInstalacao = medicaoMarcoSuperficialDetalhes.data;
+            marcosuperficial.aterro = medicaoMarcoSuperficialDetalhes.aterro;
+
+            $scope.createMarcoSuperficial(marcosuperficial, callback);
+          }else{
+            callback(response[0], status);  
+          }
           
       }).error(function (err, status) {
           callback(err, status);
@@ -32,13 +73,14 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.saveMedicaoMarcoSuperficialDetalhes = function(medicaoMarcoSuperficialDetalhes){
+      
+      medicaoMarcoSuperficialDetalhes.owner = $scope.data;
+      medicaoMarcoSuperficialDetalhes.data = medicaoMarcoSuperficialDetalhes.owner.data;
 
-      $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes.nome, function(ret, status){
+      $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function(marcoSuperficial, status){
+          if(null!=marcoSuperficial && undefined!=marcoSuperficial){
 
-          if(null!=ret && ret.length>0){
-
-            medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = ret[0];
-            medicaoMarcoSuperficialDetalhes['owner'] = $scope.data;
+            medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
 
             $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
                 $scope.refreshChilds = true;

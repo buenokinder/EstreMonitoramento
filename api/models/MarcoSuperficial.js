@@ -80,10 +80,13 @@ module.exports = {
         return ret;
     },
 
-    loadDetalhes: function(callback, list, index){
+    loadDetalhes: function(callback, list, index, dataInicial, dataFinal){
       var _that = this;
+      var filtro = {};
+      filtro.data = { '>=': dataInicial, '<=': dataFinal };
+      filtro.marcoSuperficial = this.id;
 
-      MedicaoMarcoSuperficialDetalhes.find({marcoSuperficial:this.id}).populate("owner").exec(function(err,detalhes){
+      MedicaoMarcoSuperficialDetalhes.find(filtro).populate("owner").exec(function(err,detalhes){
 
         if(null==detalhes || detalhes.length==0){
           callback(list, index, detalhes);
