@@ -30,6 +30,33 @@
               <i class="mdi-action-search"></i></a>
             </div>
           </div>
+
+
+          <div class="row">
+              <table class="table table-bordered table-hover table-condensed">
+                <tbody>
+                  <tr style="font-weight: bold">
+                    <td>Marco</td>
+                    <td>Data</td>
+                    <td>Altura</td>
+                    <td>Comprimento</td>
+                    <td>Tipo Estaca</td>
+                    <td>Usuário Criador</td>
+                    <td>Aterro</td>
+                    <td>Ações</td>
+                  </tr>
+
+                  <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
+                    <td>
+                      <span class="ng-scope ng-binding">
+                      {{monitoramento.marcoSuperficial}}
+                      </span>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>          
+          </div>
         </div>
 
 
