@@ -61,6 +61,10 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
         $scope.pathname = "Piezômetro";
         $scope.pai = "Dados Mestre";
         break;
+      case '/MedicaoPiezometro' :
+        $scope.pathname = "Piezômetro";
+        $scope.pai = "Área de Trabalho";
+        break;        
       case '/Usuario' :
         $scope.pathname = "Usuário";
         $scope.pai = "Administração";

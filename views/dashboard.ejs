@@ -113,7 +113,9 @@
                          <li>
                             <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
                                 <i class="mdi-hardware-desktop-windows"></i>
-                                <span>Área de Trabalho<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                                <span>Área de Trabalho
+                                    <i class="mdi-navigation-arrow-drop-down right"></i>
+                                </span>
                             </a>
                         </li>
                         <li>
@@ -144,9 +146,20 @@
 
 
             <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
-            <li><a  ng-click="goto('/Bombeamento')"  class="white estre-green-icon">Bombeamento</a></li>
-                    <li><a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a></li>
-                    <li><a  ng-click="goto('/MedicaoMarcoSuperficial')"  class="white estre-green-icon">Marco Superficial</a></li>
+            <li>
+                <a  ng-click="goto('/Bombeamento')"  class="white estre-green-icon">Bombeamento</a>
+            </li>
+            <li>
+                <a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a>
+            </li>
+            <li>
+                <a  ng-click="goto('/MedicaoMarcoSuperficial')"  class="white estre-green-icon">
+                Marco Superficial</a>
+            </li>
+            <li>
+                <a  ng-click="goto('/MedicaoPiezometro')"  class="white estre-green-icon">
+                Piezômetro</a>
+            </li>            
                     <li><a  ng-click="goto('/Mapa')"  class="white estre-green-icon">Mapa</a></li>
                     <li><a  ng-click="goto('/OperacaoSecaoCorte')"  class="white estre-green-icon">Seção de Corte</a></li>
                      <li><a  ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
@@ -489,6 +502,7 @@
 <script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
 <script src="/js/private/dashboard/OperacaoSecaoCorteController.js"></script>
 <script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
+<script src="/js/private/dashboard/MedicaoPiezometroController.js"></script>
 <script src="/js/private/dashboard/TemplateUpdateController.js"></script>
 <script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
 
