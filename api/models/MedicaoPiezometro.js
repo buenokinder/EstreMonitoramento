@@ -8,14 +8,44 @@
 module.exports = {
 
  attributes: {
-     data: {
+     dataMedicao: {
       type: 'date',
       required: true,
       defaultsTo: new Date()
     },
+
+    temperatura: {
+      type: 'float',
+      required: true
+    },
+
+    saliencia: {
+      type: 'float',
+      required: true
+    },
+
+    prolongamentoCorte: {
+      type: 'float',
+      required: true
+    },
+
+    medicoesNivelChorumeComPressao: {
+      type: 'float',
+      required: true
+    },
+
+    medicoesNivelChorumeSemPressao: {
+      type: 'float',
+      required: true
+    },
+
+    pressaoGas: {
+      type: 'float',
+      required: true
+    },
     
-    Piezometro: {
-      model: 'Piezometro'
+    owner: {
+      model: 'piezometro'
     }
   }
 };
