@@ -30,6 +30,9 @@ module.exports = {
     aterro: {
       model: 'Aterro'
     },
+    usuario: {
+      model: 'Usuario'
+    },
     /*medicaoMarcoSuperficialDetalhes: {
       collection: 'medicaoMarcoSuperficialDetalhes',
       via: 'marcoSuperficial'

@@ -16,6 +16,9 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: false
+    },
+    usuario: {
+      model: 'Usuario'
     }
   }
 };

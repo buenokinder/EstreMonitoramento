@@ -584,6 +584,8 @@
                             case 'textAngular':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
                                 break;
+                            case 'usuario':                                
+                                break;
                             case'datepicker':
                                 HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
                                 HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
@@ -624,7 +626,8 @@
                 
             },
             controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
-                $scope.me = window.SAILS_LOCALS.me;
+                $scope.me = window.SAILS_LOCALS;
+                console.log('me', $scope.me);
                 $scope.combodata = ([]);
                 $scope.combos = ([]);
                 $scope.modelComboBox = ([]);
@@ -706,6 +709,10 @@
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
                                 break;
+                            case 'usuario':
+                                $scope.data[$scope.fields[key].name] = $scope.me._id;
+                                                                   
+                                break;                                
                             default:
                         
                             break;

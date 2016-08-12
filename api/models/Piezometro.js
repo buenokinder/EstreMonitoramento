@@ -13,10 +13,6 @@ module.exports = {
       type: 'string',
       required: true
     },
-  	dataCriacao: {
-      type: 'date',
-      required: true
-    },
   	usuarioCriador: {
       model: 'Usuario',
       required: false
@@ -51,8 +47,10 @@ module.exports = {
       model: 'Aterro'
     },
     aterro: {
-      model: 'Aterro',
-      required: true
+      model: 'Aterro'
+    },
+    usuario: {
+      model: 'Usuario'
     }
   }
 };
