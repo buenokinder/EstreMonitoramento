@@ -12,13 +12,14 @@
         <div >
           <table class="table table-bordered table-hover table-condensed">
             <tr style="font-weight: bold">
-              <td style="width:15%">Data</td>
+              <td style="width:15%">Data Medição</td>
 
               <td style="width:15%">Seção de Corte</td>
               <td style="width:15%">Altura</td>
               <td style="width:15%">Comprimento</td>
               <td style="width:15%">Tipo Estaca</td>
-              <td style="width:15%">Usuário Criador</td>
+              <td style="width:15%">Data Criação</td>              
+              <td style="width:15%">Criado por</td>
               <td style="width:15%">Aterro</td>
 
               <td style="width:15%">Ações</td>
@@ -56,6 +57,13 @@
                   {{ operacaoSecaoCorte.tipoEstaca || 'empty' }}
                 </span>
               </td>
+              <td>
+
+                <!-- editable status (select-local) -->                
+                <span  editable-text="operacaoSecaoCorte.createdAt" e-name="datacriacao" e-form="rowform" edit-disabled="true">
+                  {{ operacaoSecaoCorte.createdAt | date : 'dd/MM/yyyy' }}
+                </span>                
+              </td>              
               <td>
 
                 <!-- editable status (select-local) -->                

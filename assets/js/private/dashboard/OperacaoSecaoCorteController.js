@@ -136,6 +136,7 @@ $scope.dataAtualFormatada = function(data){
       dataMedicao: new Date(),
       aterro : $scope.usuario._aterro,
       usuario : $scope.usuario._id,
+      createdAt: new Date(),
       tipoEstaca: null,
       altura: null ,
       comprimento: null
