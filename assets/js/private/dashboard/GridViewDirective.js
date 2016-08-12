@@ -590,7 +590,13 @@
                                 HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
                                 HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                                 HtmlFormBody+='</span>';                        
-                            break;                                                                                                                   
+                                break;                                                                                                                   
+                            
+                            case'date':
+
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date' type='text' value='{{data." + $scope.fields[key].name + "}}' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";                       
+                                break;                                                                                                                   
+
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
@@ -623,7 +629,18 @@
                     HtmlFormBody += "</div></div></div> <input type='hidden' name='_csrf' value='<%= _csrf %>' /></form></div>";
 
                     $element.replaceWith($compile(HtmlFormBody)($scope));
-                
+
+                    /*
+                    $(".date").each(function(i,o){
+                        var data = new Date($(o).val());
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDate();
+                        var retorno = dia + "/" + mes + "/" + ano;
+                        $(o).val(retorno);
+                    });*/
+
+                    $(".date").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});                    
             },
             controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
                 $scope.me = window.SAILS_LOCALS;
@@ -656,12 +673,12 @@
                     }
                      if(type == "date"){
 
-                        var data = new Date(valor);
-                         var ano = data.getFullYear();
-                           var mes = data.getMonth() + 1;
-                           var dia = data.getDay();
-                         var retorno = dia + "/" + mes + "/" + ano;
-                        return retorno;
+                       var data = new Date(valor);
+                       var ano = data.getFullYear();
+                       var mes = data.getMonth() + 1;
+                       var dia = data.getDate();
+                       var retorno = dia + "/" + mes + "/" + ano;
+                       return retorno;
                      }
                     if(type == "usuarios"){
                         return valor.name;            
@@ -1026,7 +1043,7 @@
                         var data = new Date(valor);
                         var ano = data.getFullYear();
                         var mes = data.getMonth() + 1;
-                        var dia = data.getDay();
+                        var dia = data.getDate();
                         var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
                     }
