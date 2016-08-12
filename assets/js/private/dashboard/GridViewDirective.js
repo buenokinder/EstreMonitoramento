@@ -703,7 +703,7 @@
                         switch ($scope.fields[key].type) {
                             case 'listview':
                                 $scope.data[$scope.fields[key].model] = ([]);
-                                                                   
+                                $scope[$scope.fields[key].input] = "";                                   
                                 break;
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
@@ -714,10 +714,11 @@
                                                                    
                                 break;                                
                             default:
-                        
+                                $scope.data[$scope.fields[key].name] = "" 
                             break;
                         }
                     } 
+                    console.log('data', $scope.data);
                 }
                 
                 $scope.adicionaAlertas = function(coeficiente, model, input) {                    
@@ -731,14 +732,10 @@
                 }
 
 
-                $scope.newitem = function () {                    
-                    $scope.data = ([]);
-                    var newData = ({});
-                    for (var key in $scope.fields) {                        
-                        newData[$scope.fields[key].name] = "";
-                        $scope[$scope.fields[key].name] = "";          
-                    }                    
-                    $scope.data = newData;
+                $scope.newitem = function () {                                        
+
+                    $scope.init();
+                    console.log('data', $scope.data);
                     $scope.inputClass = "";
                 };
 
@@ -811,8 +808,9 @@
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
                                         //sennitCommunicationService.prepForBroadcastDataList($scope.data);
-                                        $scope.data = ([]);
+                                        $scope.data = ({});                                      
                                         $scope.inputClass = "disabled";
+                                        $scope.newitem();
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);
                                     })
@@ -822,7 +820,6 @@
                                     .finally(function eitherWay(){
                                         $scope.sennitForm.loading = false;
                                     })
-                                    $scope.newitem();
                                 } else {
                                     swal("Cancelado", "Seu registro não foi alterado :(", "error");
                                 } 
