@@ -34,6 +34,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           $http.get('/MarcoSuperficial').success(function(response, status){
                $scope.monitoramentos.marcosSuperficiais = response;
           });
+
+          $("#btMonitoramentos").on("click", function(e){
+            e.preventDefault();
+            document.location="#/MonitoramentoMarcoSuperficial"
+          });
       },
 
       pesquisar:function(){
@@ -56,17 +61,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
           $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
                $scope.monitoramentos.pesquisa = response;
-
-
-              var $table = $('.table');
-              var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
-
-              $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
-
-              $fixedColumn.find('tr').each(function (i, elem) {
-                  $(this).height($table.find('tr:eq(' + i + ')').height());
-              });
-               
+                setInterval(function(){
+                    var $fixedColumn = $('#fixed');
+                    var $pesquisa = $('#pesquisa');
+                    $fixedColumn.find('tbody tr').each(function (i, elem) {
+                        $(this).height($pesquisa.find('tbody  tr:eq(' + i + ')').height());
+                    });
+                }, 0);
           });        
       }
     };

@@ -51,6 +51,7 @@ module.exports = {
 				item.cota = marcosSuperficiais[i].cota;
 				item.data = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data
 				item.nomeTopografo = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeTopografo;
+				item.temperatura = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.temperatura;
 				item.nomeAuxiliar =marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeAuxiliar;
 				item.deslocamentoHorizontalParcial = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalParcial;
 				item.deslocamentoHorizontalTotal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalTotal;
@@ -100,7 +101,6 @@ module.exports = {
 
 				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
-				console.log("sortString",sortString);
 				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
@@ -205,7 +205,7 @@ module.exports = {
 						            }
 
 						            if (retorno.velocidadeVertical <=2){
-						            	retorno.criterioAlertaVerticalMetodologia2 ="COND. MIN.";
+						            	retorno.criterioAlertaVerticalMetodologia2 ="COND MIN";
 						            }else{
 						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
 											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
