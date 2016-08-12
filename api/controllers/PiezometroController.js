@@ -21,6 +21,7 @@ module.exports = {
 		Piezometro.find(filtro)
 		.populate('aterro')
 		.populate('alertas')
+		.populate('usuario')
 		.exec(function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);

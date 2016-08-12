@@ -287,6 +287,7 @@ module.exports = {
 
 		MarcoSuperficial.find(filtro)
 		.populate('aterro')
+		.populate('usuario')
 		.exec(function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);

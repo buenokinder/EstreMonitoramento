@@ -19,6 +19,7 @@ module.exports = {
 		}
 
 		SecaoFatorSeguranca.find(filtro)
+		.populate('usuario')
 		.exec(function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);
