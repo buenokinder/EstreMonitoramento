@@ -51,6 +51,7 @@ module.exports = {
 				item.cota = marcosSuperficiais[i].cota;
 				item.data = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data
 				item.nomeTopografo = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeTopografo;
+				item.temperatura = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.temperatura;
 				item.nomeAuxiliar =marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeAuxiliar;
 				item.deslocamentoHorizontalParcial = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalParcial;
 				item.deslocamentoHorizontalTotal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalTotal;
@@ -156,9 +157,6 @@ module.exports = {
 						            else
 						                retorno.sentidoDeslocamentoNorteSul = "Sul";
 
-						            console.log("retorno.sentidoDeslocamentoDirerencaEste",retorno.sentidoDeslocamentoDirerencaEste);
-						            console.log("retorno.sentidoDeslocamentoDirerencaEste >0",retorno.sentidoDeslocamentoDirerencaEste>0);
-
 						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
 						                retorno.sentidoDeslocamentoLesteOeste = "Leste";
 						            else
@@ -207,7 +205,7 @@ module.exports = {
 						            }
 
 						            if (retorno.velocidadeVertical <=2){
-						            	retorno.criterioAlertaVerticalMetodologia2 ="COND. MIN.";
+						            	retorno.criterioAlertaVerticalMetodologia2 ="COND MIN";
 						            }else{
 						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
 											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
