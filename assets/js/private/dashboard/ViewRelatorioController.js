@@ -61,6 +61,7 @@ function getParameterByName(name, url) {
 		            $http.get("/MarcoSuperficial/monitoramentos/").then(function (results) {                                
 				        $scope.data  = results.data;
                         console.log($scope.data[2]);
+                        //respostas.forEach(myFunction);
                     });
                 };
 

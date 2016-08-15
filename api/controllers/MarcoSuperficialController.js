@@ -103,12 +103,9 @@ module.exports = {
 				}
 
 				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
-<<<<<<< HEAD
+
 				var sortString = req.param('order');
-=======
-				//var sortString= 'dataInstalacao ASC';
-				var sortString = req.param('o');
->>>>>>> 2016_08_08__2016_08_12
+
 				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {

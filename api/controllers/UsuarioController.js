@@ -54,6 +54,8 @@ req.session.me.aterro = user.aterros[0];
             req.session.me.aterro = "";
 
           return res.ok();
+
+        
         }
       });
     });
