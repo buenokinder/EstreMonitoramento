@@ -143,7 +143,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     function parseMedicao(value){
       if(undefined == value || null==value || value=='')return 0;
 
-      var ret = parseFloat(value.replace('\r','').trim());
+      var ret = parseFloat(value.replace(',','.').replace('\r','').trim());
 
       return ret;
     }
@@ -260,6 +260,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.$on('handleBroadcast', function() {
+      $scope.medicoes = ([]);
       $scope.data = sennitCommunicationService.data;
       $scope.inputClass = "active";
       $scope.verMedicoes = true;

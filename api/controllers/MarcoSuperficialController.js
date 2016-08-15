@@ -146,8 +146,9 @@ module.exports = {
 									retorno.deslocamentoVerticalTotal = parseFloat((MedicaoAtual.cota - MedicaoInicial.cota) * 100).toFixed(2);
 									retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(2);
 									retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(2);
-									retorno.velocidadeHorizontal = parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(2);
-									retorno.velocidadeVertical = parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(2);
+
+									retorno.velocidadeHorizontal = (DiferencaDatas==0 ? 0: parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(2));
+									retorno.velocidadeVertical = (DiferencaDatas==0 ? 0: parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(2));
 
 						            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((MedicaoAtual.norte - MedicaoInicial.norte) * 100).toFixed(2);
 						            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((MedicaoAtual.leste - MedicaoInicial.leste) * 100).toFixed(2);
