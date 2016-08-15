@@ -251,9 +251,7 @@ module.exports = {
 					if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
 						dataFinal = new Date(req.param('dtFim'));				
 					}
-					console.log("dataInicial",dataInicial);
-					console.log("dataFinal",dataFinal);
-
+					
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index, dataInicial, dataFinal);
 					}

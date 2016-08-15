@@ -43,6 +43,10 @@ module.exports = {
       collection: 'alertasPiezometro',
       via: 'owner'
     },
+    medicoes: {
+      collection: 'medicaoPiezometro',
+      via: 'owner'
+    },    
     owner: {
       model: 'Aterro'
     },
