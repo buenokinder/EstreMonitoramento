@@ -25,6 +25,9 @@ module.exports = {
     },    
     aterro: {
       model: 'Aterro'
+    },
+    usuario: {
+      model: 'Usuario'
     }
   }
 };

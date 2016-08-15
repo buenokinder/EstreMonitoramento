@@ -1,3 +1,4 @@
+
 /**
  * MarcoSuperficialController
  *
@@ -35,7 +36,7 @@ module.exports = {
 			item.nomeTopografo = null;
 			item.nomeAuxiliar = null;
 			item.criterioAlertaHorizontalMetodologia1= null;
-			item.criterioAlertaHorizontalVertical1= null;
+			item.criterioAlertaVerticalMetodologia1= null;
 			item.criterioAlertaHorizontalMetodologia2= null;
 			item.criterioAlertaVerticalMetodologia2= null;
 			item.vetorDeslocamentoSeno = null;
@@ -51,6 +52,7 @@ module.exports = {
 				item.cota = marcosSuperficiais[i].cota;
 				item.data = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data
 				item.nomeTopografo = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeTopografo;
+				item.temperatura = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.temperatura;
 				item.nomeAuxiliar =marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeAuxiliar;
 				item.deslocamentoHorizontalParcial = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalParcial;
 				item.deslocamentoHorizontalTotal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalTotal;
@@ -65,7 +67,7 @@ module.exports = {
 				item.sentidoDeslocamentoLesteOeste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoLesteOeste;
 				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
 				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
-				item.criterioAlertaHorizontalVertical1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalVertical1;
+				item.criterioAlertaVerticalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
 				item.criterioAlertaHorizontalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia2;
 				item.criterioAlertaVerticalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia2;
 				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
@@ -94,16 +96,11 @@ module.exports = {
 
 				var filtro ={};
 				
-				if(req.param('id')!=undefined){
-					filtro.id = req.param('id');				
+				if(req.param('ms')!=undefined){
+					filtro.id = req.param('ms');				
 				}
 
-				if(req.param('id')!=undefined){
-					filtro.id = req.param('id');				
-				}
-
-				var marcoSuperficial = MarcoSuperficial.find().populate('aterro');
-
+				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
 
 				marcoSuperficial.sort(sortString);
@@ -163,9 +160,9 @@ module.exports = {
 						                retorno.sentidoDeslocamentoNorteSul = "Sul";
 
 						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
-						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
-						            else
 						                retorno.sentidoDeslocamentoLesteOeste = "Leste";
+						            else
+						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
 
 
 						            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Leste")
@@ -185,13 +182,13 @@ module.exports = {
 						            }
 
 						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
-						            retorno.criterioAlertaHorizontalVertical1 = "Ok";
+						            retorno.criterioAlertaVerticalMetodologia1 = "Ok";
 						            for (k = 0; k < alertas.length; k++) {
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
 						                    retorno.criterioAlertaHorizontalMetodologia1 = alertas[k].nivel;
 
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
-						                    retorno.criterioAlertaHorizontalVertical1 = alertas[k].nivel;
+						                    retorno.criterioAlertaVerticalMetodologia1 = alertas[k].nivel;
 						            }
 
 						            if (retorno.velocidadeHorizontal <=1){
@@ -210,7 +207,7 @@ module.exports = {
 						            }
 
 						            if (retorno.velocidadeVertical <=2){
-						            	retorno.criterioAlertaVerticalMetodologia2 ="COND. MIN.";
+						            	retorno.criterioAlertaVerticalMetodologia2 ="COND MIN";
 						            }else{
 						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
 											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
@@ -244,16 +241,18 @@ module.exports = {
 						return resolve(marcosSuperficiais);
 					}
 
-					var dataInicial =new Date(0);
+					var dataInicial =new Date(new Date().setDate(new Date().getDate()-30));
 					var dataFinal =new Date();
 
-					if(req.param('dtIni')!=undefined){
+					if(undefined!=req.param('dtIni') && ''!=req.param('dtIni')){
 						dataInicial = new Date(req.param('dtIni'));				
 					}
 
-					if(req.param('dtFim')!=undefined){
+					if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
 						dataFinal = new Date(req.param('dtFim'));				
 					}
+					console.log("dataInicial",dataInicial);
+					console.log("dataFinal",dataFinal);
 
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index, dataInicial, dataFinal);
@@ -289,6 +288,7 @@ module.exports = {
 
 		MarcoSuperficial.find(filtro)
 		.populate('aterro')
+		.populate('usuario')
 		.exec(function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);

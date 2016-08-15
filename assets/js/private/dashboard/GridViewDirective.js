@@ -9,6 +9,7 @@
                 adicionar: '@',
                 view: '@',
                 strupdate: '@',
+                calculate: '@',
                 update: '@',
                 strdelete: '@',
                 pagesize: '=',
@@ -53,6 +54,7 @@
                 HtmlFormBody += "<table class='striped'><thead><tr>";
                 HtmlFormBody += "<th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer; text-align:center;'>{{field.value}}</th>";
                 HtmlFormBody += "<th  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>Editar</th>";
+                HtmlFormBody += "<th  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>Cálculos</th>";
                 HtmlFormBody += "<th  ng-show='exibir(update)' style='text-align:center;'>Ações</th>";
                 HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
                 HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
@@ -68,7 +70,13 @@
 
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>";
                     HtmlFormBody +=             "<a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                    HtmlFormBody +=         "</td>";                
+                    HtmlFormBody +=         "</td>";   
+
+                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>";
+                    HtmlFormBody +=             "<a href ='#' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                    HtmlFormBody +=         "</td>";   
+                    
+
                     HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
                     HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
                     HtmlFormBody +=             "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
@@ -133,6 +141,7 @@
                     HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
                     HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
                     HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
                     HtmlFormBody += "</td>";
@@ -584,11 +593,19 @@
                             case 'textAngular':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\","+$scope.fields[key].name+")' ng-model='"+$scope.fields[key].name+"'></div></div></div></div></div></div>";
                                 break;
+                            case 'usuario':                                
+                                break;
                             case'datepicker':
                                 HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
                                 HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                                 HtmlFormBody+='</span>';                        
-                            break;                                                                                                                   
+                                break;                                                                                                                   
+                            
+                            case'date':
+
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date' type='text' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";                       
+                                break;                                                                                                                   
+
                             case 'combobox':
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
@@ -621,10 +638,22 @@
                     HtmlFormBody += "</div></div></div> <input type='hidden' name='_csrf' value='<%= _csrf %>' /></form></div>";
 
                     $element.replaceWith($compile(HtmlFormBody)($scope));
-                
+
+                    /*
+                    $(".date").each(function(i,o){
+                        var data = new Date($(o).val());
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDate();
+                        var retorno = dia + "/" + mes + "/" + ano;
+                        $(o).val(retorno);
+                    });*/
+
+                    //$(".date").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});                    
             },
             controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
-                $scope.me = window.SAILS_LOCALS.me;
+                $scope.me = window.SAILS_LOCALS;
+                console.log('me', $scope.me);
                 $scope.combodata = ([]);
                 $scope.combos = ([]);
                 $scope.modelComboBox = ([]);
@@ -653,12 +682,12 @@
                     }
                      if(type == "date"){
 
-                        var data = new Date(valor);
-                         var ano = data.getFullYear();
-                           var mes = data.getMonth() + 1;
-                           var dia = data.getDay();
-                         var retorno = dia + "/" + mes + "/" + ano;
-                        return retorno;
+                       var data = new Date(valor);
+                       var ano = data.getFullYear();
+                       var mes = data.getMonth() + 1;
+                       var dia = data.getDate();
+                       var retorno = dia + "/" + mes + "/" + ano;
+                       return retorno;
                      }
                     if(type == "usuarios"){
                         return valor.name;            
@@ -700,17 +729,22 @@
                         switch ($scope.fields[key].type) {
                             case 'listview':
                                 $scope.data[$scope.fields[key].model] = ([]);
-                                                                   
+                                $scope[$scope.fields[key].input] = "";                                   
                                 break;
                             case 'textAngular':
                                 $scope.data[$scope.fields[key].name] = "";
                                                                    
                                 break;
+                            case 'usuario':
+                                $scope.data[$scope.fields[key].name] = $scope.me._id;
+                                                                   
+                                break;                                
                             default:
-                        
+                                $scope.data[$scope.fields[key].name] = "" 
                             break;
                         }
                     } 
+                    console.log('data', $scope.data);
                 }
                 
                 $scope.adicionaAlertas = function(coeficiente, model, input) {                    
@@ -724,14 +758,10 @@
                 }
 
 
-                $scope.newitem = function () {                    
-                    $scope.data = ([]);
-                    var newData = ({});
-                    for (var key in $scope.fields) {                        
-                        newData[$scope.fields[key].name] = "";
-                        $scope[$scope.fields[key].name] = "";          
-                    }                    
-                    $scope.data = newData;
+                $scope.newitem = function () {                                        
+
+                    $scope.init();
+                    console.log('data', $scope.data);
                     $scope.inputClass = "";
                 };
 
@@ -804,8 +834,9 @@
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
                                         //sennitCommunicationService.prepForBroadcastDataList($scope.data);
-                                        $scope.data = ([]);
+                                        $scope.data = ({});                                      
                                         $scope.inputClass = "disabled";
+                                        $scope.newitem();
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);
                                     })
@@ -815,7 +846,6 @@
                                     .finally(function eitherWay(){
                                         $scope.sennitForm.loading = false;
                                     })
-                                    $scope.newitem();
                                 } else {
                                     swal("Cancelado", "Seu registro não foi alterado :(", "error");
                                 } 
@@ -834,13 +864,12 @@
                             closeOnCancel: false }, 
                             function(isConfirm){   
                                 if (isConfirm) {     
-                                    swal("Registro Incluido!", "Seu registro foi incluido com sucesso.", "success");
+                                    
                                     var inJson = angular.toJson( $scope.data);
                                     query = JSON.parse(inJson);
-
-
                                     $http.post('/'+ $scope.listaname , query)
                                     .then(function onSuccess(sailsResponse){
+                                        swal("Registro Incluido!", "Seu registro foi incluido com sucesso.", "success");
                                         Materialize.toast('Registro incluido com sucesso!', 4000);
                                         sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
                                         $scope.newitem();
@@ -848,9 +877,8 @@
 
                                     })
                                     .catch(function onError(sailsResponse){
-
-
-
+                                        swal("Erro", "Seu registro não foi salvo :(", "error");   
+                                        Materialize.toast('Falha ao inserir o registro!', 4000);
                                     })
                                     .finally(function eitherWay(){
                                         $scope.sennitForm.loading = false;
@@ -1022,7 +1050,7 @@
                         var data = new Date(valor);
                         var ano = data.getFullYear();
                         var mes = data.getMonth() + 1;
-                        var dia = data.getDay();
+                        var dia = data.getDate();
                         var retorno = dia + "/" + mes + "/" + ano;
                         return retorno;
                     }

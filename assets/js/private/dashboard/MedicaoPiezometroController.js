@@ -1,7 +1,6 @@
-
-app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
+app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
-    $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
+    $scope.inserted = {data:'', piezometro:([])};
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
@@ -10,7 +9,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.monitoramentos = {
       dataInicial:'',
       dataFinal:'',
-      marcoSuperficial:([]),
+      Piezometro:([]),
       marcosSuperficiais:([]),
       monitoramentos:([]),
       pesquisa: null,
@@ -32,13 +31,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
           $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
-          $http.get('/MarcoSuperficial').success(function(response, status){
+          $http.get('/Piezometro').success(function(response, status){
                $scope.monitoramentos.marcosSuperficiais = response;
           });
 
           $("#btMonitoramentos").on("click", function(e){
             e.preventDefault();
-            document.location="#/MonitoramentoMarcoSuperficial"
+            document.location="#/MonitoramentoPiezometro"
           });
       },
 
@@ -56,11 +55,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
-          if(null!=$scope.monitoramentos.marcoSuperficial && undefined != $scope.monitoramentos.marcoSuperficial && ''!=$scope.monitoramentos.marcoSuperficial){
-            query+="&ms="+$scope.monitoramentos.marcoSuperficial;
+          if(null!=$scope.monitoramentos.Piezometro && undefined != $scope.monitoramentos.Piezometro && ''!=$scope.monitoramentos.Piezometro){
+            query+="&ms="+$scope.monitoramentos.Piezometro;
           }
 
-          $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
+          $http.get('/Piezometro/monitoramentos/'+query).success(function(response, status){
                $scope.monitoramentos.pesquisa = response;
                 setInterval(function(){
                     var $fixedColumn = $('#fixed');
@@ -86,29 +85,29 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         });
     };
 
-    $scope.createMarcoSuperficial = function(marcoSuperficial, callback){
-          $http.post('/MarcoSuperficial', marcoSuperficial).success(function(response, status){
+    $scope.createPiezometro = function(Piezometro, callback){
+          $http.post('/Piezometro', Piezometro).success(function(response, status){
               callback(response, status);
           }).error(function(err, status){
-              swal("Erro", "Ocorreu uma falha ao importar o marco superficial '" + marcoSuperficial.nome + "' :(", "error");
+              swal("Erro", "Ocorreu uma falha ao importar o marco superficial '" + Piezometro.nome + "' :(", "error");
               callback(err, status);
           }); 
     };
 
-    $scope.getMarcoSuperficial = function(medicaoMarcoSuperficialDetalhes, callback) {
-      $http.get('/MarcoSuperficial/?nome='+medicaoMarcoSuperficialDetalhes.nome).success(function (response, status) {
+    $scope.getPiezometro = function(medicaoPiezometroDetalhes, callback) {
+      $http.get('/Piezometro/?nome='+medicaoPiezometroDetalhes.nome).success(function (response, status) {
 
           if(null==response || response.length==0){
-            var marcosuperficial={};
-            marcosuperficial.nome = medicaoMarcoSuperficialDetalhes.nome;
-            marcosuperficial.leste = medicaoMarcoSuperficialDetalhes.leste;
-            marcosuperficial.norte = medicaoMarcoSuperficialDetalhes.norte;
-            marcosuperficial.cota = medicaoMarcoSuperficialDetalhes.cota;
-            marcosuperficial.habilitado = true;
-            marcosuperficial.dataInstalacao = medicaoMarcoSuperficialDetalhes.data;
-            marcosuperficial.aterro = medicaoMarcoSuperficialDetalhes.aterro;
+            var Piezometro={};
+            Piezometro.nome = medicaoPiezometroDetalhes.nome;
+            Piezometro.leste = medicaoPiezometroDetalhes.leste;
+            Piezometro.norte = medicaoPiezometroDetalhes.norte;
+            Piezometro.cota = medicaoPiezometroDetalhes.cota;
+            Piezometro.habilitado = true;
+            Piezometro.dataInstalacao = medicaoPiezometroDetalhes.data;
+            Piezometro.aterro = medicaoPiezometroDetalhes.aterro;
 
-            $scope.createMarcoSuperficial(marcosuperficial, callback);
+            $scope.createPiezometro(Piezometro, callback);
           }else{
             callback(response[0], status);  
           }
@@ -118,24 +117,24 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
-    $scope.saveMedicaoMarcoSuperficialDetalhes = function(medicaoMarcoSuperficialDetalhes){
+    $scope.saveMedicaoPiezometroDetalhes = function(medicaoPiezometroDetalhes){
       
-      medicaoMarcoSuperficialDetalhes.owner = $scope.data;
-      medicaoMarcoSuperficialDetalhes.data = medicaoMarcoSuperficialDetalhes.owner.data;
+      medicaoPiezometroDetalhes.owner = $scope.data;
+      medicaoPiezometroDetalhes.data = medicaoPiezometroDetalhes.owner.data;
 
-      $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function(marcoSuperficial, status){
-          if(null!=marcoSuperficial && undefined!=marcoSuperficial){
+      $scope.getPiezometro(medicaoPiezometroDetalhes, function(Piezometro, status){
+          if(null!=Piezometro && undefined!=Piezometro){
 
-            medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
+            medicaoPiezometroDetalhes['Piezometro'] = Piezometro;
 
-            $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
+            $http.post('/MedicaoPiezometroDetalhes', medicaoPiezometroDetalhes).success(function(data, status){
                 $scope.refreshChilds = true;
-                $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
+                $scope.medicoes.push(medicaoPiezometroDetalhes);
             }).error(function(data, status){
-                swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+                swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoPiezometroDetalhes.nome + "' :(", "error");
             }); 
           }else{
-            swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+            swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoPiezometroDetalhes.nome + "' :(", "error");
           }
       });
     };
@@ -149,7 +148,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     }
     $scope.showContent = function($fileContent){
 
-        var extractMedicaoMarcoSuperficialDetalhes = function(ret){
+        var extractMedicaoPiezometroDetalhes = function(ret){
             $scope.medicoes = ([]);
             var linhas = $fileContent.split('\n');  
 
@@ -160,9 +159,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 if(colunas.length <4) continue;
 
                 var medicao = {'nome': colunas[0] , 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]) , 'cota': parseMedicao(colunas[3])};
-                var medicaoMarcoSuperficialDetalhes = {'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
+                var medicaoPiezometroDetalhes = {'nome': medicao.nome , 'norte': medicao.norte, 'leste': medicao.leste , 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
                 
-                $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
+                $scope.saveMedicaoPiezometroDetalhes(medicaoPiezometroDetalhes);
             }
             $scope.content = $fileContent;
         };
@@ -171,11 +170,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
         };
 
-        $scope.deleteAllDetalhes({id:$scope.data.id}, extractMedicaoMarcoSuperficialDetalhes, erro);
+        $scope.deleteAllDetalhes({id:$scope.data.id}, extractMedicaoPiezometroDetalhes, erro);
     };
 
     $scope.deleteAllDetalhes = function (data, callback){
-      $http.post('/MedicaoMarcoSuperficialDetalhes/deleteall', data).success(function (response) {
+      $http.post('/MedicaoPiezometroDetalhes/deleteall', data).success(function (response) {
           callback(response, null);
       }).error(function (err, status) {
           callback(err, status);
@@ -199,7 +198,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                   if (isConfirm) {     
                       $http({
                           method: 'POST',
-                          url: '/MedicaoMarcoSuperficial/',
+                          url: '/MedicaoPiezometro/',
                           data: $scope.inserted
                       }).then(function onSuccess(sailsResponse){
                           $scope.inputClass = null;
@@ -238,7 +237,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                     if (isConfirm) {     
                         $http({
                             method: 'PUT',
-                            url: '/MedicaoMarcoSuperficial/' + $scope.data.id,
+                            url: '/MedicaoPiezometro/' + $scope.data.id,
                             data: {'obsOperacional': $scope.data.obsOperacional}
                         }).then(function onSuccess(sailsResponse){
                             $scope.inputClass = null;

@@ -30,6 +30,9 @@ module.exports = {
     aterro: {
       model: 'Aterro'
     },
+    usuario: {
+      model: 'Usuario'
+    },
     /*medicaoMarcoSuperficialDetalhes: {
       collection: 'medicaoMarcoSuperficialDetalhes',
       via: 'marcoSuperficial'
@@ -83,7 +86,19 @@ module.exports = {
     loadDetalhes: function(callback, list, index, dataInicial, dataFinal){
       var _that = this;
       var filtro = {};
-      filtro.data = { '>=': dataInicial, '<=': dataFinal };
+
+      if(dataInicial!='' && dataFinal!=''){
+        filtro.data = { '>=': dataInicial, '<=': dataFinal };  
+      }else{
+        if(dataInicial!=''){
+          filtro.data = { '>=': dataInicial};  
+        }
+
+        if(dataFinal!=''){
+          filtro.data = { '<=': dataFinal};  
+        }
+      }
+      
       filtro.marcoSuperficial = this.id;
 
       MedicaoMarcoSuperficialDetalhes.find(filtro).populate("owner").exec(function(err,detalhes){
