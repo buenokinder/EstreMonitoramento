@@ -1,4 +1,4 @@
-app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
+app.controller('MedicaoPiezometroController', ['$scope','$interval', '$http', 'sennitCommunicationService',   function($scope, $interval, $http, sennitCommunicationService){
     $scope.data = [];
     $scope.inserted = {data:'', piezometro:([])};
     $scope.medicoes = ([]);
@@ -9,11 +9,13 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
     $scope.monitoramentos = {
       dataInicial:'',
       dataFinal:'',
-      Piezometro:([]),
-      marcosSuperficiais:([]),
+      piezometro:([]),
+      piezometros:([]),
       monitoramentos:([]),
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
+
+
       init: function(){
 
           var getDatePtBr = function(date){
@@ -23,7 +25,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
               var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
 
              return value;
-          }
+          };
 
           var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
           var dtFim = new Date();
@@ -32,7 +34,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
           $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
           $http.get('/Piezometro').success(function(response, status){
-               $scope.monitoramentos.marcosSuperficiais = response;
+               $scope.monitoramentos.piezometros = response;
           });
 
           $("#btMonitoramentos").on("click", function(e){
@@ -55,11 +57,11 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
           query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
-          if(null!=$scope.monitoramentos.Piezometro && undefined != $scope.monitoramentos.Piezometro && ''!=$scope.monitoramentos.Piezometro){
-            query+="&ms="+$scope.monitoramentos.Piezometro;
+          if(null!=$scope.monitoramentos.piezometro && undefined != $scope.monitoramentos.piezometro && ''!=$scope.monitoramentos.piezometro){
+            query+="&pz="+$scope.monitoramentos.piezometro;
           }
 
-          $http.get('/Piezometro/monitoramentos/'+query).success(function(response, status){
+          $http.get('/piezometro/monitoramentos/'+query).success(function(response, status){
                $scope.monitoramentos.pesquisa = response;
                 setInterval(function(){
                     var $fixedColumn = $('#fixed');
@@ -74,15 +76,16 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
 
     $scope.monitoramentos.init();
 
-    $scope.removeFile = function(){
-        $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
-          $scope.medicoes = ([]);
-          $scope.refreshChilds = true;
-          $scope.content = null;
-          swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
-        }, function(){
-          swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
-        });
+    $scope.monitoramentoPiezometro = function(piezometro){
+      var data = angular.fromJson(piezometro);
+      var salienciaInicialEstimada = 1 -data.salienciaInicial;
+
+
+      /*if (data.Prolongamento_Corte atual=""-\"  " ou "0" )=Prondidade_Descontando_Cortes anterior
+      Se (Prolongamento_Corte atual≠""-\" " ou 0)=(Prondidade_Descontando_Cortes anterior+Prolongamento_Corte)
+*/
+
+
     };
 
     $scope.createPiezometro = function(Piezometro, callback){
@@ -270,7 +273,6 @@ app.controller('MedicaoPiezometroController', ['$scope', '$http', 'sennitCommuni
 
 
     $(".dropify").on('afterClear', function(e){
-      console.log("file removed --");
       $scope.removeFile();
     });
 
