@@ -904,7 +904,20 @@
                             function(isConfirm){   
                                 if (isConfirm) {     
                                     
-                                    var inJson = angular.toJson( $scope.data);
+
+                                    var params = {};
+                                    for(var field in $scope.fields){
+                                        params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                    }
+
+                                    $(".datepicker").each(function(i,el){
+                                        var value = $(this).val().split("/");
+                                        params[$(this).prop("name")] = new Date(value[2],parseInt(value[1])-1,value[0]);
+                                        $scope.data[$(this).prop("name")] = $(this).val();
+                                    });
+
+                                    
+                                    var inJson = angular.toJson( params);
                                     query = JSON.parse(inJson);
                                     $http.post('/'+ $scope.listaname , query)
                                     .then(function onSuccess(sailsResponse){
