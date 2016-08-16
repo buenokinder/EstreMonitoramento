@@ -29,7 +29,7 @@ module.exports = {
       type: 'string',
       required: true
     },  
-   	profundidadeTotalCamaraCarga: {
+   	profundidadeMediaCamaraCargaInicial: {
       type: 'string',
       required: true
     },  
