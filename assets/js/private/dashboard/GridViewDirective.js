@@ -345,12 +345,21 @@
                         }
                     }
                     if(type == "date"){
-                        var data = new Date(valor);
+                        /*var data=null;
+
+                        if(valor.toString().indexOf("/")>=0){
+                            var value = valor.split('/');
+                            data  = new Date(value[2], parseInt(value[1]-1), value[0]);
+
+                        }else{
+                           data = new Date(valor);
+                        }
+
                         var ano = data.getFullYear();
                         var mes = data.getMonth() + 1;
                         var dia = data.getDate();
-                        var retorno = dia + "/" + mes + "/" + ano;
-                        return retorno;
+                        var retorno = dia + "/" + mes + "/" + ano;*/
+                        return getDate(valor);
                     }
                     if(type == "usuario"){
                         return valor.name;            
@@ -539,7 +548,6 @@
                                     HtmlFormBody += "</button>";
                                     HtmlFormBody += "</td>";
                                     HtmlFormBody += "</div>";
-                                  
                                   }
                                
                                       
@@ -598,15 +606,11 @@
                                 break;
                             case 'usuario':                                
                                 break;
-                            case'datepicker':
-                                HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
-                                HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
-                                HtmlFormBody+='</span>';                        
-                                break;                                                                                                                   
                             
                             case'date':
-
-                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date' type='text' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";                       
+                            case'datepicker':
+                                var value = getDate($scope.fields[key].value);
+                                HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date datepicker' type='text' name='"+$scope.fields[key].name+"' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";                       
                                 break;                                                                                                                   
 
                             case 'combobox':
@@ -642,21 +646,29 @@
 
                     $element.replaceWith($compile(HtmlFormBody)($scope));
 
-                    /*
-                    $(".date").each(function(i,o){
-                        var data = new Date($(o).val());
-                        var ano = data.getFullYear();
-                        var mes = data.getMonth() + 1;
-                        var dia = data.getDate();
-                        var retorno = dia + "/" + mes + "/" + ano;
-                        $(o).val(retorno);
-                    });*/
+                    $('.datepicker').pickadate({
+                        selectMonths: true
+                    });   
 
-                    //$(".date").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});                    
+
+                    $('.datepicker').each(function(i,el){
+                        
+                        var $input = $(this).pickadate();
+                        var picker = $input.pickadate('picker');
+                        var date  = $scope.data[$(this).prop("name")];
+
+                        if(date.toString().indexOf("/")>=0){
+                            var value = date.split('/');
+                            picker.set('select', new Date(value[2], parseInt(value[1]-1), value[0]));
+
+                        }else{
+                            picker.set('select', new Date(date));
+                        }
+                    });                           
+                   
             },
             controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
                 $scope.me = window.SAILS_LOCALS;
-                console.log('me', $scope.me);
                 $scope.combodata = ([]);
                 $scope.combos = ([]);
                 $scope.modelComboBox = ([]);
@@ -666,14 +678,7 @@
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
-                $scope.opened = {};
-
-                $scope.open = function($event, elementOpened) {
-                  $event.preventDefault();
-                  $event.stopPropagation();
-
-                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
-                };  
+               
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
 
@@ -683,14 +688,23 @@
                              return valor[key];
                         }
                     }
-                     if(type == "date"){
+                     if(type == "date" || type == "datepicker"){
 
-                       var data = new Date(valor);
-                       var ano = data.getFullYear();
-                       var mes = data.getMonth() + 1;
-                       var dia = data.getDate();
-                       var retorno = dia + "/" + mes + "/" + ano;
-                       return retorno;
+                        /*var data=null;
+
+                        if(valor.toString().indexOf("/")>=0){
+                            var value = valor.split('/');
+                            data  = new Date(value[2], parseInt(value[1]-1), value[0]);
+
+                        }else{
+                           data = new Date(valor);
+                        }
+
+                        var ano = data.getFullYear();
+                        var mes = data.getMonth() + 1;
+                        var dia = data.getDate();
+                        var retorno = dia + "/" + mes + "/" + ano;*/
+                        return getDate(valor);
                      }
                     if(type == "usuarios"){
                         return valor.name;            
@@ -747,7 +761,6 @@
                             break;
                         }
                     } 
-                    console.log('data', $scope.data);
                 }
                 
                 $scope.adicionaAlertas = function(coeficiente, model, input) {                    
@@ -770,6 +783,16 @@
 
                 $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
+
+                    
+                    for(var field in $scope.fields){
+                        if($scope.fields[field].type=="date" || $scope.fields[field].type=="datepicker"){
+                            var dt = getDate($scope.data[$scope.fields[field].name]);
+                            $scope.data[$scope.fields[field].name] = dt;
+                            $("input[name="+$scope.fields[field].name+"]").val(dt);
+                        }
+                    }
+
                     $scope.inputClass = "active";
                 });        
 
@@ -830,10 +853,23 @@
                             function(isConfirm){   
                                 if (isConfirm) {     
                                     
+
+
+                                    var params = {};
+                                    for(var field in $scope.fields){
+                                        params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                    }
+
+                                    $(".datepicker").each(function(i,el){
+                                        var value = $(this).val().split("/");
+                                        params[$(this).prop("name")] = new Date(value[2],parseInt(value[1])-1,value[0]);
+                                        $scope.data[$(this).prop("name")] = $(this).val();
+                                    });
+
                                     $http({
                                         method: 'PUT',
                                         url: '/'+ $scope.listaname + '/' + $scope.data.id,
-                                        data: $scope.data
+                                        data: params
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
                                         //sennitCommunicationService.prepForBroadcastDataList($scope.data);
@@ -868,7 +904,20 @@
                             function(isConfirm){   
                                 if (isConfirm) {     
                                     
-                                    var inJson = angular.toJson( $scope.data);
+
+                                    var params = {};
+                                    for(var field in $scope.fields){
+                                        params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                    }
+
+                                    $(".datepicker").each(function(i,el){
+                                        var value = $(this).val().split("/");
+                                        params[$(this).prop("name")] = new Date(value[2],parseInt(value[1])-1,value[0]);
+                                        $scope.data[$(this).prop("name")] = $(this).val();
+                                    });
+
+                                    
+                                    var inJson = angular.toJson( params);
                                     query = JSON.parse(inJson);
                                     $http.post('/'+ $scope.listaname , query)
                                     .then(function onSuccess(sailsResponse){
@@ -972,15 +1021,19 @@
 
                     switch($scope.fields[key].type){
                         case'date':
-                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'">';
+                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'">';
                             HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                             HtmlFormBody+='</span>';                        
                             break;
                         case'datepicker':
-                            HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                            HtmlFormBody+='<span editable-text="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" ng-model="'+$scope.fields[key].name+'" e-class="datepicker" >';
                             HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
                             HtmlFormBody+='</span>';                        
-                            break;
+                            break;                        
+                            /*HtmlFormBody+='<span editable-bsdate="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-readonly="true" e-is-open="opened.$data" e-ng-click="open($event,\'$data\')" e-datepicker-popup="dd/MM/yyyy" e-show-calendar-button="true">';
+                            HtmlFormBody+='{{ (data.'+$scope.fields[key].name+' | date:"dd/MM/yyyy") || "empty" }}';
+                            HtmlFormBody+='</span>';                        
+                            break;*/
 
                         case 'textarea':
                             HtmlFormBody+='<span editable-textarea="data.'+$scope.fields[key].name+'" e-name="'+$scope.fields[key].name+'" e-rows="'+$scope.fields[key].rows+'" e-cols="'+$scope.fields[key].cols+'" e-style="width: '+$scope.fields[key].width+'; height:' +$scope.fields[key].height+ '" ng-model="'+$scope.fields[key].name+'">{{data.'+$scope.fields[key].name+'}}</span>';    
@@ -999,7 +1052,7 @@
                 }
 
                 HtmlFormBody += '<div class="buttons">';
-                    HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">';
+                    HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="loadForm(editableForm)" ng-show="!editableForm.$visible">';
                       HtmlFormBody += 'Editar';
                     HtmlFormBody += '</button>';
 
@@ -1030,14 +1083,30 @@
                 $scope.data = ({});
                 $scope.url = ([]);
 
-                $scope.opened = {};
+                $scope.loadForm = function(form){
 
-                $scope.open = function($event, elementOpened) {
-                  $event.preventDefault();
-                  $event.stopPropagation();
+                    form.$show()
 
-                  $scope.opened[elementOpened] = !$scope.opened[elementOpened];
-                };  
+                    $('.datepicker').pickadate({
+                        selectMonths: true, // Creates a dropdown to control month
+                    });          
+
+                    
+                    $('.datepicker').each(function(i,el){
+                        
+                        var $input = $(this).pickadate();
+                        var picker = $input.pickadate('picker');
+                        var date  = $scope.data[$(this).prop("name")];
+
+                        if(date.toString().indexOf("/")>=0){
+                            var value = date.split('/');
+                            picker.set('select', new Date(value[2], parseInt(value[1]-1), value[0]));
+
+                        }else{
+                            picker.set('select', new Date(date));
+                        }
+                    });
+                };
 
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
@@ -1048,7 +1117,7 @@
                         }
                     }
                     
-                    if(type == "date"){
+                    if(type == "date" || type == "datepicker"){
 
                         var data = new Date(valor);
                         var ano = data.getFullYear();
@@ -1124,10 +1193,19 @@
                     if($scope.data.id){
                         $scope.sennitForm.loading = true;
 
+     
+
+
                         var params = {};
                         for(var field in $scope.fields){
                             params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
                         }
+
+                        $(".datepicker").each(function(i,el){
+                            var value = $(this).val().split("/");
+                            params[$(this).prop("name")] = new Date(value[2],parseInt(value[1])-1,value[0]);
+                            $scope.data[$(this).prop("name")] = $(this).val();
+                        });
 
                         swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
@@ -1148,6 +1226,11 @@
                                         $scope.inputClass = "disabled";
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);
+
+//                                        $(".datepicker").each(function(i,el){
+  //                                          $scope.data[$(this).prop("name")] = $(this).val();
+    //                                    });
+
                                     })
                                     .catch(function onError(sailsResponse){
 
@@ -1188,3 +1271,4 @@
 
     return sennitCommunicationService;
 });
+

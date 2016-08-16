@@ -8,8 +8,30 @@ var Promise = require('bluebird');
 
 module.exports = {
 
+	getDate: function(value){
+		var date = new Date(value.valueOf() + value.getTimezoneOffset() * 60000)
+		return new Date(date.getFullYear(),date.getMonth()+1,date.getDate());
+	},
+
+    orderByDateAsc: function (a,b) {
+          if (a.dataMedicao < b.dataMedicao)
+            return -1;
+          if (a.dataMedicao> b.dataMedicao)
+            return 1;
+        
+          return 0;
+    },
+
+  	orderByDateDesc: function (a,b) {
+          if (a.dataMedicao > b.dataMedicao)
+            return -1;
+          if (a.dataMedicao< b.dataMedicao)
+            return 1;
+          return 0;
+    },
 	monitoramentos: function(req, res){
 		var _that = this;
+		var itens = [];
 
 		var execute = new Promise( function( resolve, reject )
 	    {
@@ -25,82 +47,122 @@ module.exports = {
 				dataFinal = new Date(req.param('dtFim'));				
 			}
 
-			//filtro.medicoes = {dataMedicao:{ '>=': dataInicial, '<=': dataFinal }}; 
-
 			if(req.param('pz')!=undefined){
 				filtro.id = req.param('pz');				
 			}
 
-			console.log("filtro", filtro);
+			dataFinal = _that.getDate(dataFinal);
+			dataInicial = _that.getDate(dataInicial);
+
 			var piezometro = Piezometro.find(filtro).
 								populate('aterro').
 								populate('medicoes');
 
-			var sortString = req.param('order');
-			piezometro.sort(sortString);
+			var sortString = "desc";
+
+			if(req.param('order')=="asc" || req.param('order')==""  || req.param('order')==undefined){
+				sortString = "asc";
+			}
+			
 
 			piezometro.exec(function result(err, piezometros) {
 
-				console.log("piezometros", piezometros);
-
 				for(var i=0;i<piezometros.length;i++){
 					var piezometro = piezometros[i];
-					for(var j=0;j<piezometros[i].medicoes.length;j++){
-						var medicao = piezometros[i].medicoes[j];
+					if(sortString=="asc"){
+						piezometros[i].medicoes.sort(_that.orderByDateAsc);
+					}else{
+						piezometros[i].medicoes.sort(_that.orderByDateDesc);
+					}
 
-						if(medicao.dataMedicao<dataInicial 
-							|| medicao.dataMedicao>dataFinal)
+					for(var j=0;j<piezometros[i].medicoes.length;j++){
+
+						var medicao = piezometro.medicoes[j];
+						var dataMedicao = _that.getDate(medicao.dataMedicao);
+
+						if(dataMedicao<dataInicial 
+							|| dataMedicao>dataFinal)
 							continue;
 
-						var salienciaInicialEstimada = piezometro.salienciaInicial -1;
-						var profundidadeDescontandoCortes = 0;
+						medicao.owner  ={id: piezometro.id, nome: piezometro.nome};
+						medicao.salienciaInicial = parseFloat(piezometro.salienciaInicial); 
+						medicao.celulaPiezometrica = parseFloat(piezometro.celulaPiezometrica);
+						medicao.salienciaInicialEstimada = medicao.salienciaInicial -1;
+						medicao.profundidadeMediaCamaraCargaInicial = parseFloat(piezometro.profundidadeMediaCamaraCargaInicial);
+						medicao.profundidadeTotalInicial = parseFloat(piezometro.profundidadeTotalInicial);
+						//medicao.prolongamentoCorte = parseFloat(piezometro.prolongamentoCorte);
+						medicao.profundidadeDescontandoCortes = 0;
 
 						if(j==0){
-							profundidadeDescontandoCortes = 
+							medicao.profundidadeDescontandoCortes = 
 								medicao.prolongamentoCorte=="-"?
-									piezometro.profundidadeTotalInicial:
-									piezometro.profundidadeTotalInicial+medicao.prolongamentoCorte;
+									medicao.profundidadeTotalInicial:
+									medicao.profundidadeTotalInicial+parseFloat(medicao.prolongamentoCorte);
 						}else{
-							var medicaoAnterior = piezometros[i].medicoes[j-1];
+							var medicaoAnterior = piezometro.medicoes[j-1];
 
-							profundidadeDescontandoCortes = 
+							medicao.profundidadeDescontandoCortes = 
 								medicao.prolongamentoCorte=="-" || medicao.prolongamentoCorte==0?
 									medicaoAnterior.profundidadeDescontandoCortes:
-									(medicaoAnterior.profundidadeDescontandoCortes+medicao.prolongamentoCorte);
+									(medicaoAnterior.profundidadeDescontandoCortes+parseFloat(medicao.prolongamentoCorte));
 
 						}
 
-						var profundidadeTotalAtual = profundidadeDescontandoCortes - salienciaInicialEstimada;
-						var profundidadeMediaCamaradeCargaDescontandoCortes=0;
+						medicao.profundidadeTotalAtual = medicao.profundidadeDescontandoCortes - medicao.salienciaInicialEstimada;
+						medicao.profundidadeMediaCamaradeCargaDescontandoCortes=0;
 
 						if(j==0){
-							profundidadeMediaCamaradeCargaDescontandoCortes = 
+							medicao.profundidadeMediaCamaradeCargaDescontandoCortes = 
 								medicao.prolongamentoCorte=="-"?
-									piezometro.profundidadeTotalCamaraCarga:
-									piezometro.profundidadeTotalCamaraCarga+medicao.prolongamentoCorte;
+									medicao.profundidadeMediaCamaraCargaInicial:
+									medicao.profundidadeMediaCamaraCargaInicial+medicao.prolongamentoCorte;
 						}else{
-							var medicaoAnterior = piezometros[i].medicoes[j-1];
+							var medicaoAnterior = piezometro.medicoes[j-1];
 
-							profundidadeMediaCamaradeCargaDescontandoCortes = 
+							medicao.profundidadeMediaCamaradeCargaDescontandoCortes = 
 								medicao.prolongamentoCorte=="-" || medicao.prolongamentoCorte==0?
 									medicaoAnterior.profundidadeMediaCamaradeCargaDescontandoCortes:
 									(medicaoAnterior.profundidadeMediaCamaradeCargaDescontandoCortes+medicao.prolongamentoCorte);
 						}
-						var profundidadeMediaCamaradeCarga = profundidadeMediaCamaradeCargaDescontandoCortes - salienciaInicialEstimada;
+						medicao.profundidadeMediaCamaradeCarga = medicao.profundidadeMediaCamaradeCargaDescontandoCortes - medicao.salienciaInicialEstimada;
+ 						medicao.medicoesNivelChorumeComPressaoNivelEfetivo = medicao.medicoesNivelChorumeComPressaoNivelMedido - medicao.salienciaInicial;
+ 						medicao.medicoesNivelChorumeSemPressaoNivelEfetivo = medicao.medicoesNivelChorumeSemPressaoNivelMedido - medicao.salienciaInicial;
+						medicao.baseAteNivelU = medicao.profundidadeTotalAtual-medicao.celulaPiezometrica-medicao.medicoesNivelChorumeSemPressaoNivelEfetivo;
+						medicao.profundidadeEnterradaZ = medicao.profundidadeTotalAtual;
+						medicao.ru = medicao.profundidadeEnterradaZ==0?"-"
+										:(parseFloat(medicao.baseAteNivelU/medicao.profundidadeEnterradaZ).toFixed(2));
 
+						if (medicao.ru=="-" || medicao.ru==null){
+							medicao.criterioAlertaRu = "-";
+						}
 
+						if (medicao.ru<0.55){
+							medicao.criterioAlertaRu = "Bom";
+						}
 
+						if (medicao.ru>=0.55 && medicao.ru<0.6){
+							medicao.criterioAlertaRu = "Atenção";
+						}
 
+						if (medicao.ru>=0.6 && medicao.ru<0.8){
+							medicao.criterioAlertaRu = "Alerta";
+						}
+
+						if (medicao.ru>=0.8){
+							medicao.criterioAlertaRu = "Intervenção";
+						}
+
+						
+						var pressaoMcaChorume = (medicao.saliencia + medicao.profundidadeMediaCamaradeCargaDescontandoCortes)-medicao.medicoesNivelChorumeSemPressaoNivelMedido;
+						medicao.pressaoMcaChorume = pressaoMcaChorume<0?0:pressaoMcaChorume;
+						medicao.pressaoMcaColunaComPressao = medicao.profundidadeDescontandoCortes - medicao.medicoesNivelChorumeComPressaoNivelEfetivo;
+						medicao.pressaoMcaColunaSemPressao = medicao.profundidadeDescontandoCortes - medicao.medicoesNivelChorumeSemPressaoNivelEfetivo;
+						medicao.pressaoMcaGasPio = medicao.pressaoMcaColunaComPressao - medicao.pressaoMcaColunaSemPressao;
+ 						itens.push(medicao);
 					}
 				}
 
-
-
-				total = piezometros.length;
-
-
-
-				return resolve(piezometros);
+				return resolve(itens);
 			});
 
 	    });
