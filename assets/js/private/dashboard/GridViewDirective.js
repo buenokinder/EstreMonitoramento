@@ -565,9 +565,9 @@
                                  break;
                             case 'listbox-multiple':
                                 
-                                    HtmlFormBody += "<div class='form-group'>";
+                                    HtmlFormBody += "<div class='input-field col s12'>";
                                     HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                                    HtmlFormBody += "<select multiple id='" + $scope.fields[key].name + "' required ng-multiple='true' class='form-control emailReminder width-169 ng-pristine ng-invalid ng-invalid-required ng-touched' ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].text + " for x in " + $scope.fields[key].model + "' value=''></select>";
+                                    HtmlFormBody += "<select multiple id='" + $scope.fields[key].name + "' required ng-multiple='true' ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].text + " for x in " + $scope.fields[key].model + "' value=''></select>";
                                     HtmlFormBody += "</select>";
                                     HtmlFormBody += "</div>";
                                 break;
@@ -615,10 +615,15 @@
                                 break;
                             case 'comboboxmulti':
                                     $scope.getCombo($scope.fields[key]);
+
+    //                                  <select class="" ng-model="select.value3" material-select multiple watch>
+    //     <option ng-repeat="value in select.choices">{{value}}</option>
+    // </select>
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                                     HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
-                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "' multiple></select>";
+                                    HtmlFormBody += "<div   isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
                                     HtmlFormBody += "</div></div>";
+                                  
                                 break;
 
                                 
@@ -713,9 +718,22 @@
                     }
                     else{                  
                         $http.get("/"+ field.api).then(function (results) {                                
-                            $scope[field.model]  = results.data;                          
+                            $scope[field.model]  = results.data;   
+                            console.log(results.data);
+
+                            angular.forEach($scope[field.model], function(value, key) {
+ console.log(key);
+  delete $scope[field.model][key].aterros;
+
+  angular.extend($scope[field.model][key], { 'teste': false, 	icon: "<img src='/images/user_icon.png' ></img>"} );
+});     
+console.log($scope[field.model]);
                         });
                     }
+                  
+
+                    
+    
                 };
 
              
@@ -755,6 +773,7 @@
                 };
                 $scope.change = function(model, data) {
                     $scope.data[model] = data;
+                        $('select').material_select();    
                 }
 
 
@@ -763,11 +782,47 @@
                     $scope.init();
                     console.log('data', $scope.data);
                     $scope.inputClass = "";
+                    $('select').material_select();    
+                    console.log('Foi');
                 };
 
                 $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
                     $scope.inputClass = "active";
+                    $('select').material_select();    
+                    console.log('Foi');
+
+                    for (var key in $scope.fields) {
+                         switch ($scope.fields[key].type) {
+                                 
+                            
+                            case 'comboboxmulti':
+                                   
+                              
+                                    angular.forEach($scope[$scope.fields[key].model], function(value, keyItem) {
+ 
+ for (var item in $scope.data[$scope.fields[key].name]) {
+     console.log(item);
+if ($scope.data[$scope.fields[key].name][item].id== value.id){
+console.log('igual');
+ angular.extend($scope[$scope.fields[key].model][keyItem], { 'teste': true, 		icon: "<img src='/images/user_icon.png' ></img>"} );
+ console.log($scope[$scope.fields[key].model]);
+}
+ }
+
+
+
+ 
+});     
+                                break;
+
+                                
+                            default:
+                    
+                                break;
+                         }           
+
+                } 
                 });        
 
 
@@ -902,11 +957,13 @@
             sennitCommunicationService.prepForBroadcast = function(data) {
                 this.data = data;
                 this.broadcastItem();
+                    $('select').material_select();    
             };
 
             sennitCommunicationService.prepForBroadcastDataList = function(datum) {
                 this.datum = datum;
                 this.broadcastItemReturn();
+                    $('select').material_select();    
             };
 
             

@@ -1,6 +1,7 @@
 
 <div class="section">
  <div class="row section">
+   
   <div class="divider"></div>
 
 
@@ -10,12 +11,18 @@
       </div>
 
       <div class="col s12 m12 l6">
-      	<form-view fields="[ {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone', 'uiMask': 'ui-br-phone-number'}, {'name': 'usuarios' , 'value': 'Gerente do Aterro', 'type': 'comboboxmulti', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' },{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="true"></form-view>
+      	<form-view fields="[ {'name': 'nome', 'value': 'Nome', 'length': '20'}, {'name': 'cidade' , 'value': 'Cidade'}, {'name': 'endereco' , 'value': 'Endereço'}, {'name': 'telefone' , 'value': 'Telefone', 'uiMask': 'ui-br-phone-number'}, {'name': 'usuarios' , 'value': 'Usuarios do Aterro', 'type': 'comboboxmulti', 'text': 'usuario', 'api': 'Usuario', 'model': 'usuarios',  'fieldid': 'id', 'fieldname': 'name' },{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' } ]" label="Formulário de Aterro" listaname="Aterro"  strupdate="true"></form-view>
     	</div>
-       
+        
+   
     </div>
   </div>
+ 
 </div>
-
-
+</div>
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
 <!--{'name': 'situacao' , 'value': 'Em Operação', 'type': 'checkbox' }-->

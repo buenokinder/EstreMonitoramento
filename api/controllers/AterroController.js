@@ -64,22 +64,22 @@ module.exports = {
         return res.json(JsonConvert);
     },
 
-    update: function(req, res) {
-        var gerente = req.param('gerente');		
-        var id = req.param('id');
-        Aterro.update(id, { gerente: gerente.id,nome: req.param('nome'),cidade: req.param('cidade'),endereco: req.param('endereco'),telefone: req.param('telefone')}, function aterroUpdate(err, newAterro) {
-            if (err) {
-            console.log("err: ", err);
-            console.log("err.invalidAttributes: ", err.invalidAttributes);
-            return res.negotiate(err);
-            }			
+    // update: function(req, res) {
+    //     var gerente = req.param('gerente');		
+    //     var id = req.param('id');
+    //     Aterro.update(id, { gerente: gerente.id,nome: req.param('nome'),cidade: req.param('cidade'),endereco: req.param('endereco'),telefone: req.param('telefone')}, function aterroUpdate(err, newAterro) {
+    //         if (err) {
+    //         console.log("err: ", err);
+    //         console.log("err.invalidAttributes: ", err.invalidAttributes);
+    //         return res.negotiate(err);
+    //         }			
 
-            return res.json({
-                idAterro: newAterro.id,
-                mensagem: "Atualizado com Sucesso!"
-            });
-        });
-    },
+    //         return res.json({
+    //             idAterro: newAterro.id,
+    //             mensagem: "Atualizado com Sucesso!"
+    //         });
+    //     });
+    // },
 
     search: function(req, res) {
         var filtro = {};
