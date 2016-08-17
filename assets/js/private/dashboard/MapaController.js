@@ -10,7 +10,7 @@ app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http
     $scope.aterros = [];
     $scope.mapas = [];
     $scope.loadAterros = function() {
-        return $http.get('/Aterro?where={"gerente": "' + window.SAILS_LOCALS._csrf  + '"}').success(function(data) {
+        return $http.get('/Aterro').success(function(data) {
             $scope.aterros = data;
                   $('.dropdown-button').dropdown({
       inDuration: 300,
@@ -89,7 +89,7 @@ $scope.selecionarAterro = function(aterro) {
     $scope.mapa = [];
     $scope.getSrc = function() {
         if($scope.mapa != null){
-        var url = "http://localhost:1337/mapas?id=" + $scope.mapa.mapaFile;
+        var url = "http://estre.sennit.com.br:1337/mapas?id=" + $scope.mapa.mapaFile;
         return $sce.trustAsResourceUrl(url);
         }
         return null;

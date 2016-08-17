@@ -28,7 +28,7 @@
             <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
               <td >
                 <!-- editable username (text with validation) -->
-                <span   editable-select="operacaoSecaoCorte.dataMedicao" edit-disabled="true"  e-name="dataMedicao" e-required e-form="rowform">
+                <span   editable-select="operacaoSecaoCorte.dataMedicao"   e-name="dataMedicao" e-required e-form="rowform">
                 {{ operacaoSecaoCorte.dataMedicao | date : 'dd/MM/yyyy' }}
                 </span>
               </td>
