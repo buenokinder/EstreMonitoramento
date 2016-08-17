@@ -199,7 +199,15 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                   if (isConfirm) {     
 
                       var params = $scope.inserted;
-                      params["data"] = getDate(params["data"]);
+                      
+                      if(params["data"].toString().indexOf("/")>=0){
+                        var ret = params["data"].split('/');
+                        data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
+                      }else{
+                         data = new Date(params["data"]);
+                      }
+                
+                      params["data"] = data;
                       
                       $http({
                           method: 'POST',
