@@ -125,27 +125,23 @@ console.log(user);
    * (wipes `me` from the sesion)
    */
   logout: function (req, res) {
-    console.log(req.session.me);
+    console.log("req.session.me - init", req.session.me);
     // Look up the user record from the database which is
     // referenced by the id in the user session (req.session.me)
-    Usuario.findOne(req.session.me, function foundUser(err, user) {
+    Usuario.findOne({id:req.session.me.id}, function foundUser(err, user) {
       if (err) return res.negotiate(err);
 
       // If session refers to a user who no longer exists, still allow logout.
       if (!user) {
         sails.log.verbose('Session refers to a user who no longer exists.');
         //return res.backToHomePage();
-        return res.redirect('/');
+        return res.redirect('/#/login');
       }
 
       // Wipe out the session (log out)
-      console.log("req.session.me",req.session.me);
       req.session.destroy(function(err) {
-          console.log("err", err);
-
            setTimeout(function(){
-               return res.redirect('/login');
-               console.log("req.session.me",req.session.me);
+               return res.redirect('/#/login');
            }, 1000);
       });
 
