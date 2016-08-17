@@ -45,7 +45,7 @@
                         $scope.getCombo($scope.fields[key]);
                         HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
                         HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                  
-                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'></select>";
+                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'><option value='Todos'></option></select>";
                         HtmlFormBody += "</div>";
                     }     
                 }
@@ -617,7 +617,7 @@
                                     $scope.getCombo($scope.fields[key]);
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                                     HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
-                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'></select>";
+                                    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
                                     HtmlFormBody += "</div></div>";
                                 break;
                             case 'comboboxmulti':
@@ -647,7 +647,8 @@
                     $element.replaceWith($compile(HtmlFormBody)($scope));
 
                     $('.datepicker').pickadate({
-                        selectMonths: true
+                        selectMonths: true,
+                        selectYears:true
                     });   
 
 
@@ -656,14 +657,17 @@
                         var $input = $(this).pickadate();
                         var picker = $input.pickadate('picker');
                         var date  = $scope.data[$(this).prop("name")];
+                        
+                        if(undefined!=date && null!=date) {
+                            if(date.toString().indexOf("/")>=0){
+                                var value = date.split('/');
+                                picker.set('select', new Date(value[2], parseInt(value[1]-1), value[0]));
 
-                        if(date.toString().indexOf("/")>=0){
-                            var value = date.split('/');
-                            picker.set('select', new Date(value[2], parseInt(value[1]-1), value[0]));
-
-                        }else{
-                            picker.set('select', new Date(date));
+                            }else{
+                                picker.set('select', new Date(date));
+                            }
                         }
+
                     });                           
                    
             },
@@ -1088,7 +1092,8 @@
                     form.$show()
 
                     $('.datepicker').pickadate({
-                        selectMonths: true, // Creates a dropdown to control month
+                        selectMonths: true, 
+                        selectYears:true
                     });          
 
                     
