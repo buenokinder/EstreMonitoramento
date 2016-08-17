@@ -187,6 +187,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.addMedicao = function (){
+     
+
       swal({  title: "",   
               text: "Você tem certeza que deseja inserir a medição ?",   
               type: "warning",   

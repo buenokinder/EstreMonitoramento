@@ -12,7 +12,6 @@ module.exports = {
       type: 'string',
       required: true,
       unique: true
-
     },
     dataInserted: {
       type: 'date',
@@ -21,15 +20,15 @@ module.exports = {
 
     },
    dia: {
-      type: 'string',
+      type: 'integer',
       required: true
     },
     mes: {
-      type: 'string',
+      type: 'integer',
       required: true
     },
     ano: {
-      type: 'string',
+      type: 'integer',
       required: true
     },
     pluviometria: {
