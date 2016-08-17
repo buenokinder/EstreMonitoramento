@@ -628,7 +628,7 @@
     // </select>
                                     HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                                     HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";                                    
-                                    HtmlFormBody += "<div   isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
+                                    HtmlFormBody += "<div   isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon perfil name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
                                     HtmlFormBody += "</div></div>";
                                   
                                 break;
@@ -746,7 +746,7 @@
  console.log(key);
   delete $scope[field.model][key].aterros;
 
-  angular.extend($scope[field.model][key], { 'teste': false, 	icon: "<img src='/images/user_icon.png' ></img>"} );
+  angular.extend($scope[field.model][key], { 'teste': false, 	icon: "<img src='/images/"+ $scope[field.model][key].perfil +".png' ></img>"} );
 });     
 console.log($scope[field.model]);
                         });
