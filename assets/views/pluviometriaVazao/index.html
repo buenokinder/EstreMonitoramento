@@ -44,7 +44,7 @@
 <select class='browser-default active' id='' required ng-model='mes' ng-options='x as x.id for x in meses track by x.id'></select>
 </div>
 <div class="col s6 m4 l4 col-lg-offset-2">
-<select class='browser-default active' id=''  required ng-model='ano' ng-change="changeAno(ano)"ng-options='x as x.id for x in anos track by x.id'></select>
+<select class='browser-default active' id=''  required ng-model='ano' ng-change="changeAno(ano)"ng-options='for x in anos track by x'></select>
 </div>
         <div class="row" >
 <div >

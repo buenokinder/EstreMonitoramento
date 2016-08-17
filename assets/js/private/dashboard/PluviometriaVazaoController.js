@@ -5,72 +5,83 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   $scope.mes = { id: 1};
   $scope.meses= [{ id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}];;
   $scope.ano = { id: 2016};
-  $scope.anos = [{ id: 2016}, {id: 2017}];
-  
-
-$scope.changeAno = function(ano) {
-    
-    $http.get('/PluviometriaVazao?where={ "mes": "' + $scope.mes.id + '","ano": "' + ano.id  + '"}').success(function(data) {
-      console.log( angular.fromJson(data));
-      $scope.operacaoPluviometrias = angular.fromJson(data);
-
-    });
-};
-
-
-  $http.get('/Usuario').success(function(data) {
-      $scope.usuarios = angular.fromJson(data);
-    });
-    $http.get('/Aterro').success(function(data) {
-      $scope.aterros = data;
-    });
-
-$scope.usuario = window.SAILS_LOCALS;
-$scope.excel;
-  
-   $scope.uploadPluviometria = function(){
-         $('.dropify').dropify({
-                messages: {
-                    default: 'Arraste seu Arquivo',
-                    
-                }
-            });
-          $('#modalPluviometria').openModal();
-    
-    };
-$scope.loadFile = function() {
-
-	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
-		console.log('Buscando');
-		$scope.excel = angular.fromJson(res);// JSON.stringify(res);
-    angular.forEach($scope.excel, function(registro, index){
-      if(index != 0)
-      {
-
-
-        var registroPluviometria = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
- 
-       $http.post('/PluviometriaVazao', registroPluviometria);
-
-      }
-           
-    });
-	});
-}
+  $scope.anos = ([]);
   $scope.aterros = [];
+  $scope.usuarios = [];  
+
+  $scope.changeAno = function(ano) {
+      
+      $http.get('/PluviometriaVazao?where={ "mes": "' + $scope.mes.id + '","ano": "' + ano  + '"}').success(function(data) {
+        console.log( angular.fromJson(data));
+        $scope.operacaoPluviometrias = angular.fromJson(data);
+
+      });
+  };
+
+  $scope.loadDistinctAnos = function(){
+    $http.get('/PluviometriaVazao/listDistinctAnos').success(function(data) {
+      $scope.anos = angular.fromJson(data);
+    });
+  };
+
+  $scope.init = function(){
+    $scope.loadDistinctAnos();
+    $scope.loadAterros();
+    $scope.loadUsuarios();
+    $scope.usuario = window.SAILS_LOCALS;
+    $scope.excel;
+  }
+      
+
   $scope.loadAterros = function() {
     return $scope.aterros.length ? null : $http.get('/Aterro').success(function(data) {
       $scope.aterros = angular.fromJson(data); 
     });
   };
 
-    $scope.usuarios = [];
+    
   $scope.loadUsuarios = function() {
-    console.log('teste');
     return $scope.usuarios.length ? null : $http.get('/Usuario').success(function(data) {
       $scope.usuarios = data;
     });
   };
+    
+  $scope.uploadPluviometria = function(){
+    $('.dropify').dropify({
+      messages: {
+          default: 'Arraste seu Arquivo',
+          
+      }
+    });
+    $('#modalPluviometria').openModal();
+  };
+
+  $scope.loadFile = function() {
+    var totalSendSuccess=0;
+    var totalSendError =0 ;
+
+  	alasql('SELECT * FROM FILE(?,{headers:true})',[event],function(res){
+  		$scope.excel = angular.fromJson(res);// JSON.stringify(res);
+
+      angular.forEach($scope.excel, function(registro, index){
+        if(index != 0)
+        {
+          var registroPluviometria = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
+          $http.post('/PluviometriaVazao', registroPluviometria, 
+          function(result){
+            totalSendSuccess+=1;
+          }, function(error){
+            swal("Erro", "Ocorreu uma falha ao importar o registro do dia '" + registro.A + "' :(", "error");
+            totalSendError+=1;
+
+          });
+
+        }
+      });
+  	});
+  };
+
+
 
   $scope.showAterro = function(aterro) {
     if(aterro.aterro && $scope.aterros.length) {
@@ -125,5 +136,7 @@ $scope.loadFile = function() {
     };
     $scope.operacaoPluviometrias.push($scope.inserted);
   };
-   
+  
+  $scope.init();
+
 }]);

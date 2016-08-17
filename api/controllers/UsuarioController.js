@@ -13,7 +13,6 @@ module.exports = {
 
 
   login: function (req, res) {
-    console.log('veio');
 
     // Usuario.find().populate('aterro').exec(function(err, users) {
     //     console.log(users);
@@ -45,9 +44,7 @@ console.log(user);
           req.session.me = user;
           req.session.name = user.name;
           if(user.aterros.length > 0){
-
-req.session.me.aterro = user.aterros[0];
-
+            req.session.me.aterro = user.aterros[0];
           }
             
           else
@@ -137,19 +134,27 @@ req.session.me.aterro = user.aterros[0];
       // If session refers to a user who no longer exists, still allow logout.
       if (!user) {
         sails.log.verbose('Session refers to a user who no longer exists.');
-        return res.backToHomePage();
+        //return res.backToHomePage();
+        return res.redirect('/');
       }
 
       // Wipe out the session (log out)
-      req.session.me = null;
+      console.log("req.session.me",req.session.me);
+      req.session.destroy(function(err) {
+          console.log("err", err);
+
+           setTimeout(function(){
+               return res.redirect('/login');
+               console.log("req.session.me",req.session.me);
+           }, 1000);
+      });
 
       // Either send a 200 OK or redirect to the home page
-      return res.backToHomePage();
 
     });
   },
     
-      updateProfile: function(req, res) {
+  updateProfile: function(req, res) {
 
     Usuario.update({
       id: req.param('id')

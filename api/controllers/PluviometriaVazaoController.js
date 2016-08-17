@@ -7,5 +7,12 @@
 
 module.exports = {
 	
+	listDistinctAnos: function(req, res){
+		PluviometriaVazao.native(function(err,coll){
+		  coll.distinct("ano", function(err,result){
+		     res.json(result);
+		  });
+		});		
+	}
 };
 
