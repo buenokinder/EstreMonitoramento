@@ -197,10 +197,14 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
               closeOnCancel: false }, 
               function(isConfirm){   
                   if (isConfirm) {     
+
+                      var params = $scope.inserted;
+                      params["data"] = getDate(params["data"]);
+                      
                       $http({
                           method: 'POST',
                           url: '/MedicaoMarcoSuperficial/',
-                          data: $scope.inserted
+                          data: params
                       }).then(function onSuccess(sailsResponse){
                           $scope.inputClass = null;
                           $scope.inputClass = "disabled";

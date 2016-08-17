@@ -3,18 +3,15 @@
 app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
   $scope.mes = { id: 1};
-  $scope.meses= [{ id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}];;
+  $scope.meses= [{ id: 1, name:'Janeiro'}, {id: 2, name:'Fevereiro'}, {id: 3, name:'Março'}, {id: 4, name:'Abril'}, {id: 5, name:'Maio'}, {id: 6, name:'Junho'}, {id: 7, name:'Julho'}, {id: 8, name:'Agosto'}, {id: 9, name:'Setembro'}, {id: 10, name:'Outubro'}, {id: 11, name:'Novembro'}, {id: 12, name:'Dezembro'}];;
   $scope.ano = { id: 2016};
   $scope.anos = ([]);
   $scope.aterros = [];
   $scope.usuarios = [];  
 
   $scope.changeAno = function(ano) {
-      
       $http.get('/PluviometriaVazao?where={ "mes": "' + $scope.mes.id + '","ano": "' + ano  + '"}').success(function(data) {
-        console.log( angular.fromJson(data));
         $scope.operacaoPluviometrias = angular.fromJson(data);
-
       });
   };
 
@@ -57,31 +54,38 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   };
 
   $scope.loadFile = function() {
-    var totalSendSuccess=0;
-    var totalSendError =0 ;
+    var totalSent=0;
+    var totalErrors =0 ;
+    var checkImport = function(totalToSend, totalSent, totalErrors){
+      if(totalSent==totalToSend){
+        Materialize.toast('Importação finalizada '+(totalErrors>0?'com erros.':'')+'!', 4000);
+        $scope.changeAno($scope.ano.id);
+      }  
+    };
 
-  	alasql('SELECT * FROM FILE(?,{headers:true})',[event],function(res){
-  		$scope.excel = angular.fromJson(res);// JSON.stringify(res);
+  	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
+  		$scope.excel = angular.fromJson(res);
 
       angular.forEach($scope.excel, function(registro, index){
         if(index != 0)
         {
           var registroPluviometria = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
           $http.post('/PluviometriaVazao', registroPluviometria, 
-          function(result){
-            totalSendSuccess+=1;
-          }, function(error){
-            swal("Erro", "Ocorreu uma falha ao importar o registro do dia '" + registro.A + "' :(", "error");
-            totalSendError+=1;
+            function(result){
+              totalSent+=1;
+              checkImport($scope.excel.length-1, totalSent, totalErrors);
 
-          });
-
+            }, function(error){
+              swal("Erro", "Ocorreu uma falha ao importar o registro do dia '" + registro.A + "' :(", "error");
+              totalSent+=1;
+              totalErrors+=1;
+              checkImport($scope.excel.length-1, totalSent, totalErrors);
+            }
+          );
         }
       });
   	});
   };
-
-
 
   $scope.showAterro = function(aterro) {
     if(aterro.aterro && $scope.aterros.length) {
