@@ -868,7 +868,11 @@ console.log('igual');
 
                 $scope.save = function () {
 
-                 $scope.sennitForm.loading = true;                    
+                 $scope.sennitForm.loading = true;   
+                 if($scope.data.mes){
+                        $scope.data.mes = $scope.data.mes.id;
+
+                 }                 
                   if($scope.data.id){
                     $scope.sennitForm.loading = true;
                     swal({   title: "",   

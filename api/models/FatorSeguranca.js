@@ -14,7 +14,10 @@ module.exports = {
       required: true
     },
     mes: {
-      type: 'json'
+      type: 'string'
+    },
+    ano: {
+      type: 'string'
     },
     valorRu: {
       type: 'float'
