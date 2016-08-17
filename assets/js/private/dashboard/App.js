@@ -1,6 +1,6 @@
 var app = angular.module('DashboardModule', ['xeditable','ui.bootstrap',
     	'ngRoute','ngMaterial', 'lr.upload',
-    	'ngResource','leaflet-directive', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
+    	'ngResource','leaflet-directive','isteven-multi-select', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
     	]);
 
  app.directive('onReadFile', function ($parse) {
