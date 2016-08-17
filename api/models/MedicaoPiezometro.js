@@ -29,12 +29,12 @@ module.exports = {
       required: true
     },
 
-    medicoesNivelChorumeComPressao: {
+    medicoesNivelChorumeComPressaoNivelMedido: {
       type: 'float',
       required: true
     },
 
-    medicoesNivelChorumeSemPressao: {
+    medicoesNivelChorumeSemPressaoNivelMedido: {
       type: 'float',
       required: true
     },

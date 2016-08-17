@@ -7,18 +7,20 @@
     <div class="row">
       <div class="col s12 m12 l6">
 
-        <grid-view fields="[{'name': 'owner', 'sub':'nome', 'value': 'Piezômetro'},{'name': 'dataMedicao' , 'value': 'Data', 'type':'date'}]" listaname="MedicaoPiezometro" autopage="true" adicionar="" add="false" label="Lista de Medições"  view="MedicaoPiezometro" pagesize="5" strupdate="true" calculate="true"></grid-view>
+        <grid-view fields="[{'name': 'owner', 'sub':'nome', 'value': 'Piezômetro'},{'name': 'dataMedicao' , 'value': 'Data', 'type':'date'}]" listaname="MedicaoPiezometro" autopage="true" adicionar="" add="false" label="Lista de Medições"  view="MedicaoPiezometro" pagesize="5" strupdate="true" ></grid-view>
+
+        <button class="btn btn-large  ng-scope" aria-hidden="false" id="btMonitoramentos">Monitoramentos</button>          
       </div>
 
 
       <div class="col s12 m12 l6">
-        <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'date'}, {'name': 'owner' , 'value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome' },
-{'name': 'temperatura', 'value': 'Temperatura', 'uiMask':'ui-number-mask=0'}, 
-{'name': 'saliencia', 'value': 'Saliência', 'uiMask':'ui-number-mask=0'}, 
-{'name': 'prolongamentoCorte', 'value': 'Prolongamento/Corte (m)', 'uiMask':'ui-number-mask=0'}, 
-{'name': 'medicoesNivelChorumeComPressao', 'value': 'Medição de Nível de Chorume com Pressão (Rg. Fechado) Nível Medido (m)', 'uiMask':'ui-number-mask=0'}, 
-{'name': 'medicoesNivelChorumeSemPressao', 'value': 'Medição de Nível de Chorume Sem Pressão (Rg. Aberto) Nível Medido (m)', 'uiMask':'ui-number-mask=0'}, 
-{'name': 'pressaoGas', 'value': 'Pressão de Gás', 'uiMask':'ui-number-mask=0'}, 
+        <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'datepicker'}, {'name': 'owner' , 'value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome' },
+{'name': 'temperatura', 'value': 'Temperatura', 'uiMask':'ui-number-mask'}, 
+{'name': 'saliencia', 'value': 'Saliência', 'uiMask':'ui-number-mask'}, 
+{'name': 'prolongamentoCorte', 'value': 'Prolongamento/Corte (m)'}, 
+{'name': 'medicoesNivelChorumeComPressaoNivelMedido', 'value': 'Medição de Nível de Chorume com Pressão (Rg. Fechado) Nível Medido (m)', 'uiMask':'ui-number-mask'}, 
+{'name': 'medicoesNivelChorumeSemPressaoNivelMedido', 'value': 'Medição de Nível de Chorume Sem Pressão (Rg. Aberto) Nível Medido (m)', 'uiMask':'ui-number-mask'}, 
+{'name': 'pressaoGas', 'value': 'Pressão de Gás', 'uiMask':'ui-number-mask'}, 
         ]" label="Formulário de Medição" listaname="MedicaoPiezometro"  strupdate="true"></form-view>
       </div>
        

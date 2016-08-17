@@ -524,6 +524,29 @@
   });
 
 </script>
+    <script type="text/javascript">
+        function getDate(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+                var ret = value.split('/');
+                data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
+            }else{
+               data = new Date(value);
+            }
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+            
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+            var retorno = dia + "/" + mes + "/" + ano;
+            return retorno;
+        }
+
+    </script>
 
   </body>
 </html>

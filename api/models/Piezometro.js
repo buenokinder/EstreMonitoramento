@@ -29,7 +29,7 @@ module.exports = {
       type: 'string',
       required: true
     },  
-   	profundidadeTotalCamaraCarga: {
+   	profundidadeMediaCamaraCargaInicial: {
       type: 'string',
       required: true
     },  
@@ -43,6 +43,10 @@ module.exports = {
       collection: 'alertasPiezometro',
       via: 'owner'
     },
+    medicoes: {
+      collection: 'medicaoPiezometro',
+      via: 'owner'
+    },    
     owner: {
       model: 'Aterro'
     },
