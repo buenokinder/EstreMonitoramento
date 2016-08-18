@@ -1,13 +1,15 @@
-
 app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   function($scope, $http, $filter){
   $scope.operacaoPluviometrias = []; 
   $scope.mes = { id: 1};
   $scope.meses= [{ id: 1, name:'Janeiro'}, {id: 2, name:'Fevereiro'}, {id: 3, name:'Março'}, {id: 4, name:'Abril'}, {id: 5, name:'Maio'}, {id: 6, name:'Junho'}, {id: 7, name:'Julho'}, {id: 8, name:'Agosto'}, {id: 9, name:'Setembro'}, {id: 10, name:'Outubro'}, {id: 11, name:'Novembro'}, {id: 12, name:'Dezembro'}];
   $scope.ano = { id: 2016};
   $scope.anos = ([]);
+  $scope.anosToAssociateWithFile = ([]);
+  $scope.anoAssociatedWithFile = ([]);
+  $scope.mesAssociatedWithFile = ([]);  
   $scope.aterros = [];
   $scope.usuarios = [];  
-  $scope.currentYear = (new Date()).getFullYear();
+  $scope.currentAno = (new Date()).getFullYear();
   $scope.totalSent=0;
   $scope.totalErrors =0 ;
   $scope.usuario = null;
@@ -20,15 +22,21 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
       });
   };
 
-  $scope.loadDistinctAnos = function(){
+  $scope.loadDistinctAnos = function(callback){
     $http.get('/PluviometriaVazao/listDistinctAnos').success(function(data) {
       if(data.length==0){
-        $scope.anos =  [{id:$scope.currentYear}];  
+        $scope.anos =  [{id:$scope.currentAno}];  
+
+        if(undefined!=callback){
+          callback();
+        }
         return;
       }
 
       $scope.anos = angular.fromJson(data);
-
+      if(undefined!=callback){
+        callback();
+      }
     });
   };
 
@@ -37,8 +45,10 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
     $scope.loadDistinctAnos();
     $scope.loadAterros();
     $scope.loadUsuarios();
-    $scope.ano = {id:$scope.currentYear};
-    
+    $scope.ano = {id:$scope.currentAno};
+    for(var i=2016;i<=$scope.currentAno;i++){
+      $scope.anosToAssociateWithFile.push({id:i});
+    }
   }
 
   $scope.loadAterros = function() {
@@ -78,7 +88,13 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   function checkStatusImport(){
     if($scope.totalSent==$scope.excel.length-1){
       Materialize.toast('Importação finalizada '+($scope.totalErrors>0?'com erros.':'')+'!', 4000);
-      $scope.search();
+      
+      $scope.loadDistinctAnos(function(){
+        $scope.ano = $scope.anoAssociatedWithFile;
+        $scope.mes = $scope.mesAssociatedWithFile;
+        $scope.search();
+      });
+
       $scope.totalSent=0;
       $scope.totalErrors=0;
     }  
@@ -124,7 +140,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
       angular.forEach(medicoes, function(registro, index){
         if(index != 0)
         {
-          var medicao = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id , ano: $scope.ano.id };
+          var medicao = { data: registro.A +'/' + $scope.mesAssociatedWithFile.id + '/' + $scope.anoAssociatedWithFile.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mesAssociatedWithFile.id , ano: $scope.anoAssociatedWithFile.id };
 
           $scope.getMedicao(medicao, function(result){
             if(null==result){
@@ -187,15 +203,16 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
                   if (isConfirm) {    
                     $scope.getMedicao(medicao, function(result){
                       if(null==result){
-                        $http.post('/PluviometriaVazao', medicao).then(function(){
+                        $http.post('/PluviometriaVazao', medicao).then(function(itemInserted){
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
-                          Materialize.toast('Registro inserido com sucesso!', 4000);                       
+                          Materialize.toast('Registro inserido com sucesso!', 4000);  
+                          $scope.operacaoPluviometrias[index].id = itemInserted.data.id;                     
                         }, function(error){
                           swal("Erro", "Seu registro não foi inserido :(", "error");  
                         });       
 
-                          $scope.operacaoPluviometrias[index].aterro = $scope.aterro;
-                          $scope.operacaoPluviometrias[index].usuario = $scope.usuario;
+                          //$scope.operacaoPluviometrias[index].aterro = $scope.aterro;
+                          //$scope.operacaoPluviometrias[index].usuario = $scope.usuario;
 
                       }else{
                         swal("Erro", "Já existe uma medição para essa mesma data. :(", "error");
@@ -295,7 +312,4 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
     $scope.excel = ([]);
     $("#excel-data").hide();
   });
-
-  $scope.init();
-
 }]);
