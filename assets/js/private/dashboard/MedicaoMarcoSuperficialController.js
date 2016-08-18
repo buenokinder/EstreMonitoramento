@@ -10,8 +10,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.monitoramentos = {
       dataInicial:'',
       dataFinal:'',
-      marcoSuperficial:([]),
       marcosSuperficiais:([]),
+      marcosSuperficiaisSearch:([]),
       monitoramentos:([]),
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
@@ -33,7 +33,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
           $http.get('/MarcoSuperficial').success(function(response, status){
-               $scope.monitoramentos.marcosSuperficiais = response;
+              var marcosSuperficiais = [];
+              for(var i=0;i<response.length;i++){
+                marcosSuperficiais.push({id:response[i].id, name:response[i].nome, marker:response[i].nome, icon:'', ticked:false});
+              }
+              $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;               
           });
 
           $("#btMonitoramentos").on("click", function(e){
@@ -56,8 +60,12 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
-          if(null!=$scope.monitoramentos.marcoSuperficial && undefined != $scope.monitoramentos.marcoSuperficial && ''!=$scope.monitoramentos.marcoSuperficial){
-            query+="&ms="+$scope.monitoramentos.marcoSuperficial;
+          if(null!=$scope.monitoramentos.marcosSuperficiaisSearch && undefined != $scope.monitoramentos.marcosSuperficiaisSearch && $scope.monitoramentos.marcosSuperficiaisSearch.length>0){
+            var ms="";
+            angular.forEach($scope.monitoramentos.marcosSuperficiaisSearch, function(value, key){
+              ms+= ((ms==""?"":",")+value.id);
+            });
+            query+="&ms="+ms;
           }
 
           $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){

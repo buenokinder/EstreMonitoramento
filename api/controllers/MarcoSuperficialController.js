@@ -97,7 +97,7 @@ module.exports = {
 				var filtro ={};
 				
 				if(req.param('ms')!=undefined){
-					filtro.id = req.param('ms');				
+					filtro.id = req.param('ms').split(',');				
 				}
 
 				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
