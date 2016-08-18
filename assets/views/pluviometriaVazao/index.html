@@ -2,8 +2,9 @@
   <div id="modalPluviometria" class="modal modal-fixed-footer">
     <div class="modal-content">
       <input id="readfile" type="file" class="dropify" data-height="200"  custom-on-change="loadFile"/>
-      <div>
-        <h2>Pluviometria processada a partir do arquivo:</h2>
+
+      <div id="excel-data">
+        <h4>Pluviometria processada a partir do arquivo:</h4>
         <table class='striped'>
           <thead>
             <tr>
@@ -14,7 +15,7 @@
           </thead>
           
           <tbody>
-            <tr ng-repeat='pluviometria in excel' ng-click='ViewItem(datum)' style='cursor:pointer'>
+            <tr ng-repeat='pluviometria in excel' ng-if="$index > 0">
               <th class="ng-scope">{{pluviometria.A}}</th>
               <th class="ng-scope">{{pluviometria.B}}</th>
               <th class="ng-scope">{{pluviometria.C}}</th>
@@ -63,8 +64,8 @@
               <td style="width:15%">Ações</td>
             </tr>
 
-            <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias">
-              <td ng-click="rowform.$show()" >
+            <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias" title="Clique para editar.">
+              <td ng-click="rowform.$show()">
                 <!-- editable username (text with validation) -->
                 <span editable-text="operacaoPluviometria.dia"  class="datepicker" e-name="dia" e-form="rowform"  e-required>
                 {{ operacaoPluviometria.dia || '' }}
@@ -106,7 +107,7 @@
                     <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
                   </button>
                   
-                  <a ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" >
+                  <a ng-disabled="rowform.$waiting" ng-click="cancel($index, rowform)" >
                     <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
                   </a>
                 </form>
