@@ -9,11 +9,16 @@
         Operação Seção de Corte
       </h4>
       <div class="row" >
+        <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Inicial</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
+                <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Final</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
+
+                        <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Seção de Corte</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
+        <div  class="right col s1" aria-hidden="false"><a ng-click="pesquisar()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a></div>
         <div >
           <table class="table table-bordered table-hover table-condensed">
             <tr style="font-weight: bold">
               <td style="width:15%">Data Medição</td>
-
+     
               <td style="width:15%">Seção de Corte</td>
               <td style="width:15%">Altura</td>
               <td style="width:15%">Comprimento</td>
@@ -26,12 +31,14 @@
             </tr>
 
             <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
-              <td >
-                <!-- editable username (text with validation) -->
-                <span   editable-select="operacaoSecaoCorte.dataMedicao"   e-name="dataMedicao" e-required e-form="rowform">
-                {{ operacaoSecaoCorte.dataMedicao | date : 'dd/MM/yyyy' }}
+                       <td>
+                <!-- editable status (select-local) -->
+                <span editable-text="operacaoSecaoCorte.dataMedicao" e-name="dataMedicao" e-form="rowform" >
+         
+                  {{ (operacaoSecaoCorte.dataMedicao  | date:"dd/MM/yyyy") || 'empty' }}
                 </span>
               </td>
+        
 
               <td>
                 <!-- editable group (select-remote) -->

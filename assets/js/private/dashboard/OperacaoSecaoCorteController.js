@@ -91,7 +91,11 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   f
     } 
     else {
       angular.extend(data, {dataMedicao: new Date()}, {usuario: $scope.usuario._id}, {aterro: $scope.usuario._aterro});
-      return $http.post('/OperacaoSecaoCorte', data);
+      return $http.post('/OperacaoSecaoCorte', data).then(function onSuccess(sailsResponse){
+        console.log(sailsResponse);
+          data.id=sailsResponse;
+          return true;
+      }); ;
     }
   };
 
@@ -133,7 +137,7 @@ $scope.dataAtualFormatada = function(data){
 
   $scope.addSecaoCorte = function() {
     $scope.inserted = {
-      dataMedicao: new Date(),
+      dataMedicao: null,
       aterro : $scope.usuario._aterro,
       usuario : $scope.usuario._id,
       createdAt: new Date(),
