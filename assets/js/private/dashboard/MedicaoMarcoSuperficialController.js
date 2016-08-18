@@ -285,11 +285,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     });
 
 
-    $(".dropify").on('afterClear', function(e){
-      console.log("file removed --");
-      $scope.removeFile();
-    });
-
     $scope.uploadDetalhes = function(){
        $('.dropify').dropify({
               messages: {

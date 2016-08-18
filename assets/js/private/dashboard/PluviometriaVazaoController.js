@@ -10,9 +10,11 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   $scope.currentYear = (new Date()).getFullYear();
   $scope.totalSent=0;
   $scope.totalErrors =0 ;
+  $scope.usuario = null;
+  $scope.aterro = null;
+  $scope.excel = ([]);
 
   $scope.search = function() {
-      //$http.get('/PluviometriaVazao?sort=data ASC&where={ "mes": "' + $scope.mes.id + '","ano": "' + $scope.ano.id   + '"}').success(function(data) {
       $http.get('/PluviometriaVazao/search?mes='+$scope.mes.id+'&ano='+$scope.ano.id).success(function(data) {
         $scope.operacaoPluviometrias = angular.fromJson(data);
       });
@@ -31,23 +33,36 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   };
 
   $scope.init = function(){
+   
     $scope.loadDistinctAnos();
     $scope.loadAterros();
     $scope.loadUsuarios();
-    $scope.usuario = window.SAILS_LOCALS;
     $scope.ano = {id:$scope.currentYear};
-    $scope.excel;
+    
   }
 
   $scope.loadAterros = function() {
     return $scope.aterros.length ? null : $http.get('/Aterro').success(function(data) {
       $scope.aterros = angular.fromJson(data); 
+
+      for(var i=0;i<$scope.aterros.length;i++){
+        if($scope.aterros[i].id==window.SAILS_LOCALS._aterro){
+          $scope.aterro = $scope.aterros[i];
+        }
+      }
+
     });
   };
     
   $scope.loadUsuarios = function() {
     return $scope.usuarios.length ? null : $http.get('/Usuario').success(function(data) {
       $scope.usuarios = data;
+
+      for(var i=0;i<$scope.usuarios.length;i++){
+        if($scope.usuarios[i].id==window.SAILS_LOCALS._id){
+          $scope.usuario = $scope.usuarios[i];
+        }
+      }
     });
   };
     
@@ -100,6 +115,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   $scope.loadFile = function() {
   	alasql('SELECT * FROM FILE(?,{headers:false})',[event],function(res){
   		$scope.excel = angular.fromJson(res);
+      $("#excel-data").show();
       $scope.addMedicoes($scope.excel);
   	});
   };
@@ -108,7 +124,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
       angular.forEach(medicoes, function(registro, index){
         if(index != 0)
         {
-          var medicao = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
+          var medicao = { data: registro.A +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id , ano: $scope.ano.id };
 
           $scope.getMedicao(medicao, function(result){
             if(null==result){
@@ -135,7 +151,6 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   };
 
   $scope.showUsuario = function(user) {
-    
     if(user && $scope.usuarios.length) {
       var selected = $filter('filter')($scope.usuarios, {id: user.usuario.id});
       return selected.length ? selected[0].name : 'Not set';
@@ -154,10 +169,10 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   $scope.savePluviometria = function(rowform, index, data, id) {
 
     angular.extend(data, {id: id});
-    angular.extend(data, {usuario: $scope.usuario._id});
-    angular.extend(data, {aterro: $scope.usuario._aterro});
+    angular.extend(data, {usuario: $scope.usuario.id});
+    angular.extend(data, {aterro: $scope.aterro});
 
-    var medicao = { data: data.dia +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.usuario._aterro, usuario: $scope.usuario._id, mes: $scope.mes.id , ano: $scope.ano.id };
+    var medicao = { data: data.dia +'/' + $scope.mes.id + '/' + $scope.ano.id  , dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id , ano: $scope.ano.id };
     if(undefined==id){
 
       swal({  title: "",   
@@ -178,6 +193,10 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
                         }, function(error){
                           swal("Erro", "Seu registro não foi inserido :(", "error");  
                         });       
+
+                          $scope.operacaoPluviometrias[index].aterro = $scope.aterro;
+                          $scope.operacaoPluviometrias[index].usuario = $scope.usuario;
+
                       }else{
                         swal("Erro", "Já existe uma medição para essa mesma data. :(", "error");
                         rowform.$cancel();
@@ -220,6 +239,14 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
     }
   };
 
+  $scope.cancel  = function(index, rowform) { 
+    if($scope.operacaoPluviometrias[index].id==undefined){
+      $scope.operacaoPluviometrias.splice(index, 1);
+      return;
+    }
+
+    rowform.$cancel();
+  };
 
   $scope.removePluviometria = function(index) {
     
@@ -255,14 +282,20 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http','$filter',   fu
   $scope.addPluviometria = function() {
     $scope.inserted = {
       dataMedicao: null,
-      aterro: null,
-      usuario: null,
+      aterro: $scope.aterro,
+      usuario: $scope.usuario,
       pluviometria: null,
       vazao: null 
     };
     $scope.operacaoPluviometrias.push($scope.inserted);
   };
-  
+
+
+  $(".dropify").on('dropify.afterClear', function(e){
+    $scope.excel = ([]);
+    $("#excel-data").hide();
+  });
+
   $scope.init();
 
 }]);
