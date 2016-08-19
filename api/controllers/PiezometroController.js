@@ -48,7 +48,7 @@ module.exports = {
 			}
 
 			if(req.param('pz')!=undefined){
-				filtro.id = req.param('pz');				
+				filtro.id = req.param('pz').split(',');				
 			}
 
 			dataFinal = _that.getDate(dataFinal);

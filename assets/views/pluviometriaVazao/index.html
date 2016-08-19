@@ -1,16 +1,31 @@
 <div class="row" ng-init="init()">
   <div id="modalPluviometria" class="modal modal-fixed-footer">
     <div class="modal-content">
-      <input id="readfile" type="file" class="dropify" data-height="200"  custom-on-change="loadFile"/>
 
-      <div id="excel-data">
+      <div class="row">
+        <div class="col s6 m4 l4 col-lg-offset-2">
+          <label ng-class="inputClass" for="mes">Mês</label>
+          <select class='browser-default active' id='' required ng-model='mesAssociatedWithFile' ng-options='x as x.name for x in meses track by x.id' title='Selecione o mês que deseja associar com as medições do arquivo.'></select>
+        </div>
+
+        <div class="col s6 m4 l4 col-lg-offset-2">
+          <label ng-class="inputClass" for="ano">Ano</label>
+          <select class='browser-default active' id=''  required ng-model='anoAssociatedWithFile' ng-options='x as x.id for x in anosToAssociateWithFile track by x.id'  title='Selecione o ano que deseja associar com as medições do arquivo.''></select>
+        </div>        
+      </div>
+
+      <div class="row">
+        <input id="readfile" type="file" class="dropify" data-height="200"  custom-on-change="loadFile"/>
+      </div>
+      
+      <div class="row" id="excel-data" style="display:none">
         <h4>Pluviometria processada a partir do arquivo:</h4>
         <table class='striped'>
           <thead>
             <tr>
               <th class='text-center ng-binding ng-scope'>Data</th>
-              <th class='text-center ng-binding ng-scope' >Pluviometria</th>
-              <th class='text-center ng-binding ng-scope' >Vazao</th>
+              <th class='text-center ng-binding ng-scope' >Pluviometria (mm)</th>
+              <th class='text-center ng-binding ng-scope' >Vazão (m³/dia)</th>
             </tr>
           </thead>
           
@@ -24,6 +39,9 @@
           </tbody>
         </table>
       </div>
+      
+
+
     </div>
   </div>
 
@@ -59,12 +77,12 @@
               <td style="width:15%">Data</td>
               <td style="width:15%">Usuário</td>
               <td style="width:15%">Aterro</td>
-              <td style="width:15%">Pluviometria</td>
-              <td style="width:15%">Vazão</td>
+              <td style="width:15%">Pluviometria (mm)</td>
+              <td style="width:15%">Vazão (m³/dia)</td>
               <td style="width:15%">Ações</td>
             </tr>
 
-            <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias" title="Clique para editar.">
+            <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias" title="Clique para editar." style="cursor:pointer">
               <td ng-click="rowform.$show()">
                 <!-- editable username (text with validation) -->
                 <span editable-text="operacaoPluviometria.dia"  class="datepicker" e-name="dia" e-form="rowform"  e-required>

@@ -11,6 +11,7 @@ app.controller('MedicaoPiezometroController', ['$scope','$interval', '$http', 's
       dataFinal:'',
       piezometro:([]),
       piezometros:([]),
+      piezometrosSearch:([]),
       monitoramentos:([]),
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
@@ -34,7 +35,11 @@ app.controller('MedicaoPiezometroController', ['$scope','$interval', '$http', 's
           $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
           $http.get('/Piezometro').success(function(response, status){
-               $scope.monitoramentos.piezometros = response;
+               var piezometros = [];
+              for(var i=0;i<response.length;i++){
+                piezometros.push({id:response[i].id, name:response[i].nome, marker:response[i].nome, icon:'', ticked:false});
+              }
+              $scope.monitoramentos.piezometros = piezometros;
           });
 
           $("#btMonitoramentos").on("click", function(e){
@@ -57,8 +62,12 @@ app.controller('MedicaoPiezometroController', ['$scope','$interval', '$http', 's
           query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
-          if(null!=$scope.monitoramentos.piezometro && undefined != $scope.monitoramentos.piezometro && ''!=$scope.monitoramentos.piezometro){
-            query+="&pz="+$scope.monitoramentos.piezometro;
+          if(null!=$scope.monitoramentos.piezometrosSearch && undefined != $scope.monitoramentos.piezometrosSearch && $scope.monitoramentos.piezometrosSearch.length>0){
+            var pzs="";
+            angular.forEach($scope.monitoramentos.piezometrosSearch, function(value, key){
+              pzs+= ((pzs==""?"":",")+value.id);
+            });
+            query+="&pz="+pzs;
           }
 
           $http.get('/piezometro/monitoramentos/'+query).success(function(response, status){
