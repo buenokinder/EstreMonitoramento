@@ -3,7 +3,13 @@
   table, th, td {
         font-size: 10px;
   }  
+  #pesquisa table, #pesquisa th, #pesquisa td {
+        border: solid 1px;
+  }  
 
+  .fixed table tr {
+      border-bottom: 1px solid;
+  }  
 </style>
 
 <div class="section">
@@ -50,21 +56,18 @@
 
       <div class="row" ng-show="monitoramentos.pesquisa!=null && monitoramentos.pesquisa.length>0">
         <div style="float:left" class="table-responsive col m1" id="fixed">
-        <table class="table table-striped table-bordered table-hover table-condensed">
-            <thead>
-              <tr height="90px">
-                <th rowspan="3">MARCO</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
-                <td>{{monitoramento.marcoSuperficial}}</td>
-              </tr>
-            </tbody>          
-          </table>        
-       
-        
-
+          <table class="table table-striped table-bordered table-hover table-condensed">
+              <thead>
+                <tr height="90px">
+                  <th rowspan="3">MARCO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope" style="border-bottom: solid 1px;">
+                  <td>{{monitoramento.marcoSuperficial}}</td>
+                </tr>
+              </tbody>          
+            </table>        
         </div>
       
         <div style="overflow-x: scroll;" class="table-responsive col m11">
@@ -74,22 +77,21 @@
               <tr>
 
                 <th rowspan="3">DATA</th>
-                <th rowspan="2" colspan="3">COORDENADAS</th>
-                <th colspan="4">DESLOCAMENTOS</th>
-                <th colspan="2">VELOCIDADE</th>
-                <th rowspan="2" colspan="2">CRITÉRIO DE ALERTA (metodologia 1)</th>
-                <th rowspan="2" colspan="2">CRITÉRIO DE ALERTA  (metodologia 2)</th>
-                <th rowspan="2" colspan="2">NOME</th>
+                <th rowspan="2" colspan="3"  style="text-align:center">COORDENADAS</th>
+                <th colspan="4"  style="text-align:center">DESLOCAMENTOS</th>
+                <th colspan="2"  style="text-align:center">VELOCIDADE</th>
+                <th rowspan="2" colspan="2"  style="text-align:center">CRITÉRIO DE ALERTA (metodologia 1)</th>
+                <th rowspan="2" colspan="2" style="text-align:center">NOME</th>
                 <th rowspan="3">TEMPERATURA NO HORÁRIO DA MEDIÇÃO (ºC)</th>
-                <th colspan="5">SDMS</th>
-                <th rowspan="2" colspan="2">AVD</th>
+                <th colspan="5"  style="text-align:center">SDMS</th>
+                <th rowspan="2" colspan="2"  style="text-align:center">AVD</th>
               </tr>
               
               <tr>
                 <th colspan="2">Horizontal</th>
                 <th colspan="2">Vertical</th>
-                <th>Horizontal</th>
-                <th>Vertical</th>
+                <th style="text-align:center">Horizontal</th>
+                <th style="text-align:center">Vertical</th>
                 <th colspan="2">Diferença</th>
                 <th rowspan="2">Norte/Sul</th>
                 <th rowspan="2">Leste/Oeste</th>
@@ -108,21 +110,19 @@
                 <th>(cm/dia)</th>
                 <th>Horizontal</th>
                 <th>Vertical</th>
-                <th>Horizontal</th>
-                <th>Vertical</th>                    
                 <th>Topógrafo</th>
                 <th>Auxiliar</th>
                 <th>Norte</th>
                 <th>Este</th>                                            
-                <th>Seno</th>                                            
-                <th>Ângulo</th>                                          
+                <th style="text-align:center">Seno</th>                                       
+                <th style="text-align:center">Ângulo</th>   
               </tr>
             </thead>
             
             <tbody>
               <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
 
-        <td>{{monitoramento.data | date:'dd/MM/yyyy'}}</td>
+                <td>{{monitoramento.data | date:'dd/MM/yyyy'}}</td>
                 <td>{{monitoramento.norte}}</td>
                 <td>{{monitoramento.leste}}</td>
                 <td>{{monitoramento.cota}}</td>
@@ -132,13 +132,11 @@
                 <td>{{monitoramento.deslocamentoVerticalTotal}}</td>
                 <td>{{monitoramento.velocidadeHorizontal}}</td>
                 <td>{{monitoramento.velocidadeVertical}}</td>
-                <td>{{monitoramento.criterioAlertaHorizontalMetodologia1}}</td>
-                <td>{{monitoramento.criterioAlertaVerticalMetodologia1}}</td>
-                <td>{{monitoramento.criterioAlertaHorizontalMetodologia2}}</td>
-                <td>{{monitoramento.criterioAlertaVerticalMetodologia2}}</td>
+                <td class='{{getCssClass(monitoramento.criterioAlertaHorizontalMetodologia1)}}'>{{monitoramento.criterioAlertaHorizontalMetodologia1}}</td>
+                <td class='{{getCssClass(monitoramento.criterioAlertaVerticalMetodologia1)}}'>{{monitoramento.criterioAlertaVerticalMetodologia1}}</td>
                 <td>{{monitoramento.nomeTopografo}}</td>
                 <td>{{monitoramento.nomeAuxiliar}}</td>
-                <td>{{monitoramento.temperatura}}</td>
+                <td style="text-align:center">{{monitoramento.temperatura}}</td>
 
                 <td>{{monitoramento.sentidoDeslocamentoDirerencaNorte}}</td>
                 <td>{{monitoramento.sentidoDeslocamentoDirerencaEste}}</td>

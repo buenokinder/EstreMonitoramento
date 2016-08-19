@@ -1,18 +1,91 @@
 
-
 <div class="section">
  <div class="row section">
   <div class="divider"></div>
     <div class="row">    
       <div class="col s12 m12 l6">
-
-
       	<grid-view fields="[{'name': 'nome' , 'value': 'Nome','filter':'true'}, {'name': 'createdAt', 'value': 'Data Criação', 'uiFilter':'date'}, {'name': 'aterro' , 'value': 'Aterro', 'sub':'nome', 'type': 'combobox', 'combo':'true', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome'},{'name': 'habilitado' , 'value': 'Habilitado'}, {'name':'usuario', 'value': 'Criado por', 'sub':'name'}]" listaname="Piezometro" autopage="true"  label="Lista de Piezômetro"  adicionar="" add="false" view="Piezometro" pagesize="5" strupdate="true"></grid-view>
       </div>
       <div class="col s12 m12 l6">
-      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial', 'uiMask':'ui-number-mask'}, {'name': 'celulaPiezometrica', 'value': 'Célula Piezométrica ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeMediaCamaraCargaInicial', 'value': 'Prof. Média da Câmara de Carga ', 'uiMask':'ui-number-mask'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'alertas', 'value': 'Alertas', 'model': 'alertas','input': 'alerta' ,'uiMask':'ui-number-mask','type':'listview', fields: [ {'name': 'coeficienteRU', 'value': 'CoeficienteRu', 'uiFilter':'number'}, {'name': 'date', 'value': 'Data', 'uiFilter': 'date'}]}, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }, {'name': 'usuario', 'type':'usuario'}]" label="Formulário de Piezômetro" listaname="Piezometro"  strupdate="false"></form-view>
+      	<form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial', 'uiMask':'ui-number-mask'}, {'name': 'celulaPiezometrica', 'value': 'Célula Piezométrica ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeMediaCamaraCargaInicial', 'value': 'Prof. Média da Câmara de Carga ', 'uiMask':'ui-number-mask'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'alertas', 'value': 'Alertas', 'model': 'alertas','input': 'alerta' ,'uiMask':'ui-number-mask','type':'listview', fields: [ {'name': 'coeficienteRU', 'value': 'CoeficienteRu', 'uiFilter':'number'}]}, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }, {'name': 'usuario', 'type':'usuario'}]" label="Formulário de Piezômetro" listaname="Piezometro"  strupdate="false"></form-view>
     	</div>
     </div>
+
+    <div class="row">    
+      <div class="col s12 m12 l6">
+      </div>
+
+      <div class="col s12 m12 l6">
+
+        <pre>
+          var niveisAlerta =$("#niveis-alerta-template")
+            .clone()
+            .prop('id','niveis-alerta')
+            .css('display','block');
+          
+          $("#sign-up-form div[class=row]:nth-child(7)").prepend(niveisAlerta);
+
+        </pre>
+
+        <div class="row" id="niveis-alerta-template" style="display:none;margin-top:12px;margin-bottom:12px" >
+          <div class="input-field col s12">
+            <table class="striped">
+              <thead>
+                <tr>
+                  <th class="text-center ng-binding ng-scope">Nível de Alerta</th>
+                  <th class="text-center ng-binding ng-scope">Valor</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td class="aceitavel">Aceitável</td>
+
+                  <td>
+                   
+                  <a href="#" editable-text="data.nivelAceitavel" e-name="nivelAceitavel" ng-model="data.nivelAceitavel">{{data.nivelAceitavel}}</a>
+
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="regular">Regular</td>
+                  <td>
+                    <span editable-text="data.nivelRegular" e-name="nivelRegular" ng-model="data.nivelRegular">{{data.nivelRegular}}</span>
+                  </td>
+                </tr>             
+
+                <tr>
+                  <td class="atencao">Atenção</td>
+                  <td>
+                    <span editable-text="data.nivelAtencao" e-name="nivelAtencao" ng-model="data.nivelAtencao">{{data.nivelAtencao}}</span>
+                  </td>
+                </tr>   
+
+                <tr>
+                  <td class="intervencao">Intervenção</td>
+                  <td>
+                    <span editable-text="data.nivelIntervencao" e-name="nivelIntervencao" ng-model="data.nivelIntervencao">{{data.nivelIntervencao}}</span>
+                  </td>
+                </tr> 
+
+                <tr>
+                  <td class="paralisacao">Paralisação</td>
+                  <td>
+                    <span editable-text="data.nivelParalisacao" e-name="nivelParalisacao" ng-model="data.nivelParalisacao">{{data.nivelParalisacao}}</span>
+                  </td>
+                </tr> 
+              </tbody>
+           
+            </table>
+
+          </div>
+        </div>
+        
+
+      </div>
+    </div>    
+
   </div>
 </div>
 

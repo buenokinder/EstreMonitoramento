@@ -140,11 +140,12 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 	  	$routeProvider.when("/Piezometro", {
-			templateUrl: "/views/piezometro/index.html"
+			templateUrl: "/views/piezometro/index.html",
+			controller : 'PiezometroController'			
 		}).when("/Piezometro/:id", {		
-		  templateUrl: "/views/piezometro/index.html"
+		  templateUrl: "/views/piezometro/index.html",
+		  controller : 'PiezometroController'
 		});
-
         
 	  	$routeProvider.when("/Usuario", {
 			templateUrl: "/views/usuario/index.html"
