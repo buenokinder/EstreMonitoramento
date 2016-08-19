@@ -4,8 +4,26 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
+    $scope.verResumos = false;
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
+
+    function getDatePtBr(date){
+      if(null==date || undefined == date || ''==date)
+          return '';
+
+        var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+
+       return value;
+    }
+
+    function getDateQuery(date){
+      if(null==date || undefined == date || ''==date)
+          return '';
+
+       var value = date.split('/');
+       return value[2] + '-' + value[1] + '-' + value[0];
+    }
 
     $scope.monitoramentos = {
       dataInicial:'',
@@ -16,15 +34,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
       init: function(){
-
-          var getDatePtBr = function(date){
-            if(null==date || undefined == date || ''==date)
-                return '';
-
-              var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
-
-             return value;
-          }
 
           var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
           var dtFim = new Date();
@@ -46,16 +55,22 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           });
       },
 
+      pesquisarResumo:function(marcosSuperficiais, callback){
+          var query="?order="+$scope.monitoramentos.ordenacao;
+          query+="&dtIni=1970-01-01";
+          query+="&dtFim="+getDateQuery(getDatePtBr(new Date()));
+          query+="&ms="+marcosSuperficiais;
+
+          $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
+               $scope.monitoramentos.resumo = response;
+               callback();
+          });    
+      },
+
       pesquisar:function(){
           var query="?order="+$scope.monitoramentos.ordenacao;
 
-          var getDateQuery = function(date){
-            if(null==date || undefined == date || ''==date)
-                return '';
 
-             var value = date.split('/');
-             return value[2] + '-' + value[1] + '-' + value[0];
-          }
 
           query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
           query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
@@ -246,6 +261,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       );   
     };
 
+    $scope.getCssClass = function(alerta){
+      return (alerta.replace("ç","c").replace("ã","a").replace("á","a")).toLowerCase();
+    }
     
     $scope.saveObsOperacional = function (){
         swal({  title: "",   
@@ -281,12 +299,38 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         );   
     };
 
-    $scope.$on('handleBroadcast', function() {
-      $scope.medicoes = ([]);
+    $scope.$on('handleBroadcast', function(e, type) {
       $scope.data = sennitCommunicationService.data;
-      $scope.inputClass = "active";
-      $scope.verMedicoes = true;
+
+      if(sennitCommunicationService.type=='select'){
+        $scope.medicoes = ([]);
+        $scope.inputClass = "active";
+        $scope.verResumos =false;
+        $scope.verMedicoes = true;
+      }else{
+        
+        $scope.verMedicoes = false;
+        $scope.monitoramentos.resumo = ([]);
+
+        if($scope.data.medicaoMarcoSuperficialDetalhes.length>0){
+          var ms="";
+          var mss=[];
+
+          angular.forEach($scope.data.medicaoMarcoSuperficialDetalhes, function(value, key){
+            if(mss.indexOf(value.marcoSuperficial)<0){
+              ms+= ((ms==""?"":",")+value.marcoSuperficial);
+              mss.push(value.marcoSuperficial);
+            }
+          });
+        
+          $scope.monitoramentos.pesquisarResumo(ms, function(){
+            $scope.verResumos =true;
+          });
+        }
+
+      }
     }); 
+
 
     $(".dropify").on('dropify.afterClear', function(e){
       $scope.removeFile();
