@@ -21,6 +21,33 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http','$filter',   f
       $scope.secaoCortes = data;
     });
 
+                        $('.datepicker').pickadate({
+                        selectMonths: true,
+                        selectYears:true
+                    });   
+$scope.querydape = [];
+  $scope.pesquisar = function(){
+ var query = "";
+                    for (var key in $scope.querydapesquisa) {
+                        query += key + "=" + $scope.querydapesquisa[key] + "&";
+                    }
+var datafinal;
+var datainicial;
+    $("#datafinal").each(function(i,el){
+      datafinal = $(this).val();
+    });
+    $("#datainicial").each(function(i,el){
+      datainicial = $(this).val();
+      
+    });
+
+    query += "&datainicial=" + datainicial + "&datafinal=" + datafinal;
+
+    $http.get('/OperacaoSecaoCorte/Search?' + query ).success(function(data) {
+      $scope.operacaoSecaoCortes = angular.fromJson(data);
+      console.log('teste 2');
+    });
+  }
 
    $scope.secaoCortes = ([]);
   $scope.init = function(){

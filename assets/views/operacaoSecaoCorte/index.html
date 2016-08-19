@@ -8,11 +8,17 @@
       <h4 class="header2">
         Operação Seção de Corte
       </h4>
+     {{ querydapesquisa}}
       <div class="row" >
-        <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Inicial</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
-                <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Final</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
+        <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Inicial</label><input type="text" id="datainicial" class="form-control ng-pristine ng-untouched ng-valid ng-empty date datepicker" ng-model="querydapesquisa.dataInicial" aria-invalid="false"></div>
+                <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Final</label><input type="text" id="datafinal" class="form-control ng-pristine ng-untouched ng-valid ng-empty date datepicker"  ng-model="querydapesquisa.dataFinal" aria-invalid="false"></div>
 
-                        <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Seção de Corte</label><input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="nome" ng-model="querydapesquisa.nome" aria-invalid="false"></div>
+         <div class="form-group col m3" id="sign-up-form">
+        <label ng-class="inputClass" for="aterro">Seção de Corte</label>
+        <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="marcoSuperficial" required="" ng-model="querydapesquisa.secaoCorte" ng-options="x.id as x.nome for x in secaoCortes" aria-invalid="true">
+        <option value="?" selected="selected"></option>
+        </select>
+      </div>  
         <div  class="right col s1" aria-hidden="false"><a ng-click="pesquisar()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a></div>
         <div >
           <table class="table table-bordered table-hover table-condensed">
