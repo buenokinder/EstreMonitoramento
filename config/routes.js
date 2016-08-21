@@ -38,6 +38,9 @@ module.exports.routes = {
     'GET /logout': 'UsuarioController.logout',
     'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
+    'GET /aterro': 'AterroController.search',
+    'GET /marcosuperficial': 'MarcoSuperficialController.search',
+     'GET /marcosuperficial/count': 'MarcoSuperficialController.searchcount',
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
     'GET /visualizacao': 'PageController.visualizacao'

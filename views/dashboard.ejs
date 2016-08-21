@@ -28,7 +28,7 @@
   <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = { _id: "<%= me.id %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};
+    window.SAILS_LOCALS = { _id: "<%= me.id %>" , _perfil: "<%= me.perfil %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};
     </script>
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
 <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
@@ -64,7 +64,7 @@
 
                         <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i class="mdi-action-settings-overscan estre-green-icon"></i></a>
                         </li>
-                        <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications estre-green-icon"><small class="notification-badge " style="background: #777777 !important;">5</small></i>
+                       <!-- <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications estre-green-icon"><small class="notification-badge " style="background: #777777 !important;">5</small></i> -->
 
                         </a>
                         </li>
@@ -73,7 +73,7 @@
 
 
                     <!-- notifications-dropdown -->
-                    <ul id="notifications-dropdown" class="dropdown-content">
+                  <!--  <ul id="notifications-dropdown" class="dropdown-content">
                       <li>
                         <h5>ALERTAS </h5>
                       </li>
@@ -91,7 +91,7 @@
                         <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 4 dias</time>
                       </li>
 
-                    </ul>
+                    </ul> -->
                 </div>
             </nav>
 
@@ -99,7 +99,7 @@
              <nav id="horizontal-nav" class="estre-green hide-on-med-and-down">
                 <div class="nav-wrapper">
                     <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
-                        <li>
+                        <li ng-hide="(perfil != 'Administrador')">
                             <a href="#/" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
                                 <i class="mdi-action-assignment-ind"></i>
                                 <span>Administração<i class="mdi-navigation-arrow-drop-down right"></i></span>
@@ -120,14 +120,14 @@
                                 </span>
                             </a>
                         </li>
-                        <li>
-                            <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
+                        <li ng-hide="(perfil == 'Operacional')" >
+                            <a  class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
                                 <i class="mdi-editor-insert-chart"></i>
                                 <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
                             </a>
                         </li>
-                        <li>
-                            <a ng-click="goto('/Dashboard')" class="cyan-text">
+                        <li  ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')" >
+                            <ang-click="goto('/Dashboard')" class="cyan-text">
                                 <i class="mdi-action-dashboard"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -164,17 +164,17 @@
             </li>            
                     <li><a  ng-click="goto('/Mapa')"  class="white estre-green-icon">Mapa</a></li>
                     <li><a  ng-click="goto('/OperacaoSecaoCorte')"  class="white estre-green-icon">Seção de Corte</a></li>
-                     <li><a  ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
+                     <li ng-hide="(perfil == 'Operacional')"><a    ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
 
                    <li><a  ng-click="goto('/PocosVisita')"  class="white estre-green-icon">Poços de visita</a></li>
                 </ul>
 
                 <ul id="DadosMestredropdown" class="dropdown-content dropdown-horizontal-list">
-                  <li><a  ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
+                  <li ng-hide="(perfil == 'Operacional')" ><a   ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
                   <li><a  ng-click="goto('/Aterro')"  class="white estre-green-icon">Aterro</a></li>
 
                   <li><a  ng-click="goto('/MarcoSuperficial')"  class="white estre-green-icon">Marco Superficial e Inclinomêtro</a></li>
-                  <li><a ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
+                  <li  ng-hide="(perfil == 'Operacional')" ><a ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
                   <li><a ng-click="goto('/SecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
 
                   <li><a ng-click="goto('/Piezometro')"   class="white estre-green-icon">Piezômetro</a></li>
