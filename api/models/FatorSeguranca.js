@@ -9,7 +9,7 @@
 module.exports = {
 
   attributes: {
-    analise: {
+    saturacao: {
       type: 'json',
       required: true
     },

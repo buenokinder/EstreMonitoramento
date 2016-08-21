@@ -182,8 +182,8 @@ module.exports = {
 							            }
 						            }
 
-						            retorno.criterioAlertaHorizontalMetodologia1 = "Ok";
-						            retorno.criterioAlertaVerticalMetodologia1 = "Ok";
+						            retorno.criterioAlertaHorizontalMetodologia1 = "Aceitável";
+						            retorno.criterioAlertaVerticalMetodologia1 = "Aceitável";
 						            for (k = 0; k < alertas.length; k++) {
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
 						                    retorno.criterioAlertaHorizontalMetodologia1 = alertas[k].nivel;
@@ -191,37 +191,7 @@ module.exports = {
 						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
 						                    retorno.criterioAlertaVerticalMetodologia1 = alertas[k].nivel;
 						            }
-
-						            if (retorno.velocidadeHorizontal <=1){
-						            	retorno.criterioAlertaHorizontalMetodologia2 ="COND. MIN.";
-						            }else{
-						             	if(1<retorno.velocidadeHorizontal && retorno.velocidadeHorizontal<=2){
-											retorno.criterioAlertaHorizontalMetodologia2 ="ATENÇÃO";
-										}else{
-							             	if(2<retorno.velocidadeHorizontal && retorno.velocidadeHorizontal<=5){
-												retorno.criterioAlertaHorizontalMetodologia2 ="ALERTA";
-											}						            	
-											else{
-												retorno.criterioAlertaHorizontalMetodologia2 ="INTERVENÇÃO";
-											}											
-										}
-						            }
-
-						            if (retorno.velocidadeVertical <=2){
-						            	retorno.criterioAlertaVerticalMetodologia2 ="COND MIN";
-						            }else{
-						             	if(2<retorno.velocidadeVertical && retorno.velocidadeVertical<=4){
-											retorno.criterioAlertaVerticalMetodologia2 ="ATENÇÃO";
-										}else{
-							             	if(4<retorno.velocidadeVertical && retorno.velocidadeVertical<=10){
-												retorno.criterioAlertaVerticalMetodologia2 ="ALERTA";
-											}						            	
-											else{
-												retorno.criterioAlertaVerticalMetodologia2 ="INTERVENÇÃO";
-											}											
-										}
-						            }
-
+						           
 						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste/retorno.deslocamentoHorizontalTotal),2);
 						            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
 						            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo),2);
@@ -253,6 +223,9 @@ module.exports = {
 						dataFinal = new Date(req.param('dtFim'));				
 					}
 					
+					console.log("dataInicial",dataInicial);
+					console.log("dataFinal",dataFinal);
+
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index, dataInicial, dataFinal);
 					}

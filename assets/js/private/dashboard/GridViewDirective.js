@@ -1,4 +1,3 @@
-
  app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
         return {
             restrict: 'E',
@@ -11,6 +10,7 @@
                 view: '@',
                 strupdate: '@',
                 calculate: '@',
+                calculatetitle: '@',
                 update: '@',
                 strdelete: '@',
                 pagesize: '=',
@@ -55,7 +55,7 @@
                 HtmlFormBody += "<table class='striped'><thead><tr>";
                 HtmlFormBody += "<th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer; text-align:center;'>{{field.value}}</th>";
                 HtmlFormBody += "<th  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'>Editar</th>";
-                HtmlFormBody += "<th  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>Cálculos</th>";
+                HtmlFormBody += "<th  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>"+$scope.calculatetitle+"</th>";
                 HtmlFormBody += "<th  ng-show='exibir(update)' style='text-align:center;'>Ações</th>";
                 HtmlFormBody += "<th  ng-show='exibir(relatorio)' style='text-align:center;'>Ações</th></tr></thead>";
                 HtmlFormBody += "<th  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
@@ -143,7 +143,7 @@
                     HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
                     
-                    var anchor =(undefined != $scope.calculate && '' != $scope.calculate)?"<a calculate data='{{datum}}'>":"<a ng-click='select(datum)'>";
+                    var anchor =(undefined != $scope.calculate && '' != $scope.calculate)?"<a  ng-click='calc(datum)'>":"<a ng-click='select(datum)'>";
 
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>"+anchor+"<i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
@@ -280,32 +280,13 @@
                             } 
                         }
                     );   
-
-
                 }
 
                 $scope.trocaCor = function(field, data) {
                     var keys = Object.keys(data);
-                    if(keys[0] == field.name) {
-                        switch(data.nivel) {
-                            case 'Aceitável': 
-                                return "aceitavel";
-                                break;
-                            case 'Regular': 
-                                return "regular";
-                                break;
-                            case 'Atenção': 
-                                return "atencao";
-                                break;
-                            case 'Intervenção': 
-                                return "intervencao";
-                                break;
-                            case 'Paralisação': 
-                                return "paralisacao";
-                                break; 
-                            default:
-                                break;
-                        }
+                    if(keys[0] == field.name && (undefined!=data[field.name])) {
+                        return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
+                        //return data.nivel.replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                     }
                 };
                 
@@ -487,6 +468,10 @@
                     sennitCommunicationService.prepForBroadcast(msg);
                 };
 
+                $scope.calc = function(msg) {
+                    sennitCommunicationService.prepForBroadcast(msg, 'calculate');
+                };
+
                 $scope.delete = function (item) {
 
                     swal({   title: "Você tem certeza que deseja excluir?",   
@@ -602,15 +587,13 @@
                                 HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
                                 HtmlFormBody += "<label  ng-class='inputClass' for='"+$scope.fields[key].name+"'>" + $scope.fields[key].value + "</label>";                                    
                                 HtmlFormBody += "<input class='col s11' type='text' ng-model='" + $scope.fields[key].input + "' "+ $scope.fields[key].uiMask+"></input>";
-                                HtmlFormBody += "<div class='col s1'><a ng-click='adicionaAlertas(" + $scope.fields[key].input + ",\"" + $scope.fields[key].model.trim()  + "\",\"" + $scope.fields[key].input + "\" )' class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
+                                HtmlFormBody += "<div class='col s1'><a ng-click='addItem(" + $scope.fields[key].input + ",\"" + $scope.fields[key].model.trim()  + "\",\"" + $scope.fields[key].input + "\" )' class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
                                 HtmlFormBody += "<table class='striped col s11'><thead><tr>";                               
-                                HtmlFormBody += "<th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th></tr></thead>";
-                                HtmlFormBody += "<tbody><tr ng-repeat='datum in data."+$scope.fields[key].model+"' ng-click='ViewItem(datum)' style='cursor:pointer'><td</td><td ng-repeat='field in fields[" + key + "].fields' >";
-                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
+                                HtmlFormBody += "<th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th>Ações</th></tr></thead>";
+                                HtmlFormBody += "<tbody><tr ng-repeat='datum in data."+$scope.fields[key].model+"' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields[" + key + "].fields' >";
+                                HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td><td title='Remover'><a ng-click=\"removeItem(datum,'" + $scope.fields[key].model.trim() + "')\"><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td>";
                                 HtmlFormBody += "</tr></tbody></table>";
                                 HtmlFormBody += "</div></div>";
-                                // ng-show='exibir(strupdate)' td de delete
-                                // ng-show='deleteDisabled()' <A> tag
                                 break;
                             case 'checkbox':
                                 HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='"+  $scope.fields[key].name +"' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
@@ -704,6 +687,7 @@
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
+<<<<<<< HEAD
 
                  $scope.nopacess = false;
 
@@ -737,6 +721,35 @@
                        }
 
                        
+=======
+                
+                $scope.removeItem = function(item, model){
+
+                    var index = $scope.data[model].indexOf(item);
+                    $scope.data[model].splice(index, 1);  
+
+                    /*swal({   title: "",   
+                            text: "Você tem certeza que deseja remover este registro?",   
+                            type: "info",   
+                            showCancelButton: true, 
+                            confirmButtonText: "Sim",   
+                            cancelButtonText: "Cancelar",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false }, 
+                            function(isConfirm){   
+                                if (isConfirm) {     
+                                     
+                                    var index = $scope.data[model].indexOf(item);
+                                    $scope.data[model].splice(index, 1);  
+                                    swal("Registro Removido!", "Seu registro foi removido com sucesso.", "success");
+                                } else {
+                                    swal("Cancelado", "Seu registro não foi removido :(", "error");   
+                                } 
+                            }
+                        );  */ 
+                };
+
+>>>>>>> origin/2016_08_15__2016_08_19
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
 
@@ -795,7 +808,7 @@
  console.log(key);
   delete $scope[field.model][key].aterros;
 
-  angular.extend($scope[field.model][key], { 'teste': false, 	icon: "<img src='/images/"+ $scope[field.model][key].perfil +".png' ></img>"} );
+  angular.extend($scope[field.model][key], { 'teste': false,    icon: "<img src='/images/"+ $scope[field.model][key].perfil +".png' ></img>"} );
 });     
 console.log($scope[field.model]);
                         });
@@ -837,9 +850,10 @@ console.log($scope[field.model]);
 
                 }
                 
-                $scope.adicionaAlertas = function(coeficiente, model, input) {                    
+                $scope.addItem = function(coeficiente, model, input, fields) {                    
                     var date = new Date();
                     var dateISO = date.toISOString();
+
                     $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});                    
                     $scope[input] = "";                            
                 };
@@ -848,19 +862,14 @@ console.log($scope[field.model]);
                         $('select').material_select();    
                 }
 
-
                 $scope.newitem = function () {                                        
-
                     $scope.init();
-                    console.log('data', $scope.data);
                     $scope.inputClass = "";
                     $('select').material_select();    
-                    console.log('Foi');
                 };
 
                 $scope.$on('handleBroadcast', function() {
                     $scope.data = sennitCommunicationService.data;
-
                     
                     for(var field in $scope.fields){
                         if($scope.fields[field].type=="date" || $scope.fields[field].type=="datepicker"){
@@ -872,39 +881,18 @@ console.log($scope[field.model]);
 
                     $scope.inputClass = "active";
                     $('select').material_select();    
-                    console.log('Foi');
 
                     for (var key in $scope.fields) {
-                         switch ($scope.fields[key].type) {
-                                 
-                            
-                            case 'comboboxmulti':
-                                   
-                              
-                                    angular.forEach($scope[$scope.fields[key].model], function(value, keyItem) {
- 
- for (var item in $scope.data[$scope.fields[key].name]) {
-     console.log(item);
-if ($scope.data[$scope.fields[key].name][item].id== value.id){
-console.log('igual');
- angular.extend($scope[$scope.fields[key].model][keyItem], { 'teste': true, 		icon: "<img src='/images/user_icon.png' ></img>"} );
- console.log($scope[$scope.fields[key].model]);
-}
- }
-
-
-
- 
-});     
-                                break;
-
-                                
-                            default:
-                    
-                                break;
-                         }           
-
-                } 
+                        if($scope.fields[key].type == 'comboboxmulti'){
+                            angular.forEach($scope[$scope.fields[key].model], function(value, keyItem) {
+                                for (var item in $scope.data[$scope.fields[key].name]) {
+                                    if ($scope.data[$scope.fields[key].name][item].id== value.id){
+                                        angular.extend($scope[$scope.fields[key].model][keyItem], { 'teste': true,         icon: "<img src='/images/user_icon.png' ></img>"} );
+                                    }
+                                }
+                            });     
+                        }
+                    } 
                 });        
 
 
@@ -961,6 +949,7 @@ console.log('igual');
 {                            
 
                     $scope.sennitForm.loading = true;
+                    
                     swal({   title: "",   
                             text: "Você tem certeza que deseja alterar este registro?",   
                             type: "warning",   
@@ -991,7 +980,6 @@ console.log('igual');
                                         data: params
                                     }).then(function onSuccess(sailsResponse){
                                         $scope.inputClass = null;
-                                        //sennitCommunicationService.prepForBroadcastDataList($scope.data);
                                         $scope.data = ({});                                      
                                         $scope.inputClass = "disabled";
                                         $scope.newitem();
@@ -1076,25 +1064,24 @@ console.log('igual');
         }
             }]).factory('sennitCommunicationService', function($rootScope) {
             var sennitCommunicationService = ([]);
-            
             sennitCommunicationService.data = '';
+            sennitCommunicationService.type = 'select';
 
-            sennitCommunicationService.prepForBroadcast = function(data) {
+            sennitCommunicationService.prepForBroadcast = function(data, type) {
+                this.type = undefined==type?'select':'calculate';
                 this.data = data;
-                this.broadcastItem();
-                    $('select').material_select();    
+                this.broadcastItem(type);
+                $('select').material_select();    
             };
 
             sennitCommunicationService.prepForBroadcastDataList = function(datum) {
                 this.datum = datum;
                 this.broadcastItemReturn();
-                    $('select').material_select();    
+                $('select').material_select();    
             };
 
-            
-
-            sennitCommunicationService.broadcastItem = function() {
-                $rootScope.$broadcast('handleBroadcast');
+            sennitCommunicationService.broadcastItem = function(type) {
+                $rootScope.$broadcast('handleBroadcast', type);
             };
 
             sennitCommunicationService.broadcastItemReturn = function() {
@@ -1301,13 +1288,7 @@ console.log('igual');
                         }
                     } 
                 }
-                
-                $scope.adicionaAlertas = function(coeficiente, model, input) {                    
-                    var date = new Date();
-                    var dateISO = date.toISOString();
-                    $scope.data[model].push({'coeficienteRU': coeficiente, 'date': dateISO});                    
-                    $scope[input] = "";                            
-                };
+     
                 $scope.change = function(model, data) {
                     $scope.data[model] = data;
                 }
@@ -1323,9 +1304,6 @@ console.log('igual');
 
                     if($scope.data.id){
                         $scope.sennitForm.loading = true;
-
-     
-
 
                         var params = {};
                         for(var field in $scope.fields){
@@ -1358,9 +1336,6 @@ console.log('igual');
                                         swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                         Materialize.toast('Registro alterado com sucesso!', 4000);
 
-//                                        $(".datepicker").each(function(i,el){
-  //                                          $scope.data[$(this).prop("name")] = $(this).val();
-    //                                    });
 
                                     })
                                     .catch(function onError(sailsResponse){
@@ -1377,29 +1352,5 @@ console.log('igual');
                     } 
                 };
             }
-        }}]).factory('sennitCommunicationService', function($rootScope) {
-            var sennitCommunicationService = ([]);
-            
-            sennitCommunicationService.data = '';
-
-            sennitCommunicationService.prepForBroadcast = function(data) {
-                this.data = data;
-                this.broadcastItem();
-            };
-
-            sennitCommunicationService.prepForBroadcastDataList = function(datum) {
-                this.datum = datum;
-                this.broadcastItemReturn();
-            };
-
-            sennitCommunicationService.broadcastItem = function() {
-                $rootScope.$broadcast('handleBroadcast');
-            };
-
-            sennitCommunicationService.broadcastItemReturn = function() {
-                $rootScope.$broadcast('handleBroadcastItem');
-            };
-
-    return sennitCommunicationService;
-});
+        }}]);
 
