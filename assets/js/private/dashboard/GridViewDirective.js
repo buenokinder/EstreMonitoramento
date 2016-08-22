@@ -13,6 +13,7 @@
                 calculatetitle: '@',
                 update: '@',
                 strdelete: '@',
+                 deleteperfil: '=',
                 pagesize: '=',
                 popup: '@',
                 add: '@',
@@ -97,8 +98,8 @@
                     HtmlFormBody +=                     "<i class='mdi-navigation-close estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
                     HtmlFormBody +=                 "</a>";
                     HtmlFormBody +=             "</form>";
-                    HtmlFormBody +=             "<div class='buttons' ng-show='!rowform.$visible'>";
-                    HtmlFormBody +=                 "<a ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody +=             "<div class='buttons'  ng-show='!rowform.$visible'>";
+                    HtmlFormBody +=                 "<a ng-hide='nopDelete' ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
                     HtmlFormBody +=             "</div>";
                     HtmlFormBody +=         "</td>";
                     HtmlFormBody +=     "</tr>";
@@ -147,7 +148,7 @@
 
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>"+anchor+"<i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
-                    HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody += "<a ng-hide='nopDelete' ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
                     HtmlFormBody += "</td>";
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
                     HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
@@ -179,7 +180,7 @@
                 $scope.TotalPagesSearch = ([]);
                 $scope.edited = ([]);
                 $scope.nopacess = false;
-
+                $scope.nopDelete = true;
 
                 for (var key in $scope.noacess) {           
                     if ($scope.noacess[key].perfil == $scope.me._perfil){
@@ -189,6 +190,15 @@
                 }
 
                 
+                 for (var key in $scope.deleteperfil) {
+                        console.log('foi');
+                           console.log($scope.deleteperfil[key].perfil );
+                           if ($scope.deleteperfil[key].perfil == $scope.me._perfil){
+                                $scope.nopDelete = false;
+                                console.log('falsete');
+                           }
+                         
+                       }   
 
                 $scope.pesquisar = function() {
                     console.log('query', $scope.querydapesquisa);
@@ -509,15 +519,14 @@
                 datasource: '=',
                 adicionarperfil: '=',
                 updateperfil: '=',
+                deleteperfil: '=',
                 listaname: '@',
-                  noacess: '=',
+                noacess: '=',
                 strupdate: '@',
                 nocard: '@',
                 strnew: '@',
                 redirecionar: '@',  
                 label: '@'
-
-
             }, link: function ($scope, $element, attrs, $http) {
 
                 var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-hide='nopacess'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
@@ -684,6 +693,7 @@
                 }
                 $scope.nopNew = true;
                 $scope.nopUpdate = true;
+                
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
@@ -719,8 +729,7 @@
                            }
                          
                        }
-
-                       
+         
 
                 
                 $scope.removeItem = function(item, model){
