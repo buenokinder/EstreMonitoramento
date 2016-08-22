@@ -286,7 +286,6 @@
                     var keys = Object.keys(data);
                     if(keys[0] == field.name && (undefined!=data[field.name])) {
                         return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
-                        //return data.nivel.replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                     }
                 };
                 
