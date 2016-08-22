@@ -337,23 +337,14 @@
                              return valor[key];
                         }
                     }
-                    if(type == "date"){
-                        /*var data=null;
-
-                        if(valor.toString().indexOf("/")>=0){
-                            var value = valor.split('/');
-                            data  = new Date(value[2], parseInt(value[1]-1), value[0]);
-
-                        }else{
-                           data = new Date(valor);
-                        }
-
-                        var ano = data.getFullYear();
-                        var mes = data.getMonth() + 1;
-                        var dia = data.getDate();
-                        var retorno = dia + "/" + mes + "/" + ano;*/
+                    if (type == "date" || type == "datepicker") {
                         return getDate(valor);
                     }
+
+                    if (type == "datetimepicker") {
+                        return getDateTimeString(valor);
+                    }
+
                     if(type == "usuario"){
                         return valor.name;            
                     }
@@ -1144,6 +1135,7 @@
                             HtmlFormBody += '<span editable-text="data.' + $scope.fields[key].name + '" e-name="' + $scope.fields[key].name + '" ng-model="' + $scope.fields[key].name + '" e-class="datetimepicker" >';
                             HtmlFormBody += '{{ (data.' + $scope.fields[key].name + ' | date:"dd/MM/yyyy HH:mm") || "empty" }}';
                             HtmlFormBody += '</span>';
+
                             break;
 
                         case 'textarea':
@@ -1195,7 +1187,12 @@
                 $scope.url = ([]);
 
                 $scope.loadForm = function(form){
-                    form.$show()
+                    form.$show();
+
+                    $(".datetimepicker").each(function (i, o) {
+                        $scope.data[$(this).prop("name")] = getDateTimeString($scope.data[$(this).prop("name")]);
+                    });
+
                     $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
                     $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
                 };

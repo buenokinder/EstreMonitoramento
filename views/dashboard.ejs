@@ -524,6 +524,11 @@
 	</script>
 
     <script type="text/javascript">
+
+		function padLeftZero(value){
+			return parseInt(value)<10?"0"+value.toString():value.toString();
+		}
+
         function getDate(value){
             var data=null;
 
@@ -558,10 +563,10 @@
             }
 
 			var retorno = "";
-			if(parseInt(hora)==0 && parseInt(hora)==0){
+			if(parseInt(hora)==0 && parseInt(minuto)==0){
 				retorno = dia + "/" + mes + "/" + ano;
 			}else{
-				retorno = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+				retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
 			}
             
             return retorno;
@@ -580,10 +585,10 @@
             }
 
 			var retorno = "";
-			if(parseInt(hora)==0 && parseInt(hora)==0){
+			if(parseInt(hora)==0 && parseInt(minuto)==0){
 				retorno = ano + "-" + mes + "-" + dia;
 			}else{
-				retorno = ano + "-" + mes + "-" + dia + " " + hora + ":" + minuto;
+				retorno = ano + "-" + padLeftZero(mes) + "-" + padLeftZero(dia) + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
 			}
             
             return retorno;
