@@ -5,6 +5,7 @@
                 filters: '=',
                 fields: '=',
                 listaname: '@',
+                noacess: '=',
                 adicionar: '@',
                 view: '@',
                 strupdate: '@',
@@ -26,7 +27,7 @@
             }, link: function ($scope, $element, attrs) {
                 var HtmlFormBody = "";
 
-                HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
+                HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()' ng-hide='nopacess'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
                 for (var key in $scope.fields) {
                     
                     if($scope.fields[key].readonly == undefined){
@@ -167,7 +168,7 @@
             controller: function ($scope, $element, $http, $filter) {
                 $scope.data = ([]);
                 $scope.querydapesquisa = ({});
-                $scope.me = window.SAILS_LOCALS.me;
+                $scope.me = window.SAILS_LOCALS;
                 $scope.ActualPage = 1;
                 $scope.skip = 0;
                 $scope.TotalItens = 0;
@@ -177,6 +178,17 @@
                 $scope.TotalItensSearch = 0;
                 $scope.TotalPagesSearch = ([]);
                 $scope.edited = ([]);
+                $scope.nopacess = false;
+
+
+                for (var key in $scope.noacess) {           
+                    if ($scope.noacess[key].perfil == $scope.me._perfil){
+                        console.log('Sem acesso');
+                        $scope.nopacess = true;
+                    } 
+                }
+
+                
 
                 $scope.pesquisar = function() {
                     console.log('query', $scope.querydapesquisa);
@@ -273,7 +285,7 @@
                 $scope.trocaCor = function(field, data) {
                     var keys = Object.keys(data);
                     if(keys[0] == field.name && (undefined!=data[field.name])) {
-                        return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
+                        //return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                         //return data.nivel.replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                     }
                 };
@@ -495,7 +507,10 @@
             scope: {
                 fields: '=',
                 datasource: '=',
+                adicionarperfil: '=',
+                updateperfil: '=',
                 listaname: '@',
+                  noacess: '=',
                 strupdate: '@',
                 nocard: '@',
                 strnew: '@',
@@ -505,7 +520,7 @@
 
             }, link: function ($scope, $element, attrs, $http) {
 
-                var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
+                var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-hide='nopacess'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
                        
                 if ($scope.nocard)
                     HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
@@ -625,7 +640,7 @@
                 } 
 
      
-                    HtmlFormBody +=  "<div class='row'>&nbsp;</div><div class='row'><div class='input-field col s12'><a ng-click='newitem()' ng-show='newDisabled()' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a><button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' ><span ng-show='!sennitForm.loading'>Submeter</span>";
+                    HtmlFormBody +=  "<div class='row' >&nbsp;</div><div class='row' ng-hide='(nopNew && nopUpdate)'><div class='input-field col s12'><a ng-click='newitem()' ng-hide='nopNew' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a><button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' ><span ng-show='!sennitForm.loading'>Submeter</span>";
                     HtmlFormBody += "<span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
                     HtmlFormBody +="<span ng-show='sennitForm.loading'>Aguarde...</span></button></div></div>";
             
@@ -667,9 +682,46 @@
                 $scope.sennitForm = {
                     loading: false
                 }
+                $scope.nopNew = true;
+                $scope.nopUpdate = true;
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
+
+
+                 $scope.nopacess = false;
+
+
+                for (var key in $scope.noacess) {           
+                    if ($scope.noacess[key].perfil == $scope.me._perfil){
+                        console.log('Sem acesso');
+                        $scope.nopacess = true;
+                    } 
+                }
+
+
+                 for (var key in $scope.adicionarperfil) {
+                           console.log('perfil');
+                           console.log($scope.adicionarperfil[key].perfil);
+                           console.log($scope.me._perfil);
+                           
+                           if ($scope.adicionarperfil[key].perfil == $scope.me._perfil){
+                                $scope.nopNew = false;
+                           }
+                         
+                       }
+
+      for (var key in $scope.updateperfil) {
+                     
+                           
+                           if ($scope.updateperfil[key].perfil == $scope.me._perfil){
+                                $scope.nopUpdate = false;
+                           }
+                         
+                       }
+
+                       
+
                 
                 $scope.removeItem = function(item, model){
 
@@ -696,6 +748,7 @@
                             }
                         );  */ 
                 };
+
 
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
@@ -792,6 +845,9 @@ console.log($scope[field.model]);
                             break;
                         }
                     } 
+
+                     
+
                 }
                 
                 $scope.addItem = function(coeficiente, model, input, fields) {                    
@@ -888,6 +944,10 @@ console.log($scope[field.model]);
 
                  }                 
                   if($scope.data.id){
+                      
+                        if(!$scope.nopUpdate)
+{                            
+
                     $scope.sennitForm.loading = true;
                     
                     swal({   title: "",   
@@ -937,9 +997,15 @@ console.log($scope[field.model]);
                                 } 
                             }
                         );                                            
+}else{
+     $scope.sennitForm.loading = false;
+}
 
+                    } else{
+        console.log($scope.nopNew);
+                        if(!$scope.nopNew)
+{                            
 
-                    } else{                    
                         swal({   title: "",   
                             text: "Você tem certeza que deseja incluir este registro?",   
                             type: "info",   
@@ -987,7 +1053,10 @@ console.log($scope[field.model]);
                                 } 
                             }
                         );                        
+}else{
 
+    $scope.sennitForm.loading = false;
+}
                     }
                 };
             }

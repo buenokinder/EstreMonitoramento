@@ -16,14 +16,7 @@ app.controller('DashboardController', [ '$scope', '$location', '$rootScope', fun
     $scope.link = $location.path();
     $scope.alteraStatusBreadcrumbs($location.path());
   });
-
-$scope.modernBrowsers = [
-    { icon: "<img src=[..]/opera.png.. />",               name: "Opera",              maker: "(Opera Software)",        ticked: true  },
-    { icon: "<img src=[..]/internet_explorer.png.. />",   name: "Internet Explorer",  maker: "(Microsoft)",             ticked: false },
-    { icon: "<img src=[..]/firefox-icon.png.. />",        name: "Firefox",            maker: "(Mozilla Foundation)",    ticked: true  },
-    { icon: "<img src=[..]/safari_browser.png.. />",      name: "Safari",             maker: "(Apple)",                 ticked: false },
-    { icon: "<img src=[..]/chrome.png.. />",              name: "Chrome",             maker: "(Google)",                ticked: true  }
-]; 
+ $scope.perfil = window.SAILS_LOCALS._perfil;
   //$scope.isAdmin =  window.SAILS_LOCALS.me.isAdmin;
   $scope.goto = function(path){
     $location.path(path);

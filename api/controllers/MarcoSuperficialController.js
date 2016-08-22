@@ -258,6 +258,11 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
+		if(req.session.me.perfil == "Gerente"){
+            
+            filtro.aterro = req.session.me.aterro.id;
+        }
+
 		MarcoSuperficial.find(filtro)
 		.populate('aterro')
 		.populate('usuario')
@@ -281,6 +286,10 @@ module.exports = {
 			if(req.param(key) == undefined) continue;
 			filtro[key] = req.param(key);
 		}
+		if(req.session.me.perfil == "Gerente"){
+            
+            filtro.aterro = req.session.me.aterro.id;
+        }
 		
 		MarcoSuperficial.count(filtro)
 		.exec(function result(err, ret) {

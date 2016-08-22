@@ -84,6 +84,8 @@ module.exports = {
     search: function(req, res) {
         var filtro = {};
 
+
+
         for(key in req.allParams()) {
             if(key == 'nome') {
                 filtro.nome = { 'contains': req.param('nome') };
@@ -97,6 +99,13 @@ module.exports = {
             filtro[key] = req.param(key);
         }
 
+        if(req.session.me.perfil == "Gerente"){
+            
+            filtro.id = req.session.me.aterro.id;
+        }
+        console.log('filtro'); 
+
+        console.log(filtro);
         Aterro.find(filtro)        
         .exec(function result(err, ret) {
           if (err) {
