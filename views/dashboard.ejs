@@ -129,7 +129,7 @@
                             </a>
                         </li>
                         <li  ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')" >
-                            <ang-click="goto('/Dashboard')" class="cyan-text">
+                            <a href="" ng-click="goto('/Dashboard')" class="cyan-text">
                                 <i class="mdi-action-dashboard"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -151,44 +151,44 @@
 
             <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
             <li>
-                <a  ng-click="goto('/Bombeamento')"  class="white estre-green-icon">Bombeamento</a>
+                <a  href="" ng-click="goto('/Bombeamento')"  class="white estre-green-icon">Bombeamento</a>
             </li>
             <li>
-                <a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a>
+                <a  href="" ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a>
             </li>
             <li>
-                <a  ng-click="goto('/MedicaoMarcoSuperficial')"  class="white estre-green-icon">
+                <a  href="" ng-click="goto('/MedicaoMarcoSuperficial')"  class="white estre-green-icon">
                 Marco Superficial</a>
             </li>
             <li>
-                <a  ng-click="goto('/MedicaoPiezometro')"  class="white estre-green-icon">
+                <a  href="" ng-click="goto('/MedicaoPiezometro')"  class="white estre-green-icon">
                 Piezômetro</a>
             </li>            
-                    <li><a  ng-click="goto('/Mapa')"  class="white estre-green-icon">Mapa</a></li>
-                    <li><a  ng-click="goto('/OperacaoSecaoCorte')"  class="white estre-green-icon">Seção de Corte</a></li>
-                     <li ng-hide="(perfil == 'Operacional')"><a    ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
+                    <li><a  href="" ng-click="goto('/Mapa')"  class="white estre-green-icon">Mapa</a></li>
+                    <li><a  href="" ng-click="goto('/OperacaoSecaoCorte')"  class="white estre-green-icon">Seção de Corte</a></li>
+                     <li ng-hide="(perfil == 'Operacional')"><a    href="" ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
 
-                   <li><a  ng-click="goto('/PocosVisita')"  class="white estre-green-icon">Poços de visita</a></li>
+                   <li><a  href="" ng-click="goto('/PocosVisita')"  class="white estre-green-icon">Poços de visita</a></li>
                 </ul>
 
                 <ul id="DadosMestredropdown" class="dropdown-content dropdown-horizontal-list">
-                  <li ng-hide="(perfil == 'Operacional')" ><a   ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
-                  <li><a  ng-click="goto('/Aterro')"  class="white estre-green-icon">Aterro</a></li>
+                  <li ng-hide="(perfil == 'Operacional')" ><a   href="" ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
+                  <li><a  href="" ng-click="goto('/Aterro')"  class="white estre-green-icon">Aterro</a></li>
 
-                  <li><a  ng-click="goto('/MarcoSuperficial')"  class="white estre-green-icon">Marco Superficial e Inclinomêtro</a></li>
-                  <li  ng-hide="(perfil == 'Operacional')" ><a ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
-                  <li><a ng-click="goto('/SecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
+                  <li><a  href="" ng-click="goto('/MarcoSuperficial')"  class="white estre-green-icon">Marco Superficial e Inclinomêtro</a></li>
+                  <li  ng-hide="(perfil == 'Operacional')" ><a href="" ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
+                  <li><a href="" ng-click="goto('/SecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
 
-                  <li><a ng-click="goto('/Piezometro')"   class="white estre-green-icon">Piezômetro</a></li>
+                  <li><a href="" ng-click="goto('/Piezometro')"   class="white estre-green-icon">Piezômetro</a></li>
                 </ul>
               <ul id="Administracaodropdown" class="dropdown-content dropdown-horizontal-list">
-                  <li><a  ng-click="goto('/Usuario')" class="white estre-green-icon">Usuário</a></li>
+                  <li><a  href="" ng-click="goto('/Usuario')" class="white estre-green-icon">Usuário</a></li>
                 </ul>
 
                 <!-- Usersdropdown -->
                 <ul id="Usersdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a ng-click="goto('/Perfil')"  class="white estre-green-icon">Perfil</a></li>
-                    <li><a ng-click="goto('/Settings')"  class="white estre-green-icon">Configurações</a></li>
+                    <li><a href="" ng-click="goto('/Perfil')"  class="white estre-green-icon">Perfil</a></li>
+                    <li><a href="" ng-click="goto('/Settings')"  class="white estre-green-icon">Configurações</a></li>
                     <li> 
                         <a href="/logout"  class="white estre-green-icon">Sair</a>
                     </li>
@@ -196,9 +196,9 @@
 
                 <!-- Chartsdropdown -->
                 <ul id="Chartsdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a ng-click="goto('/Template')" class="white estre-green-icon">Template</a></li>
-                    <li><a ng-click="goto('/Relatorio')" class="white estre-green-icon">Relatório</a></li>
-                    <li><a ng-click="goto('/')" class="white estre-green-icon">Parametrização</a></li>
+                    <li><a href="" ng-click="goto('/Template')" class="white estre-green-icon">Template</a></li>
+                    <li><a href="" ng-click="goto('/Relatorio')" class="white estre-green-icon">Relatório</a></li>
+                    <li><a href="" ng-click="goto('/')" class="white estre-green-icon">Parametrização</a></li>
 
                 </ul>
             <!-- HORIZONTL NAV END-->
@@ -211,6 +211,118 @@
   <!-- START MAIN -->
     <div id="main">
         <!-- START WRAPPER -->
+<aside id="left-sidebar-nav hide-on-large-only" >
+    <ul id="slide-out" class="side-nav leftside-navigation  hide-on-large-only">
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li class="bold" ng-hide="(perfil != 'Administrador')">
+                    <a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-invert-colors"></i> Administração</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a  href="" href="" ng-click="goto('/Usuario')">Usuário</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-image-palette"></i> Dados Mestre</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li ng-hide="(perfil == 'Operacional')" >
+                                <a   href="" ng-click="goto('/Alerta')" >Alerta</a>
+                            </li>
+                            <li>
+                                <a  href="" ng-click="goto('/Aterro')" >Aterro</a>
+                            </li>
+
+                            <li>
+                                <a  href="" ng-click="goto('/MarcoSuperficial')" >M S e Inclinomêtro</a>
+                            </li>
+                            <li  ng-hide="(perfil == 'Operacional')" >
+                                <a href="" ng-click="goto('/SecaoFatorSeguranca')">S F de Segurança</a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="goto('/SecaoCorte')">Seção de Corte</a>
+                            </li>
+
+                            <li>
+                                <a href="" ng-click="goto('/Piezometro')"  >Piezômetro</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-editor-border-all"></i> Área de Trabalho</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a  href="" ng-click="goto('/Bombeamento')" >Bombeamento</a>
+                            </li>
+                            <li>
+                                <a  href="" ng-click="goto('/PluviometriaVazao')" >Pluviometria e Vazão</a>
+                            </li>
+                            <li>
+                                <a  href="" ng-click="goto('/MedicaoMarcoSuperficial')" >Marco Superficial</a>
+                            </li>
+                            <li>
+                                <a  href="" ng-click="goto('/MedicaoPiezometro')" >Piezômetro</a>
+                            </li>            
+                            <li>
+                                <a  href="" ng-click="goto('/Mapa')" >Mapa</a>
+                            </li>
+                            <li>
+                                <a  href="" ng-click="goto('/OperacaoSecaoCorte')" >Seção de Corte</a>
+                            </li>
+                            <li ng-hide="(perfil == 'Operacional')">
+                                <a    href="" ng-click="goto('/FatorSeguranca')" >Fator de Segurança</a>
+                            </li>
+
+                            <li><a  href="" ng-click="goto('/PocosVisita')" >Poços de visita</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold" ng-hide="(perfil == 'Operacional')">
+                    <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-editor-insert-comment"></i> Relatórios</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="" ng-click="goto('/Template')">Template</a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="goto('/Relatorio')">Relatório</a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="goto('/')">Parametrização</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold active" ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')">
+                    <a href="" ng-click="goto('/Dashboard')" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>
+                </li>                 
+                <li class="bold" >
+                    <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-social-pages"></i> Usuário</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="" ng-click="goto('/Perfil')" >Perfil</a>
+                            </li>
+                            <li>
+                                <a href="" ng-click="goto('/Settings')" >Configurações</a>
+                            </li>
+                            <li> 
+                                <a href="/logout" >Sair</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+       
+    </ul>
+    <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></a>
+</aside>      
         <div class="wrapper">
 
 
