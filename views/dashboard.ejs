@@ -5,33 +5,35 @@
     <title>Estre</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="msapplication-tap-highlight" content="no">
-     <link rel="icon" href="favicon.png" type="image/x-icon">
-   	<!-- <link rel="stylesheet" href="page.css"> -->
-          <link rel="stylesheet" href="/js/private/dashboard/isteven-multi-select.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="msapplication-tap-highlight" content="no">
+	<link rel="icon" href="favicon.png" type="image/x-icon">
+	<!-- <link rel="stylesheet" href="page.css"> -->
+	<link rel="stylesheet" href="/js/private/dashboard/isteven-multi-select.css">
 	<link rel="stylesheet" href="elements.css">
-    <link rel="stylesheet" href="/styles/materialize.css">
-    
+	<link rel="stylesheet" href="/styles/materialize.css">
+	<link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection">
+	<link rel="stylesheet" href="/styles/style-horizontal.css">
+	<link href="/styles/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
 
+	<link rel="stylesheet" href="/styles/bootstrap-material-datetimepicker.css" />
+	<link href="/styles/fonts.googleapi.com.roboto.css" rel='stylesheet' type='text/css'>
+	<link href="/styles/fonts.googleapi.com.material.icons.css" rel="stylesheet">
 
+	<!--STYLES END-->
+	<link href="/js/dependencies/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
+	<link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
 
-    <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection">
-       <link rel="stylesheet" href="/styles/style-horizontal.css">
-    <link href="/styles/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
-    <!--STYLES END-->
-    <link href="/js/dependencies/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
-<link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
-
-  <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+	<link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = { _id: "<%= me.id %>" , _perfil: "<%= me.perfil %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};
     </script>
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
+
   </head>
 
 <body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="DashboardController" >
@@ -433,7 +435,7 @@
               </div>
             </div>
           </div>
-</div>
+	</div>
     <!-- //////////////////////////////////////////////////////////////////////////// -->
 
     <!-- START FOOTER -->
@@ -448,29 +450,23 @@
     </footer>
     <!-- END FOOTER -->
 
-
-
-
-
-
-
-    <script src="/js/dependencies/sails.io.js"></script>
-    <script src="/js/dependencies/angular.min.js"></script>
-    <script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
-    <script src="/js/dependencies/angular-input-masks/releases/angular-input-masks-dependencies.js"></script>
-    <script src="/js/dependencies/angular-input-masks/releases/angular-input-masks.js"></script>
-    <script src="/js/dependencies/angular-br-filters/release/angular-br-filters.js"></script>
-    <script src="/js/dependencies/angular-material.min.js"></script>
-    <script src="/js/jquery-1.11.2.min.js"></script>
+	<script src="/js/dependencies/sails.io.js"></script>
+	<script src="/js/dependencies/angular.min.js"></script>
+	<script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
+	<script src="/js/dependencies/angular-input-masks/releases/angular-input-masks-dependencies.js"></script>
+	<script src="/js/dependencies/angular-input-masks/releases/angular-input-masks.js"></script>
+	<script src="/js/dependencies/angular-br-filters/release/angular-br-filters.js"></script>
+	<script src="/js/dependencies/angular-material.min.js"></script>
+	<script src="/js/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="/js/dependencies/materialize.js"></script>
-    	<script type="text/javascript" src="/js/private/dashboard/isteven-multi-select.js"></script>
-    <script src="/js/dependencies/perfect-scrollbar.min.js"></script>
-    <script type="text/javascript" src="/js/sparkline/jquery.sparkline.min.js"></script>
-    <script type="text/javascript" src="/js/sparkline/sparkline-script.js"></script>
-        <script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="text/javascript" src="/js/plugins.js"></script>
-    <script src="/js/dependencies/custom-script.js"></script>
-    <link rel='stylesheet' href='/js/dependencies/font-awesome/css/font-awesome.css'>
+	<script type="text/javascript" src="/js/private/dashboard/isteven-multi-select.js"></script>
+	<script src="/js/dependencies/perfect-scrollbar.min.js"></script>
+	<script type="text/javascript" src="/js/sparkline/jquery.sparkline.min.js"></script>
+	<script type="text/javascript" src="/js/sparkline/sparkline-script.js"></script>
+	<script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>
+	<script type="text/javascript" src="/js/plugins.js"></script>
+	<script src="/js/dependencies/custom-script.js"></script>
+	<link rel='stylesheet' href='/js/dependencies/font-awesome/css/font-awesome.css'>
 
     <link rel='stylesheet' href='/js/dependencies/textangular/dist/textAngular.css'>
     <script src='/js/dependencies/textangular/dist/textAngular-rangy.min.js'></script>
@@ -500,34 +496,34 @@
 
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
-<script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
-<script src="/js/private/dashboard/OperacaoSecaoCorteController.js"></script>
-<script src="/js/private/dashboard/PiezometroController.js"></script>
-<script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
-<script src="/js/private/dashboard/MedicaoPiezometroController.js"></script>
-<script src="/js/private/dashboard/TemplateUpdateController.js"></script>
-<script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
-<script type="text/javascript" src="/js/private/dashboard/jquery.maskedinput.min.js"></script>
+	<script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
+	<script src="/js/private/dashboard/OperacaoSecaoCorteController.js"></script>
+	<script src="/js/private/dashboard/PiezometroController.js"></script>
+	<script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
+	<script src="/js/private/dashboard/MedicaoPiezometroController.js"></script>
+	<script src="/js/private/dashboard/TemplateUpdateController.js"></script>
+	<script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
+	<script type="text/javascript" src="/js/private/dashboard/jquery.maskedinput.min.js"></script>
+	
+	
+	<script type="text/javascript" src="/js/private/dashboard/material.min.js"></script>
+	<script type="text/javascript" src="/js/private/dashboard/moment-with-locales.min.js"></script>
+	<script type="text/javascript" src="/js/private/dashboard/bootstrap-material-datetimepicker.js"></script>
 
-<script src="http://cdn.jsdelivr.net/alasql/latest/alasql.min.js"></script>
-<script src="/js/private/dashboard/xlsx.core.min.js"></script>
-<script>
-  $(document).ready(function() {
-                 $('.dropify').dropify({
-                messages: {
-                    default: 'Arraste seu Arquivo ZIP contendo os arquivos Shapefile de seu mapa',
+	<script src="http://cdn.jsdelivr.net/alasql/latest/alasql.min.js"></script>
+	<script src="/js/private/dashboard/xlsx.core.min.js"></script>
+	<script>
+	  $(document).ready(function() {
+			$('.dropify').dropify({
+				messages: {
+					default: 'Arraste seu Arquivo ZIP contendo os arquivos Shapefile de seu mapa',
+				}
+			});
+			$('input.materialize-textarea').characterCounter();
+	  });
+	</script>
 
-                }
-            });
-	    $('input.materialize-textarea').characterCounter();
-
-      
-  });
-
-</script>
     <script type="text/javascript">
-
-
         function getDate(value){
             var data=null;
 
@@ -549,6 +545,80 @@
             return retorno;
         }
 
+		function getDateTimeString(value){
+            var data = getDateTime(value);
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+			var hora = data.getHours();
+			var minuto = data.getMinutes()
+            
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+			var retorno = "";
+			if(parseInt(hora)==0 && parseInt(hora)==0){
+				retorno = dia + "/" + mes + "/" + ano;
+			}else{
+				retorno = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+			}
+            
+            return retorno;
+        }
+
+		function getDateTimeStringQuery(value){
+            var data = getDateTime(value);
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+			var hora = data.getHours();
+			var minuto = data.getMinutes()
+            
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+			var retorno = "";
+			if(parseInt(hora)==0 && parseInt(hora)==0){
+				retorno = ano + "-" + mes + "-" + dia;
+			}else{
+				retorno = ano + "-" + mes + "-" + dia + " " + hora + ":" + minuto;
+			}
+            
+            return retorno;
+        }
+
+		function getDateTime(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+				var ret = value.split("/");
+				var mes = parseInt(ret[1]) - 1;
+				var dia = ret[0];
+				ret = ret[2].split(' ');
+				var ano = ret[0];
+				var hora = 0;
+				var minuto = 0;
+				var possuiHoras =  ret.length>1;
+				
+				if(possuiHoras){
+					ret = ret[1].split(':')
+					hora = ret[0];
+					minuto = ret[1];
+				}
+				data = new Date(ano, mes, dia, hora, minuto);
+            }else{
+               data = new Date(value);
+            }
+
+			return data;
+        }
+
+		$(function(){		
+			$('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
+			$('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+		});
     </script>
 
   </body>

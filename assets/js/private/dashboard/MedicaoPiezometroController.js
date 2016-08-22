@@ -1,191 +1,183 @@
-app.controller('MedicaoPiezometroController', ['$scope','$interval', '$http', 'sennitCommunicationService',   function($scope, $interval, $http, sennitCommunicationService){
+app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', 'sennitCommunicationService', function ($scope, $interval, $http, sennitCommunicationService) {
     $scope.data = [];
-    $scope.inserted = {data:'', piezometro:([])};
+    $scope.inserted = { data: '', piezometro: ([]) };
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
 
     $scope.monitoramentos = {
-      dataInicial:'',
-      dataFinal:'',
-      piezometro:([]),
-      piezometros:([]),
-      piezometrosSearch:([]),
-      monitoramentos:([]),
-      pesquisa: null,
-      ordenacao:'dataInstalacao ASC',
+        dataInicial: '',
+        dataFinal: '',
+        piezometro: ([]),
+        piezometros: ([]),
+        piezometrosSearch: ([]),
+        monitoramentos: ([]),
+        pesquisa: null,
+        ordenacao: 'dataInstalacao ASC',
 
+        init: function () {
 
-      init: function(){
+            var getDatePtBr = function (date) {
+                if (null == date || undefined == date || '' == date)
+                    return '';
 
-          var getDatePtBr = function(date){
-            if(null==date || undefined == date || ''==date)
-                return '';
+                var value = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " 00:00";
+                return value;
+            };
 
-              var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
 
-             return value;
-          };
+            var dtIni = (new Date(new Date().setDate(new Date().getDate() - 30)));
+            var dtFim = new Date();
 
-          var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
-          var dtFim = new Date();
+            $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
+            $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
-          $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
-          $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
-
-          $http.get('/Piezometro').success(function(response, status){
-               var piezometros = [];
-              for(var i=0;i<response.length;i++){
-                piezometros.push({id:response[i].id, name:response[i].nome, marker:response[i].nome, icon:'', ticked:false});
-              }
-              $scope.monitoramentos.piezometros = piezometros;
-          });
-
-          $("#btMonitoramentos").on("click", function(e){
-            e.preventDefault();
-            document.location="#/MonitoramentoPiezometro"
-          });
-      },
-
-      pesquisar:function(){
-          var query="?order="+$scope.monitoramentos.ordenacao;
-
-          var getDateQuery = function(date){
-            if(null==date || undefined == date || ''==date)
-                return '';
-
-             var value = date.split('/');
-             return value[2] + '-' + value[1] + '-' + value[0];
-          }
-
-          query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
-          query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
-
-          if(null!=$scope.monitoramentos.piezometrosSearch && undefined != $scope.monitoramentos.piezometrosSearch && $scope.monitoramentos.piezometrosSearch.length>0){
-            var pzs="";
-            angular.forEach($scope.monitoramentos.piezometrosSearch, function(value, key){
-              pzs+= ((pzs==""?"":",")+value.id);
+            $http.get('/Piezometro').success(function (response, status) {
+                var piezometros = [];
+                for (var i = 0; i < response.length; i++) {
+                    piezometros.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false });
+                }
+                $scope.monitoramentos.piezometros = piezometros;
             });
-            query+="&pz="+pzs;
-          }
 
-          $http.get('/piezometro/monitoramentos/'+query).success(function(response, status){
-               $scope.monitoramentos.pesquisa = response;
-                setInterval(function(){
+            $("#btMonitoramentos").on("click", function (e) {
+                e.preventDefault();
+                document.location = "#/MonitoramentoPiezometro"
+            });
+        },
+
+        pesquisar: function () {
+            var query = "?order=" + $scope.monitoramentos.ordenacao;
+
+            query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
+            query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
+
+            if (null != $scope.monitoramentos.piezometrosSearch && undefined != $scope.monitoramentos.piezometrosSearch && $scope.monitoramentos.piezometrosSearch.length > 0) {
+                var pzs = "";
+                angular.forEach($scope.monitoramentos.piezometrosSearch, function (value, key) {
+                    pzs += ((pzs == "" ? "" : ",") + value.id);
+                });
+                query += "&pz=" + pzs;
+            }
+
+            $http.get('/piezometro/monitoramentos/' + query).success(function (response, status) {
+                $scope.monitoramentos.pesquisa = response;
+                setInterval(function () {
                     var $fixedColumn = $('#fixed');
                     var $pesquisa = $('#pesquisa');
                     $fixedColumn.find('tbody tr').each(function (i, elem) {
                         $(this).height($pesquisa.find('tbody  tr:eq(' + i + ')').height());
                     });
                 }, 0);
-          });        
-      }
+            });
+        }
     };
 
     $scope.monitoramentos.init();
 
 
-    $scope.addMedicao = function (){
-      swal({  title: "",   
-              text: "Você tem certeza que deseja inserir a medição ?",   
-              type: "warning",   
-              showCancelButton: true, 
-              confirmButtonText: "Sim",   
-              cancelButtonText: "Cancelar",   
-              closeOnConfirm: false,   
-              closeOnCancel: false }, 
-              function(isConfirm){   
-                  if (isConfirm) {     
-                      $http({
-                          method: 'POST',
-                          url: '/MedicaoPiezometro/',
-                          data: $scope.inserted
-                      }).then(function onSuccess(sailsResponse){
-                          $scope.inputClass = null;
-                          $scope.inputClass = "disabled";
-                          $scope.refreshChilds = true;
-                          $scope.verMedicoes = false;
-                          $scope.closeMedicao();
-                          $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
-                          swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
-                          Materialize.toast('Registro inserido com sucesso!', 4000);
-                      })
-                      .catch(function onError(sailsResponse){
+    $scope.addMedicao = function () {
+        swal({
+            title: "",
+            text: "Você tem certeza que deseja inserir a medição ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'POST',
+                            url: '/MedicaoPiezometro/',
+                            data: $scope.inserted
+                        }).then(function onSuccess(sailsResponse) {
+                            $scope.inputClass = null;
+                            $scope.inputClass = "disabled";
+                            $scope.refreshChilds = true;
+                            $scope.verMedicoes = false;
+                            $scope.closeMedicao();
+                            $scope.inserted = { data: '', nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
+                            swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
+                            Materialize.toast('Registro inserido com sucesso!', 4000);
+                        })
+                        .catch(function onError(sailsResponse) {
 
-                      })
-                      .finally(function eitherWay(){
-                          $scope.sennitForm.loading = false;
-                      })
-                  } else {
-                          swal("Cancelado", "Seu registro não foi inserido :(", "error");
-                  } 
-              }
-      );   
+                        })
+                        .finally(function eitherWay() {
+                            $scope.sennitForm.loading = false;
+                        })
+                    } else {
+                        swal("Cancelado", "Seu registro não foi inserido :(", "error");
+                    }
+                }
+        );
     };
 
-    
-    $scope.saveObsOperacional = function (){
-        swal({  title: "",   
-                text: "Você tem certeza que deseja inserir a observação ?",   
-                type: "warning",   
-                showCancelButton: true, 
-                confirmButtonText: "Sim",   
-                cancelButtonText: "Cancelar",   
-                closeOnConfirm: false,   
-                closeOnCancel: false }, 
-                function(isConfirm){   
-                    if (isConfirm) {     
+
+    $scope.saveObsOperacional = function () {
+        swal({
+            title: "",
+            text: "Você tem certeza que deseja inserir a observação ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
                         $http({
                             method: 'PUT',
                             url: '/MedicaoPiezometro/' + $scope.data.id,
-                            data: {'obsOperacional': $scope.data.obsOperacional}
-                        }).then(function onSuccess(sailsResponse){
+                            data: { 'obsOperacional': $scope.data.obsOperacional }
+                        }).then(function onSuccess(sailsResponse) {
                             $scope.inputClass = null;
                             $scope.inputClass = "disabled";
                             swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                             Materialize.toast('Registro alterado com sucesso!', 4000);
                         })
-                        .catch(function onError(sailsResponse){
+                        .catch(function onError(sailsResponse) {
 
                         })
-                        .finally(function eitherWay(){
+                        .finally(function eitherWay() {
                             $scope.sennitForm.loading = false;
                         })
                     } else {
-                            swal("Cancelado", "Seu registro não foi alterado :(", "error");
-                    } 
+                        swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                    }
                 }
-        );   
+        );
     };
 
-    $scope.$on('handleBroadcast', function() {
-      $scope.data = sennitCommunicationService.data;
-      $scope.inputClass = "active";
-      $scope.verMedicoes = true;
-    }); 
+    $scope.$on('handleBroadcast', function () {
+        $scope.data = sennitCommunicationService.data;
+        $scope.inputClass = "active";
+        $scope.verMedicoes = true;
+    });
 
-    $(".dropify").on('dropify.afterClear', function(e){
-      $scope.removeFile();
+    $(".dropify").on('dropify.afterClear', function (e) {
+        $scope.removeFile();
     });
 
 
-    $(".dropify").on('afterClear', function(e){
-      $scope.removeFile();
-    });
-
-    $scope.uploadDetalhes = function(){
-       $('.dropify').dropify({
-              messages: {
-                  default: 'Arraste seu Arquivo',
-              }
-          });
+    $scope.uploadDetalhes = function () {
+        $('.dropify').dropify({
+            messages: {
+                default: 'Arraste seu Arquivo',
+            }
+        });
         $('#modalUpload').openModal();
     };
 
 
-    $scope.addNewMapa = function(){
-      $('#modalMedicaoUpload').openModal();
+    $scope.addNewMapa = function () {
+        $('#modalMedicaoUpload').openModal();
     };
 
 }]);

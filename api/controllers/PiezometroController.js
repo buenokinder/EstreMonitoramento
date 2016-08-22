@@ -8,10 +8,10 @@ var Promise = require('bluebird');
 
 module.exports = {
 
-	getDate: function(value){
-		var date = new Date(value.valueOf() + value.getTimezoneOffset() * 60000)
-		return new Date(date.getFullYear(),date.getMonth()+1,date.getDate());
-	},
+    getDate: function (value) {
+        var date = new Date(value.valueOf() + value.getTimezoneOffset() * 60000)
+        return new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    },
 
     orderByDateAsc: function (a,b) {
           if (a.dataMedicao < b.dataMedicao)
@@ -37,22 +37,22 @@ module.exports = {
 	    {
 			var filtro ={};
 			var dataInicial =new Date(new Date().setDate(new Date().getDate()-30));
-			var dataFinal =new Date();
+			var dataFinal = new Date();
 
 			if(undefined!=req.param('dtIni') && ''!=req.param('dtIni')){
-				dataInicial = new Date(req.param('dtIni'));				
+			    dataInicial = new Date(req.param('dtIni'));
 			}
 
 			if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
-				dataFinal = new Date(req.param('dtFim'));				
+			    dataFinal = new Date(req.param('dtFim'));
 			}
 
 			if(req.param('pz')!=undefined){
 				filtro.id = req.param('pz').split(',');				
 			}
 
-			dataFinal = _that.getDate(dataFinal);
-			dataInicial = _that.getDate(dataInicial);
+		//	dataFinal = dataFinalContemHora ? dataFinal : _that.getDate(dataFinal);
+			//dataInicial = dataInicialContemHora ? dataInicial : _that.getDate(dataInicial);
 
 			var piezometro = Piezometro.find(filtro).
 								populate('aterro').
@@ -78,10 +78,10 @@ module.exports = {
 					for(var j=0;j<piezometros[i].medicoes.length;j++){
 
 						var medicao = piezometro.medicoes[j];
-						var dataMedicao = _that.getDate(medicao.dataMedicao);
+					    //var dataMedicao = _that.getDate(medicao.dataMedicao);
 
-						if(dataMedicao<dataInicial 
-							|| dataMedicao>dataFinal)
+						if (medicao.dataMedicao < dataInicial
+							|| medicao.dataMedicao > dataFinal)
 							continue;
 
 						medicao.owner  ={id: piezometro.id, nome: piezometro.nome};
