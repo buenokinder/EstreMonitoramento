@@ -285,7 +285,7 @@
                 $scope.trocaCor = function(field, data) {
                     var keys = Object.keys(data);
                     if(keys[0] == field.name && (undefined!=data[field.name])) {
-                        return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
+                        //return data[field.name].replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                         //return data.nivel.replace("á","a").replace("ç","c").replace("ã","a").toLowerCase();
                     }
                 };
@@ -688,6 +688,7 @@
                 $scope.data = ({});
                 $scope.url = ([]);
 
+
                  $scope.nopacess = false;
 
 
@@ -720,7 +721,7 @@
                        }
 
                        
-=======
+
                 
                 $scope.removeItem = function(item, model){
 
@@ -748,7 +749,7 @@
                         );  */ 
                 };
 
->>>>>>> origin/2016_08_15__2016_08_19
+
                 $scope.verifica = function (valor, nome, type, filtro) {        
                     if(valor.hasOwnProperty(nome)) {
 
