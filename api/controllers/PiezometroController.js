@@ -51,9 +51,6 @@ module.exports = {
 				filtro.id = req.param('pz').split(',');				
 			}
 
-		//	dataFinal = dataFinalContemHora ? dataFinal : _that.getDate(dataFinal);
-			//dataInicial = dataInicialContemHora ? dataInicial : _that.getDate(dataInicial);
-
 			var piezometro = Piezometro.find(filtro).
 								populate('aterro').
 								populate('medicoes');
@@ -78,7 +75,6 @@ module.exports = {
 					for(var j=0;j<piezometros[i].medicoes.length;j++){
 
 						var medicao = piezometro.medicoes[j];
-					    //var dataMedicao = _that.getDate(medicao.dataMedicao);
 
 						if (medicao.dataMedicao < dataInicial
 							|| medicao.dataMedicao > dataFinal)

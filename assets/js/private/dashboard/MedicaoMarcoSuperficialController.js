@@ -12,7 +12,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       if(null==date || undefined == date || ''==date)
           return '';
 
-        var value = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+      var value = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " 00:00";;
 
        return value;
     }
@@ -34,6 +34,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
       init: function(){
+          $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
 
           var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
           var dtFim = new Date();
@@ -69,11 +70,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
       pesquisar:function(){
           var query="?order="+$scope.monitoramentos.ordenacao;
+          query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
+          query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
 
-
-
-          query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
-          query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
+          //query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
+          //query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
 
           if(null!=$scope.monitoramentos.marcosSuperficiaisSearch && undefined != $scope.monitoramentos.marcosSuperficiaisSearch && $scope.monitoramentos.marcosSuperficiaisSearch.length>0){
             var ms="";
