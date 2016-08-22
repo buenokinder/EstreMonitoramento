@@ -64,6 +64,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             $http.get('/piezometro/monitoramentos/' + query).success(function (response, status) {
                 $scope.monitoramentos.pesquisa = response;
+                console.log("response", response);
                 setInterval(function () {
                     var $fixedColumn = $('#fixed');
                     var $pesquisa = $('#pesquisa');
