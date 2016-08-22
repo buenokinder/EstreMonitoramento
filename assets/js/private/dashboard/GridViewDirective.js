@@ -687,7 +687,6 @@
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
-<<<<<<< HEAD
 
                  $scope.nopacess = false;
 
