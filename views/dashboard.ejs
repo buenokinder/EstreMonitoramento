@@ -662,6 +662,27 @@
             return retorno;
         }
 
+		function getDateQuery(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+                var ret = value.split('/');
+                data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
+            }else{
+               data = new Date(value);
+            }
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+            
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+            var retorno = ano + "-" + mes + "-" + dia;
+            return retorno;
+        }
+
 		function getDateTimeString(value){
             var data = getDateTime(value);
             var ano = data.getFullYear();

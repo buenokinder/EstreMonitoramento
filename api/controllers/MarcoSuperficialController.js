@@ -37,8 +37,6 @@ module.exports = {
 			item.nomeAuxiliar = null;
 			item.criterioAlertaHorizontalMetodologia1= null;
 			item.criterioAlertaVerticalMetodologia1= null;
-			item.criterioAlertaHorizontalMetodologia2= null;
-			item.criterioAlertaVerticalMetodologia2= null;
 			item.vetorDeslocamentoSeno = null;
 			item.vetorDeslocamentoAngulo = null;
 
@@ -68,8 +66,6 @@ module.exports = {
 				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
 				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
 				item.criterioAlertaVerticalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
-				item.criterioAlertaHorizontalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia2;
-				item.criterioAlertaVerticalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia2;
 				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
 				item.vetorDeslocamentoAngulo =  marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoAngulo;
 				result.push(item);
@@ -134,6 +130,8 @@ module.exports = {
 									MedicaoAtual.data = MedicaoAtual.owner.data;
 									MedicaoAnterior.data= j==0?MedicaoInicial.data:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1].owner.data;
 
+
+							
 									var deltaParcialNorte = Math.pow((MedicaoAtual.norte - MedicaoAnterior.norte), 2);
 									var deltaParcialEste = Math.pow((MedicaoAtual.leste - MedicaoAnterior.leste), 2);
 									var deltaTotalNorte = Math.pow((MedicaoAtual.norte - MedicaoInicial.norte), 2);
@@ -143,16 +141,16 @@ module.exports = {
 						            DataAnterior = Math.floor(MedicaoAnterior.data.getTime() / (3600*24*1000));
 						            DiferencaDatas = DataAtual - DataAnterior;
 
-									retorno.deslocamentoVerticalParcial = parseFloat((MedicaoAtual.cota - MedicaoAnterior.cota) * 100).toFixed(2);
-									retorno.deslocamentoVerticalTotal = parseFloat((MedicaoAtual.cota - MedicaoInicial.cota) * 100).toFixed(2);
-									retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(2);
-									retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(2);
+									retorno.deslocamentoVerticalParcial = parseFloat((MedicaoAtual.cota - MedicaoAnterior.cota) * 100).toFixed(4);
+									retorno.deslocamentoVerticalTotal = parseFloat((MedicaoAtual.cota - MedicaoInicial.cota) * 100).toFixed(4);
+									retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
+									retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(4);
 
-									retorno.velocidadeHorizontal = (DiferencaDatas==0 ? 0: parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(2));
-									retorno.velocidadeVertical = (DiferencaDatas==0 ? 0: parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(2));
+									retorno.velocidadeHorizontal = (DiferencaDatas==0 ? 0: parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(4));
+									retorno.velocidadeVertical = (DiferencaDatas==0 ? 0: parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(4));
 
-						            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((MedicaoAtual.norte - MedicaoInicial.norte) * 100).toFixed(2);
-						            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((MedicaoAtual.leste - MedicaoInicial.leste) * 100).toFixed(2);
+						            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((MedicaoAtual.norte - MedicaoInicial.norte) * 100).toFixed(4);
+						            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((MedicaoAtual.leste - MedicaoInicial.leste) * 100).toFixed(4);
 						            
 
 						            if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
@@ -192,9 +190,9 @@ module.exports = {
 						                    retorno.criterioAlertaVerticalMetodologia1 = alertas[k].nivel;
 						            }
 						           
-						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste/retorno.deslocamentoHorizontalTotal),2);
+						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste / retorno.deslocamentoHorizontalTotal), 2).toFixed(4);
 						            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
-						            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo),2);
+						            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo),2).toFixed(4);
 
 									marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento=retorno;
 								}
@@ -223,27 +221,16 @@ module.exports = {
 						dataFinal = new Date(req.param('dtFim'));				
 					}
 					
-					console.log("dataInicial",dataInicial);
-					console.log("dataFinal",dataFinal);
-
 					for(var index=0;index<marcosSuperficiais.length;index++){
 						initLoadDetalhe(index, dataInicial, dataFinal);
 					}
 				});
-
-
 			});
-
-
-
-
 	    });
 
 		execute.then(function(results){
 		    res.json(results);
 		});
-
-
 	},
 
 	search: function(req, res) {

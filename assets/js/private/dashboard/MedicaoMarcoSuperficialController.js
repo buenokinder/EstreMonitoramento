@@ -8,23 +8,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
 
-    function getDatePtBr(date){
-      if(null==date || undefined == date || ''==date)
-          return '';
-
-      var value = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " 00:00";;
-
-       return value;
-    }
-
-    function getDateQuery(date){
-      if(null==date || undefined == date || ''==date)
-          return '';
-
-       var value = date.split('/');
-       return value[2] + '-' + value[1] + '-' + value[0];
-    }
-
     $scope.monitoramentos = {
       dataInicial:'',
       dataFinal:'',
@@ -39,8 +22,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
           var dtFim = new Date();
 
-          $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
-          $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
+          $scope.monitoramentos.dataInicial = getDateTimeString(dtIni);
+          $scope.monitoramentos.dataFinal = getDateTimeString(dtFim);
 
           $http.get('/MarcoSuperficial').success(function(response, status){
               var marcosSuperficiais = [];
@@ -59,7 +42,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       pesquisarResumo:function(marcosSuperficiais, callback){
           var query="?order="+$scope.monitoramentos.ordenacao;
           query+="&dtIni=1970-01-01";
-          query+="&dtFim="+getDateQuery(getDatePtBr(new Date()));
+          query += "&dtFim=" + getDateQuery(getDate(new Date()));
           query+="&ms="+marcosSuperficiais;
 
           $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
@@ -262,7 +245,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       );   
     };
 
-    $scope.getCssClass = function(alerta){
+    $scope.getCssClass = function (alerta) {
+        if (null == alerta || undefined == alerta || '' == alerta.trim()) return;
+
       return (alerta.replace("ç","c").replace("ã","a").replace("á","a")).toLowerCase();
     }
     
