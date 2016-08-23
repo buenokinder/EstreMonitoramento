@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
     dataMedicao: {
-      type: 'string',
+      type: 'date',
       required: true
     },
     tipoEstaca: {

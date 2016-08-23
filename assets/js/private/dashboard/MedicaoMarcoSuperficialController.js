@@ -56,9 +56,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
           query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
 
-          //query+="&dtIni="+getDateQuery($scope.monitoramentos.dataInicial);
-          //query+="&dtFim="+getDateQuery($scope.monitoramentos.dataFinal);
-
           if(null!=$scope.monitoramentos.marcosSuperficiaisSearch && undefined != $scope.monitoramentos.marcosSuperficiaisSearch && $scope.monitoramentos.marcosSuperficiaisSearch.length>0){
             var ms="";
             angular.forEach($scope.monitoramentos.marcosSuperficiaisSearch, function(value, key){
