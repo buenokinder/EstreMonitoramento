@@ -7,10 +7,20 @@
 
 module.exports = {
 
-    teste: function(req,res) {
+    findOne: function (req, res) {
 
-        console.log( "JSON File:" );
-        var JsonConvert = require( "./JPN.geo.json" ) ;
+        Aterro.find({ id: req.param('id') }).populate("usuarios")
+        .exec(function (err, goal) {
+            if (err) return res.json(err, 400);
+            return res.json(goal[0]);
+        });
+    },
+
+
+    teste: function (req, res) {
+
+        console.log("JSON File:");
+        var JsonConvert = require("./JPN.geo.json");
 
         var UtmConverter = require('utm-converter'); // Example using Node.js.
         var converter = new UtmConverter();
@@ -21,31 +31,31 @@ module.exports = {
                 switch (prop) {
 
                     case "geometries":
-                    var geometries = JsonConvert[prop];
+                        var geometries = JsonConvert[prop];
 
-                    for (var teste in geometries) {
+                        for (var teste in geometries) {
 
 
 
-                        for (i = 0; i < geometries[teste].coordinates.length; i++) { 
-                            console.log("teste: " +  geometries[teste].coordinates[i][0]);
-                            wgsResult = converter.toWgs({"coord":{"x": geometries[teste].coordinates[i][0] ,"y":geometries[teste].coordinates[i][1]},"zone":22,"isSouthern":true});
-                            geometries[teste].coordinates[i][0] = wgsResult.coord.longitude;
-                            geometries[teste].coordinates[i][1] = wgsResult.coord.latitude;
+                            for (i = 0; i < geometries[teste].coordinates.length; i++) {
+                                console.log("teste: " + geometries[teste].coordinates[i][0]);
+                                wgsResult = converter.toWgs({ "coord": { "x": geometries[teste].coordinates[i][0], "y": geometries[teste].coordinates[i][1] }, "zone": 22, "isSouthern": true });
+                                geometries[teste].coordinates[i][0] = wgsResult.coord.longitude;
+                                geometries[teste].coordinates[i][1] = wgsResult.coord.latitude;
+                            }
+
+
+
                         }
 
-
-
-                    }
-
-                    break;
-                 // obj[prop] has the value
+                        break;
+                        // obj[prop] has the value
                 }
             }
         }
-     
+
         // var wgsCoord = [145.240917, -37.830436];
-        
+
         // var utmResult =[666179.596719106,7161622.580844007,0,-1e+38];//{"coord":{"x":665832.645,"y":7162140.815},"zone":24,"isSouthern":true};
         // // 
 
@@ -81,60 +91,56 @@ module.exports = {
     //     });
     // },
 
-    search: function(req, res) {
+    search: function (req, res) {
         var filtro = {};
 
-
-
-        for(key in req.allParams()) {
-            if(key == 'nome') {
+        for (key in req.allParams()) {
+            if (key == 'nome') {
                 filtro.nome = { 'contains': req.param('nome') };
                 continue;
             }
-            if(key == 'cidade') {
+            if (key == 'cidade') {
                 filtro.cidade = { 'contains': req.param('cidade') };
                 continue;
             }
-            if(req.param(key) == undefined) continue;
+            if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
         }
 
-        if(req.session.me.perfil == "Gerente"){
-            
+        if (req.session.me.perfil == "Gerente") {
+
             filtro.id = req.session.me.aterro.id;
         }
-        console.log('filtro'); 
 
-        console.log(filtro);
-        Aterro.find(filtro)        
+        Aterro.find(filtro).populate("usuarios")
         .exec(function result(err, ret) {
-          if (err) {
-            return res.negotiate(err);
-          }else{
-            res.json(ret); 
-          }
+            if (err) {
+                return res.negotiate(err);
+            } else {
+                res.json(ret);
+            }
         });
     },
 
-    searchCount: function(req, res) {
+    searchCount: function (req, res) {
         var filtro = {};
-        
-        for(key in req.allParams()) {
-            if(key == 'nome') {
+
+        for (key in req.allParams()) {
+            if (key == 'nome') {
                 filtro.nome = { 'contains': req.param('nome') };
                 continue;
             }
-            if(req.param(key) == undefined) continue;
+            if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
         }
-        
+
         Aterro.count(filtro)
         .exec(function result(err, ret) {
-          if (err) {
-            return res.negotiate(err);
-          }else{
-            res.json(ret); 
-          }
-        });     
+            if (err) {
+                return res.negotiate(err);
+            } else {
+                res.json(ret);
+            }
+        });
     }
 }
