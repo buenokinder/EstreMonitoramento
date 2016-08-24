@@ -177,6 +177,29 @@ module.exports = {
 	    return ret;
 	},
 
+	getDate: function (value, hr, min, sec) {
+	    var ret = value.split('-');
+	    var ano = ret[0];
+	    var mes = parseInt(ret[1]) - 1;
+
+	    ret = ret[2].split(' ');
+	    var dia = ret[0];
+	    var hora = (undefined != hr ? hr : 0);
+	    var minuto = (undefined != min ? min : 0);;
+	    var segundos = (undefined != sec ? sec : 0);;
+
+	    var possuiHoras = ret.length > 1;
+
+	    if (possuiHoras) {
+	        ret = ret[1].split(':')
+	        hora = ret[0];
+	        minuto = ret[1];
+	    }
+
+	    return new Date(ano, mes, dia, hora, minuto, segundos);
+
+	},
+
 	getFiltrosMarco: function (req) {
 
 	    var filtro = {};
@@ -192,32 +215,29 @@ module.exports = {
 	    }
 
 	    if (undefined != req.param('data')) {
-	        dt = req.param('data').split('-');
-	        dataInicial = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 0, 0, 0);
-	        dataFinal = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 23, 59, 59);
+	        dataInicial = this.getDate(req.param('data'), 0, 0, 0);
+	        dataFinal = this.getDate(req.param('data'), 23, 59, 59);
 
 	        filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
 	        return filtro;
 	    }
 
-	    dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-	    dataInicial.setHours(0);
-	    dataInicial.setMinutes(0);
-	    dataInicial.setSeconds(0);
-
-	    dataFinal = new Date();
-	    dataInicial.setHours(23);
-	    dataInicial.setMinutes(59);
-	    dataInicial.setSeconds(59);
-
 	    if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-	        dt = req.param('dtIni').split('-');
-	        dataInicial = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 0, 0, 0);
+	        dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+	    } else {
+	        dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+	        dataInicial.setHours(0);
+	        dataInicial.setMinutes(0);
+	        dataInicial.setSeconds(0);
 	    }
 
 	    if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-	        dt = req.param('dtFim').split('-');
-	        dataFinal = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 23, 59, 59);
+	        dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+	    } else {
+	        dataFinal = new Date();
+	        dataInicial.setHours(23);
+	        dataInicial.setMinutes(59);
+	        dataInicial.setSeconds(59);
 	    }
 
 	    filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
@@ -232,33 +252,32 @@ module.exports = {
         var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
         var dataFinal = new Date();
 
-        if (undefined != req.param('data')) {
+        if (undefined != req.param('data') && '' != req.param('data')) {
             dt = req.param('data').split('-');
-            dataInicial = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 0, 0, 0);
-            dataFinal = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 23, 59, 59);
+            dataInicial = this.getDate(req.param('data'), 0, 0, 0);
+            dataFinal = this.getDate(req.param('data'), 23, 59, 59);
 
             filtro.data = { '>=': dataInicial, '<=': dataFinal };
             return filtro;
         }
 
-        dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        dataInicial.setHours(0);
-        dataInicial.setMinutes(0);
-        dataInicial.setSeconds(0);
-
-        dataFinal = new Date();
-        dataInicial.setHours(23);
-        dataInicial.setMinutes(59);
-        dataInicial.setSeconds(59);
-
         if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-            dt = req.param('dtIni').split('-');
-            dataInicial = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 0, 0, 0);
+            dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+        }
+        else {
+            dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+            dataInicial.setHours(0);
+            dataInicial.setMinutes(0);
+            dataInicial.setSeconds(0);
         }
 
         if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-            dt = req.param('dtFim').split('-');
-            dataFinal = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], 23, 59, 59);
+            dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+        } else {
+            dataFinal = new Date();
+            dataInicial.setHours(23);
+            dataInicial.setMinutes(59);
+            dataInicial.setSeconds(59);
         }
 
         filtro.data = { '>=': dataInicial, '<=': dataFinal };
@@ -404,7 +423,6 @@ module.exports = {
 					    if (req.param('limitMedicoes') != undefined) {
 					        f.limit = req.param('limitMedicoes');
 					    }
-					    console.log("filtroDetalhes", f);
 
 					    MedicaoMarcoSuperficialDetalhes.find(f).populate("owner").exec(function (err, detalhes) {
 					        //ret = _that.listDetalhesByOwnerDate(detalhes);
