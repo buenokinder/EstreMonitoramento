@@ -107,14 +107,10 @@ module.exports = {
             filtro[key] = req.param(key);
         }
 
+        if (req.session.me.perfil == "Gerente") {
 
-        if(req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional"){
-            
             filtro.id = req.session.me.aterro.id;
         }
-      
-        Aterro.find(filtro)        
-
 
         Aterro.find(filtro).populate("usuarios")
         .exec(function result(err, ret) {
