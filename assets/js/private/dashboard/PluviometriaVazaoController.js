@@ -88,6 +88,9 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     function checkStatusImport() {
         if ($scope.totalSent == $scope.excel.length - 1) {
             Materialize.toast('Importação finalizada ' + ($scope.totalErrors > 0 ? 'com erros.' : '') + '!', 4000);
+            
+            if($scope.totalErrors == 0)
+                fecharModal("modalPluviometria");
 
             $scope.loadDistinctAnos(function () {
                 $scope.ano = $scope.anoAssociatedWithFile;

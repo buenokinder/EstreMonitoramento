@@ -1,6 +1,7 @@
 
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
+    var deferred = $.Deferred();
     $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
@@ -17,8 +18,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       pesquisa: null,
       ordenacao:'dataInstalacao ASC',
       init: function(){
-          $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
-
+          $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' }).on('change', function(e, date) {
+            $scope.inserted.data = getDateTimeString(date);
+          });
           var dtIni = (new Date(new Date().setDate(new Date().getDate()-30)));
           var dtFim = new Date();
 
@@ -78,6 +80,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.monitoramentos.init();
+
+ 
+
 
     $scope.removeFile = function(){
         $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
@@ -186,10 +191,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       });
     };
 
-    $scope.closeMedicao = function(){
-      $('#modalView').closeModal();
-    };
-
     $scope.addMedicao = function (){
      
 
@@ -206,14 +207,14 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
                       var params = $scope.inserted;
                       
-                      if(params["data"].toString().indexOf("/")>=0){
+                      /*if(params["data"].toString().indexOf("/")>=0){
                         var ret = params["data"].split('/');
                         data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
                       }else{
                          data = new Date(params["data"]);
-                      }
+                      }*/
                 
-                      params["data"] = data;
+                      params["data"] = getDateTime($scope.inserted.data);
                       
                       $http({
                           method: 'POST',
@@ -224,7 +225,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           $scope.inputClass = "disabled";
                           $scope.refreshChilds = true;
                           $scope.verMedicoes = false;
-                          $scope.closeMedicao();
+                          fecharModal("modalView");
                           $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
@@ -266,6 +267,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                         }).then(function onSuccess(sailsResponse){
                             $scope.inputClass = null;
                             $scope.inputClass = "disabled";
+                            fecharModal("modalUpload");
                             swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                             Materialize.toast('Registro alterado com sucesso!', 4000);
                         })
