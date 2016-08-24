@@ -614,8 +614,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     case 'comboboxmulti':
                         $scope.getCombo($scope.fields[key]);
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                        HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<div   isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon perfil name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
+                        HtmlFormBody += "<label class='active'  for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+                        HtmlFormBody += "<div  style='margin-top: 10px;'  isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon perfil name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
                         HtmlFormBody += "</div></div>";
                         break;
 
