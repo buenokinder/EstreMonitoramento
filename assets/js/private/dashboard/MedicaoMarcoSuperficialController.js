@@ -125,7 +125,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.saveMedicaoMarcoSuperficialDetalhes = function(medicaoMarcoSuperficialDetalhes){
       
       medicaoMarcoSuperficialDetalhes.owner = $scope.data;
-      medicaoMarcoSuperficialDetalhes.data = medicaoMarcoSuperficialDetalhes.owner.data;
+      medicaoMarcoSuperficialDetalhes.data = getDateTime(medicaoMarcoSuperficialDetalhes.owner.data);
 
       $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function(marcoSuperficial, status){
           if(null!=marcoSuperficial && undefined!=marcoSuperficial){
