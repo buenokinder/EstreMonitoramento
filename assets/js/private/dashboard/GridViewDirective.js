@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
  app.directive('gridView', [ '$compile','sennitCommunicationService', function ($compile,sennitCommunicationService) {
         return {
             restrict: 'E',
@@ -35,43 +35,7 @@
                     if($scope.fields[key].readonly == undefined){
                         $scope.fields[key].readonly=false;
                     }
-=======
-app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($compile, sennitCommunicationService) {
-    return {
-        restrict: 'E',
-        scope: {
-            filters: '=',
-            fields: '=',
-            listaname: '@',
-            noacess: '=',
-            adicionar: '@',
-            view: '@',
-            strupdate: '@',
-            calculate: '@',
-            calculatetitle: '@',
-            update: '@',
-            strdelete: '@',
-            pagesize: '=',
-            popup: '@',
-            add: '@',
-            edit: '@',
-            delete: '@',
-            relatorio: '@',
-            autopage: '@',
-            label: '@',
-            parentkey: '@',
-            editinline: '='
 
-        }, link: function ($scope, $element, attrs) {
-            var HtmlFormBody = "";
-
-            HtmlFormBody += "<div class='card-panel'><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-init='init()' ng-hide='nopacess'><a href='{{adicionar}}' ng-show='exibirAdd()' class='btn btn-labeled btn-primary'>Add New</a>";
-            for (var key in $scope.fields) {
-
-                if ($scope.fields[key].readonly == undefined) {
-                    $scope.fields[key].readonly = false;
-                }
->>>>>>> origin/2016_08_22__2016_08_26
 
                 if ($scope.fields[key].filter == 'true') {
                     $scope.habilitaBotao = true;
@@ -117,116 +81,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody +=         "</td>";   
                     
 
-<<<<<<< HEAD
-                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
-                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
-                    HtmlFormBody +=             "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
-                    HtmlFormBody +=             "<a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                    HtmlFormBody +=         "</td>";                
-                    HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'>";
-                    HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
-                    HtmlFormBody +=         "</td>"
-                    HtmlFormBody +=         "<td style='white-space: nowrap'>";
-                    HtmlFormBody +=             "<form editable-form name='rowform' ng-show='rowform.$visible' class='form-buttons form-inline' onbeforesave='save(datum)' ng-show='rowform.$visible' shown='edited == datum'>";
-                    HtmlFormBody +=                 "<button type='submit' ng-disabled='rowform.$waiting' style='border:none; background: none !important;' >";
-                    HtmlFormBody +=                     "<i class='mdi-navigation-check estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
-                    HtmlFormBody +=                 "</button>";
-                    HtmlFormBody +=                 "<a ng-disabled='rowform.$waiting' ng-click='rowform.$cancel()' >";
-                    HtmlFormBody +=                     "<i class='mdi-navigation-close estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
-                    HtmlFormBody +=                 "</a>";
-                    HtmlFormBody +=             "</form>";
-                    HtmlFormBody +=             "<div class='buttons'  ng-show='!rowform.$visible'>";
-                    HtmlFormBody +=                 "<a ng-hide='nopDelete' ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                    HtmlFormBody +=             "</div>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=     "</tr>";
-                    HtmlFormBody += "</tbody>";
-                    HtmlFormBody += "<tfoot>";
-                    HtmlFormBody +=     "<tr ng-hide='habilitaPaginacao'>";
-                    HtmlFormBody +=         "<td colspan='3' class='row'>";
-                    HtmlFormBody +=             "<div>";
-                    HtmlFormBody +=                 "<ul class='pagination'>";
-                    HtmlFormBody +=                     "<li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li>";
-                    HtmlFormBody +=                     "<li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li>";
-                    HtmlFormBody +=                     "<li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li>";
-                    HtmlFormBody +=                 "</ul>";
-                    HtmlFormBody +=             "</div>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=         "<td>";
-                    HtmlFormBody +=             "<div class='row pull-right'><div class='input-field col s2'>";
-                    HtmlFormBody +=                 "<a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
-                    HtmlFormBody +=             "</div>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=     "</tr>";
-                    HtmlFormBody +=     "<tr ng-show='habilitaPaginacao'>";
-                    HtmlFormBody +=         "<td colspan='3' class='row'>";
-                    HtmlFormBody +=             "<div>";
-                    HtmlFormBody +=                 "<ul class='pagination'>";
-                    HtmlFormBody +=                     "<li><a>«</a></li>";
-                    HtmlFormBody +=                     "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
-                    HtmlFormBody +=                     "<li><a >»</a></li>";
-                    HtmlFormBody +=                 "</ul>";
-                    HtmlFormBody +=             "</div>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=         "<td>";
-                    HtmlFormBody +=             "<div class='row pull-right'>";
-                    HtmlFormBody +=                 "<div class='input-field col s2'>";
-                    HtmlFormBody +=                     "<a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
-                    HtmlFormBody +=                 "</div>";
-                    HtmlFormBody +=         "</td>";
-                    HtmlFormBody +=     "</tr>";
-                    HtmlFormBody += "</tfoot>";
-                }else{
-                    HtmlFormBody += "<tbody><tr ng-repeat='datum in data' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields' style='text-align:center;' ng-class='trocaCor(field, datum)'>";
-                    HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td>";
-                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.strupdate+")' style='text-align:center;'><a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
-                    
-                    var anchor =(undefined != $scope.calculate && '' != $scope.calculate)?"<a  ng-click='calc(datum)'>":"<a ng-click='select(datum)'>";
-
-                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir("+$scope.calculate+")' style='text-align:center;'>"+anchor+"<i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
-                    HtmlFormBody += "<a ng-hide='nopDelete' ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                    HtmlFormBody += "</td>";
-                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";                
-                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\""+$scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/"+$scope.view+'/'+"{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
-                    HtmlFormBody += "</tr></tbody><tfoot>";
-                    HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
-                    HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/"+$scope.view+'/'+"new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
-                    HtmlFormBody += "</tfoot>";
-                }
-                HtmlFormBody += "</table></div></div>";
-
-
-                if($scope.popup == 'true')
-                    HtmlFormBody +=  "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
-               
-                $element.replaceWith($compile(HtmlFormBody)($scope));
-
-            },
-            controller: function ($scope, $element, $http, $filter) {
-                $scope.data = ([]);
-                $scope.querydapesquisa = ({});
-                $scope.me = window.SAILS_LOCALS;
-                $scope.ActualPage = 1;
-                $scope.skip = 0;
-                $scope.TotalItens = 0;
-                $scope.TotalPages = ([]);
-                $scope.ActualPageSearch = 1;
-                $scope.skipSearch = 0;
-                $scope.TotalItensSearch = 0;
-                $scope.TotalPagesSearch = ([]);
-                $scope.edited = ([]);
-                $scope.nopacess = false;
-                $scope.nopDelete = true;
-
-                for (var key in $scope.noacess) {           
-                    if ($scope.noacess[key].perfil == $scope.me._perfil){
-                        console.log('Sem acesso');
-                        $scope.nopacess = true;
-                    } 
-=======
                 HtmlFormBody +=         "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
                 HtmlFormBody +=             "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";                                 
                 HtmlFormBody +=             "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
@@ -332,23 +186,23 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             for (var key in $scope.noacess) {
                 if ($scope.noacess[key].perfil == $scope.me._perfil) {
                     $scope.nopacess = true;
->>>>>>> origin/2016_08_22__2016_08_26
+
                 }
             }
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
                 
-                 for (var key in $scope.deleteperfil) {
-                        console.log('foi');
-                           console.log($scope.deleteperfil[key].perfil );
-                           if ($scope.deleteperfil[key].perfil == $scope.me._perfil){
-                                $scope.nopDelete = false;
-                                console.log('falsete');
-                           }
+//                  for (var key in $scope.deleteperfil) {
+//                         console.log('foi');
+//                            console.log($scope.deleteperfil[key].perfil );
+//                            if ($scope.deleteperfil[key].perfil == $scope.me._perfil){
+//                                 $scope.nopDelete = false;
+//                                 console.log('falsete');
+//                            }
                          
-                       }   
-=======
->>>>>>> origin/2016_08_22__2016_08_26
+//                        }   
+// =======
+// >>>>>>> origin/2016_08_22__2016_08_26
 
 
             $scope.pesquisar = function () {
@@ -653,228 +507,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
         }
 
     }
-}]).directive('formView', ['$compile', 'sennitCommunicationService', function ($compile, sennitCommunicationService, $http) {
-    return {
-        restrict: 'E',
-        scope: {
-            fields: '=',
-            datasource: '=',
-            adicionarperfil: '=',
-            updateperfil: '=',
-            listaname: '@',
-            noacess: '=',
-            strupdate: '@',
-            nocard: '@',
-            strnew: '@',
-            redirecionar: '@',
-            label: '@'
-
-
-        }, link: function ($scope, $element, attrs, $http) {
-
-            var HtmlFormBody = " <div class='card-panel' ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row' ng-hide='nopacess'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
-
-            if ($scope.nocard)
-                HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
-
-
-            if ($scope.strupdate == 'false')
-                HtmlFormBody += "";
-            else
-                HtmlFormBody += "";
-            for (var key in $scope.fields) {
-                switch ($scope.fields[key].type) {
-
-                    case 'table-add-remove':
-
-                        //'tableadd': { 'model': 'usuarios' , 'text': 'name', 'valuesource': 'id' }
-                        if ($scope.fields[key].tableadd) {
-                            HtmlFormBody += "<div class='form-group' >";
-                            HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                            HtmlFormBody += "<select  id='" + $scope.fields[key].name + "'  class='form-control emailReminder width-169 ng-pristine ng-invalid ng-invalid-required ng-touched' ng-model='combodata." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].tableadd.text + " for x in " + $scope.fields[key].tableadd.model + "' value=''></select>";
-                            HtmlFormBody += "</select>";
-                            HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
-                            HtmlFormBody += "<button type='button' class='mb-sm btn btn-labeled btn-primary' ng-click='Associate(combodata." + $scope.fields[key].name + ",&#39;" + $scope.fields[key].name + "&#39;,&#39;" + $scope.fields[key].name + "&#39; ,&#39;" + $scope.fields[key].tableadd.apiadd + "&#39;, &#39;add&#39;)' aria-label='Left Align'>";
-                            HtmlFormBody += " Add <i class='fa fa-plus'></i>";
-                            HtmlFormBody += "</button>";
-                            HtmlFormBody += "</td>";
-                            HtmlFormBody += "</div>";
-                        }
-
-
-                        HtmlFormBody += "<table class='table table-bordered table-hover'>";
-                        HtmlFormBody += "<thead class='thead-sennit'>";
-                        HtmlFormBody += "<tr>";
-                        HtmlFormBody += "<th class='col-lg-1 col-md-3 col-sm-3 text-center'>" + $scope.fields[key].name + "</th>";
-                        HtmlFormBody += "<th class='col-lg-2 col-md-3 col-sm-4 text-center'>Actions</th>";
-                        HtmlFormBody += "</tr>";
-                        HtmlFormBody += "</thead>";
-                        HtmlFormBody += "<tbody>";
-                        HtmlFormBody += "<tr data-ng-repeat='datum in data." + $scope.fields[key].name + "' class='ng-scope'>";
-                        HtmlFormBody += "<td class='col-lg-1 col-md-2 col-sm-3 ng-binding'>";
-                        HtmlFormBody += "{{datum." + $scope.fields[key].text + " }}";
-                        HtmlFormBody += "</td>";
-                        HtmlFormBody += "<td class='col-lg-2 col-md-3 col-sm-4 text-center'>";
-                        HtmlFormBody += "<button type='button' class='mb-sm btn btn-danger' ng-click='Associate(datum, &#39;" + $scope.fields[key].name + "&#39;,&#39;" + $scope.fields[key].tableadd.valuesource + "&#39; ,&#39;" + $scope.fields[key].tableadd.apidelete + "&#39;, &#39;delete&#39;)' aria-label='Left Align'>";
-                        HtmlFormBody += " <i class='fa fa-trash' aria-hidden='true'></i>";
-                        HtmlFormBody += "</button>";
-                        HtmlFormBody += "</td>";
-                        HtmlFormBody += "</tr>";
-                        HtmlFormBody += "</tbody>";
-                        HtmlFormBody += "</table>";
-                                 
-                                 
-                        break;
-                    case 'listbox-multiple':
-                                
-                        HtmlFormBody += "<div class='input-field col s12'>";
-                        HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<select multiple id='" + $scope.fields[key].name + "' required ng-multiple='true' ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].text + " for x in " + $scope.fields[key].model + "' value=''></select>";
-                        HtmlFormBody += "</select>";
-                        HtmlFormBody += "</div>";
-                        break;
-
-                    case 'listview':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'> ";
-                        HtmlFormBody += "<label  ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<input class='col s11' type='text' ng-model='" + $scope.fields[key].input + "' " + $scope.fields[key].uiMask + "></input>";
-                        HtmlFormBody += "<div class='col s1'><a ng-click='addItem(" + $scope.fields[key].input + ",\"" + $scope.fields[key].model.trim() + "\",\"" + $scope.fields[key].input + "\" )' class='btn-floating btn-small waves-effect waves-light' aria-hidden='false'><i class='mdi-content-add'></i></a></div>";
-                        HtmlFormBody += "<table class='striped col s11'><thead><tr>";
-                        HtmlFormBody += "<th ng-repeat='field in fields[" + key + "].fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value}}</th><th>Ações</th></tr></thead>";
-                        HtmlFormBody += "<tbody><tr ng-repeat='datum in data." + $scope.fields[key].model + "' ng-click='ViewItem(datum)' style='cursor:pointer'><td ng-repeat='field in fields[" + key + "].fields' >";
-                        HtmlFormBody += "<span ng-repeat='(key, value) in datum ' ng-show='(key==field.name)'>{{ verifica(value,field.sub, field.type, field.uiFilter)}}</span></td><td title='Remover'><a ng-click=\"removeItem(datum,'" + $scope.fields[key].model.trim() + "')\"><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a></td>";
-                        HtmlFormBody += "</tr></tbody></table>";
-                        HtmlFormBody += "</div></div>";
-                        break;
-                    case 'checkbox':
-                        HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='" + $scope.fields[key].name + "' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
-
-                        break;
-                    case 'textAngular':
-                        HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\"," + $scope.fields[key].name + ")' ng-model='" + $scope.fields[key].name + "'></div></div></div></div></div></div>";
-                        break;
-                    case 'usuario':
-                        break;
-
-                    case 'date':
-                    case 'datepicker':
-                        var value = getDate($scope.fields[key].value);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date datepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
-                        break;
-
-                    case 'datetimepicker':
-                        var value = getDate($scope.fields[key].value);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='datetimepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
-                        break;
-
-                    case 'combobox':
-                        $scope.getCombo($scope.fields[key]);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                        HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
-                        HtmlFormBody += "</div></div>";
-                        break;
-                    case 'comboboxmulti':
-                        $scope.getCombo($scope.fields[key]);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                        HtmlFormBody += "<label class='active'  for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<div  style='margin-top: 10px;'  isteven-multi-select input-model='" + $scope.fields[key].model + "' item-label='icon perfil name'  button-label='icon name' tick-property='teste'  output-model='data." + $scope.fields[key].name + "' ></div>";
-                        HtmlFormBody += "</div></div>";
-                        break;
-
-                    case 'number':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='number' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
-
-                        break;
-
-                    default:
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
-                        break;
-                }
-
-            }
-
-
-            HtmlFormBody += "<div class='row' >&nbsp;</div><div class='row' ng-hide='(nopNew && nopUpdate)'><div class='input-field col s12'><a ng-click='newitem()' ng-hide='nopNew' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a><button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' ><span ng-show='!sennitForm.loading'>Submeter</span>";
-            HtmlFormBody += "<span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
-            HtmlFormBody += "<span ng-show='sennitForm.loading'>Aguarde...</span></button></div></div>";
-
-
-            HtmlFormBody += "</div></div></div> <input type='hidden' name='_csrf' value='<%= _csrf %>' /></form></div>";
-
-            $element.replaceWith($compile(HtmlFormBody)($scope));
-
-            $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time:false });
-            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
-
-        },
-        controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
-            $scope.me = window.SAILS_LOCALS;
-            $scope.combodata = ([]);
-            $scope.combos = ([]);
-            $scope.modelComboBox = ([]);
-            $scope.sennitForm = {
-                loading: false
-            }
-            $scope.nopNew = true;
-            $scope.nopUpdate = true;
-            $scope.inputClass = "";
-            $scope.data = ({});
-            $scope.url = ([]);
-
-
-            $scope.nopacess = false;
-
-
-            for (var key in $scope.noacess) {
-                if ($scope.noacess[key].perfil == $scope.me._perfil) {
-                    $scope.nopacess = true;
-                }
-            }
-
-
-            for (var key in $scope.adicionarperfil) {
-                if ($scope.adicionarperfil[key].perfil == $scope.me._perfil) {
-                    $scope.nopNew = false;
-                }
-            }
-
-            for (var key in $scope.updateperfil) {
-
-                if ($scope.updateperfil[key].perfil == $scope.me._perfil) {
-                    $scope.nopUpdate = false;
-                }
-            }
-
-            $scope.removeItem = function (item, model) {
-
-                var index = $scope.data[model].indexOf(item);
-                $scope.data[model].splice(index, 1);
-
-                /*swal({   title: "",   
-                        text: "Você tem certeza que deseja remover este registro?",   
-                        type: "info",   
-                        showCancelButton: true, 
-                        confirmButtonText: "Sim",   
-                        cancelButtonText: "Cancelar",   
-                        closeOnConfirm: false,   
-                        closeOnCancel: false }, 
-                        function(isConfirm){   
-                            if (isConfirm) {     
-                                 
-                                var index = $scope.data[model].indexOf(item);
-                                $scope.data[model].splice(index, 1);  
-                                swal("Registro Removido!", "Seu registro foi removido com sucesso.", "success");
-                            } else {
-                                swal("Cancelado", "Seu registro não foi removido :(", "error");   
-                            } 
-                        }
-                    );  */
-            };
-
-<<<<<<< HEAD
-        }
-    }]).directive('formView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService,$http) {
+}]).directive('formView', [ '$compile','sennitCommunicationService', function  ($compile,sennitCommunicationService,$http) {
         return {
             restrict: 'E',
             scope: {
@@ -896,9 +529,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                        
                 if ($scope.nocard)
                     HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
-                
-=======
->>>>>>> origin/2016_08_22__2016_08_26
+
 
             $scope.verifica = function (valor, nome, type, filtro) {
                 if (valor.hasOwnProperty(nome)) {
@@ -912,15 +543,14 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 if (type == "date" || type == "datepicker") {
                     return getDate(valor);
                 }
-<<<<<<< HEAD
+
                 $scope.nopNew = true;
                 $scope.nopUpdate = true;
                 
                 $scope.inputClass = "";
                 $scope.data = ({});
                 $scope.url = ([]);
-=======
->>>>>>> origin/2016_08_22__2016_08_26
+
 
                 if (type == "datetimepicker") {
                     return getDateTimeString(valor);
@@ -955,7 +585,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     $http.get("/" + field.api).then(function (results) {
                         $scope[field.model] = results.data;
 
-<<<<<<< HEAD
+
                  for (var key in $scope.adicionarperfil) {
                            console.log('perfil');
                            console.log($scope.adicionarperfil[key].perfil);
@@ -976,9 +606,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                          
                        }
          
-=======
                         angular.forEach($scope[field.model], function (value, key) {
->>>>>>> origin/2016_08_22__2016_08_26
+
 
                             if ($scope[field.model][key].aterros) {
                                 delete $scope[field.model][key].aterros;

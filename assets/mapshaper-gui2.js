@@ -2165,6 +2165,12 @@ gui.getPixelRatio = function() {
   return deviceRatio > 1 ? 2 : 1;
 };
  
+ $("#graph").mousemove(function (e) {
+    handleMouseMove(e);
+});
+
+// show tooltip when mouse hovers over dot
+function handleMouseMove(e) {
 function DisplayCanvas() {
   var _self = El('canvas'),
       _canvas = _self.node(),
@@ -2193,11 +2199,9 @@ function DisplayCanvas() {
       end(_ctx);
     }
   };
-
-   _self.drawPinDots = function(shapes, style){
+ _self.drawPinDots = function(shapes, style){
         var oReq = new XMLHttpRequest();
-        myParam
-        oReq.open("GET", "/marcosuperficial/monitoramentos/?limitMedicoes=1&aterro="+ myParam.aterro + "&data="+ myParam.data + "&tipo=mapa" , true);
+        oReq.open("GET", "/marcosuperficial/" , true);
         oReq.responseType = "application/json";
  
  oReq.onreadystatechange = function() {
@@ -2228,7 +2232,6 @@ function myFunction(arr, shapes, style) {
 oReq.send();
 
  };
- 
   _self.drawSquareDots = function(shapes, style) {
     var t = getScaledTransform(_ext),
         pixRatio = gui.getPixelRatio(),
@@ -2249,9 +2252,13 @@ oReq.send();
       for (var j=0, m=shp ? shp.length : 0; j<m; j++) {
         if (!shp) continue;
         p = shp[j];
+       // console.log(p);
+
+
         if (contador< 10){
           console.log('Draw Pin');
-          drawPin(p[0] * t.mx + t.bx, p[1] * t.my + t.by, size, _ctx);
+         
+        //  drawPin(p[0] * t.mx + t.bx, p[1] * t.my + t.by, size, _ctx);
           contador = contador+1;
         }
        
@@ -2689,8 +2696,8 @@ function DisplayLayer(lyr, dataset, ext) {
         console.log(style);
         console.log('pin pin 3 ');
         console.log(lyr.geometry_type);
-        // canv.drawSquareDots(lyr.shapes, style);
-          canv.drawPinDots(lyr.shapes, style);
+        canv.drawPinDots(lyr.shapes, style);
+       //canv.drawSquareDots(lyr.shapes, style);
       }
     } else {
       canv.drawPathShapes(lyr.shapes, obj.dataset.arcs, style);
@@ -4427,5 +4434,5 @@ gui.startEditing = function() {
   });
 };
  
-}());
+}())
  
