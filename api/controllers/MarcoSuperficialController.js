@@ -10,12 +10,21 @@ var Promise = require('bluebird');
 
 module.exports = {
 
+    _marcosSuperficiais: ([]),
+    _alertas: ([]),
+    _totalMarcosSuperficias: 0,
+    _totalMarcosSuperficiasCarregados: 0,
+
 	summarizeMonitoramento:function(marcosSuperficiais){
 
 		var result = [];
 
-		for(var i=0;i<marcosSuperficiais.length;i++){
+		for (var i in marcosSuperficiais) {
+		    if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
+
 			var item = {};
+			
+			item.id = marcosSuperficiais[i].id;
 			item.marcoSuperficial = marcosSuperficiais[i].nome;
 			item.data = marcosSuperficiais[i].data;
 			item.norte = marcosSuperficiais[i].norte;
@@ -37,10 +46,10 @@ module.exports = {
 			item.nomeAuxiliar = null;
 			item.criterioAlertaHorizontalMetodologia1= null;
 			item.criterioAlertaVerticalMetodologia1= null;
-			item.criterioAlertaHorizontalMetodologia2= null;
-			item.criterioAlertaVerticalMetodologia2= null;
 			item.vetorDeslocamentoSeno = null;
 			item.vetorDeslocamentoAngulo = null;
+
+			item.aterro = { id: marcosSuperficiais[i].aterro.id, nome: marcosSuperficiais[i].aterro.nome };
 
 			result.push(item);
 
@@ -68,8 +77,6 @@ module.exports = {
 				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
 				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
 				item.criterioAlertaVerticalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
-				item.criterioAlertaHorizontalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia2;
-				item.criterioAlertaVerticalMetodologia2= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia2;
 				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
 				item.vetorDeslocamentoAngulo =  marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoAngulo;
 				result.push(item);
@@ -79,171 +86,373 @@ module.exports = {
 		return result;
 	},
 
-	monitoramentos: function(req, res){
+
+	summarizeMonitoramentoMapa: function (marcosSuperficiais) {
+
+	    var result = [];
+
+	    for (var i in marcosSuperficiais) {
+	        if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
+
+	        var item = {};
+
+	        if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length == 0) {
+	            item.marcoSuperficial = marcosSuperficiais[i].nome;
+	            item.norte = marcosSuperficiais[i].norte;
+	            item.leste = marcosSuperficiais[i].leste;
+	            item.criterioAlertaHorizontalMetodologia1 = "";
+	            item.criterioAlertaVerticalMetodologia1 = "";
+	            result.push(item);
+	        }
+
+	        for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
+	            var item = {};
+	            item.marcoSuperficial = marcosSuperficiais[i].nome;
+	            item.norte = marcosSuperficiais[i].norte;
+	            item.leste = marcosSuperficiais[i].leste;
+	            item.criterioAlertaHorizontalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
+	            item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
+	            result.push(item);
+	        }
+	    }
+
+	    return result;
+	},
+
+
+	orderByDateAsc: function (a, b) {
+	    if (a.dataMedicao < b.dataMedicao)
+	        return -1;
+	    if (a.dataMedicao > b.dataMedicao)
+	        return 1;
+
+	    return 0;
+	},
+
+	orderByDateDesc: function (a, b) {
+	    if (a.dataMedicao > b.dataMedicao)
+	        return -1;
+	    if (a.dataMedicao < b.dataMedicao)
+	        return 1;
+	    return 0;
+	},
+
+	extractOwners: function (detalhes) {
+	    var owners = [];
+
+	    for (var i = 0; i < detalhes.length; i++) {
+	        var exists = false;
+
+	        for (var j = 0; j < owners.length; j++) {
+	            if (detalhes[i].owner['id'] == owners[j].id) {
+	                exists = true;
+	                break;
+	            }
+	        }
+
+	        if (!exists) {
+	            owners.push(detalhes[i].owner);
+	        }
+	    }
+
+
+	    return owners;
+	},
+
+	listDetalhesByOwnerDate: function (detalhes) {
+
+	    var owners = this.extractOwners(detalhes);
+	    owners.sort(this.orderByDateAsc);
+
+	    var ret = [];
+
+	    for (var i = 0; i < owners.length; i++) {
+	        for (var j = 0; j < detalhes.length; j++) {
+	            if (detalhes[j].owner['id'] == owners[i].id) {
+	                ret.push(detalhes[j]);
+	            }
+	        }
+	    }
+
+	    return ret;
+	},
+
+	getDate: function (value, hr, min, sec) {
+	    var ret = value.split('-');
+	    var ano = ret[0];
+	    var mes = parseInt(ret[1]) - 1;
+
+	    ret = ret[2].split(' ');
+	    var dia = ret[0];
+	    var hora = (undefined != hr ? hr : 0);
+	    var minuto = (undefined != min ? min : 0);;
+	    var segundos = (undefined != sec ? sec : 0);;
+
+	    var possuiHoras = ret.length > 1;
+
+	    if (possuiHoras) {
+	        ret = ret[1].split(':')
+	        hora = ret[0];
+	        minuto = ret[1];
+	    }
+
+	    return new Date(ano, mes, dia, hora, minuto, segundos);
+
+	},
+
+	getFiltrosMarco: function (req) {
+
+	    var filtro = {};
+	    var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+	    var dataFinal = new Date();
+
+	    if (req.param('ms') != undefined) {
+	        filtro.id = req.param('ms').split(',');
+	    }
+
+	    if (req.param('aterro') != undefined) {
+	        filtro.aterro = req.param('aterro').split(',');
+	    }
+
+	    if (undefined != req.param('data')) {
+	        dataInicial = this.getDate(req.param('data'), 0, 0, 0);
+	        dataFinal = this.getDate(req.param('data'), 23, 59, 59);
+
+	        filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
+	        return filtro;
+	    }
+
+	    if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
+	        dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+	    } else {
+	        dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+	        dataInicial.setHours(0);
+	        dataInicial.setMinutes(0);
+	        dataInicial.setSeconds(0);
+	    }
+
+	    if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
+	        dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+	    } else {
+	        dataFinal = new Date();
+	        dataInicial.setHours(23);
+	        dataInicial.setMinutes(59);
+	        dataInicial.setSeconds(59);
+	    }
+
+	    filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
+
+	    return filtro;
+	},
+
+    getFiltrosDetalhes:function(req){
+
+        var filtro = {};
+
+        var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+        var dataFinal = new Date();
+
+        if (undefined != req.param('data') && '' != req.param('data')) {
+            dt = req.param('data').split('-');
+            dataInicial = this.getDate(req.param('data'), 0, 0, 0);
+            dataFinal = this.getDate(req.param('data'), 23, 59, 59);
+
+            filtro.data = { '>=': dataInicial, '<=': dataFinal };
+            return filtro;
+        }
+
+        if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
+            dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+        }
+        else {
+            dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+            dataInicial.setHours(0);
+            dataInicial.setMinutes(0);
+            dataInicial.setSeconds(0);
+        }
+
+        if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
+            dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+        } else {
+            dataFinal = new Date();
+            dataInicial.setHours(23);
+            dataInicial.setMinutes(59);
+            dataInicial.setSeconds(59);
+        }
+
+        filtro.data = { '>=': dataInicial, '<=': dataFinal };
+
+        return filtro;
+    },
+
+    loadMedicoesDetalhes: function (marcoSuperficialId) {
+
+        var marcoSuperficial = this._marcosSuperficiais[marcoSuperficialId];
+
+        var graus = function (angulo) {
+            return angulo * (180 / Math.PI);
+        }
+
+        for (var j = 0; j < marcoSuperficial.medicaoMarcoSuperficialDetalhes.length; j++) {
+            var first = (j == 0);
+
+            var retorno = {
+                deslocamentoHorizontalParcial: [],
+                deslocamentoHorizontalTotal: ([]),
+                velocidadeHorizontal: ([]),
+                velocidadeVertical: ([]),
+                criterioAlerta: Math.pow(2, 2)
+            };
+
+            var medicaoAtual = marcoSuperficial.medicaoMarcoSuperficialDetalhes[j];
+            var medicaoAnterior = first ? marcoSuperficial : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1];
+
+            medicaoAtual.data = medicaoAtual.owner.data;
+            medicaoAnterior.data = first ? marcoSuperficial.data : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1].owner.data;
+
+            var deltaParcialNorte = Math.pow((medicaoAtual.norte - medicaoAnterior.norte), 2);
+            var deltaParcialEste = Math.pow((medicaoAtual.leste - medicaoAnterior.leste), 2);
+            var deltaTotalNorte = Math.pow((medicaoAtual.norte - marcoSuperficial.norte), 2);
+            var deltaTotalEste = Math.pow((medicaoAtual.leste - marcoSuperficial.leste), 2);
+
+            DataAtual = Math.floor(medicaoAtual.data.getTime() / (3600 * 24 * 1000));
+            DataAnterior = Math.floor(medicaoAnterior.data.getTime() / (3600 * 24 * 1000));
+            DiferencaDatas = DataAtual - DataAnterior;
+
+            retorno.deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
+            retorno.deslocamentoVerticalTotal = parseFloat((medicaoAtual.cota - marcoSuperficial.cota) * 100).toFixed(4);
+            retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
+            retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(4);
+
+            retorno.velocidadeHorizontal = (DiferencaDatas == 0 ? 0 : parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(4));
+            retorno.velocidadeVertical = (DiferencaDatas == 0 ? 0 : parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(4));
+
+            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((medicaoAtual.norte - marcoSuperficial.norte) * 100).toFixed(4);
+            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((medicaoAtual.leste - marcoSuperficial.leste) * 100).toFixed(4);
+
+
+            if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
+                retorno.sentidoDeslocamentoNorteSul = "Norte";
+            else
+                retorno.sentidoDeslocamentoNorteSul = "Sul";
+
+            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
+                retorno.sentidoDeslocamentoLesteOeste = "Leste";
+            else
+                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
+
+            if (retorno.sentidoDeslocamentoNorteSul == "Sul" && retorno.sentidoDeslocamentoLesteOeste == "Leste") {
+                retorno.sentido = "Sudeste";
+            }
+            else {
+                if (retorno.sentidoDeslocamentoNorteSul == "Sul" && retorno.sentidoDeslocamentoLesteOeste == "Oeste") {
+                    retorno.sentido = "Sudoeste";
+                } else {
+                    if (retorno.sentidoDeslocamentoNorteSul == "Norte" && retorno.sentidoDeslocamentoLesteOeste == "Leste") {
+                        retorno.sentido = "Nordeste";
+                    } else {
+                        retorno.sentido = "Noroeste";
+                    }
+                }
+            }
+
+            retorno.criterioAlertaHorizontalMetodologia1 = "Aceitável";
+            retorno.criterioAlertaVerticalMetodologia1 = "Aceitável";
+
+            for (k = 0; k < this._alertas.length; k++) {
+                if (retorno.velocidadeHorizontal > this._alertas[k].velocidade)
+                    retorno.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
+
+                if (retorno.velocidadeHorizontal > this._alertas[k].velocidade)
+                    retorno.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+            }
+
+            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste / retorno.deslocamentoHorizontalTotal), 2).toFixed(4);
+            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
+            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo), 2).toFixed(4);
+
+            marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].monitoramento = retorno;
+
+        }
+        this._marcosSuperficiais[marcoSuperficialId] = marcoSuperficial;
+    },
+
+    monitoramentos: function (req, res) {
 		var _that = this;
 
 		var execute = new Promise( function( resolve, reject )
-	    {
-			var total=0;
-			var totalCarregados=0;
-
-			var graus = function(angulo){
-				return angulo * (180/Math.PI);
-			}
-
+		{
+		    _that._totalMarcosSuperficias = 0;
+		    _that._totalMarcosSuperficiasCarregados = 0;
+		    _that._marcosSuperficiais = ([]);
+		    _that._alertas = ([]);
 
 			Alerta.find({}, function(err, alertas){
-
-				var filtro ={};
+			    _that._alertas = alertas;
+			    var filtro = _that.getFiltrosMarco(req);
 				
-				if(req.param('ms')!=undefined){
-					filtro.id = req.param('ms').split(',');				
-				}
-
+				
 				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
 
 				marcoSuperficial.sort(sortString);
 
 				marcoSuperficial.exec(function result(err, marcosSuperficiais) {
-					total = marcosSuperficiais.length;
 
-					var endLoadDetalhe = function(marcosSuperficiais, index, detalhes)
-					{
-						marcosSuperficiais[index].medicaoMarcoSuperficialDetalhes = detalhes;
-						totalCarregados+=1;
-						if(total==totalCarregados){
-								
-							for(var i=0;i<marcosSuperficiais.length;i++){
+				    if (null == marcosSuperficiais || marcosSuperficiais.length == 0) {
+				        return resolve(marcosSuperficiais);
+				    }
 
-								var MedicaoInicial = marcosSuperficiais[i];
-								MedicaoInicial.data = MedicaoInicial.dataInstalacao;
+					_that._totalMarcosSuperficias = marcosSuperficiais.length;
 
-								for(var j=0;j<marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length;j++){
-								    var retorno = {
-								        deslocamentoHorizontalParcial: [],
-								        deslocamentoHorizontalTotal: ([]),
-								        velocidadeHorizontal: ([]),
-								        velocidadeVertical: ([]),
-								        criterioAlerta: Math.pow(2, 2)
-								    };
+					for (var i = 0; i < marcosSuperficiais.length; i++) {
 
-									var MedicaoAtual = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
-									var MedicaoAnterior = j==0?MedicaoInicial:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1];
-									
-									MedicaoAtual.data = MedicaoAtual.owner.data;
-									MedicaoAnterior.data= j==0?MedicaoInicial.data:marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j-1].owner.data;
+					    var filtroDetalhes = _that.getFiltrosDetalhes(req);
+					    filtroDetalhes.marcoSuperficial = marcosSuperficiais[i].id;
+					    marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes = [];
+					    marcosSuperficiais[i].data = marcosSuperficiais[i].dataInstalacao;
+					    _that._marcosSuperficiais[marcosSuperficiais[i].id] = marcosSuperficiais[i];
 
-									var deltaParcialNorte = Math.pow((MedicaoAtual.norte - MedicaoAnterior.norte), 2);
-									var deltaParcialEste = Math.pow((MedicaoAtual.leste - MedicaoAnterior.leste), 2);
-									var deltaTotalNorte = Math.pow((MedicaoAtual.norte - MedicaoInicial.norte), 2);
-									var deltaTotalEste = Math.pow((MedicaoAtual.leste - MedicaoInicial.leste), 2);
+					    var sort = 'data Desc';
+					    if (undefined != req.param('order') &&  (req.param('order').toLowerCase().indexOf("asc") >= 0)) {
+					        sort = 'data Asc';
+					    }
 
-			            			DataAtual = Math.floor(MedicaoAtual.data.getTime() / (3600 *24 *1000));
-						            DataAnterior = Math.floor(MedicaoAnterior.data.getTime() / (3600*24*1000));
-						            DiferencaDatas = DataAtual - DataAnterior;
+					    var f = { where: filtroDetalhes, sort: sort};
 
-									retorno.deslocamentoVerticalParcial = parseFloat((MedicaoAtual.cota - MedicaoAnterior.cota) * 100).toFixed(2);
-									retorno.deslocamentoVerticalTotal = parseFloat((MedicaoAtual.cota - MedicaoInicial.cota) * 100).toFixed(2);
-									retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(2);
-									retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(2);
+					    if (req.param('limitMedicoes') != undefined) {
+					        f.limit = req.param('limitMedicoes');
+					    }
 
-									retorno.velocidadeHorizontal = (DiferencaDatas==0 ? 0: parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(2));
-									retorno.velocidadeVertical = (DiferencaDatas==0 ? 0: parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(2));
+					    MedicaoMarcoSuperficialDetalhes.find(f).populate("owner").exec(function (err, detalhes) {
+					        //ret = _that.listDetalhesByOwnerDate(detalhes);
+					        var possuiDetalhes = null != detalhes && undefined != detalhes && detalhes.length;
+					        var marcoSuperficialId = possuiDetalhes ? detalhes[0].marcoSuperficial : '';
 
-						            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((MedicaoAtual.norte - MedicaoInicial.norte) * 100).toFixed(2);
-						            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((MedicaoAtual.leste - MedicaoInicial.leste) * 100).toFixed(2);
-						            
+					        if (marcoSuperficialId != '') {
+					            _that._marcosSuperficiais[marcoSuperficialId].medicaoMarcoSuperficialDetalhes = detalhes;
+					            _that.loadMedicoesDetalhes(marcoSuperficialId);
+					        }
 
-						            if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
-						                retorno.sentidoDeslocamentoNorteSul = "Norte";
-						            else
-						                retorno.sentidoDeslocamentoNorteSul = "Sul";
+					        _that._totalMarcosSuperficiasCarregados += 1;
 
-						            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
-						                retorno.sentidoDeslocamentoLesteOeste = "Leste";
-						            else
-						                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
+					        if (_that._totalMarcosSuperficias == _that._totalMarcosSuperficiasCarregados) {
+					            if (undefined != req.param("tipo") && req.param("tipo") == "mapa") {
+					                return resolve(_that.summarizeMonitoramentoMapa(_that._marcosSuperficiais));
+					            }
 
-
-						            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Leste")
-						            {
-						            	retorno.sentido = 	"Sudeste";
-						            }
-						            else{
-							            if(retorno.sentidoDeslocamentoNorteSul=="Sul" && retorno.sentidoDeslocamentoLesteOeste=="Oeste"){
-							            	retorno.sentido = "Sudoeste";
-							            }else{
-							            	if(retorno.sentidoDeslocamentoNorteSul=="Norte" && retorno.sentidoDeslocamentoLesteOeste=="Leste"){
-							            		retorno.sentido = "Nordeste";
-							            	}else{
-							            		retorno.sentido = "Noroeste";
-							            	}
-							            }
-						            }
-
-						            retorno.criterioAlertaHorizontalMetodologia1 = "Aceitável";
-						            retorno.criterioAlertaVerticalMetodologia1 = "Aceitável";
-						            for (k = 0; k < alertas.length; k++) {
-						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
-						                    retorno.criterioAlertaHorizontalMetodologia1 = alertas[k].nivel;
-
-						                if (retorno.velocidadeHorizontal > alertas[k].velocidade)
-						                    retorno.criterioAlertaVerticalMetodologia1 = alertas[k].nivel;
-						            }
-						           
-						            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste/retorno.deslocamentoHorizontalTotal),2);
-						            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
-						            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo),2);
-
-									marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento=retorno;
-								}
-							}
-
-							return resolve(_that.summarizeMonitoramento(marcosSuperficiais));
-						}					
-					};
-
-					var initLoadDetalhe = function(index, dataInicial, dataFinal){
-						marcosSuperficiais[index].loadDetalhes(endLoadDetalhe, marcosSuperficiais, index, dataInicial, dataFinal);
-					};
-
-					if(null==marcosSuperficiais || marcosSuperficiais.length==0){
-						return resolve(marcosSuperficiais);
+					            return resolve(_that.summarizeMonitoramento(_that._marcosSuperficiais));
+					        }
+					    });
 					}
 
-					var dataInicial =new Date(new Date().setDate(new Date().getDate()-30));
-					var dataFinal =new Date();
-
-					if(undefined!=req.param('dtIni') && ''!=req.param('dtIni')){
-						dataInicial = new Date(req.param('dtIni'));				
-					}
-
-					if(undefined!=req.param('dtFim') && ''!=req.param('dtFim') ){
-						dataFinal = new Date(req.param('dtFim'));				
-					}
-					
-					console.log("dataInicial",dataInicial);
-					console.log("dataFinal",dataFinal);
-
-					for(var index=0;index<marcosSuperficiais.length;index++){
-						initLoadDetalhe(index, dataInicial, dataFinal);
-					}
 				});
-
-
 			});
-
-
-
-
 	    });
 
 		execute.then(function(results){
 		    res.json(results);
 		});
-
-
 	},
 
 	search: function(req, res) {

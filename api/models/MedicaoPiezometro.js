@@ -39,11 +39,16 @@ module.exports = {
       required: true
     },
 
-    pressaoGas: {
+    pressaoGasKpa: {
       type: 'float',
       required: true
     },
-    
+
+    pressaoGasMca: {
+        type: 'float',
+        required: true
+    },
+
     owner: {
       model: 'piezometro'
     }

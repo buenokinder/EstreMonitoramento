@@ -11,7 +11,7 @@
       <div class="row">
         
         <div class="col s12 m12 l6">
-         <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'date'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false"  strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true">
+         <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false"  strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true">
          </grid-view>
 
         <button class="btn btn-large  ng-scope" aria-hidden="false" id="btMonitoramentos">Monitoramentos</button>         
@@ -22,7 +22,6 @@
             <div id="modalView" class="modal modal-fixed-footer">
                 <div class="modal-content">
                 <h4>Nova Medição</h4>
-
 
                   <form editable-form="" name="editableForm" class="ng-pristine ng-scope ng-invalid ng-invalid-date">
                     <p>
@@ -49,7 +48,6 @@
                         </div>
                       </span>
                     </p>
-
 
                     <p>
                       <b>Auxiliar: </b>
@@ -100,8 +98,7 @@
             </div>
 
 
-          <div ng-controller="MedicaoMarcoSuperficialController" 
-          ng-show="verResumos" class="container">
+          <div ng-controller="MedicaoMarcoSuperficialController" ng-show="verResumos" class="container">
             <div class="card-panel ng-scope">
               <div class="card-content black-text">
                 <div class="row" aria-hidden="false">
@@ -137,7 +134,7 @@
                         <tbody>
                           <tr ng-repeat="monitoramento in monitoramentos.resumo" class="ng-scope">
                             <td>{{monitoramento.marcoSuperficial}}</td>
-                            <td>{{monitoramento.data | date:'dd/MM/yyyy'}}</td>
+                            <td>{{monitoramento.data | date:'dd/MM/yyyy HH:mm'}}</td>
                             <td>{{monitoramento.deslocamentoHorizontalParcial}}</td>
                             <td>{{monitoramento.deslocamentoVerticalParcial}}</td>
                             <td>{{monitoramento.velocidadeVertical}}</td>
@@ -159,7 +156,7 @@
             <div class="card-panel ng-scope">
                <div class="card-content black-text">
                   <p>Detalhes da Medição</p>
-                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor'},{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true}  ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
+                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor'},{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true}  ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
                </div>
 
 
