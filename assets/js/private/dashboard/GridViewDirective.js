@@ -606,9 +606,29 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                     case 'combobox':
                         $scope.getCombo($scope.fields[key]);
+                        console.log("defaultValue", $scope.fields[key].defaultValue);
+
+                        if ($scope.fields[key].updateperfil) {
+                            var perfis = angular.fromJson($scope.fields[key].updateperfil);
+                            var nopUpdate = true;
+                            for (var key in perfis) {
+                                if (perfis[key].perfil == $scope.me._perfil) {
+                                    nopUpdate = false;
+                                    break;
+                                }
+                            }
+                        }
+
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                         HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+                        //if (nopUpdate) {
+                        //    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        //} else {
+                        //    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        //}
+                        
                         HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+
                         HtmlFormBody += "</div></div>";
                         break;
                     case 'comboboxmulti':
