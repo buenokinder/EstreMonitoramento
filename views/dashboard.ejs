@@ -329,10 +329,10 @@
         <!--breadcrumbs start-->
         <div id="breadcrumbs-wrapper" >
             <!-- Search for small screen -->
-            <div class="header-search-wrapper grey hide-on-large-only">
+<!--             <div class="header-search-wrapper grey hide-on-large-only">
                 <i class="mdi-action-search active"></i>
                 <input type="text" name="Search" class="header-search-input z-depth-2" placeholder="Pesquisar">
-            </div>
+            </div> -->
             <div class="container">
                 <div class="row">
                   <div class="col s12 m12 l12">
@@ -636,6 +636,10 @@
 		function padLeftZero(value){
 			return parseInt(value)<10?"0"+value.toString():value.toString();
 		}
+        
+        function fecharModal(modal){
+          $('#'+modal+'').closeModal();
+        };
 
         function getDate(value){
             var data=null;
