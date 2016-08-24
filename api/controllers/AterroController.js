@@ -99,13 +99,11 @@ module.exports = {
             filtro[key] = req.param(key);
         }
 
-        if(req.session.me.perfil == "Gerente"){
+        if(req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional"){
             
             filtro.id = req.session.me.aterro.id;
         }
-        console.log('filtro'); 
-
-        console.log(filtro);
+      
         Aterro.find(filtro)        
         .exec(function result(err, ret) {
           if (err) {

@@ -8,7 +8,10 @@
       	<grid-view fields="[{'name': 'data' , 'value': 'Data Medição','uiFilter': 'date'}, {'name': 'saliencia' , 'value': 'Saliência', 'uiFilter': 'number'} , {'name': 'nivelChorume' , 'value': 'Nível de Chorume', 'uiFilter': 'number'}, {'name': 'aterro' , 'value': 'Aterro', 'sub':'nome', 'type': 'combobox', 'combo':'true', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome'}, {'name': 'createdAt', 'value': 'Data Criação', 'uiFilter':'date'}, {'name':'usuario', 'value':'Criado por', 'sub': 'name'}]" listaname="pocosvisita" autopage="true"  label="Lista de Poços de Visita"  adicionar="" add="false" view="pocosvisita" pagesize="5" strdelete="true" update="true"></grid-view>
       </div>
       <div class="col s12 m12 l6">
-      	<form-view  fields="[{'name': 'data' , 'value': 'Data', 'uiMask': 'ui-date-mask'}, {'name': 'saliencia' , 'value': 'Saliência' ,'uiMask': 'ui-number-mask=1'}, {'name': 'nivelChorume' , 'value': 'Nível de Chorume' ,'uiMask': 'ui-number-mask=1','uiMask': 'ui-number-mask=1'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'usuario', 'type':'usuario'}]"  label="Formulário de Poços de Visita" listaname="pocosvisita"  strupdate="false"></form-view>
+      	<form-view  fields="[{'name': 'data' , 'value': 'Data', 'uiMask': 'ui-date-mask'}, {'name': 'saliencia' , 'value': 'Saliência' ,'uiMask': 'ui-number-mask=1'}, {'name': 'nivelChorume' , 'value': 'Nível de Chorume' ,'uiMask': 'ui-number-mask=1','uiMask': 'ui-number-mask=1'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome' }, {'name': 'usuario', 'type':'usuario'}]"  label="Formulário de Poços de Visita" listaname="pocosvisita" 
+        
+        updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]"  adicionarperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'},{ 'perfil': 'Operacional'},  { 'perfil': 'Diretor'}]"
+         strupdate="false"></form-view>
     	</div>
     </div>
   </div>

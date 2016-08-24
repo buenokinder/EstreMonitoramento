@@ -9,7 +9,7 @@ function queryObj() {
 var myParam = queryObj();
 console.log(myParam);
 (function(){
-
+ 
 var api = mapshaper; // assuming mapshaper is in global scope
 var utils = api.utils;
 var gui = api.gui = {};
@@ -19,12 +19,12 @@ var MapShaper = api.internal;
 var Bounds = api.internal.Bounds;
 var APIError = api.internal.APIError;
 var message = api.internal.message;
-
+ 
 // Replace error function in mapshaper lib
 var error = MapShaper.error = function() {
   stop.apply(null, utils.toArray(arguments));
 };
-
+ 
 // replace stop function
 var stop = MapShaper.stop = function() {
   // Show a popup error message, then throw an error
@@ -32,8 +32,8 @@ var stop = MapShaper.stop = function() {
   gui.alert(msg);
   throw new Error(msg);
 };
-
-
+ 
+ 
 function Handler(type, target, callback, listener, priority) {
   this.type = type;
   this.callback = callback;
@@ -41,7 +41,7 @@ function Handler(type, target, callback, listener, priority) {
   this.priority = priority || 0;
   this.target = target;
 }
-
+ 
 Handler.prototype.trigger = function(evt) {
   if (!evt) {
     evt = new EventData(this.type);
@@ -51,7 +51,7 @@ Handler.prototype.trigger = function(evt) {
   }
   this.callback.call(this.listener, evt);
 }
-
+ 
 function EventData(type, target, data) {
   this.type = type;
   this.target = target;
@@ -60,15 +60,15 @@ function EventData(type, target, data) {
     this.data = data;
   }
 }
-
+ 
 EventData.prototype.stopPropagation = function() {
   this.__stop__ = true;
 };
-
+ 
 //  Base class for objects that dispatch events
 function EventDispatcher() {}
-
-
+ 
+ 
 // @obj (optional) data object, gets mixed into event
 // @listener (optional) dispatch event only to this object
 EventDispatcher.prototype.dispatchEvent = function(type, obj, listener) {
@@ -90,7 +90,7 @@ EventDispatcher.prototype.dispatchEvent = function(type, obj, listener) {
     }
   }
 };
-
+ 
 EventDispatcher.prototype.addEventListener =
 EventDispatcher.prototype.on = function(type, callback, context, priority) {
   context = context || this;
@@ -103,7 +103,7 @@ EventDispatcher.prototype.on = function(type, callback, context, priority) {
   handlers.splice(i+1, 0, handler);
   return this;
 };
-
+ 
 // Remove an event handler.
 // @param {string} type Event type to match.
 // @param {function(BoundEvent)} callback Event handler function to match.
@@ -114,13 +114,13 @@ EventDispatcher.prototype.removeEventListener = function(type, callback, context
   var count = this.removeEventListeners(type, callback, context);
   return count;
 };
-
+ 
 // Remove event handlers; passing arguments can limit which listeners to remove
 // Returns nmber of handlers removed.
 EventDispatcher.prototype.removeEventListeners = function(type, callback, context) {
   var handlers = this._handlers;
   var newArr = [];
-  var count = 0;
+ var count = 0;
   for (var i = 0; handlers && i < handlers.length; i++) {
     var evt = handlers[i];
     if ((!type || type == evt.type) &&
@@ -135,7 +135,7 @@ EventDispatcher.prototype.removeEventListeners = function(type, callback, contex
   this._handlers = newArr;
   return count;
 };
-
+ 
 EventDispatcher.prototype.countEventListeners = function(type) {
   var handlers = this._handlers,
     len = handlers && handlers.length || 0,
@@ -146,15 +146,15 @@ EventDispatcher.prototype.countEventListeners = function(type) {
   }
   return count;
 };
-
-
-
+ 
+ 
+ 
 var Env = (function() {
   var inNode = typeof module !== 'undefined' && !!module.exports;
   var inBrowser = typeof window !== 'undefined' && !inNode;
   var inPhantom = inBrowser && !!(window.phantom && window.phantom.exit);
   var ieVersion = inBrowser && /MSIE ([0-9]+)/.exec(navigator.appVersion) && parseInt(RegExp.$1) || NaN;
-
+ 
   return {
     iPhone : inBrowser && !!(navigator.userAgent.match(/iPhone/i)),
     iPad : inBrowser && !!(navigator.userAgent.match(/iPad/i)),
@@ -166,8 +166,8 @@ var Env = (function() {
     ie: !isNaN(ieVersion)
   };
 })();
-
-
+ 
+ 
 var Browser = {
   getPageXY: function(el) {
     var x = 0, y = 0;
@@ -178,25 +178,25 @@ var Browser = {
     }
     else {
       var fixed = Browser.elementIsFixed(el);
-
+ 
       while (el) {
         x += el.offsetLeft || 0;
         y += el.offsetTop || 0;
         el = el.offsetParent;
       }
-
+ 
       if (fixed) {
-        var offsX = -Browser.pageXToViewportX(0);
+       var offsX = -Browser.pageXToViewportX(0);
         var offsY = -Browser.pageYToViewportY(0);
         x += offsX;
         y += offsY;
       }
     }
-
+ 
     var obj = {x:x, y:y};
     return obj;
   },
-
+ 
   elementIsFixed: function(el) {
     // get top-level offsetParent that isn't body (cf. Firefox)
     var body = document.body;
@@ -204,34 +204,34 @@ var Browser = {
       var parent = el;
       el = el.offsetParent;
     }
-
+ 
     // Look for position:fixed in the computed style of the top offsetParent.
     // var styleObj = parent && (parent.currentStyle || window.getComputedStyle && window.getComputedStyle(parent, '')) || {};
     var styleObj = parent && Browser.getElementStyle(parent) || {};
     return styleObj['position'] == 'fixed';
   },
-
+ 
   pageXToViewportX: function(x) {
     return x - window.pageXOffset;
   },
-
+ 
   pageYToViewportY: function(y) {
     return y - window.pageYOffset;
   },
-
+ 
   getElementStyle: function(el) {
     return el.currentStyle || window.getComputedStyle && window.getComputedStyle(el, '') || {};
   },
-
+ 
   getClassNameRxp: function(cname) {
     return new RegExp("(^|\\s)" + cname + "(\\s|$)");
   },
-
+ 
   hasClass: function(el, cname) {
     var rxp = this.getClassNameRxp(cname);
     return el && rxp.test(el.className);
   },
-
+ 
   addClass: function(el, cname) {
     var classes = el.className;
     if (!classes) {
@@ -242,17 +242,17 @@ var Browser = {
     }
     el.className = classes;
   },
-
+ 
   removeClass: function(el, cname) {
     var rxp = this.getClassNameRxp(cname);
     el.className = el.className.replace(rxp, "$2");
   },
-
+ 
   replaceClass: function(el, c1, c2) {
     var r1 = this.getClassNameRxp(c1);
     el.className = el.className.replace(r1, '$1' + c2 + '$2');
   },
-
+ 
   mergeCSS: function(s1, s2) {
     var div = this._cssdiv;
     if (!div) {
@@ -261,11 +261,11 @@ var Browser = {
     div.style.cssText = s1 + ";" + s2; // extra ';' for ie, which may leave off final ';'
     return div.style.cssText;
   },
-
+ 
   addCSS: function(el, css) {
     el.style.cssText = Browser.mergeCSS(el.style.cssText, css);
   },
-
+ 
   // Return: HTML node reference or null
   // Receive: node reference or id or "#" + id
   getElement: function(ref) {
@@ -286,14 +286,14 @@ var Browser = {
     }
     return el || null;
   },
-
+ 
   undraggable: function(el) {
     el.ondragstart = function(){return false;};
     el.draggable = false;
   }
-
+ 
 };
-
+ 
 Browser.onload = function(handler) {
   if (document.readyState == 'complete') {
     handler();
@@ -301,8 +301,8 @@ Browser.onload = function(handler) {
     window.addEventListener('load', handler);
   }
 };
-
-
+ 
+ 
 // See https://github.com/janl/mustache.js/blob/master/mustache.js
 utils.htmlEscape = (function() {
   var entityMap = {
@@ -319,13 +319,13 @@ utils.htmlEscape = (function() {
     });
   };
 }());
-
-
+ 
+ 
 var classSelectorRE = /^\.([\w-]+)$/,
     idSelectorRE = /^#([\w-]+)$/,
     tagSelectorRE = /^[\w-]+$/,
     tagOrIdSelectorRE = /^#?[\w-]+$/;
-
+ 
 function Elements(sel) {
   if ((this instanceof Elements) == false) {
     return new Elements(sel);
@@ -334,27 +334,27 @@ function Elements(sel) {
   this.select(sel);
   this.tmp = new El();
 }
-
+ 
 Elements.prototype = {
   size: function() {
     return this.elements.length;
   },
-
+ 
   select: function(sel) {
     this.elements = Elements.__select(sel);
     return this;
   },
-
+ 
   addClass: function(className) {
     this.forEach(function(el) { el.addClass(className); });
     return this;
   },
-
+ 
   removeClass: function(className) {
     this.forEach(function(el) { el.removeClass(className); })
     return this;
   },
-
+ 
   forEach: function(callback, ctx) {
     var tmp = this.tmp;
     for (var i=0, len=this.elements.length; i<len; i++) {
@@ -364,7 +364,7 @@ Elements.prototype = {
     return this;
   }
 };
-
+ 
 Elements.__select = function(selector, root) {
   root = root || document;
   var els;
@@ -385,7 +385,7 @@ Elements.__select = function(selector, root) {
   }
   return utils.toArray(els);
 }
-
+ 
 Elements.__getElementsByClassName = function(cname, node) {
   if (node.getElementsByClassName) {
     return node.getElementsByClassName(cname);
@@ -397,7 +397,7 @@ Elements.__getElementsByClassName = function(cname, node) {
     if (re.test(els[i].className)) a.push(els[i]);
   return a;
 };
-
+ 
 // Converts dash-separated names (e.g. background-color) to camelCase (e.g. backgroundColor)
 // Doesn't change names that are already camelCase
 //
@@ -405,12 +405,12 @@ El.toCamelCase = function(str) {
   var cc = str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase() });
   return cc;
 };
-
+ 
 El.fromCamelCase = function(str) {
   var dashed = str.replace(/([A-Z])/g, "-$1").toLowerCase();
   return dashed;
 };
-
+ 
 El.setStyle = function(el, name, val) {
   var jsName = El.toCamelCase(name);
   if (el.style[jsName] == void 0) {
@@ -426,11 +426,11 @@ El.setStyle = function(el, name, val) {
   }
   el.style[jsName] = cssVal;
 }
-
+ 
 El.findAll = function(sel, root) {
   return Elements.__select(sel, root);
 };
-
+ 
 function El(ref) {
   if (!ref) error("Element() needs a reference");
   if (ref instanceof El) {
@@ -439,11 +439,11 @@ function El(ref) {
   else if (this instanceof El === false) {
     return new El(ref);
   }
-
+ 
   var node;
   if (utils.isString(ref)) {
     if (El.isHTML(ref)) {
-      var parent = El('div').html(ref).node();
+     var parent = El('div').html(ref).node();
       node = parent.childNodes.length  == 1 ? parent.childNodes[0] : parent;
     } else if (tagOrIdSelectorRE.test(ref)) {
       node = Browser.getElement(ref) || document.createElement(ref); // TODO: detect type of argument
@@ -456,22 +456,22 @@ function El(ref) {
   if (!node) error("Unmatched element selector:", ref);
   this.el = node;
 }
-
+ 
 utils.inherit(El, EventDispatcher); //
-
+ 
 El.removeAll = function(sel) {
   var arr = Elements.__select(sel);
   utils.forEach(arr, function(el) {
     El(el).remove();
   });
 };
-
+ 
 El.isHTML = function(str) {
   return str && str[0] == '<'; // TODO: improve
 };
-
+ 
 utils.extend(El.prototype, {
-
+ 
   clone: function() {
     var el = this.el.cloneNode(true);
     if (el.nodeName == 'SCRIPT') {
@@ -483,27 +483,27 @@ utils.extend(El.prototype, {
     this.el = el;
     return this;
   },
-
+ 
   node: function() {
     return this.el;
   },
-
+ 
   width: function() {
    return this.el.offsetWidth;
   },
-
+ 
   height: function() {
     return this.el.offsetHeight;
   },
-
+ 
   top: function() {
     return this.el.offsetTop;
   },
-
+ 
   left: function() {
     return this.el.offsetLeft;
   },
-
+ 
   // Apply inline css styles to this Element, either as string or object.
   //
   css: function(css, val) {
@@ -520,7 +520,7 @@ utils.extend(El.prototype, {
     }
     return this;
   },
-
+ 
   attr: function(obj, value) {
     if (utils.isString(obj)) {
       if (arguments.length == 1) {
@@ -533,32 +533,32 @@ utils.extend(El.prototype, {
     }
     return this;
   },
-
-
+ 
+ 
   remove: function(sel) {
     this.el.parentNode && this.el.parentNode.removeChild(this.el);
     return this;
   },
-
+ 
   addClass: function(className) {
     Browser.addClass(this.el, className);
     return this;
   },
-
+ 
   removeClass: function(className) {
     Browser.removeClass(this.el, className);
     return this;
   },
-
+ 
   classed: function(className, b) {
     this[b ? 'addClass' : 'removeClass'](className);
     return this;
   },
-
+ 
   hasClass: function(className) {
     return Browser.hasClass(this.el, className);
   },
-
+ 
   toggleClass: function(cname) {
     if (this.hasClass(cname)) {
       this.removeClass(cname);
@@ -566,11 +566,11 @@ utils.extend(El.prototype, {
       this.addClass(cname);
     }
   },
-
+ 
   computedStyle: function() {
     return Browser.getElementStyle(this.el);
   },
-
+ 
   visible: function() {
     if (this._hidden !== undefined) {
       return !this._hidden;
@@ -578,7 +578,7 @@ utils.extend(El.prototype, {
     var style = this.computedStyle();
     return style.display != 'none' && style.visibility != 'hidden';
   },
-
+ 
   showCSS: function(css) {
     if (!css) {
       return this._showCSS || "display:block;";
@@ -586,7 +586,7 @@ utils.extend(El.prototype, {
     this._showCSS = css;
     return this;
   },
-
+ 
   hideCSS: function(css) {
     if (!css) {
       return this._hideCSS || "display:none;";
@@ -594,7 +594,7 @@ utils.extend(El.prototype, {
     this._hideCSS = css;
     return this;
   },
-
+ 
   hide: function(css) {
     if (this.visible()) {
       this.css(css || this.hideCSS());
@@ -602,7 +602,7 @@ utils.extend(El.prototype, {
     }
     return this;
   },
-
+ 
   show: function(css) {
     if (!this.visible()) {
       this.css(css || this.showCSS());
@@ -610,7 +610,7 @@ utils.extend(El.prototype, {
     }
     return this;
   },
-
+ 
   html: function(html) {
     if (arguments.length == 0) {
       return this.el.innerHTML;
@@ -619,12 +619,12 @@ utils.extend(El.prototype, {
       return this;
     }
   },
-
+ 
   text: function(str) {
     this.html(utils.htmlEscape(str));
     return this;
   },
-
+ 
   // Shorthand for attr('id', <name>)
   id: function(id) {
     if (id) {
@@ -633,13 +633,13 @@ utils.extend(El.prototype, {
     }
     return this.el.id;
   },
-
+ 
   findChild: function(sel) {
     var node = Elements.__select(sel, this.el)[0];
     if (!node) error("Unmatched selector:", sel);
     return new El(node);
   },
-
+ 
   appendTo: function(ref) {
     var parent = ref instanceof El ? ref.el : Browser.getElement(ref);
     if (this._sibs) {
@@ -650,11 +650,11 @@ utils.extend(El.prototype, {
     parent.appendChild(this.el);
     return this;
   },
-
+ 
   nextSibling: function() {
     return this.el.nextSibling ? new El(this.el.nextSibling) : null;
   },
-
+ 
   newSibling: function(tagName) {
     var el = this.el,
         sib = document.createElement(tagName),
@@ -668,7 +668,7 @@ utils.extend(El.prototype, {
     }
     return e;
   },
-
+ 
   firstChild: function() {
     var ch = this.el.firstChild;
     while (ch.nodeType != 1) { // skip text nodes
@@ -676,25 +676,25 @@ utils.extend(El.prototype, {
     }
     return new El(ch);
   },
-
+ 
   appendChild: function(ref) {
     var el = El(ref);
     this.el.appendChild(el.el);
     return this;
   },
-
+ 
   newChild: function(tagName) {
     var ch = document.createElement(tagName);
     this.el.appendChild(ch);
     return new El(ch);
   },
-
+ 
   // Traverse to parent node
   parent: function() {
     var p = this.el && this.el.parentNode;
     return p ? new El(p) : null;
   },
-
+ 
   findParent: function(tagName) {
     var p = this.el && this.el.parentNode;
     if (tagName) {
@@ -705,16 +705,16 @@ utils.extend(El.prototype, {
     }
     return p ? new El(p) : null;
   },
-
+ 
   // Remove all children of this element
   //
   empty: function() {
     this.el.innerHTML = '';
     return this;
   }
-
+ 
 });
-
+ 
 // use DOM handler for certain events
 // TODO: find a better way distinguising DOM events and other events registered on El
 // e.g. different methods
@@ -732,7 +732,7 @@ El.prototype.on = function(type, func, ctx) {
   }
   return this;
 };
-
+ 
 El.prototype.__removeEventListener = El.prototype.removeEventListener;
 El.prototype.removeEventListener = function(type, func) {
   if (this.constructor == El) {
@@ -742,8 +742,8 @@ El.prototype.removeEventListener = function(type, func) {
   }
   return this;
 };
-
-
+ 
+ 
 function ElementPosition(ref) {
   var self = this,
       el = El(ref),
@@ -751,22 +751,22 @@ function ElementPosition(ref) {
       pageY = 0,
       width = 0,
       height = 0;
-
+ 
   el.on('mouseover', update);
   window.onorientationchange && window.addEventListener('orientationchange', update);
   window.addEventListener('scroll', update);
   window.addEventListener('resize', update);
-
+ 
   // trigger an update, e.g. when map container is resized
   this.update = function() {
     update();
   };
-
+ 
   this.resize = function(w, h) {
     el.css('width', w).css('height', h);
     update();
   };
-
+ 
   this.width = function() { return width };
   this.height = function() { return height };
   this.position = function() {
@@ -778,7 +778,7 @@ function ElementPosition(ref) {
       height: height
     };
   };
-
+ 
   function update() {
     var div = el.node(),
         xy = Browser.getPageXY(div),
@@ -798,21 +798,21 @@ function ElementPosition(ref) {
   }
   update();
 }
-
+ 
 utils.inherit(ElementPosition, EventDispatcher);
-
-
+ 
+ 
 function getTimerFunction() {
   return typeof requestAnimationFrame == 'function' ?
     requestAnimationFrame : function(cb) {setTimeout(cb, 25);};
 }
-
+ 
 function Timer() {
   var self = this,
       running = false,
       busy = false,
       tickTime, startTime, duration;
-
+ 
   this.start = function(ms) {
     var now = +new Date();
     duration = ms || Infinity;
@@ -820,17 +820,17 @@ function Timer() {
     running = true;
     if (!busy) startTick(now);
   };
-
+ 
   this.stop = function() {
     running = false;
   };
-
+ 
   function startTick(now) {
     busy = true;
     tickTime = now;
     getTimerFunction()(onTick);
   }
-
+ 
   function onTick() {
     var now = +new Date(),
         elapsed = now - startTime,
@@ -852,40 +852,40 @@ function Timer() {
     if (running) startTick(now);
   }
 }
-
+ 
 utils.inherit(Timer, EventDispatcher);
-
+ 
 function Tween(ease) {
   var self = this,
       timer = new Timer(),
       start, end;
-
+ 
   timer.on('tick', onTick);
-
+ 
   this.start = function(a, b, duration) {
     start = a;
     end = b;
     timer.start(duration || 500);
   };
-
+ 
   function onTick(e) {
     var pct = ease ? ease(e.pct) : e.pct,
         val = end * pct + start * (1 - pct);
     self.dispatchEvent('change', {value: val});
   }
 }
-
+ 
 utils.inherit(Tween, EventDispatcher);
-
+ 
 Tween.sineInOut = function(n) {
   return 0.5 - Math.cos(n * Math.PI) / 2;
 };
-
+ 
 Tween.quadraticOut = function(n) {
   return 1 - Math.pow((1 - n), 2);
 };
-
-
+ 
+ 
 // @mouse: MouseArea object
 function MouseWheel(mouse) {
   var self = this,
@@ -894,13 +894,13 @@ function MouseWheel(mouse) {
       timer = new Timer().addEventListener('tick', onTick),
       sustainTime = 60,
       fadeTime = 80;
-
+ 
   if (window.onmousewheel !== undefined) { // ie, webkit
     window.addEventListener('mousewheel', handleWheel);
   } else { // firefox
     window.addEventListener('DOMMouseScroll', handleWheel);
   }
-
+ 
   function handleWheel(evt) {
     var direction;
     if (evt.wheelDelta) {
@@ -917,7 +917,7 @@ function MouseWheel(mouse) {
     currDirection = direction;
     timer.start(sustainTime + fadeTime);
   }
-
+ 
   function onTick(evt) {
     var elapsed = evt.time - prevWheelTime,
         fadeElapsed = elapsed - sustainTime,
@@ -935,10 +935,10 @@ function MouseWheel(mouse) {
     }
   }
 }
-
+ 
 utils.inherit(MouseWheel, EventDispatcher);
-
-
+ 
+ 
 function MouseArea(element) {
   var pos = new ElementPosition(element),
       _areaPos = pos.position(),
@@ -948,7 +948,7 @@ function MouseArea(element) {
       _prevEvt,
       // _moveEvt,
       _downEvt;
-
+ 
   pos.on('change', function() {_areaPos = pos.position()});
   // TODO: think about touch events
   document.addEventListener('mousemove', onMouseMove);
@@ -959,23 +959,23 @@ function MouseArea(element) {
   element.addEventListener('mouseout', onAreaOut);
   element.addEventListener('mousedown', onAreaDown);
   element.addEventListener('dblclick', onAreaDblClick);
-
+ 
   function onAreaDown(e) {
     e.preventDefault(); // prevent text selection cursor on drag
   }
-
+ 
   function onAreaEnter() {
     if (!_isOver) {
       _isOver = true;
       _self.dispatchEvent('enter');
     }
   }
-
+ 
   function onAreaOut(e) {
     _isOver = false;
     _self.dispatchEvent('leave');
   }
-
+ 
   function onMouseUp(e) {
     var evt = procMouseEvent(e),
         elapsed, dx, dy;
@@ -993,20 +993,20 @@ function MouseArea(element) {
       _downEvt = null;
     }
   }
-
+ 
   function onMouseDown(e) {
    if (e.button != 2 && e.which != 3) { // ignore right-click
       _downEvt = procMouseEvent(e);
     }
   }
-
+ 
   function onMouseMove(e) {
     var evt = procMouseEvent(e);
     if (!_dragging && _downEvt && _downEvt.hover) {
       _dragging = true;
       _self.dispatchEvent('dragstart', evt);
     }
-
+ 
     if (_dragging) {
       var obj = {
         dragX: evt.pageX - _downEvt.pageX,
@@ -1017,11 +1017,11 @@ function MouseArea(element) {
       _self.dispatchEvent('hover', evt);
     }
   }
-
+ 
   function onAreaDblClick(e) {
     if (_isOver) _self.dispatchEvent('dblclick', procMouseEvent(e));
   }
-
+ 
   function procMouseEvent(e) {
     var pageX = e.pageX,
         pageY = e.pageY,
@@ -1039,36 +1039,36 @@ function MouseArea(element) {
     };
     return _prevEvt;
   }
-
+ 
   this.isOver = function() {
     return _isOver;
   }
-
+ 
   this.isDown = function() {
     return !!_downEvt;
   }
-
+ 
   this.mouseData = function() {
     return utils.extend({}, _prevEvt);
   }
 }
-
+ 
 utils.inherit(MouseArea, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 function ErrorMessages(model) {
   var el;
   model.addMode('alert', function() {}, turnOff);
-
+ 
   function turnOff() {
     if (el) {
-      el.remove();
+     el.remove();
       el = null;
     }
   }
-
+ 
   return function(str) {
     var infoBox;
     if (el) return;
@@ -1079,33 +1079,33 @@ function ErrorMessages(model) {
     model.enterMode('alert');
   };
 }
-
-
-
-
+ 
+ 
+ 
+ 
 api.enableLogging();
-
+ 
 gui.browserIsSupported = function() {
   return typeof ArrayBuffer != 'undefined' &&
       typeof Blob != 'undefined' && typeof File != 'undefined';
 };
-
+ 
 gui.formatMessageArgs = function(args) {
   // remove cli annotation (if present)
   return MapShaper.formatLogArgs(args).replace(/^\[[^\]]+\] ?/, '');
 };
-
+ 
 gui.handleDirectEvent = function(cb) {
   return function(e) {
     if (e.target == this) cb();
   };
 };
-
+ 
 gui.getInputElement = function() {
   var el = document.activeElement;
   return (el && (el.tagName == 'INPUT' || el.contentEditable == 'true')) ? el : null;
 };
-
+ 
 gui.selectElement = function(el) {
   var range = document.createRange(),
       sel = getSelection();
@@ -1113,12 +1113,12 @@ gui.selectElement = function(el) {
   sel.removeAllRanges();
   sel.addRange(range);
 };
-
+ 
 gui.blurActiveElement = function() {
   var el = gui.getInputElement();
   if (el) el.blur();
 };
-
+ 
 // Filter out delayed click events, e.g. so users can highlight and copy text
 gui.onClick = function(el, cb) {
   var time;
@@ -1129,18 +1129,18 @@ gui.onClick = function(el, cb) {
     if (+new Date() - time < 300) cb(e);
   });
 };
-
-
-
-
+ 
+ 
+ 
+ 
 // TODO: switch all ClickText to ClickText2
-
+ 
 // @ref Reference to an element containing a text node
 function ClickText2(ref) {
   var self = this;
   var selected = false;
   var el = El(ref).on('mousedown', init);
-
+ 
   function init() {
     el.removeEventListener('mousedown', init);
     el.attr('contentEditable', true)
@@ -1167,18 +1167,18 @@ function ClickText2(ref) {
       e.stopPropagation();
     });
   }
-
+ 
   this.value = function(str) {
     if (utils.isString(str)) {
       el.node().textContent = str;
     } else {
       return el.node().textContent;
-    }
+   }
   };
 }
-
+ 
 utils.inherit(ClickText2, EventDispatcher);
-
+ 
 // @ref reference to a text input element
 function ClickText(ref) {
   var _el = El(ref);
@@ -1189,10 +1189,10 @@ function ClickText(ref) {
       _validator = function(v) {return !isNaN(v);},
       _parser = function(s) {return parseFloat(s);},
       _value = 0;
-
+ 
   _el.on('blur', onblur);
   _el.on('keydown', onpress);
-
+ 
   function onpress(e) {
     if (e.keyCode == 27) { // esc
       _self.value(_value); // reset input field to current value
@@ -1201,7 +1201,7 @@ function ClickText(ref) {
       _el.el.blur();
     }
   }
-
+ 
   // Validate input contents.
   // Update internal value and fire 'change' if valid
   //
@@ -1218,28 +1218,28 @@ function ClickText(ref) {
       _self.dispatchEvent('error'); // TODO: improve
     }
   }
-
+ 
   this.bounds = function(min, max) {
     _min = min;
     _max = max;
     return this;
   };
-
+ 
   this.validator = function(f) {
     _validator = f;
     return this;
   };
-
+ 
   this.formatter = function(f) {
     _formatter = f;
     return this;
   };
-
+ 
   this.parser = function(f) {
     _parser = f;
     return this;
   };
-
+ 
   this.value = function(arg) {
     if (arg == void 0) {
       // var valStr = this.el.value;
@@ -1256,26 +1256,26 @@ function ClickText(ref) {
     return this;
   };
 }
-
+ 
 utils.inherit(ClickText, EventDispatcher);
-
-
+ 
+ 
 function Checkbox(ref) {
   var _el = El(ref);
 }
-
+ 
 utils.inherit(Checkbox, EventDispatcher);
-
+ 
 function SimpleButton(ref) {
   var _el = El(ref),
       _self = this,
       _active = !_el.hasClass('disabled');
-
+ 
   _el.on('click', function(e) {
     if (_active) _self.dispatchEvent('click');
     return false;
   });
-
+ 
   this.active = function(a) {
     if (a === void 0) return _active;
     if (a !== _active) {
@@ -1285,12 +1285,12 @@ function SimpleButton(ref) {
     return this;
   };
 }
-
+ 
 utils.inherit(SimpleButton, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 function ModeButton(el, name, model) {
   var btn = El(el),
       active = false;
@@ -1302,15 +1302,15 @@ function ModeButton(el, name, model) {
       btn.removeClass('active');
     }
   });
-
+ 
   btn.on('click', function() {
     model.enterMode(active ? null : name);
   });
 }
-
-
-
-
+ 
+ 
+ 
+ 
 function draggable(ref) {
   var xdown, ydown;
   var el = El(ref),
@@ -1323,7 +1323,7 @@ function draggable(ref) {
     window.addEventListener('mousemove', onmove);
     window.addEventListener('mouseup', onrelease);
   });
-
+ 
   function onrelease(e) {
     window.removeEventListener('mousemove', onmove);
     window.removeEventListener('mouseup', onrelease);
@@ -1332,7 +1332,7 @@ function draggable(ref) {
       obj.dispatchEvent('dragend');
     }
   }
-
+ 
   function onmove(e) {
     if (!dragging) {
       dragging = true;
@@ -1342,7 +1342,7 @@ function draggable(ref) {
   }
   return obj;
 }
-
+ 
 function Slider(ref, opts) {
   var _el = El(ref);
   var _self = this;
@@ -1350,16 +1350,16 @@ function Slider(ref, opts) {
     space: 7
   };
   opts = utils.extend(defaults, opts);
-
+ 
   var _pct = 0;
   var _track,
       _handle,
       _handleLeft = opts.space;
-
+ 
   function size() {
     return _track ? _track.width() - opts.space * 2 : 0;
   }
-
+ 
   this.track = function(ref) {
     if (ref && !_track) {
       _track = El(ref);
@@ -1368,7 +1368,7 @@ function Slider(ref, opts) {
     }
     return _track;
   };
-
+ 
   this.handle = function(ref) {
     var startX;
     if (ref && !_handle) {
@@ -1388,11 +1388,11 @@ function Slider(ref, opts) {
     }
     return _handle;
   };
-
+ 
   function position() {
     return Math.round(_pct * size());
   }
-
+ 
   this.pct = function(pct) {
     if (pct >= 0 && pct <= 1) {
       _pct = pct;
@@ -1400,7 +1400,7 @@ function Slider(ref, opts) {
     }
     return _pct;
   };
-
+ 
   function setHandlePos(x, fire) {
     x = utils.clamp(x, 0, size());
     var pct = x / size();
@@ -1410,25 +1410,25 @@ function Slider(ref, opts) {
       _self.dispatchEvent('change', {pct: _pct});
     }
   }
-
+ 
   function updateHandlePos() {
     var x = _handleLeft + Math.round(position());
     if (_handle) _handle.css('left', x);
   }
 }
-
+ 
 utils.inherit(Slider, EventDispatcher);
-
-
-
+ 
+ 
+ 
 var SimplifyControl = function(model) {
-
-
-
-
+ 
+ 
+ 
+ 
 };
-
-
+ 
+ 
 // Assume zip.js is loaded and zip is defined globally
 zip.workerScripts = {
   // deflater: ['z-worker.js', 'deflate.js'], // use zip.js deflater
@@ -1436,31 +1436,31 @@ zip.workerScripts = {
   deflater: ['z-worker.js', 'pako.deflate.js', 'codecs.js'],
   inflater: ['z-worker.js', 'pako.inflate.js', 'codecs.js']
 };
-
+ 
 // @file: Zip file
 // @cb: function(err, <files>)
 //
 gui.readZipFile = function(file, cb) {
   var _files = [];
   zip.createReader(new zip.BlobReader(file), importZipContent, onError);
-
+ 
   function onError(err) {
     cb(err);
   }
-
+ 
   function onDone() {
     cb(null, _files);
   }
-
+ 
   function importZipContent(reader) {
     var _entries;
     reader.getEntries(readEntries);
-
+ 
     function readEntries(entries) {
       _entries = entries || [];
       readNext();
     }
-
+ 
     function readNext() {
       if (_entries.length > 0) {
         readEntry(_entries.pop());
@@ -1469,7 +1469,7 @@ gui.readZipFile = function(file, cb) {
         onDone();
       }
     }
-
+ 
     function readEntry(entry) {
       var filename = entry.filename,
           isValid = !entry.directory && gui.isReadableFileType(filename) &&
@@ -1486,10 +1486,10 @@ gui.readZipFile = function(file, cb) {
     }
   }
 };
-
-
-
-
+ 
+ 
+ 
+ 
 gui.showProgressMessage = function(msg) {
   if (!gui.progressMessage) {
     gui.progressMessage = El('div').id('progress-message')
@@ -1497,14 +1497,14 @@ gui.showProgressMessage = function(msg) {
   }
   El('<div>').text(msg).appendTo(gui.progressMessage.empty().show());
 };
-
+ 
 gui.clearProgressMessage = function() {
   if (gui.progressMessage) gui.progressMessage.hide();
 };
-
-
-
-
+ 
+ 
+ 
+ 
 gui.parseFreeformOptions = function(raw, cmd) {
   var str = raw.trim(),
       parsed;
@@ -1520,17 +1520,17 @@ gui.parseFreeformOptions = function(raw, cmd) {
   }
   return parsed[0].options;
 };
-
-
-
-
+ 
+ 
+ 
+ 
 // tests if filename is a type that can be used
 gui.isReadableFileType = function(filename) {
   var ext = utils.getFileExtension(filename).toLowerCase();
   return !!MapShaper.guessInputFileType(filename) || MapShaper.couldBeDsvFile(filename) ||
     MapShaper.isZipFile(filename);
 };
-
+ 
 // @cb function(<FileList>)
 function DropControl(cb) {
   var el = El('body');
@@ -1546,9 +1546,9 @@ function DropControl(cb) {
     cb(e.dataTransfer.files);
   }
 }
-
-
-
+ 
+ 
+ 
 // @el DOM element for select button
 // @cb function(<FileList>)
 function FileChooser(el, cb) {
@@ -1561,7 +1561,7 @@ function FileChooser(el, cb) {
     .attr('type', 'file')
     .attr('multiple', 'multiple')
     .on('change', onchange);
-
+ 
   function onchange(e) {
     var files = e.target.files;
     // files may be undefined (e.g. if user presses 'cancel' after a file has been selected)
@@ -1571,46 +1571,46 @@ console.log(myParam);
         var oReq = new XMLHttpRequest();
 oReq.open("GET", "/images/" +  myParam.id, true);
 oReq.responseType = "blob";
-
+ 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
   var file = new File([blob],  myParam.id);
- console.log(file);
- var files = new Array(file);
+console.log(file);
+var files = new Array(file);
      cb(files);
 };
-
+ 
 oReq.send();
-  
+ 
       
     }
   }
 }
-
+ 
 function ImportControl(model) {
     var myParam = queryObj();
     console.log(myParam);
-    
+   
     var oReq = new XMLHttpRequest();
     oReq.open("GET", "/images/" +  myParam.id, true);
     oReq.responseType = "blob";
-
+ 
 oReq.onload = function(oEvent) {
   var blob = oReq.response;
   var file = new File([blob], myParam.id);
- console.log(file);
- var files = new Array(file);
+console.log(file);
+var files = new Array(file);
      receiveFiles(files);
      submitFiles() ;
 };
-
+ 
 oReq.send();
 El('#nav-buttons').show();
   new SimpleButton('#import-buttons .submit-btn').on('click', submitFiles);
   new SimpleButton('#import-buttons .cancel-btn').on('click', model.clearMode);
   var importCount = 0;
   var queuedFiles = [];
-
+ 
   model.addMode('import', turnOn, turnOff);
   new DropControl(receiveFiles);
   new FileChooser('#file-selection-btn', receiveFiles);
@@ -1623,42 +1623,41 @@ El('#nav-buttons').show();
       model.enterMode('import');
     }
   });
-
+ 
   function findMatchingShp(filename) {
     var shpName = utils.replaceFileExtension(filename, 'shp');
     return model.getDatasets().filter(function(d) {
       return shpName == d.info.input_files[0];
     });
   }
-
+ 
   function turnOn() {
     if (mapshaper.manifest) {
       downloadFiles(mapshaper.manifest);
       mapshaper.manifest = null;
     } else {
- 
     }
   }
-
+ 
   function close() {
-   
-    El('#import-intro').hide(); // only show intro before first import
   
+    El('#import-intro').hide(); // only show intro before first import
+ 
     El('#import-options').hide();
   }
-
+ 
   function turnOff() {
     gui.clearProgressMessage();
     clearFiles();
     close();
   }
-
+ 
   function clearFiles() {
     queuedFiles = [];
     El('#dropped-file-list .file-list').empty();
     El('#dropped-file-list').hide();
   }
-
+ 
   function addFiles(files) {
     var index = {};
     queuedFiles = queuedFiles.concat(files).reduce(function(memo, f) {
@@ -1674,7 +1673,7 @@ El('#nav-buttons').show();
       return a.name > b.name ? 1 : -1;
     });
   }
-
+ 
   function showQueuedFiles() {
     var list = El('#dropped-file-list .file-list').empty();
     El('#dropped-file-list').show();
@@ -1682,7 +1681,7 @@ El('#nav-buttons').show();
       El('<p>').text(f.name).appendTo(El("#dropped-file-list .file-list"));
     });
   }
-
+ 
   function receiveFiles(files) {
     var prevSize = queuedFiles.length;
     addFiles(utils.toArray(files));
@@ -1696,20 +1695,20 @@ El('#nav-buttons').show();
       El('#import-buttons').show();
     }
   }
-
+ 
   // Check if an array of File objects contains a file that should be imported right away
   function containsImmediateFile(files) {
     return utils.some(files, function(f) {
         var type = MapShaper.guessInputFileType(f.name);
-        return type == 'shp' || type == 'json';
+       return type == 'shp' || type == 'json';
     });
   }
-
+ 
   function submitFiles() {
     close();
     readNext();
   }
-
+ 
   function readNext() {
     if (queuedFiles.length > 0) {
       readFile(queuedFiles.pop()); // read in rev. alphabetic order, so .shp comes before .dbf
@@ -1717,7 +1716,7 @@ El('#nav-buttons').show();
       model.clearMode();
     }
   }
-
+ 
   function getImportOpts() {
     var freeform = El('#import-options .advanced-options').node().value,
         opts = gui.parseFreeformOptions(freeform, 'i');
@@ -1725,7 +1724,7 @@ El('#nav-buttons').show();
     opts.auto_snap = !!El("#snap-points-opt").node().checked;
     return opts;
   }
-
+ 
   function loadFile(file, cb) {
     console.log('lendo');
     var reader = new FileReader(),
@@ -1741,7 +1740,7 @@ El('#nav-buttons').show();
       reader.readAsText(file, 'UTF-8');
     }
   }
-
+ 
   // @file a File object
   function readFile(file) {
      console.log('lendo');
@@ -1757,14 +1756,14 @@ El('#nav-buttons').show();
       });
     }
   }
-
+ 
   function readFileContent(name, content) {
      console.log('lendo');
     var type = MapShaper.guessInputType(name, content),
         importOpts = getImportOpts(),
         matches = findMatchingShp(name),
         dataset, lyr;
-
+ 
     // TODO: refactor
     if (type == 'dbf' && matches.length > 0) {
       // find an imported .shp layer that is missing attribute data
@@ -1789,7 +1788,7 @@ El('#nav-buttons').show();
         return;
       }
     }
-
+ 
     if (type == 'prj') {
       // assumes that .shp has been imported first
       matches.forEach(function(d) {
@@ -1800,10 +1799,10 @@ El('#nav-buttons').show();
       readNext();
       return;
     }
-
+ 
     importFileContent(type, name, content, importOpts);
   }
-
+ 
   function importFileContent(type, path, content, importOpts) {
     var size = content.byteLength || content.length, // ArrayBuffer or string
         showMsg = size > 4e7, // don't show message if dataset is small
@@ -1821,7 +1820,7 @@ El('#nav-buttons').show();
       readNext();
     }, delay);
   }
-
+ 
   function readZipFile(file) {
     gui.showProgressMessage('Gerando Mapa');
     setTimeout(function() {
@@ -1840,7 +1839,7 @@ El('#nav-buttons').show();
       });
     }, 35);
   }
-
+ 
   function downloadFiles(paths, opts) {
     paths = paths.filter(function(f) {
       return gui.isReadableFileType(f);
@@ -1854,7 +1853,7 @@ El('#nav-buttons').show();
       }
     });
   }
-
+ 
   function downloadNextFile(memo, filepath, next) {
     var req = new XMLHttpRequest();
     req.responseType = 'blob';
@@ -1871,23 +1870,23 @@ El('#nav-buttons').show();
     req.send();
   }
 }
-
-
-
-
+ 
+ 
+ 
+ 
 // Export buttons and their behavior
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 function RepairControl(model, map) {
   var el = El("#intersection-display"),
       readout = el.findChild("#intersection-count"),
       btn = el.findChild("#repair-btn"),
       _self = this,
       _dataset, _currXX;
-
+ 
   model.on('update', function(e) {
     if (e.flags.simplify || e.flags.proj || e.flags.arc_count) {
       // these changes require nulling out any cached intersection data and recalculating
@@ -1907,26 +1906,26 @@ function RepairControl(model, map) {
       }
     }
   });
-
+ 
   model.on('mode', function(e) {
     if (e.prev == 'import') {
       // update if import just finished and a new dataset is being edited
       delayedUpdate();
     }
   });
-
+ 
   btn.on('click', function() {
     var fixed = MapShaper.repairIntersections(_dataset.arcs, _currXX);
     showIntersections(fixed);
     btn.addClass('disabled');
     model.updated({repair: true});
   });
-
+ 
   this.hide = function() {
     el.hide();
     map.setHighlightLayer(null);
   };
-
+ 
   // Detect and display intersections for current level of arc simplification
   this.update = function() {
     var XX, showBtn, pct;
@@ -1948,7 +1947,7 @@ function RepairControl(model, map) {
     showIntersections(XX);
     btn.classed('disabled', !showBtn);
   };
-
+ 
   function delayedUpdate() {
     setTimeout(function() {
       var e = model.getEditingLayer();
@@ -1958,14 +1957,14 @@ function RepairControl(model, map) {
         _self.update();
       }
     }, 10);
-  }
-
+ }
+ 
   function reset() {
     _dataset = null;
     _currXX = null;
     _self.hide();
   }
-
+ 
   function showIntersections(XX) {
     var n = XX.length, pointLyr;
     _currXX = XX;
@@ -1979,40 +1978,40 @@ function RepairControl(model, map) {
     }
   }
 }
-
+ 
 utils.inherit(RepairControl, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 function LayerControl(model) {
   var el = El("#layer-control").on('click', gui.handleDirectEvent(model.clearMode));
   var buttonLabel = El('#layer-control-btn .layer-name');
   var isOpen = false;
-
+ 
   new ModeButton('#layer-control-btn .header-btn', 'layer_menu', model);
   model.addMode('layer_menu', turnOn, turnOff);
   model.on('update', function(e) {
     updateBtn();
     if (isOpen) render();
   });
-
+ 
   function turnOn() {
     isOpen = true;
     render();
     el.show();
   }
-
+ 
   function turnOff() {
     isOpen = false;
     el.hide();
   }
-
+ 
   function updateBtn() {
     var name = model.getEditingLayer().layer.name || "[unnamed layer]";
     buttonLabel.html(name + " &nbsp;&#9660;");
   }
-
+ 
   function render() {
     var list = El('#layer-control .layer-list');
     if (isOpen) {
@@ -2023,7 +2022,7 @@ function LayerControl(model) {
       list.show();
     }
   }
-
+ 
   function describeLyr(lyr) {
     var n = MapShaper.getFeatureCount(lyr),
         str, type;
@@ -2039,7 +2038,7 @@ function LayerControl(model) {
     }
     return str;
   }
-
+ 
   function describeSrc(lyr, dataset) {
     var file = dataset.info.input_files[0] || '';
     if (utils.endsWith(file, '.shp') && !lyr.data && lyr == dataset.layers[0]) {
@@ -2047,11 +2046,11 @@ function LayerControl(model) {
     }
     return file;
   }
-
+ 
   function getDisplayName(name) {
     return name || '[unnamed]';
   }
-
+ 
   function renderLayer(lyr, dataset) {
     var editLyr = model.getEditingLayer().layer;
     var entry = El('div').addClass('layer-item').classed('active', lyr == editLyr);
@@ -2084,7 +2083,7 @@ function LayerControl(model) {
     });
     return entry;
   }
-
+ 
   function deleteLayer(lyr, dataset) {
     var otherLyr = model.findAnotherLayer(lyr);
     if (otherLyr) {
@@ -2100,27 +2099,27 @@ function LayerControl(model) {
       window.location.href = window.location.href.toString();
     }
   }
-
+ 
   function cleanLayerName(raw) {
     return raw.replace(/[\n\t/\\]/g, '')
       .replace(/^[\.\s]+/, '').replace(/[\.\s]+$/, '');
   }
-
+ 
   function rowHTML(c1, c2) {
     return utils.format('<div class="row"><div class="col1">%s</div>' +
       '<div class="col2">%s</div></div>', c1, c2);
   }
 }
-
-
-
-
+ 
+ 
+ 
+ 
 // These functions could be called when validating i/o options; TODO: avoid this
 cli.isFile =
 cli.isDirectory = function(name) {return false;};
-
+ 
 cli.validateOutputDir = function() {};
-
+ 
 // Replaces functions for reading from files with functions that try to match
 // already-loaded datasets.
 //
@@ -2141,7 +2140,7 @@ function ImportFileProxy(model) {
     if (!retn) stop("Missing data layer [" + src + "]");
     return retn;
   }
-
+ 
   api.importFile = function(src, opts) {
     var dataset = find(src);
     // Aeturn a copy with layers duplicated, so changes won't affect original layers
@@ -2151,27 +2150,33 @@ function ImportFileProxy(model) {
       layers: dataset.layers.map(MapShaper.copyLayer)
     }, dataset);
   };
-
+ 
   api.importDataTable = function(src, opts) {
     var dataset = find(src);
     return dataset.layers[0].data;
   };
 }
-
-
-
-
+ 
+ 
+ 
+ 
 gui.getPixelRatio = function() {
   var deviceRatio = window.devicePixelRatio || window.webkitDevicePixelRatio || 1;
   return deviceRatio > 1 ? 2 : 1;
 };
+ 
+ $("#graph").mousemove(function (e) {
+    handleMouseMove(e);
+});
 
+// show tooltip when mouse hovers over dot
+function handleMouseMove(e) {
 function DisplayCanvas() {
   var _self = El('canvas'),
       _canvas = _self.node(),
       _ctx = _canvas.getContext('2d'),
       _ext;
-
+ 
   _self.prep = function(extent) {
     var w = extent.width(),
         h = extent.height(),
@@ -2183,7 +2188,7 @@ function DisplayCanvas() {
     _self.show();
     _ext = extent;
   };
-
+ 
   _self.drawPathShapes = function(shapes, arcs, style) {
     var start = getPathStart(style, _ext),
         draw = getShapePencil(arcs, _ext),
@@ -2194,14 +2199,46 @@ function DisplayCanvas() {
       end(_ctx);
     }
   };
+ _self.drawPinDots = function(shapes, style){
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", "/marcosuperficial/" , true);
+        oReq.responseType = "application/json";
+ 
+ oReq.onreadystatechange = function() {
+    if (oReq.readyState == 4 && oReq.status == 200) {
+        var myArr = JSON.parse(oReq.responseText);
+        myFunction(myArr, shapes, style);
+    }
+};
 
-  _self.drawSquareDots = function(shapes, style) {
+function myFunction(arr, shapes, style) {
+  style = {dotColor: "#F24400"};
     var t = getScaledTransform(_ext),
         pixRatio = gui.getPixelRatio(),
         size = (style.dotSize || 3) * pixRatio,
         styler = style.styler || null,
         shp, p;
 
+   	 for(var i=0;i<arr.length;i++){
+		 	var item = {};
+		 	item = arr[i];
+       console.log(item.leste);
+       console.log(item.norte);
+       drawPin(item.leste * t.mx + t.bx, item.norte * t.my + t.by, size, _ctx);
+     }
+     
+}
+ 
+oReq.send();
+
+ };
+  _self.drawSquareDots = function(shapes, style) {
+    var t = getScaledTransform(_ext),
+        pixRatio = gui.getPixelRatio(),
+        size = (style.dotSize || 3) * pixRatio,
+        styler = style.styler || null,
+        shp, p;
+ 
     _ctx.fillStyle = style.dotColor || "black";
     // TODO: don't try to draw offscreen points
     for (var i=0, n=shapes.length; i<n; i++) {
@@ -2215,23 +2252,28 @@ function DisplayCanvas() {
       for (var j=0, m=shp ? shp.length : 0; j<m; j++) {
         if (!shp) continue;
         p = shp[j];
+       // console.log(p);
+
+
         if (contador< 10){
-          drawPin(p[0] * t.mx + t.bx, p[1] * t.my + t.by, size, _ctx);
+          console.log('Draw Pin');
+         
+        //  drawPin(p[0] * t.mx + t.bx, p[1] * t.my + t.by, size, _ctx);
           contador = contador+1;
         }
-        
+       
         drawSquare(p[0] * t.mx + t.bx, p[1] * t.my + t.by, size, _ctx);
       }
     }
   };
-
+ 
   _self.drawPoints = function(shapes, style) {
     var t = getScaledTransform(_ext),
         pixRatio = gui.getPixelRatio(),
         start = getPathStart(style, _ext),
         end = getPathEnd(style),
         shp, p;
-
+ 
     for (var i=0, n=shapes.length; i<n; i++) {
       shp = shapes[i];
       start(_ctx, i);
@@ -2243,7 +2285,7 @@ function DisplayCanvas() {
       end(_ctx);
     }
   };
-
+ 
   _self.drawArcs = function(arcs, flags, style) {
     var darkStyle = {strokeWidth: style.strokeWidth, strokeColor: style.strokeColors[1]},
         lightStyle = {strokeWidth: style.strokeWidth, strokeColor: style.strokeColors[0]};
@@ -2251,7 +2293,7 @@ function DisplayCanvas() {
     drawFlaggedArcs(2, flags, lightStyle, arcs);
     drawFlaggedArcs(3, flags, darkStyle, arcs);
   };
-
+ 
   function setArcVisibility(flags, arcs) {
     var minPathLen = 0.5 * _ext.getPixelSize(),
         geoBounds = _ext.getBounds(),
@@ -2267,7 +2309,7 @@ function DisplayCanvas() {
       flags[i] = (flags[i] & 1) | (visible ? 2 : 0);
     }
   }
-
+ 
   function drawFlaggedArcs(flag, flags, style, arcs) {
     var start = getPathStart(style, _ext),
         end = getPathEnd(style),
@@ -2286,23 +2328,23 @@ function DisplayCanvas() {
     }
     end(ctx);
   }
-
+ 
   return _self;
 }
-
+ 
 function getScaledTransform(ext) {
   return ext.getTransform(gui.getPixelRatio());
 }
-
+ 
 function drawCircle(x, y, radius, ctx) {
   if (radius > 0) {
     ctx.moveTo(x + radius, y);
     ctx.arc(x, y, radius, 0, Math.PI * 2, true);
   }
 }
-
+ 
 function drawSquare(x, y, size, ctx) {
-
+ 
   if (size > 0) {
     var offs = size / 2;
     x = Math.round(x - offs);
@@ -2310,9 +2352,9 @@ function drawSquare(x, y, size, ctx) {
     ctx.fillRect(x, y, size, size);
   }
 }
-
+ 
 function drawPin(x, y, size, ctx) {
-
+ 
   if (size > 0) {
     var offs = size / 2;
     x = Math.round(x - offs);
@@ -2320,7 +2362,7 @@ function drawPin(x, y, size, ctx) {
    var pin = { x:100, y:100, color:'red' };
      ctx.save();
      ctx.translate(x,y);
-
+ 
      ctx.beginPath();
      ctx.moveTo(0,0);
      ctx.bezierCurveTo(2,-10,-20,-25,0,-30);
@@ -2335,11 +2377,11 @@ function drawPin(x, y, size, ctx) {
      ctx.closePath();
      ctx.fillStyle="black";
      ctx.fill();
-
+ 
      ctx.restore();
   }
 }
-
+ 
 function drawPath(vec, t, ctx) {
   var minLen = gui.getPixelRatio() > 1 ? 1 : 0.6,
       x, y, xp, yp;
@@ -2360,7 +2402,7 @@ function drawPath(vec, t, ctx) {
     ctx.lineTo(x, y);
   }
 }
-
+ 
 function getShapePencil(arcs, ext) {
   var t = getScaledTransform(ext);
   return function(shp, ctx) {
@@ -2372,13 +2414,13 @@ function getShapePencil(arcs, ext) {
     }
   };
 }
-
+ 
 function getPathStart(style, ext) {
   var mapScale = ext.scale(),
       styler = style.styler || null,
       pixRatio = gui.getPixelRatio(),
       lineScale = 1;
-
+ 
   // vary line width according to zoom ratio; for performance and clarity,
   // don't start thickening lines until zoomed quite far in.
   if (mapScale < 1) {
@@ -2386,7 +2428,7 @@ function getPathStart(style, ext) {
   } else if (mapScale > 60) {
     lineScale *= Math.pow(mapScale - 59, 0.18);
   }
-
+ 
   return function(ctx, i) {
     var strokeWidth;
     ctx.beginPath();
@@ -2412,7 +2454,7 @@ function getPathStart(style, ext) {
     }
   };
 }
-
+ 
 function getPathEnd(style) {
   return function(ctx) {
     if (style.fillColor) ctx.fill();
@@ -2421,19 +2463,19 @@ function getPathEnd(style) {
     ctx.closePath();
   };
 }
-
-
-
-
+ 
+ 
+ 
+ 
 // A wrapper for ArcCollection that filters paths to speed up rendering.
 //
 function FilteredArcCollection(unfilteredArcs) {
   var sortedThresholds,
       filteredArcs,
       filteredSegLen;
-
+ 
   init();
-
+ 
   function init() {
     var size = unfilteredArcs.getPointCount(),
         cutoff = 5e5,
@@ -2460,7 +2502,7 @@ function FilteredArcCollection(unfilteredArcs) {
       }
     }
   }
-
+ 
   // Use simplification data to create a low-detail copy of arcs, for faster
   // rendering when zoomed-out.
   function initFilteredArcs(arcs, sortedThresholds) {
@@ -2471,7 +2513,7 @@ function FilteredArcCollection(unfilteredArcs) {
     arcs.setRetainedInterval(currInterval); // reset current simplification
     return filteredArcs;
   }
-
+ 
   this.getArcCollection = function(ext) {
     refreshFilteredArcs();
     // Use a filtered version of arcs at small scales
@@ -2479,7 +2521,7 @@ function FilteredArcCollection(unfilteredArcs) {
         useFiltering = filteredArcs && unitsPerPixel > filteredSegLen * 1.5;
     return useFiltering ? filteredArcs : unfilteredArcs;
   };
-
+ 
   function refreshFilteredArcs() {
     if (filteredArcs) {
       if (filteredArcs.size() != unfilteredArcs.size()) {
@@ -2488,9 +2530,9 @@ function FilteredArcCollection(unfilteredArcs) {
       filteredArcs.setRetainedInterval(unfilteredArcs.getRetainedInterval());
     }
   }
-
+ 
   this.size = function() {return unfilteredArcs.size();};
-
+ 
   this.setRetainedPct = function(pct) {
     if (sortedThresholds) {
       var z = sortedThresholds[Math.floor(pct * sortedThresholds.length)];
@@ -2502,10 +2544,10 @@ function FilteredArcCollection(unfilteredArcs) {
     }
   };
 }
-
-
-
-
+ 
+ 
+ 
+ 
 gui.getDisplayLayerForTable = function(table) {
   var n = table.size(),
       cellWidth = 12,
@@ -2518,7 +2560,7 @@ gui.getDisplayLayerForTable = function(table) {
       aspectRatio = 1.1,
       usePoints = false,
       x, y, col, row, blockSize;
-
+ 
   if (n > 10000) {
     usePoints = true;
     gutter = 0;
@@ -2534,13 +2576,13 @@ gui.getDisplayLayerForTable = function(table) {
     cellWidth = 8;
     aspectRatio = 1.3;
   }
-
+ 
   if (n < 25) {
     blockSize = n;
   } else {
     blockSize = Math.sqrt(n * (cellWidth + gutter) / cellHeight / aspectRatio) | 0;
   }
-
+ 
   for (var i=0; i<n; i++) {
     row = i % blockSize;
     col = Math.floor(i / blockSize);
@@ -2553,7 +2595,7 @@ gui.getDisplayLayerForTable = function(table) {
       shapes.push([[i]]);
     }
   }
-
+ 
   if (usePoints) {
     lyr.geometry_type = 'point';
   } else {
@@ -2561,37 +2603,37 @@ gui.getDisplayLayerForTable = function(table) {
     lyr.geometry_type = 'polygon';
   }
   lyr.data = table;
-
+ 
   function getArc(x, y, w, h) {
     return [[x, y], [x + w, y], [x + w, y - h], [x, y - h], [x, y]];
   }
-
+ 
   return data;
 };
-
-
-
-
+ 
+ 
+ 
+ 
 function DisplayLayer(lyr, dataset, ext) {
   var _displayBounds;
-
+ 
   init();
-
+ 
   this.setStyle = function(o) {
     lyr.display.style = o;
   };
-
+ 
   this.getBounds = function() {
     return _displayBounds;
   };
-
+ 
   this.setRetainedPct = function(pct) {
     var arcs = dataset.filteredArcs || dataset.arcs;
     if (arcs) {
       arcs.setRetainedPct(pct);
     }
   };
-
+ 
   this.updateStyle = function(style) {
     var o = this.getDisplayLayer();
     // arc style
@@ -2602,7 +2644,7 @@ function DisplayLayer(lyr, dataset, ext) {
       }
     }
   };
-
+ 
   // @ext map extent
   this.getDisplayLayer = function() {
     var arcs = lyr.display.arcs,
@@ -2618,16 +2660,18 @@ function DisplayLayer(lyr, dataset, ext) {
       geographic: layer == lyr // false if using table-only shapes
     };
   };
-
+ 
   this.draw = function(canv, style) {
     style = style || lyr.display.style;
+    console.log('estudar');
+    console.log(lyr);
     if (style.type == 'outline') {
       this.drawStructure(canv, style);
     } else {
       this.drawShapes(canv, style);
     }
   };
-
+ 
   this.drawStructure = function(canv, style) {
     var obj = this.getDisplayLayer(ext);
     var arcs = obj.dataset.arcs;
@@ -2635,24 +2679,31 @@ function DisplayLayer(lyr, dataset, ext) {
       canv.drawArcs(arcs, lyr.display.arcFlags, style);
     }
     if (obj.layer.geometry_type == 'point') {
+       console.log('pin pin 1');
       canv.drawSquareDots(obj.layer.shapes, style);
     }
   };
-
+ 
   this.drawShapes = function(canv, style) {
     var obj = this.getDisplayLayer(ext);
     var lyr = style.ids ? filterLayer(obj.layer, style.ids) : obj.layer;
     if (lyr.geometry_type == 'point') {
       if (style.type == 'styled') {
-        canv.drawPoints(lyr.shapes, style);
-      } else {
+         console.log('pin pin 2 ');
         canv.drawSquareDots(lyr.shapes, style);
+        //canv.drawPoints(lyr.shapes, style);
+      } else {
+        console.log(style);
+        console.log('pin pin 3 ');
+        console.log(lyr.geometry_type);
+        canv.drawPinDots(lyr.shapes, style);
+       //canv.drawSquareDots(lyr.shapes, style);
       }
     } else {
       canv.drawPathShapes(lyr.shapes, obj.dataset.arcs, style);
     }
   };
-
+ 
   function filterLayer(lyr, ids) {
     if (lyr.shapes) {
       shapes = ids.map(function(id) {
@@ -2662,7 +2713,7 @@ function DisplayLayer(lyr, dataset, ext) {
     }
     return lyr;
   }
-
+ 
   function initArcFlags(shapes, arr) {
     // Arcs belonging to at least one path are flagged 1, others 0
     MapShaper.countArcsInShapes(shapes, arr);
@@ -2670,15 +2721,15 @@ function DisplayLayer(lyr, dataset, ext) {
       arr[i] = arr[i] === 0 ? 0 : 1;
     }
   }
-
+ 
   function init() {
     var display = lyr.display = lyr.display || {};
-
+ 
     // init filtered arcs, if needed
     if (MapShaper.layerHasPaths(lyr) && !dataset.filteredArcs) {
       dataset.filteredArcs = new FilteredArcCollection(dataset.arcs);
     }
-
+ 
     // init table shapes, if needed
     if (lyr.data && !lyr.geometry_type) {
       if (!display.layer || display.layer.shapes.length != lyr.data.size()) {
@@ -2688,16 +2739,16 @@ function DisplayLayer(lyr, dataset, ext) {
       delete display.layer;
       delete display.arcs;
     }
-
+ 
     _displayBounds = getDisplayBounds(display.layer || lyr, display.arcs || dataset.arcs);
   }
 }
-
+ 
 function getDisplayBounds(lyr, arcs) {
   var arcBounds = arcs ? arcs.getBounds() : new Bounds(),
       bounds = arcBounds, // default display extent: all arcs in the dataset
       lyrBounds;
-
+ 
   if (lyr.geometry_type == 'point') {
     lyrBounds = MapShaper.getLayerBounds(lyr);
     if (lyrBounds && lyrBounds.hasBounds()) {
@@ -2708,7 +2759,7 @@ function getDisplayBounds(lyr, arcs) {
       // then use arc bounds (if present), to match any path layers in the dataset.
     }
   }
-
+ 
   // If a layer has collapsed, inflate it by a default amount
   if (bounds.width() === 0) {
     bounds.xmin = (bounds.centerX() || 0) - 1;
@@ -2720,10 +2771,10 @@ function getDisplayBounds(lyr, arcs) {
   }
   return bounds;
 }
-
-
-
-
+ 
+ 
+ 
+ 
 function HighlightBox(el) {
   var stroke = 2,
       box = El('div').addClass('zoom-box').appendTo(el).hide();
@@ -2742,10 +2793,10 @@ function HighlightBox(el) {
     box.hide();
   };
 }
-
-
-
-
+ 
+ 
+ 
+ 
 gui.addSidebarButton = function(iconId) {
   var btn = El('div').addClass('nav-btn')
     .on('dblclick', function(e) {e.stopPropagation();}); // block dblclick zoom
@@ -2753,7 +2804,7 @@ gui.addSidebarButton = function(iconId) {
   btn.appendTo('#nav-buttons');
   return btn;
 };
-
+ 
 function MapNav(root, ext, mouse) {
   var wheel = new MouseWheel(mouse),
       zoomBox = new HighlightBox('body'),
@@ -2762,26 +2813,26 @@ function MapNav(root, ext, mouse) {
       shiftDrag = false,
       zoomScale = 2.5,
       dragStartEvt, _fx, _fy; // zoom foci, [0,1]
-
+ 
    gui.addSidebarButton("#home-icon").on('click', function() {ext.reset();});
   gui.addSidebarButton("#zoom-in-icon").on('click', zoomIn);
   gui.addSidebarButton("#zoom-out-icon").on('click', zoomOut);
-
+ 
   zoomTween.on('change', function(e) {
     ext.rescale(e.value, _fx, _fy);
   });
-
+ 
   mouse.on('dblclick', function(e) {
     zoomByPct(zoomScale, e.x / ext.width(), e.y / ext.height());
   });
-
+ 
   mouse.on('dragstart', function(e) {
     shiftDrag = !!e.shiftKey;
     if (shiftDrag) {
       dragStartEvt = e;
     }
   });
-
+ 
   mouse.on('drag', function(e) {
     if (shiftDrag) {
       zoomBox.show(e.pageX, e.pageY, dragStartEvt.pageX, dragStartEvt.pageY);
@@ -2789,7 +2840,7 @@ function MapNav(root, ext, mouse) {
       ext.pan(e.dx, e.dy);
     }
   });
-
+ 
   mouse.on('dragend', function(e) {
     var bounds;
     if (shiftDrag) {
@@ -2801,21 +2852,21 @@ function MapNav(root, ext, mouse) {
       }
     }
   });
-
+ 
   wheel.on('mousewheel', function(e) {
     var k = 1 + (0.11 * e.multiplier),
         delta = e.direction > 0 ? k : 1 / k;
     ext.rescale(ext.scale() * delta, e.x / ext.width(), e.y / ext.height());
   });
-
+ 
   function zoomIn() {
     zoomByPct(zoomScale, 0.5, 0.5);
   }
-
+ 
   function zoomOut() {
     zoomByPct(1/zoomScale, 0.5, 0.5);
   }
-
+ 
   // @box Bounds with pixels from t,l corner of map area.
   function zoomToBox(box) {
     var pct = Math.max(box.width() / ext.width(), box.height() / ext.height()),
@@ -2823,7 +2874,7 @@ function MapNav(root, ext, mouse) {
         fy = box.centerY() / ext.height() * (1 + pct) - pct / 2;
     zoomByPct(1 / pct, fx, fy);
   }
-
+ 
   // @pct Change in scale (2 = 2x zoom)
   // @fx, @fy zoom focus, [0, 1]
   function zoomByPct(pct, fx, fy) {
@@ -2831,29 +2882,29 @@ function MapNav(root, ext, mouse) {
     _fy = fy;
     zoomTween.start(ext.scale(), ext.scale() * pct, 400);
   }
-
+ 
 }
-
-
-
-
+ 
+ 
+ 
+ 
 function MapExtent(el) {
   var _position = new ElementPosition(el),
       _scale = 1,
       _cx,
       _cy,
       _contentBounds;
-
+ 
   _position.on('resize', function() {
     this.dispatchEvent('change');
     this.dispatchEvent('navigate');
     this.dispatchEvent('resize');
   }, this);
-
+ 
   this.reset = function(force) {
     this.recenter(_contentBounds.centerX(), _contentBounds.centerY(), 1, force);
   };
-
+ 
   this.recenter = function(cx, cy, scale, force) {
     if (!scale) scale = _scale;
     if (force || !(cx == _cx && cy == _cy && scale == _scale)) {
@@ -2864,12 +2915,12 @@ function MapExtent(el) {
       this.dispatchEvent('navigate');
     }
   };
-
+ 
   this.pan = function(xpix, ypix) {
     var t = this.getTransform();
     this.recenter(_cx - xpix / t.mx, _cy - ypix / t.my);
   };
-
+ 
   // Zoom to @scale (a multiple of the map's full scale)
   // @xpct, @ypct: optional focus, [0-1]...
   this.rescale = function(scale, xpct, ypct) {
@@ -2889,21 +2940,21 @@ function MapExtent(el) {
         cy = fy + dy2;
     this.recenter(cx, cy, scale);
   };
-
+ 
   this.resize = _position.resize;
   this.width = _position.width;
   this.height = _position.height;
   this.position = _position.position;
-
+ 
   // get zoom factor (1 == full extent, 2 == 2x zoom, etc.)
   this.scale = function() {
     return _scale;
   };
-
+ 
   this.getPixelSize = function() {
     return 1 / this.getTransform().mx;
   };
-
+ 
   // Get params for converting geographic coords to pixel coords
   this.getTransform = function(pixScale) {
     // get transform (y-flipped);
@@ -2914,12 +2965,12 @@ function MapExtent(el) {
     }
     return this.getBounds().getTransform(viewBounds, true);
   };
-
+ 
   this.getBounds = function() {
     if (!_contentBounds) return new Bounds();
     return centerAlign(calcBounds(_cx, _cy, _scale));
   };
-
+ 
   // Update the extent of 'full' zoom without navigating the current view
   this.setBounds = function(b) {
     var prev = _contentBounds;
@@ -2931,17 +2982,17 @@ function MapExtent(el) {
       _cy = b.centerY();
     }
   };
-
+ 
   function getPadding(size) {
     return size * 0.020 + 4;
   }
-
+ 
   function calcBounds(cx, cy, scale) {
     var w = _contentBounds.width() / scale,
         h = _contentBounds.height() / scale;
     return new Bounds(cx - w/2, cy - h/2, cx + w/2, cy + h/2);
   }
-
+ 
   // Receive: Geographic bounds of content to be centered in the map
   // Return: Geographic bounds of map window centered on @_contentBounds,
   //    with padding applied
@@ -2964,12 +3015,12 @@ function MapExtent(el) {
     return bounds;
   }
 }
-
+ 
 utils.inherit(MapExtent, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 function HitControl(ext, mouse) {
   var self = new EventDispatcher();
   var prevHits = [];
@@ -2981,23 +3032,23 @@ function HitControl(ext, mouse) {
   };
   var coords = El('#coordinate-info').hide();
   var lyr, target, test;
-
+ 
   ext.on('change', function() {
     // shapes may change along with map scale
     target = lyr ? lyr.getDisplayLayer() : null;
   });
-
+ 
   self.setLayer = function(o) {
     lyr = o;
     target = o.getDisplayLayer();
     test = tests[target.layer.geometry_type];
     coords.hide();
   };
-
+ 
   self.start = function() {
     active = true;
   };
-
+ 
   self.stop = function() {
     if (active) {
       hover([]);
@@ -3005,19 +3056,19 @@ function HitControl(ext, mouse) {
       active = false;
     }
   };
-
+ 
   mouse.on('click', function(e) {
     if (!active || !target) return;
     trigger('click', prevHits);
     gui.selectElement(coords.node());
   });
-
+ 
   // DISABLING: This causes problems when hovering over the info panel
   // Deselect hover shape when pointer leaves hover area
   //mouse.on('leave', function(e) {
   // hover(-1);
   //});
-
+ 
   mouse.on('hover', function(e) {
     var p, decimals;
     if (!active || !target) return;
@@ -3031,7 +3082,7 @@ function HitControl(ext, mouse) {
       hover(test(p[0], p[1]));
     }
   });
-
+ 
   // Convert pixel distance to distance in coordinate units.
   function getHitBuffer(pix) {
     var dist = pix / ext.getTransform().mx,
@@ -3039,13 +3090,13 @@ function HitControl(ext, mouse) {
     if (scale < 1) dist *= scale; // reduce hit threshold when zoomed out
     return dist;
   }
-
+ 
   function getCoordPrecision(bounds) {
     var min = Math.min(Math.abs(bounds.xmax), Math.abs(bounds.ymax)),
         decimals = Math.ceil(Math.log(min) / Math.LN10);
     return Math.max(0, 7 - decimals);
   }
-
+ 
   function polygonTest(x, y) {
     var dist = getHitBuffer(5),
         cands = findHitCandidates(x, y, dist),
@@ -3063,13 +3114,13 @@ function HitControl(ext, mouse) {
     }
     return hits;
   }
-
+ 
   function polylineTest(x, y) {
     var dist = getHitBuffer(15),
         cands = findHitCandidates(x, y, dist);
     return findNearestCandidates(x, y, dist, cands, target.dataset.arcs);
   }
-
+ 
   function findNearestCandidates(x, y, dist, cands, arcs) {
     var hits = [],
         cand, candDist;
@@ -3085,7 +3136,7 @@ function HitControl(ext, mouse) {
     }
     return hits;
   }
-
+ 
   function pointTest(x, y) {
     var dist = getHitBuffer(25),
         limitSq = dist * dist,
@@ -3101,11 +3152,11 @@ function HitControl(ext, mouse) {
     });
     return hits;
   }
-
+ 
   function getProperties(id) {
     return target.layer.data ? target.layer.data.getRecordAt(id) : {};
   }
-
+ 
   function sameIds(a, b) {
     if (a.length != b.length) return false;
     for (var i=0; i<a.length; i++) {
@@ -3113,14 +3164,14 @@ function HitControl(ext, mouse) {
     }
     return true;
   }
-
+ 
   function trigger(event, hits) {
     self.dispatchEvent(event, {
       ids: hits,
       id: hits.length > 0 ? hits[0] : -1
     });
   }
-
+ 
   function hover(hits) {
     if (!sameIds(hits, prevHits)) {
       prevHits = hits;
@@ -3128,7 +3179,7 @@ function HitControl(ext, mouse) {
       trigger('hover', hits);
     }
   }
-
+ 
   function findHitCandidates(x, y, dist) {
     var arcs = target.dataset.arcs,
         index = {},
@@ -3152,20 +3203,20 @@ function HitControl(ext, mouse) {
     });
     return cands;
   }
-
+ 
   return self;
 }
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 function Popup() {
   var parent = El('#mshp-main-map');
   var el = El('div').addClass('popup').appendTo(parent).hide();
   // var head = El('div').addClass('popup-head').appendTo(el).text('Feature 1 of 5  next prev');
   var content = El('div').addClass('popup-content').appendTo(el);
-
+ 
   this.show = function(rec, table, editable) {
     var maxHeight = parent.node().clientHeight - 36;
     this.hide(); // clean up if panel is already open
@@ -3175,7 +3226,7 @@ function Popup() {
       content.css('height:' + maxHeight + 'px');
     }
   };
-
+ 
   this.hide = function() {
     // make sure any pending edits are made before re-rendering popup
     // TODO: only blur popup fields
@@ -3184,7 +3235,7 @@ function Popup() {
     content.node().removeAttribute('style'); // remove inline height
     el.hide();
   };
-
+ 
   function render(el, rec, table, editable) {
     var tableEl = El('table').addClass('selectable'),
         rows = 0;
@@ -3199,7 +3250,7 @@ function Popup() {
       el.html('<div class="note"></div>');
     }
   }
-
+ 
   function renderRow(table, rec, key, type, editable) {
     var rowHtml = '<td class="field-name">%s</td><td><span class="value">%s</span> </td>';
     var val = rec[key];
@@ -3213,7 +3264,7 @@ function Popup() {
       editItem(cell, rec, key, type);
     }
   }
-
+ 
   function setFieldClass(el, val, type) {
     var isNum = type ? type == 'number' : utils.isNumber(val);
     var isNully = val === undefined || val === null || val !== val;
@@ -3223,7 +3274,7 @@ function Popup() {
     el.classed('null-value', isNully);
     el.classed('empty', isEmpty);
   }
-
+ 
   function editItem(el, rec, key, type) {
     var input = new ClickText2(el),
         strval = MapShaper.formatInspectorValue(rec[key], type),
@@ -3248,7 +3299,7 @@ function Popup() {
     });
   }
 }
-
+ 
 MapShaper.formatInspectorValue = function(val, type) {
   var str;
   if (type == 'object') {
@@ -3258,7 +3309,7 @@ MapShaper.formatInspectorValue = function(val, type) {
   }
   return str;
 };
-
+ 
 MapShaper.inputParsers = {
   string: function(raw) {
     return raw;
@@ -3293,19 +3344,19 @@ MapShaper.inputParsers = {
     return isNaN(val) ? raw : val;
   }
 };
-
+ 
 MapShaper.getInputParser = function(type) {
   return MapShaper.inputParsers[type || 'multiple'];
 };
-
+ 
 MapShaper.getFieldType = function(val, key, table) {
   // if a field has a null value, look at entire column to identify type
   return MapShaper.getValueType(val) || MapShaper.getColumnType(key, table);
 };
-
-
-
-
+ 
+ 
+ 
+ 
 function InspectionControl(model, hit) {
   var _popup = new Popup();
   var _inspecting = false;
@@ -3317,7 +3368,7 @@ function InspectionControl(model, hit) {
    });
   var _self = new EventDispatcher();
   var _shapes, _lyr;
-
+ 
   _self.updateLayer = function(o) {
     var shapes = o.getDisplayLayer().layer.shapes;
     if (_inspecting) {
@@ -3334,7 +3385,7 @@ function InspectionControl(model, hit) {
     _shapes = shapes;
     _lyr = o;
   };
-
+ 
   // replace cli inspect command
   api.inspect = function(lyr, arcs, opts) {
     var ids;
@@ -3350,15 +3401,15 @@ function InspectionControl(model, hit) {
     turnOn();
     inspect(ids[0], true);
   };
-
+ 
   document.addEventListener('keydown', function(e) {
     var kc = e.keyCode, n, id;
     if (!_inspecting) return;
-
+ 
     // esc key closes (unless in an editing mode)
     if (e.keyCode == 27 && _inspecting && !model.getMode()) {
       turnOff();
-
+ 
     // arrow keys advance pinned feature unless user is editing text.
     } else if ((kc == 37 || kc == 39) && _pinned && !gui.getInputElement()) {
       n = MapShaper.getFeatureCount(_lyr.getDisplayLayer().layer);
@@ -3373,7 +3424,7 @@ function InspectionControl(model, hit) {
       }
     }
   }, !!'capture'); // preempt the layer control's arrow key handler
-
+ 
   hit.on('click', function(e) {
     var id = e.id;
     var pin = false;
@@ -3390,20 +3441,20 @@ function InspectionControl(model, hit) {
     }
     inspect(id, pin, e.ids);
   });
-
+ 
   hit.on('hover', function(e) {
     var id = e.id;
     if (!_inspecting || _pinned) return;
     inspect(id, false, e.ids);
   });
-
+ 
   function showInspector(id, editable) {
     var o = _lyr.getDisplayLayer();
     var table = o.layer.data || null;
     var rec = table ? table.getRecordAt(id) : {};
     _popup.show(rec, table, editable);
   }
-
+ 
   // @id Id of a feature in the active layer, or -1
   function inspect(id, pin, ids) {
     if (!_inspecting) return;
@@ -3421,13 +3472,13 @@ function InspectionControl(model, hit) {
       pinned: pin
     });
   }
-
+ 
   function turnOn() {
     btn.addClass('selected');
     _inspecting = true;
     hit.start();
   }
-
+ 
   function turnOff() {
     btn.removeClass('selected');
     hit.stop();
@@ -3435,13 +3486,13 @@ function InspectionControl(model, hit) {
     inspect(-1); // clear the map
     _inspecting = false;
   }
-
+ 
   return _self;
 }
-
-
-
-
+ 
+ 
+ 
+ 
 var MapStyle = (function() {
   var darkStroke = "#334",
       lightStroke = "#b2d83a",
@@ -3512,7 +3563,7 @@ var MapStyle = (function() {
           strokeWidth: 3
         }
       };
-
+ 
   return {
     getHighlightStyle: function() {
       return highStyle;
@@ -3529,11 +3580,11 @@ var MapStyle = (function() {
     },
     getOverlayStyle: getOverlayStyle
   };
-
+ 
   function calcDotSize(n) {
     return n < 20 && 5 || n < 500 && 4 || n < 50000 && 3 || 2;
   }
-
+ 
   function getOverlayStyle(lyr, o) {
     var type = lyr.geometry_type;
     var topId = o.id;
@@ -3570,12 +3621,12 @@ var MapStyle = (function() {
       } else if (inSelection) {
         style = selectionHoverStyles[type]; // TODO: differentiate from other hover ids
       } else {
-        style = hoverStyles[type]; // TODO: differentiate from other hover ids
+       style = hoverStyles[type]; // TODO: differentiate from other hover ids
       }
       ids.push(topId);
       styles.push(style);
     }
-
+ 
     if (MapShaper.layerHasSvgDisplayStyle(lyr)) {
       if (type == 'point') {
         overlayStyle = MapShaper.wrapHoverStyle(MapShaper.getSvgDisplayStyle(lyr), overlayStyle);
@@ -3585,9 +3636,9 @@ var MapStyle = (function() {
     overlayStyle.ids = ids;
     return ids.length > 0 ? overlayStyle : null;
   }
-
+ 
 }());
-
+ 
 // Modify style to use scaled circle instead of dot symbol
 MapShaper.wrapHoverStyle = function(style, hoverStyle) {
   var styler = function(obj, i) {
@@ -3606,7 +3657,7 @@ MapShaper.wrapHoverStyle = function(style, hoverStyle) {
   };
   return {styler: styler};
 };
-
+ 
 MapShaper.getSvgDisplayStyle = function(lyr) {
   var records = lyr.data.getRecords(),
       fields = MapShaper.getSvgStyleFields(lyr),
@@ -3622,7 +3673,7 @@ MapShaper.getSvgDisplayStyle = function(lyr) {
       }
       style[key] = val;
     }
-
+ 
     // TODO: make sure canvas rendering matches svg output
     if (('strokeWidth' in style) && !style.strokeColor) {
       style.strokeColor = 'black';
@@ -3630,16 +3681,16 @@ MapShaper.getSvgDisplayStyle = function(lyr) {
       style.strokeWidth = 1;
     }
     if (('radius' in style) && !style.strokeColor && !style.fillColor &&
-      lyr.geometry_type == 'point') {
+     lyr.geometry_type == 'point') {
       style.fillColor = 'black';
     }
   };
   return {styler: styler, type: 'styled'};
 };
-
-
-
-
+ 
+ 
+ 
+ 
 MapShaper.getBoundsOverlap = function(bb1, bb2) {
   var area = 0;
   if (bb1.intersects(bb2)) {
@@ -3648,7 +3699,7 @@ MapShaper.getBoundsOverlap = function(bb1, bb2) {
   }
   return area;
 };
-
+ 
 // Test if map should be re-framed to show updated layer
 gui.mapNeedsReset = function(newBounds, prevBounds, mapBounds) {
   if (!prevBounds) return true;
@@ -3664,7 +3715,7 @@ gui.mapNeedsReset = function(newBounds, prevBounds, mapBounds) {
   if (!intersects) return true; // reset if layer is out-of-view
   return areaRatio > 500 || areaRatio < 0.05; // reset if layer is not at a viewable scale
 };
-
+ 
 function MshpMap(model) {
   var _root = El('#mshp-main-map'),
       _layers = El('#map-layers'),
@@ -3672,42 +3723,42 @@ function MshpMap(model) {
       _mouse = new MouseArea(_layers.node()),
       _nav = new MapNav(_root, _ext, _mouse),
       _inspector = new InspectionControl(model, new HitControl(_ext, _mouse));
-
+ 
   var _activeCanv = new DisplayCanvas().appendTo(_layers), // data layer shapes
       _overlayCanv = new DisplayCanvas().appendTo(_layers), // hover and selection shapes
       _annotationCanv = new DisplayCanvas().appendTo(_layers), // used for line intersections
       _annotationLyr, _annotationStyle,
       _activeLyr, _activeStyle, _overlayStyle;
-
+ 
   _ext.on('change', drawLayers);
-
+ 
   _inspector.on('change', function(e) {
     var lyr = _activeLyr.getDisplayLayer().layer;
     _overlayStyle = MapStyle.getOverlayStyle(lyr, e);
     drawLayer(_activeLyr, _overlayCanv, _overlayStyle);
   });
-
+ 
   model.on('select', function(e) {
     _annotationStyle = null;
     _overlayStyle = null;
   });
-
+ 
   model.on('update', function(e) {
     var prevBounds = _activeLyr ?_activeLyr.getBounds() : null,
         needReset = false;
-
+ 
     if (arcsMayHaveChanged(e.flags)) {
       // regenerate filtered arcs when simplification thresholds are calculated
       // or arcs are updated
       delete e.dataset.filteredArcs;
-
+ 
       // reset simplification after projection (thresholds have changed)
       // TODO: preserve simplification pct (need to record pct before change)
       if (e.flags.proj && e.dataset.arcs) {
         e.dataset.arcs.setRetainedPct(1);
       }
     }
-
+ 
     _activeLyr = initActiveLayer(e);
     needReset = gui.mapNeedsReset(_activeLyr.getBounds(), prevBounds, _ext.getBounds());
     _ext.setBounds(_activeLyr.getBounds()); // update map extent to match bounds of active group
@@ -3719,7 +3770,7 @@ function MshpMap(model) {
       drawLayers();
     }
   });
-
+ 
   this.setHighlightLayer = function(lyr, dataset) {
     if (lyr) {
       _annotationLyr = new DisplayLayer(lyr, dataset, _ext);
@@ -3730,14 +3781,14 @@ function MshpMap(model) {
       _annotationLyr = null;
     }
   };
-
+ 
   // lightweight way to update simplification of display lines
   // TODO: consider handling this as a model update
   this.setSimplifyPct = function(pct) {
     _activeLyr.setRetainedPct(pct);
     drawLayers();
   };
-
+ 
   function initActiveLayer(o) {
     var lyr = new DisplayLayer(o.layer, o.dataset, _ext);
     _inspector.updateLayer(lyr);
@@ -3745,20 +3796,20 @@ function MshpMap(model) {
     lyr.updateStyle(_activeStyle);
     return lyr;
   }
-
+ 
   // Test if an update may have affected the visible shape of arcs
   // @flags Flags from update event
   function arcsMayHaveChanged(flags) {
     return flags.presimplify || flags.simplify || flags.proj ||
         flags.arc_count || flags.repair;
   }
-
+ 
   function drawLayers() {
     drawLayer(_activeLyr, _overlayCanv, _overlayStyle);
     drawLayer(_activeLyr, _activeCanv, _activeStyle);
     drawLayer(_annotationLyr, _annotationCanv, _annotationStyle);
   }
-
+ 
   function drawLayer(lyr, canv, style) {
     if (style) {
       canv.prep(_ext);
@@ -3766,15 +3817,15 @@ function MshpMap(model) {
     } else {
       canv.hide();
     }
-
+ 
   }
 }
-
+ 
 utils.inherit(MshpMap, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 function Console(model) {
   var CURSOR = '$ ';
   var PROMPT = 'Enter mapshaper commands or type "tips" for examples and console help';
@@ -3794,15 +3845,15 @@ function Console(model) {
   var _isOpen = false;
   var _error = MapShaper.error; // save default error functions...
   var _stop = MapShaper.stop;
-
+ 
   // capture all messages to this console, whether open or closed
-  message = MapShaper.message = consoleMessage;
-
+ message = MapShaper.message = consoleMessage;
+ 
   message(PROMPT);
   document.addEventListener('keydown', onKeyDown);
   new ModeButton('#console-btn', 'console', model);
   model.addMode('console', turnOn, turnOff);
-
+ 
   gui.onClick(content, function(e) {
     var targ = El(e.target);
     if (gui.getInputElement() || targ.hasClass('console-message')) {
@@ -3811,7 +3862,7 @@ function Console(model) {
       input.node().focus();
     }
   });
-
+ 
   function toLog(str, cname) {
     var msg = El('div').text(str).appendTo(log);
     if (cname) {
@@ -3819,7 +3870,7 @@ function Console(model) {
     }
     scrollDown();
   }
-
+ 
   function turnOn() {
     if (!_isOpen && !!model.getEditingLayer()) {
       _isOpen = true;
@@ -3829,7 +3880,7 @@ function Console(model) {
       input.node().focus();
     }
   }
-
+ 
   function turnOff() {
     if (_isOpen) {
       _isOpen = false;
@@ -3839,18 +3890,18 @@ function Console(model) {
       input.node().blur();
     }
   }
-
+ 
   function onPaste(e) {
     // paste plain text (remove any copied HTML tags)
     e.preventDefault();
     var str = (e.originalEvent || e).clipboardData.getData('text/plain');
     document.execCommand("insertHTML", false, str);
   }
-
+ 
   function receiveFocus() {
     placeCursor();
   }
-
+ 
   function placeCursor() {
     var el = input.node();
     var range, selection;
@@ -3864,16 +3915,16 @@ function Console(model) {
       selection.addRange(range);
     }
   }
-
+ 
   function scrollDown() {
     var el = content.parent().node();
     el.scrollTop = el.scrollHeight;
   }
-
+ 
   function metaKey(e) {
     return e.metaKey || e.ctrlKey || e.altKey;
   }
-
+ 
   function onKeyDown(e) {
     var kc = e.keyCode,
         inputEl = gui.getInputElement(),
@@ -3881,7 +3932,7 @@ function Console(model) {
         typingInConsole = inputEl && inputEl == input.node(),
         inputText = readCommandLine(),
         capture = false;
-
+ 
     // esc key
     if (kc == 27) {
       if (typing) {
@@ -3889,7 +3940,7 @@ function Console(model) {
       }
       model.clearMode(); // esc escapes other modes as well
       capture = true;
-
+ 
     // l/r arrow keys while not typing in a text field
     } else if ((kc == 37 || kc == 39) && (!typing || typingInConsole && !inputText)) {
       if (kc == 37) {
@@ -3897,11 +3948,11 @@ function Console(model) {
       } else {
         model.selectNextLayer();
       }
-
+ 
     // delete key while not inputting text
     } else if (kc == 8 && !typing) {
       capture = true; // prevent delete from leaving page
-
+ 
     // any key while console is open
     } else if (_isOpen) {
       capture = true;
@@ -3925,19 +3976,19 @@ function Console(model) {
         // normal typing
         capture = false;
       }
-
+ 
     // space bar while not inputting text
     } else if (!typing && kc == 32) {
       // space bar opens console, unless typing in an input field or editable el
       capture = true;
       model.enterMode('console');
     }
-
+ 
     if (capture) {
       e.preventDefault();
     }
   }
-
+ 
   // tab-completion for field names
   function tabComplete() {
     var line = readCommandLine(),
@@ -3955,27 +4006,27 @@ function Console(model) {
       }
     }
   }
-
+ 
   function findCompletions(str, fields) {
     return fields.filter(function(name) {
       return name.indexOf(str) === 0;
     });
   }
-
+ 
   function readCommandLine() {
     return input.node().textContent.trim();
   }
-
+ 
   function toCommandLine(str) {
     input.node().textContent = str.trim();
     placeCursor();
   }
-
+ 
   function peekHistory(i) {
     var idx = history.length - 1 - (i || 0);
     return idx >= 0 ? history[idx] : null;
   }
-
+ 
   function toHistory(str) {
     if (historyId > 0) { // if we're back in the history stack
       if (peekHistory() === '') {
@@ -3988,11 +4039,11 @@ function Console(model) {
       history.push(str);
     }
   }
-
+ 
   function fromHistory() {
     toCommandLine(peekHistory(historyId));
   }
-
+ 
   function back() {
     if (history.length === 0) return;
     if (historyId === 0) {
@@ -4001,7 +4052,7 @@ function Console(model) {
     historyId = Math.min(history.length - 1, historyId + 1);
     fromHistory();
   }
-
+ 
   function forward() {
     if (historyId <= 0) return;
     historyId--;
@@ -4010,19 +4061,19 @@ function Console(model) {
       history.pop();
     }
   }
-
+ 
   function clear() {
     log.empty();
     scrollDown();
   }
-
+ 
   function getCommandFlags(commands) {
     return commands.reduce(function(memo, cmd) {
       memo[cmd.name] = true;
       return memo;
     }, {});
   }
-
+ 
   function submit() {
     var cmd = readCommandLine();
     toCommandLine('');
@@ -4043,7 +4094,7 @@ function Console(model) {
       toHistory(cmd);
     }
   }
-
+ 
   function runMapshaperCommands(str) {
     var commands, target;
     try {
@@ -4057,11 +4108,11 @@ function Console(model) {
       applyParsedCommands(commands, target.layer, target.dataset);
     }
   }
-
+ 
   function applyParsedCommands(commands, lyr, dataset) {
     var lyrId = dataset.layers.indexOf(lyr),
         prevArcCount = dataset.arcs ? dataset.arcs.size() : 0;
-
+ 
     // most commands should target the currently edited layer unless
     // user has specified a different target
     commands.forEach(function(cmd) {
@@ -4070,7 +4121,7 @@ function Console(model) {
         cmd.options.target = String(lyrId);
       }
     });
-
+ 
     MapShaper.runParsedCommands(commands, dataset, function(err) {
       var flags = getCommandFlags(commands),
           outputLyr = getOutputLayer(lyrId, dataset, commands);
@@ -4085,7 +4136,7 @@ function Console(model) {
       if (err) onError(err);
     });
   }
-
+ 
   // try to get the output layer from the last console command
   // (if multiple layers are output, pick one of the output layers)
   // @lyrId  index of the currently edited layer
@@ -4098,14 +4149,14 @@ function Console(model) {
       // (new layers should be appended to the list of layers -- need to test)
       lyr = layers[layers.length-1];
     } else {
-      // use the layer in the same position as the currently selected layer;
+     // use the layer in the same position as the currently selected layer;
       // this may not be the output layer if a different layer was explicitly
       // targeted.
       lyr = layers[lyrId] || layers[0];
     }
     return lyr;
   }
-
+ 
   function onError(err) {
     if (utils.isString(err)) {
       stop(err);
@@ -4118,33 +4169,33 @@ function Console(model) {
       warning(err.message);
     }
   }
-
+ 
   function consoleStop() {
     var msg = gui.formatMessageArgs(arguments);
     warning(msg);
     throw new APIError(msg);
   }
-
+ 
   function warning() {
     var msg = gui.formatMessageArgs(arguments);
     toLog(msg, 'console-error');
   }
-
+ 
   function consoleMessage() {
     var msg = gui.formatMessageArgs(arguments);
     toLog(msg, 'console-message');
   }
-
+ 
   function consoleError() {
     var msg = gui.formatMessageArgs(arguments);
     throw new Error(msg);
   }
-
+ 
   function printExample(comment, command) {
     toLog(comment, 'console-message');
     toLog(command, 'console-example');
   }
-
+ 
   function printExamples() {
     printExample("See a list of all console commands", "$ help");
     printExample("Get help using a single command", "$ help innerlines");
@@ -4154,16 +4205,16 @@ function Console(model) {
     printExample("Clear the console", "$ clear");
   }
 }
-
-
-
-
+ 
+ 
+ 
+ 
 function Model() {
   var datasets = [],
       self = this,
       mode = null,
       editing;
-
+ 
   this.forEachLayer = function(cb) {
     var i = 0;
     datasets.forEach(function(dataset) {
@@ -4172,7 +4223,7 @@ function Model() {
       });
     });
   };
-
+ 
   this.deleteLayer = function(lyr, dataset) {
     var layers = dataset.layers;
     layers.splice(layers.indexOf(lyr), 1);
@@ -4180,7 +4231,7 @@ function Model() {
       this.removeDataset(dataset);
     }
   };
-
+ 
   this.findLayer = function(target) {
     var found = null;
     this.forEachLayer(function(lyr, dataset) {
@@ -4190,7 +4241,7 @@ function Model() {
     });
     return found;
   };
-
+ 
   this.findAnotherLayer = function(target) {
     var layers = this.getLayers(),
         found = null;
@@ -4199,7 +4250,7 @@ function Model() {
     }
     return found;
   };
-
+ 
   this.removeDataset = function(target) {
     if (target == (editing && editing.dataset)) {
       error("Can't remove dataset while editing");
@@ -4208,11 +4259,11 @@ function Model() {
       return d != target;
     });
   };
-
+ 
   this.getDatasets = function() {
     return datasets;
   };
-
+ 
   this.getLayers = function() {
     var layers = [];
     this.forEachLayer(function(lyr, dataset) {
@@ -4220,7 +4271,7 @@ function Model() {
     });
     return layers;
   };
-
+ 
   this.selectNextLayer = function() {
     var layers = this.getLayers(),
         idx = indexOfLayer(editing.layer, layers),
@@ -4230,7 +4281,7 @@ function Model() {
       this.selectLayer(next.layer, next.dataset);
     }
   };
-
+ 
   this.selectPrevLayer = function() {
     var layers = this.getLayers(),
         idx = indexOfLayer(editing.layer, layers),
@@ -4240,15 +4291,15 @@ function Model() {
       this.selectLayer(prev.layer, prev.dataset);
     }
   };
-
+ 
   this.selectLayer = function(lyr, dataset) {
     this.updated({select: true}, lyr, dataset);
   };
-
+ 
   this.addDataset = function(dataset) {
     this.updated({select: true, import: true}, dataset.layers[0], dataset);
   };
-
+ 
   this.updated = function(flags, lyr, dataset) {
     var e;
     flags = flags || {};
@@ -4264,15 +4315,15 @@ function Model() {
       this.dispatchEvent('update', e);
     }
   };
-
+ 
   this.getEditingLayer = function() {
     return editing || {};
   };
-
+ 
   this.getMode = function() {
     return mode;
   };
-
+ 
   // return a function to trigger this mode
   this.addMode = function(name, enter, exit) {
     this.on('mode', function(e) {
@@ -4284,13 +4335,13 @@ function Model() {
       }
     });
   };
-
+ 
   this.addMode(null, function() {}, function() {}); // null mode
-
+ 
   this.clearMode = function() {
     self.enterMode(null);
   };
-
+ 
   this.enterMode = function(next) {
     var prev = mode;
     if (next != prev) {
@@ -4298,7 +4349,7 @@ function Model() {
       self.dispatchEvent('mode', {name: next, prev: prev});
     }
   };
-
+ 
   function setEditingLayer(lyr, dataset) {
     if (editing && editing.layer == lyr) {
       return;
@@ -4311,14 +4362,14 @@ function Model() {
     }
     editing = layerObject(lyr, dataset);
   }
-
+ 
   function layerObject(lyr, dataset) {
     return {
       layer: lyr,
       dataset: dataset
     };
   }
-
+ 
   function indexOfLayer(lyr, layers) {
     var idx = -1;
     layers.forEach(function(o, i) {
@@ -4327,12 +4378,12 @@ function Model() {
     return idx;
   }
 }
-
+ 
 utils.inherit(Model, EventDispatcher);
-
-
-
-
+ 
+ 
+ 
+ 
 Browser.onload(function() {
   if (!gui.browserIsSupported()) {
     El("#mshp-not-supported").show();
@@ -4348,7 +4399,7 @@ Browser.onload(function() {
     });
   }
 });
-
+ 
 gui.startEditing = function() {
   var model = new Model(),
       dataLoaded = false,
@@ -4360,9 +4411,9 @@ gui.startEditing = function() {
   simplify = new SimplifyControl(model);
   new ImportFileProxy(model);
   new ImportControl(model);
-
+ 
   new LayerControl(model);
-
+ 
   model.on('select', function() {
     if (!dataLoaded) {
       dataLoaded = true;
@@ -4382,5 +4433,6 @@ gui.startEditing = function() {
     map.setSimplifyPct(e.value);
   });
 };
-
+ 
 }());
+ 
