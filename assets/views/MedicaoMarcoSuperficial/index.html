@@ -87,6 +87,7 @@
 
                    <div class="buttons">
                       <button type="button" class="btn btn-default ng-hide">Adicionar</button>
+
                       <span class="">
                           <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="addMedicao()">Salvar</button>
                           
@@ -166,7 +167,8 @@
             </div>
 
             <div class="card-panel ng-scope">
-              <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
+                
+                <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
 
               <div>
                   <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"

@@ -171,8 +171,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
             HtmlFormBody += "</table></div></div>";
 
-            if ($scope.popup == 'true')
-                HtmlFormBody += "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
+            if ($scope.popup == 'true') {
+
+                HtmlFormBody += "<a ng-click='modalViewmodal()' class='btn-floating btn-large waves-effect waves-light btn btn-default'><i class='mdi-content-add'></i></a>";
+
+            }
+                //HtmlFormBody += "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
 
             $element.replaceWith($compile(HtmlFormBody)($scope));
 
@@ -704,13 +708,15 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             var interval = setInterval(function () {
                 if ($scope.totalRequests == $scope.totalResponses) {
                     $element.replaceWith($compile(HtmlFormBody)($scope));
+
+                    $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
+                    $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+
                     clearInterval(interval);
                 }
             }, 0);
             
 
-            $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
-            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
 
         },
         controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
