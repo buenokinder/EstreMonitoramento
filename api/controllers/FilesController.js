@@ -14,7 +14,7 @@ module.exports = {
     },function (err, uploadedFiles) {
    
 
-    var filename = uploadedFiles[0].fd.replace("C:\\EstreMonitoramento\\.tmp\\public\\images\\","");
+    var filename = uploadedFiles[0].fd.replace("/Users/user1/EstreMonitoramento/.tmp/public/images/","");
 
 
 

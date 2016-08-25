@@ -2349,8 +2349,24 @@ function drawSquare(x, y, size, ctx) {
 function drawPin(x, y, size, ctx, item) {
   var color = "white";
 if(item.criterioAlertaHorizontalMetodologia1 == 'Aceitável'){
-    color = "greem";
+    color = "green";
   }
+
+if(item.criterioAlertaHorizontalMetodologia1 == 'Regular'){
+    color = "orange";
+  }
+
+if(item.criterioAlertaHorizontalMetodologia1 == 'Atenção'){
+    color = "yellow";
+  }
+
+if(item.criterioAlertaHorizontalMetodologia1 == 'Intervenção'){
+    color = "red";
+  }
+if(item.criterioAlertaHorizontalMetodologia1 == 'Paralisação'){
+    color = "black";
+  }
+
   if (size > 0) {
     var offs = size / 2;
     x = Math.round(x - offs);
