@@ -258,6 +258,7 @@ module.exports = {
             dataFinal = this.getDate(req.param('data'), 23, 59, 59);
 
             filtro.data = { '>=': dataInicial, '<=': dataFinal };
+			console.log(filtro.data);
             return filtro;
         }
 
