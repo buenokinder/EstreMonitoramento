@@ -202,7 +202,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
 
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
-                return (perfil && perfil.length > 0);
+                return (perfil != undefined && perfil.length > 0);
             };
             
             if ($scope.noacess)
@@ -731,16 +731,19 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
             $scope.nopNew = true;
             $scope.nopUpdate = true;
+            $scope.nopacess = false;
             $scope.inputClass = "";
             $scope.data = ({});
             $scope.url = ([]);
 
             $scope.userInProfiles = function (profiles) {
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
-                return (perfil && perfil.length > 0);
+                return (perfil!=undefined && perfil.length > 0);
             };
 
-            $scope.nopacess = $scope.userInProfiles($scope.noacess);
+            if ($scope.noacess)
+                $scope.nopacess = $scope.userInProfiles($scope.noacess);
+
             $scope.nopNew = !$scope.userInProfiles($scope.adicionarperfil);
             $scope.nopUpdate = !$scope.userInProfiles($scope.updateperfil);
 
@@ -806,10 +809,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
             $scope.comboFields = [];
 
-            $scope.getCombo = function (field, index) {
+            $scope.getCombo = function (field, index, callback) {
 
                 if (field.datarest) {
                     $scope[field.model] = JSON.parse(field.datarest);
+                    if (callback) {
+                        callback(index);
+                    }
                 }
                 else {
                     $scope.comboFields.push(field);
@@ -824,6 +830,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             }
                             angular.extend($scope[field.model][key], { 'teste': false, icon: "<img src='/images/" + $scope[field.model][key].perfil + ".png' ></img>" });
                         });
+
+                        if (callback) {
+                            callback(index);
+                        }
                     });
                 }
             };
