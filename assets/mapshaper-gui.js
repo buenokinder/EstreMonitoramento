@@ -2220,7 +2220,7 @@ function myFunction(arr, shapes, style) {
 		 	item = arr[i];
        console.log(item.leste);
        console.log(item.norte);
-       drawPin(item.leste * t.mx + t.bx, item.norte * t.my + t.by, size, _ctx);
+       drawPin(item.leste * t.mx + t.bx, item.norte * t.my + t.by, size, _ctx, item);
      }
      
 }
@@ -2346,13 +2346,16 @@ function drawSquare(x, y, size, ctx) {
   }
 }
  
-function drawPin(x, y, size, ctx) {
- 
+function drawPin(x, y, size, ctx, item) {
+  var color = "white";
+if(item.criterioAlertaHorizontalMetodologia1 == 'Aceitável'){
+    color = "greem";
+  }
   if (size > 0) {
     var offs = size / 2;
     x = Math.round(x - offs);
     y = Math.round(y - offs);
-   var pin = { x:100, y:100, color:'red' };
+   var pin = { x:100, y:100, color: color };
      ctx.save();
      ctx.translate(x,y);
  
