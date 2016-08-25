@@ -684,7 +684,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                         //        var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
                         //        var defaultValue = "";
-                                
+
                         //        for (var keyDefaultValues in jsonDefaultValue) {
                         //            for (var m in jsonDefaultValue[keyDefaultValues]) {
                         //                defaultValue = $scope[m][jsonDefaultValue[keyDefaultValues][m]];
