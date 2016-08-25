@@ -643,14 +643,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 canSelect = (perfil && perfil.length > 0);
                             }
 
-<<<<<<< HEAD
-                        $scope.getCombo($scope.fields[key]);
-
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
-                        HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
-                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
-                        HtmlFormBody += "</div></div>";
-=======
                             if (undefined != $scope.fields[key].default) {
                                 var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
                                 var defaultValue = "";
@@ -685,7 +677,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             $scope.totalResponses += 1;
                         });
 
->>>>>>> Michel
 
                         break;
                     case 'comboboxmulti':
