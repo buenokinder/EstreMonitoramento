@@ -87,6 +87,7 @@
 
                    <div class="buttons">
                       <button type="button" class="btn btn-default ng-hide">Adicionar</button>
+
                       <span class="">
                           <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="addMedicao()">Salvar</button>
                           
@@ -160,19 +161,23 @@
             <div class="card-panel ng-scope">
                <div class="card-content black-text">
                   <p>Detalhes da Medição</p>
-                    <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor'},{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true}  ]"  label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true"></edit-view>
+                   <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor', 'updateperfil':[{ 'perfil': 'Gerente'}] },{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true, 'updateperfil':[{ 'perfil': 'Operacional'}] }  ]" label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}]"></edit-view>
+
+                   
+
                </div>
 
 
             </div>
 
             <div class="card-panel ng-scope">
-              <button ng-click='uploadDetalhes()' class='btn btn-large ' aria-hidden='false'>Importar Arquivo</button>
+                
+                <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
 
               <div>
-                  	<grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false"  strupdate="false" popup="true" label="Lista de Detalhes de Medições"  
-                    view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true">
-                    </grid-view>
+                  <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
+                             view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'}]" updateperfil=" [{ 'perfil': 'Administrador' }, { 'perfil': 'Gerente' }]">
+                  </grid-view>
               </div>
 
             <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  
@@ -208,11 +213,11 @@
                       </tbody>
                     </table>
 
-                    <div class="row col-xs-12 col-md-6">
-                      <p><b>Observação do operacional:</b></p>
-                      <textarea ng-model="data.obsOperacional" class="form-group" rows="15" cols="40" style="margin: 0px; height: 85px; width: 714px;"></textarea>
-                      <button ng-click="saveObsOperacional()" type="submit" class="btn btn-primary" style="margin-right:10px;">Submeter</button>
-                    </div>
+                      <div class="row col-xs-12 col-md-6" ng-show="perfil=='Operacional'">
+                          <p><b>Observação do operacional:</b></p>
+                          <textarea ng-model="data.obsOperacional" class="form-group" rows="15" cols="40" style="margin: 0px; height: 85px; width: 714px;"></textarea>
+                          <button ng-click="saveObsOperacional()" type="submit" class="btn btn-primary" style="margin-right:10px;">Submeter</button>
+                      </div>
 
                   </div>
 

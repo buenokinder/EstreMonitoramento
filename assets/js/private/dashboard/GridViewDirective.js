@@ -6,6 +6,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             fields: '=',
             listaname: '@',
             noacess: '=',
+            deleteperfil: '=',
+            updateperfil: '=',
+            adicionarperfil: '=',
             adicionar: '@',
             view: '@',
             strupdate: '@',
@@ -61,7 +64,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             HtmlFormBody += "<th  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'>Ações</th></tr></thead>";
 
 
-            if ($scope.editinline) {
+            if ($scope.editinline && !$scope.nopupdate) {
                 HtmlFormBody += "<tbody>";
                 HtmlFormBody += "<tr ng-repeat='datum in data' style='cursor:pointer' title='Clique para editar'>";
 
@@ -77,17 +80,20 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<a href ='#' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                 HtmlFormBody += "</td>";
 
+                if (!$scope.nopdelete) {
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
+                    HtmlFormBody += "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
+                    HtmlFormBody += "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody += "</td>";
+                }
 
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'>";
-                HtmlFormBody += "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
-                HtmlFormBody += "<a ng-show='deleteDisabled()' ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
                 HtmlFormBody += "<a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                 HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'>";
                 HtmlFormBody += "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
                 HtmlFormBody += "</td>"
+
                 HtmlFormBody += "<td style='white-space: nowrap'>";
                 HtmlFormBody += "<form editable-form name='rowform' ng-show='rowform.$visible' class='form-buttons form-inline' onbeforesave='save(datum)' ng-show='rowform.$visible' shown='edited == datum'>";
                 HtmlFormBody += "<button type='submit' ng-disabled='rowform.$waiting' style='border:none; background: none !important;' >";
@@ -97,10 +103,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<i class='mdi-navigation-close estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i>";
                 HtmlFormBody += "</a>";
                 HtmlFormBody += "</form>";
-                HtmlFormBody += "<div class='buttons' ng-show='!rowform.$visible'>";
-                HtmlFormBody += "<a ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                HtmlFormBody += "</div>";
+                if (!$scope.nopdelete) {
+                    HtmlFormBody += "<div class='buttons' ng-show='!rowform.$visible'>";
+                    HtmlFormBody += "<a ng-click='delete(datum)'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody += "</div>";
+                }
                 HtmlFormBody += "</td>";
+
                 HtmlFormBody += "</tr>";
                 HtmlFormBody += "</tbody>";
                 HtmlFormBody += "<tfoot>";
@@ -146,9 +155,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 var anchor = (undefined != $scope.calculate && '' != $scope.calculate) ? "<a  ng-click='calc(datum)'>" : "<a ng-click='select(datum)'>";
 
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(" + $scope.calculate + ")' style='text-align:center;'>" + anchor + "<i class='mdi-action-assessment  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
-                HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
-                HtmlFormBody += "</td>";
+
+                if (!$scope.nopdelete) {
+                    HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(update)' style='text-align:center;'> <a ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
+                    HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
+                    HtmlFormBody += "</td>";
+                }
+
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
@@ -158,8 +171,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
             HtmlFormBody += "</table></div></div>";
 
-            if ($scope.popup == 'true')
-                HtmlFormBody += "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
+            if ($scope.popup == 'true') {
+
+                HtmlFormBody += "<a ng-click='modalViewmodal()' class='btn-floating btn-large waves-effect waves-light btn btn-default'><i class='mdi-content-add'></i></a>";
+
+            }
+                //HtmlFormBody += "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
 
             $element.replaceWith($compile(HtmlFormBody)($scope));
 
@@ -179,14 +196,21 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.edited = ([]);
             $scope.nopacess = false;
 
-
-            for (var key in $scope.noacess) {
-                if ($scope.noacess[key].perfil == $scope.me._perfil) {
-                    $scope.nopacess = true;
+            $scope.userInProfiles = function (profiles) {
+                if (!profiles) {
+                    return true;
                 }
-            }
 
+                var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
+                return (perfil && perfil.length > 0);
+            };
+            
+            if ($scope.noacess)
+                $scope.nopacess = $scope.userInProfiles($scope.noacess);
 
+            $scope.nopNew = !$scope.userInProfiles($scope.adicionarperfil);
+            $scope.nopupdate = !$scope.userInProfiles($scope.updateperfil);
+            $scope.nopdelete = !$scope.userInProfiles($scope.deleteperfil);
 
             $scope.pesquisar = function () {
                 var query = "";
@@ -490,7 +514,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
         }
 
     }
-}]).directive('formView', ['$compile', 'sennitCommunicationService', function ($compile, sennitCommunicationService, $http) {
+}]).directive('formView', ['$compile', '$filter', 'sennitCommunicationService', function ($compile, $filter, sennitCommunicationService, $http) {
     return {
         restrict: 'E',
         scope: {
@@ -605,13 +629,63 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         break;
 
                     case 'combobox':
+                        HtmlFormBody += "#ELEMENT_KEY_" + key;
 
+                        $scope.totalRequests += 1;
+                        $scope.getCombo($scope.fields[key], key, function (key) {
+                            var canSelect = true;
+                            var valueToShow = "";
+                            var htmlElement = "";
+
+                            if ($scope.fields[key].updateperfil) {
+                                var perfis = angular.fromJson($scope.fields[key].updateperfil);
+                                var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                                canSelect = (perfil && perfil.length > 0);
+                            }
+
+<<<<<<< HEAD
                         $scope.getCombo($scope.fields[key]);
 
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                         HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                         HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
                         HtmlFormBody += "</div></div>";
+=======
+                            if (undefined != $scope.fields[key].default) {
+                                var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
+                                var defaultValue = "";
+
+                                for (var keyDefaultValues in jsonDefaultValue) {
+                                    for (var m in jsonDefaultValue[keyDefaultValues]) {
+                                        defaultValue = $scope[m][jsonDefaultValue[keyDefaultValues][m]];
+                                        break;
+                                    }
+                                }
+
+                                for (var i = 0; i < $scope[$scope.fields[key].model].length; i++) {
+                                    if ($scope[$scope.fields[key].model][i][$scope.fields[key].defaultkey] == defaultValue) {
+                                        $scope.data[$scope.fields[key].name] = $scope[$scope.fields[key].model][i];
+                                        valueToShow = $scope[$scope.fields[key].model][i][$scope.fields[key].defaultvalue];
+                                        break;
+                                    }
+                                }
+                            }
+
+                            htmlElement += "<div class='row'><div class='input-field col s12'>";
+                            htmlElement += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+
+                            if (canSelect) {
+                                htmlElement += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                            } else {
+                                htmlElement += "<span>" + valueToShow + "</span>";
+                            }
+
+                            htmlElement += "</div></div>";
+                            HtmlFormBody = HtmlFormBody.replace("#ELEMENT_KEY_" + key, htmlElement);
+                            $scope.totalResponses += 1;
+                        });
+
+>>>>>>> Michel
 
                         break;
                     case 'comboboxmulti':
@@ -638,14 +712,20 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             HtmlFormBody += "<div class='row' >&nbsp;</div><div class='row' ng-hide='(nopNew && nopUpdate)'><div class='input-field col s12'><a ng-click='newitem()' ng-hide='nopNew' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a><button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' ><span ng-show='!sennitForm.loading'>Submeter</span>";
             HtmlFormBody += "<span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
             HtmlFormBody += "<span ng-show='sennitForm.loading'>Aguarde...</span></button></div></div>";
-
-
             HtmlFormBody += "</div></div></div> <input type='hidden' name='_csrf' value='<%= _csrf %>' /></form></div>";
 
-            $element.replaceWith($compile(HtmlFormBody)($scope));
+            var interval = setInterval(function () {
+                if ($scope.totalRequests == $scope.totalResponses) {
+                    $element.replaceWith($compile(HtmlFormBody)($scope));
 
-            $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
-            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+                    $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
+                    $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+
+                    clearInterval(interval);
+                }
+            }, 0);
+            
+
 
         },
         controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
@@ -653,6 +733,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.combodata = ([]);
             $scope.combos = ([]);
             $scope.modelComboBox = ([]);
+            $scope.totalRequests = 0;
+            $scope.totalResponses = 0;
             $scope.sennitForm = {
                 loading: false
             }
@@ -662,29 +744,14 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.data = ({});
             $scope.url = ([]);
 
+            $scope.userInProfiles = function (profiles) {
+                var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
+                return (perfil && perfil.length > 0);
+            };
 
-            $scope.nopacess = false;
-
-
-            for (var key in $scope.noacess) {
-                if ($scope.noacess[key].perfil == $scope.me._perfil) {
-                    $scope.nopacess = true;
-                }
-            }
-
-
-            for (var key in $scope.adicionarperfil) {
-                if ($scope.adicionarperfil[key].perfil == $scope.me._perfil) {
-                    $scope.nopNew = false;
-                }
-            }
-
-            for (var key in $scope.updateperfil) {
-
-                if ($scope.updateperfil[key].perfil == $scope.me._perfil) {
-                    $scope.nopUpdate = false;
-                }
-            }
+            $scope.nopacess = $scope.userInProfiles($scope.noacess);
+            $scope.nopNew = !$scope.userInProfiles($scope.adicionarperfil);
+            $scope.nopUpdate = !$scope.userInProfiles($scope.updateperfil);
 
             $scope.removeItem = function (item, model) {
 
@@ -786,8 +853,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             $scope.data[$scope.fields[key].name] = $scope.me._id;
 
                             break;
+                            
                         default:
-                            $scope.data[$scope.fields[key].name] = "";
+                            if ($scope.fields[key].default == undefined) {
+                                $scope.data[$scope.fields[key].name] = "";
+                            }
                             break;
                     }
                 }
@@ -1096,12 +1166,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             element.bind('change', onChangeFunc);
         }
     };
-}).directive('editView', ['$compile', 'sennitCommunicationService', function ($compile, sennitCommunicationService, $http) {
+}).directive('editView', ['$compile', '$filter', 'sennitCommunicationService', function ($compile, $filter, sennitCommunicationService, $http) {
     return {
         restrict: 'E',
         scope: {
             fields: '=',
             datasource: '=',
+            updateperfil:'=',
             listaname: '@',
             strupdate: '@',
             nocard: '@',
@@ -1114,9 +1185,36 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
             var HtmlFormBody = '<form editable-form name="editableForm" onaftersave="save()">';
 
+            if (!$scope.me) {
+                $scope.me = window.SAILS_LOCALS;
+            }
+            var canEditAll = true;
+
+            if ($scope.updateperfil) {
+                var perfis = angular.fromJson($scope.updateperfil);
+                var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                canEditAll = (perfil && perfil.length > 0);
+            }
+
+
+
+
             for (var key in $scope.fields) {
+
+                var canEdit = true;
+
+                if ($scope.fields[key].updateperfil) {
+                    var perfis = angular.fromJson($scope.fields[key].updateperfil);
+                    var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                    canEdit = (perfil && perfil.length > 0);
+                }
+
+                if (!canEdit) continue;
+
                 HtmlFormBody += '<p>';
                 HtmlFormBody += '<b>' + $scope.fields[key].value + ': </b>';
+
+ 
 
                 switch ($scope.fields[key].type) {
                     case 'date':
@@ -1142,6 +1240,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         break;
 
                     default:
+
                         if ($scope.fields[key].readonly == true) {
                             HtmlFormBody += '<span e-readonly="true">{{data.' + $scope.fields[key].name + '}}</span>';
                         } else {
@@ -1153,21 +1252,25 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += '</p>';
             }
 
-            HtmlFormBody += '<div class="buttons">';
-            HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="loadForm(editableForm)" ng-show="!editableForm.$visible">';
-            HtmlFormBody += 'Editar';
-            HtmlFormBody += '</button>';
+            if (canEditAll) {
 
-            HtmlFormBody += '<span ng-show="editableForm.$visible">';
-            HtmlFormBody += '<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting" style="margin-right:10px;">';
-            HtmlFormBody += 'Salvar';
-            HtmlFormBody += '</button>';
+                HtmlFormBody += '<div class="buttons">';
+                HtmlFormBody += '<button type="button" class="btn btn-default" ng-click="loadForm(editableForm)" ng-show="!editableForm.$visible">';
+                HtmlFormBody += 'Editar';
+                HtmlFormBody += '</button>';
 
-            HtmlFormBody += '<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">';
-            HtmlFormBody += 'Cancelar';
-            HtmlFormBody += '</button>';
-            HtmlFormBody += '</span>';
-            HtmlFormBody += '</div>';
+                HtmlFormBody += '<span ng-show="editableForm.$visible">';
+                HtmlFormBody += '<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting" style="margin-right:10px;">';
+                HtmlFormBody += 'Salvar';
+                HtmlFormBody += '</button>';
+
+                HtmlFormBody += '<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">';
+                HtmlFormBody += 'Cancelar';
+                HtmlFormBody += '</button>';
+                HtmlFormBody += '</span>';
+                HtmlFormBody += '</div>';
+            }
+
             HtmlFormBody += '</form>';
 
             $element.replaceWith($compile(HtmlFormBody)($scope));
@@ -1327,4 +1430,3 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
         }
     }
 }]);
-

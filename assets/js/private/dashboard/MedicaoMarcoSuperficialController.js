@@ -1,13 +1,14 @@
-
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
     var deferred = $.Deferred();
-    $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
+    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.verResumos = false;
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
+    $scope.me = window.SAILS_LOCALS;
+    $scope.perfil = '';
 
     $scope.monitoramentos = {
       dataInicial:'',
@@ -16,8 +17,12 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
       marcosSuperficiaisSearch:([]),
       monitoramentos:([]),
       pesquisa: null,
-      ordenacao:'dataInstalacao ASC',
-      init: function(){
+      ordenacao: 'dataInstalacao ASC',
+
+      init: function () {
+
+          $scope.perfil = $scope.me._perfil;
+
           $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' }).on('change', function(e, date) {
             $scope.inserted.data = getDateTimeString(date);
           });
@@ -80,9 +85,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.monitoramentos.init();
-
- 
-
 
     $scope.removeFile = function(){
         $scope.deleteAllDetalhes({id:$scope.data.id}, function(){
@@ -192,8 +194,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     };
 
     $scope.addMedicao = function (){
-     
-
       swal({  title: "",   
               text: "Você tem certeza que deseja inserir a medição ?",   
               type: "warning",   
@@ -226,7 +226,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           $scope.refreshChilds = true;
                           $scope.verMedicoes = false;
                           fecharModal("modalView");
-                          $scope.inserted = {data:'', nomeTopografo:'',nomeAuxiliar:'',temperatura:'',obsGestor:''};
+                          $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
                       })
