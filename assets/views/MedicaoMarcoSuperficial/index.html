@@ -67,7 +67,7 @@
 
                       <span class="editable-wrap editable-text ng-scope">
                         <div class="editable-controls form-group" ng-class="{'has-error': $error}">
-                          <input type="text" name="temperatura" ng-model="inserted.temperatura" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+                          <input type="text" name="temperatura" ng-model="inserted.temperatura" ui-number-mask='1' class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
                         
                           <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
                         </div>
@@ -111,7 +111,7 @@
                             <th rowspan="3">MARCO SUPERFICIAL</th>
                             <th rowspan="3">DATA</th>
                             <th colspan="2">DESLOCAMENTOS</th>
-                            <th colspan="1">VELOCIDADE</th>
+                            <th colspan="2">VELOCIDADE</th>
                             <th rowspan="2" colspan="2">CRITÉRIO DE ALERTA
                             </th>
                           </tr>
@@ -119,12 +119,15 @@
                           <tr>
                             <th style="text-align:center">Horizontal</th>
                             <th style="text-align:center">Vertical</th>
+                            <th style="text-align:center">Horizontal</th>
+
                             <th style="text-align:center">Vertical</th>
                           </tr>
                           
                           <tr>
                             <th style="text-align:center">Parcial (cm)</th>
                             <th style="text-align:center">Parcial (cm)</th>
+                            <th style="text-align:center">(cm/dia)</th>
                             <th style="text-align:center">(cm/dia)</th>
                             <th>Horizontal</th>
                             <th>Vertical</th>                  
@@ -137,6 +140,7 @@
                             <td>{{monitoramento.data | date:'dd/MM/yyyy HH:mm'}}</td>
                             <td>{{monitoramento.deslocamentoHorizontalParcial}}</td>
                             <td>{{monitoramento.deslocamentoVerticalParcial}}</td>
+                            <td>{{monitoramento.velocidadeHorizontal}}</td>
                             <td>{{monitoramento.velocidadeVertical}}</td>
                             <td class='{{getCssClass(monitoramento.criterioAlertaHorizontalMetodologia1)}}'>{{monitoramento.criterioAlertaHorizontalMetodologia1}}</td>
                             <td class='{{getCssClass(monitoramento.criterioAlertaVerticalMetodologia1)}}'>{{monitoramento.criterioAlertaVerticalMetodologia1}}</td>
