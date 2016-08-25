@@ -605,31 +605,118 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         break;
 
                     case 'combobox':
-                        $scope.getCombo($scope.fields[key]);
-                        console.log("defaultValue", $scope.fields[key].defaultValue);
 
-                        if ($scope.fields[key].updateperfil) {
-                            var perfis = angular.fromJson($scope.fields[key].updateperfil);
-                            var nopUpdate = true;
-                            for (var key in perfis) {
-                                if (perfis[key].perfil == $scope.me._perfil) {
-                                    nopUpdate = false;
-                                    break;
-                                }
-                            }
-                        }
+                        //AO INVES DE COLOCAR UM CALLBACK, SERÁ MELHOR COLOCAR UM WATCH NO "$scope[$scope.fields[key].model]", POIS 
+                        //QUANDO O CALLBACK É EXECUTADO O HTML JÁ FOI COMPILADO..
+                        $scope.getCombo($scope.fields[key]);
+
+                        //var nopUpdate = true;
+                        //var valueToShow = "";
+
+                        //if (undefined != $scope.fields[key].default) {
+
+                        //    if ($scope.fields[key].updateperfil) {
+                        //        var perfis = angular.fromJson($scope.fields[key].updateperfil);
+
+                        //        for (var keyPerfil in perfis) {
+                        //            if (perfis[keyPerfil].perfil == $scope.me._perfil) {
+                        //                nopUpdate = false;
+                        //                break;
+                        //            }
+                        //        }
+                        //    }
+
+                        //    var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
+                        //    var defaultValue = "";
+
+                        //    for (var keyDefaultValues in jsonDefaultValue) {
+                        //        for (var m in jsonDefaultValue[keyDefaultValues]) {
+                        //            defaultValue = $scope[m][jsonDefaultValue[keyDefaultValues][m]];
+                        //            break;
+                        //        }
+                        //    }
+
+                        //    $scope.$watch($scope[$scope.fields[key].model], function (oldValue, newValue) {
+
+
+                        //    });
+
+                        //    for (var i = 0; i < $scope[$scope.fields[key].model].length; i++) {
+                        //        if ($scope[$scope.fields[key].model][i][$scope.fields[key].defaultkey] == defaultValue) {
+                        //            $scope.data[$scope.fields[key].name] = $scope[$scope.fields[key].model][i];
+                        //            valueToShow = $scope[$scope.fields[key].model][i][$scope.fields[key].defaultvalue];
+                        //            $scope[$scope.fields[key].name] = valueToShow;
+                        //            break;
+                        //        }
+                        //    }
+                        //}
 
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
                         HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
 
-                        //if (nopUpdate) {
-                        //    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
-                        //} else {
-                        //    HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
-                        //}
-                        
-                        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        if (nopUpdate) {
+                            HtmlFormBody += "<span>{{$scope[$scope.fields[key].name]}}</span>";
+                        } else {
+                            HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        }
+
+                        //HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
                         HtmlFormBody += "</div></div>";
+
+
+                        //$scope.getCombo($scope.fields[key], key, function (key) {
+
+                        //    var nopUpdate = true;
+                        //    var valueToShow = "";
+
+                        //    if (undefined != $scope.fields[key].default) {
+
+                        //        if ($scope.fields[key].updateperfil) {
+                        //            var perfis = angular.fromJson($scope.fields[key].updateperfil);
+
+                        //            for (var keyPerfil in perfis) {
+                        //                if (perfis[keyPerfil].perfil == $scope.me._perfil) {
+                        //                    nopUpdate = false;
+                        //                    break;
+                        //                }
+                        //            }
+                        //        }
+
+                        //        var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
+                        //        var defaultValue = "";
+                                
+                        //        for (var keyDefaultValues in jsonDefaultValue) {
+                        //            for (var m in jsonDefaultValue[keyDefaultValues]) {
+                        //                defaultValue = $scope[m][jsonDefaultValue[keyDefaultValues][m]];
+                        //                break;
+                        //            }
+                        //        }
+
+                        //        for (var i = 0; i < $scope[$scope.fields[key].model].length; i++) {
+                        //            if ($scope[$scope.fields[key].model][i][$scope.fields[key].defaultkey] == defaultValue) {
+                        //                $scope.data[$scope.fields[key].name] = $scope[$scope.fields[key].model][i];
+                        //                valueToShow = $scope[$scope.fields[key].model][i][$scope.fields[key].defaultvalue];
+                        //                break;
+                        //            }
+                        //        }
+                        //    }
+
+                        //    HtmlFormBody += "<div class='row'><div class='input-field col s12'>";
+                        //    HtmlFormBody += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
+
+                        //    if (nopUpdate) {
+                        //        HtmlFormBody += "<span>" + valueToShow + "</span>";
+                        //    } else {
+                        //        HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        //    }
+
+                        //    //HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
+                        //    HtmlFormBody += "</div></div>";
+
+
+                        //});
+
+
                         break;
                     case 'comboboxmulti':
                         $scope.getCombo($scope.fields[key]);
@@ -765,10 +852,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
             $scope.comboFields = [];
 
-            $scope.getCombo = function (field) {
+            $scope.getCombo = function (field, index, callback) {
 
                 if (field.datarest) {
                     $scope[field.model] = JSON.parse(field.datarest);
+                    if (callback) {
+                        callback(index);
+                    }
                 }
                 else {
                     $scope.comboFields.push(field);
@@ -783,6 +873,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             }
                             angular.extend($scope[field.model][key], { 'teste': false, icon: "<img src='/images/" + $scope[field.model][key].perfil + ".png' ></img>" });
                         });
+
+                        if (callback) {
+                            callback(index);
+                        }
                     });
                 }
             };
