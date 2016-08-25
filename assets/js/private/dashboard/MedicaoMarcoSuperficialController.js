@@ -46,10 +46,12 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           });
       },
 
-      pesquisarResumo:function(marcosSuperficiais, callback){
+      pesquisarResumo:function(marcosSuperficiais,data, callback){
           var query="?order="+$scope.monitoramentos.ordenacao;
-          query+="&dtIni=1970-01-01";
-          query += "&dtFim=" + getDateQuery(getDate(new Date()));
+/*          query+="&dtIni=1970-01-01";
+          query += "&dtFim=" + getDateQuery(getDate(new Date()));*/
+          console.log('data string', getDateQuery(data));
+          query+="&data=" + getDateQuery(data);
           query+="&ms="+marcosSuperficiais;
 
           $http.get('/MarcoSuperficial/monitoramentos/'+query).success(function(response, status){
@@ -296,7 +298,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         
         $scope.verMedicoes = false;
         $scope.monitoramentos.resumo = ([]);
-
+        var data = $scope.data.data;
         if($scope.data.medicaoMarcoSuperficialDetalhes.length>0){
           var ms="";
           var mss=[];
@@ -308,7 +310,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             }
           });
         
-          $scope.monitoramentos.pesquisarResumo(ms, function(){
+          $scope.monitoramentos.pesquisarResumo(ms,data, function(){
             $scope.verResumos =true;
           });
         }
