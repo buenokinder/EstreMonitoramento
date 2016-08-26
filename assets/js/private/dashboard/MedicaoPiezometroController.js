@@ -1,10 +1,10 @@
 app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', 'sennitCommunicationService', function ($scope, $interval, $http, sennitCommunicationService) {
     $scope.data = [];
-    $scope.inserted = { data: '', piezometro: ([]) };
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
+    $scope.inserted = { data: getDateTimeString(new Date()), piezometro: ([]), usuario: $scope.usuario._id};
 
     $scope.monitoramentos = {
         dataInicial: '',

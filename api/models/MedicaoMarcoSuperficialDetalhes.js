@@ -29,6 +29,9 @@ module.exports = {
       model: 'marcoSuperficial',
       required: true
     },
+    usuario: {
+        model: 'Usuario'
+    },
     owner: {
       model: 'medicaoMarcoSuperficial'
 

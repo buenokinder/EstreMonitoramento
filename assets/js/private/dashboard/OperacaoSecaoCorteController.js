@@ -105,6 +105,8 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
         }
 
         data.dataMedicao = getDateTime(value);
+        data.usuario = $scope.usuario._id;
+
         $scope.operacaoSecaoCortes[index].dataMedicao = data.dataMedicao;
 
 

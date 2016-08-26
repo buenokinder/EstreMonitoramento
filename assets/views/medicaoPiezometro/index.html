@@ -6,10 +6,7 @@
 
     <div class="row">
       <div class="col s12 m12 l6">
-
-          
-
-        <grid-view fields="[{'name': 'owner', 'sub':'nome', 'value': 'Piezômetro', 'type': 'combobox', 'combo':'true', 'text': 'piezometro', 'api': 'piezometro', 'model': 'piezometros',  'fieldid': 'id', 'fieldname': 'nome'},{'name': 'dataMedicao' , 'value': 'Data', 'type':'datetimepicker'}]" listaname="MedicaoPiezometro" autopage="true" adicionar="" add="false" label="Lista de Medições"  view="MedicaoPiezometro" pagesize="5" update="true" strdelete="true"></grid-view>
+          <grid-view fields="[{'name': 'owner', 'sub':'nome', 'value': 'Piezômetro', 'type': 'combobox', 'combo':'true', 'text': 'piezometro', 'api': 'piezometro', 'model': 'piezometros',  'fieldid': 'id', 'fieldname': 'nome'},{'name': 'dataMedicao' , 'value': 'Data', 'type':'datetimepicker'}]" listaname="MedicaoPiezometro" autopage="true" adicionar="" add="false" label="Lista de Medições" view="MedicaoPiezometro" pagesize="5" update="true" strdelete="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Gerente'}]" updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Gerente'}]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]"></grid-view>
 
         <button class="btn btn-large  ng-scope" aria-hidden="false" id="btMonitoramentos">Monitoramentos</button>          
       </div>
@@ -23,8 +20,8 @@
           {'name': 'medicoesNivelChorumeComPressaoNivelMedido', 'value': 'Medição de Nível de Chorume com Pressão (Rg. Fechado) Nível Medido (m)', 'uiMask':'ui-number-mask'},
           {'name': 'medicoesNivelChorumeSemPressaoNivelMedido', 'value': 'Medição de Nível de Chorume Sem Pressão (Rg. Aberto) Nível Medido (m)', 'uiMask':'ui-number-mask'},
           {'name': 'pressaoGasKpa', 'value': 'Pressão de Gás(kPa)', 'uiMask':'ui-number-mask'},
-          {'name': 'pressaoGasMca', 'value': 'Pressão de Gás(mca)', 'uiMask':'ui-number-mask'},          
-        ]" label="Formulário de Medição" listaname="MedicaoPiezometro" strupdate="true" updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" adicionarperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'},{ 'perfil': 'Operacional'},  { 'perfil': 'Diretor'}]"></form-view>
+          {'name': 'pressaoGasMca', 'value': 'Pressão de Gás(mca)', 'uiMask':'ui-number-mask'},
+        ]" label="Formulário de Medição" listaname="MedicaoPiezometro" strupdate="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Gerente'}]" updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]" adicionarperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'},{ 'perfil': 'Operacional'},  { 'perfil': 'Diretor'}]"></form-view>
       </div>
         
 

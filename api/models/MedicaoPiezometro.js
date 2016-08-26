@@ -48,7 +48,9 @@ module.exports = {
         type: 'float',
         required: true
     },
-
+    usuario: {
+        model: 'Usuario'
+    },
     owner: {
       model: 'piezometro'
     }

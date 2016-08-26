@@ -7,43 +7,43 @@
 
 module.exports = {
 
-  attributes: {
-    data: {
-      type: 'string',
-      required: true,
-      unique: true
-    },
-    dataInserted: {
-      type: 'date',
-      required: true,
-      defaultsTo: new Date(0)
+    attributes: {
+        data: {
+            type: 'string',
+            required: true,
+            unique: true
+        },
+        dataInserted: {
+            type: 'date',
+            required: true,
+            defaultsTo: new Date(0)
 
-    },
-   dia: {
-      type: 'integer',
-      required: true
-    },
-    mes: {
-      type: 'integer',
-      required: true
-    },
-    ano: {
-      type: 'integer',
-      required: true
-    },
-    pluviometria: {
-      type: 'float',
-      required: true
-    },
-    vazao: {
-      type: 'float',
-      required: true
-    },
-     aterro: {
-      model: 'Aterro'
-    },
-     usuario: {
-      model: 'Usuario'
+        },
+        dia: {
+            type: 'integer',
+            required: true
+        },
+        mes: {
+            type: 'integer',
+            required: true
+        },
+        ano: {
+            type: 'integer',
+            required: true
+        },
+        pluviometria: {
+            type: 'float',
+            required: true
+        },
+        vazao: {
+            type: 'float',
+            required: true
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };

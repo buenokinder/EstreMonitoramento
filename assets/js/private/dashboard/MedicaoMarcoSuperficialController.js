@@ -1,7 +1,7 @@
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitCommunicationService',   function($scope, $http, sennitCommunicationService){
     $scope.data = [];
     var deferred = $.Deferred();
-    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
+    
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.verResumos = false;
@@ -9,6 +9,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.refreshChilds = false;
     $scope.me = window.SAILS_LOCALS;
     $scope.perfil = '';
+    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id };
 
     $scope.monitoramentos = {
       dataInicial:'',
@@ -120,6 +121,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             marcosuperficial.habilitado = true;
             marcosuperficial.dataInstalacao = medicaoMarcoSuperficialDetalhes.data;
             marcosuperficial.aterro = medicaoMarcoSuperficialDetalhes.aterro;
+            marcosuperficial.usuario = $scope.usuario._id;
 
             $scope.createMarcoSuperficial(marcosuperficial, callback);
           }else{
@@ -140,6 +142,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           if(null!=marcoSuperficial && undefined!=marcoSuperficial){
 
             medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
+            medicaoMarcoSuperficialDetalhes['usuario'] = $scope.usuario._id;
 
             $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
                 $scope.refreshChilds = true;
@@ -217,7 +220,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                       }*/
                 
                       params["data"] = getDateTime($scope.inserted.data);
-                      
+                      params['usuario'] = $scope.usuario._id;
+
                       $http({
                           method: 'POST',
                           url: '/MedicaoMarcoSuperficial/',

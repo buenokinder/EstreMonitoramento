@@ -8,58 +8,57 @@
 
 module.exports = {
 
-  attributes: {
-  	nome: {
-      type: 'string',
-      required: true
-    },
-  	usuarioCriador: {
-      model: 'Usuario',
-      required: false
-    },
-  	salienciaInicial: {
-      type: 'string',
-      required: true
-    },
-  	celulaPiezometrica: {
-      type: 'string',
-      required: true
-    },
-   	profundidadeTotalInicial: {
-      type: 'string',
-      required: true
-    },  
-   	profundidadeMediaCamaraCargaInicial: {
-      type: 'string',
-      required: true
-    },  
+    attributes: {
+        nome: {
+            type: 'string',
+            required: true
+        },
+        usuarioCriador: {
+            model: 'Usuario',
+            required: false
+        },
+        salienciaInicial: {
+            type: 'string',
+            required: true
+        },
+        celulaPiezometrica: {
+            type: 'string',
+            required: true
+        },
+        profundidadeTotalInicial: {
+            type: 'string',
+            required: true
+        },
+        profundidadeMediaCamaraCargaInicial: {
+            type: 'string',
+            required: true
+        },
 
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-    alertas: {
-      collection: 'alertasPiezometro',
-      via: 'owner'
-    },
-    medicoes: {
-      collection: 'medicaoPiezometro',
-      via: 'owner'
-    },    
-    owner: {
-      model: 'Aterro'
-    },
-    aterro: {
-      model: 'Aterro'
-    },
-    usuario: {
-      model: 'Usuario'
+        habilitado: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
+        alertas: {
+            collection: 'alertasPiezometro',
+            via: 'owner'
+        },
+        medicoes: {
+            collection: 'medicaoPiezometro',
+            via: 'owner'
+        },
+        owner: {
+            model: 'Aterro'
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };
 /*    prolongamentoCortePiezometro: {
       type: 'string',
       required: true
     },*/
- 

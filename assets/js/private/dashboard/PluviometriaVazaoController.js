@@ -15,6 +15,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     $scope.usuario = null;
     $scope.aterro = null;
     $scope.excel = ([]);
+    $scope.usuario = window.SAILS_LOCALS;
 
     $scope.search = function () {
         $http.get('/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id).success(function (data) {
@@ -119,6 +120,8 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
 
     $scope.addMedicao = function (medicao) {
 
+        medicao.usuario = $scope.usuario._id;
+
         $http.post('/PluviometriaVazao', medicao).then(
           function (result) {
               $scope.totalSent += 1;
@@ -206,6 +209,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                 if (isConfirm) {
                     $scope.getMedicao(medicao, function (result) {
                         if (null == result) {
+                            medicao.usuario = $scope.usuario._id;
                             $http.post('/PluviometriaVazao', medicao).then(function (itemInserted) {
                                 swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                                 Materialize.toast('Registro inserido com sucesso!', 4000);

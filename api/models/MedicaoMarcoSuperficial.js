@@ -32,7 +32,10 @@ module.exports = {
     obsGestor:{
       type: 'string',
       required: false      
-    },    
+    },
+    usuario: {
+        model: 'Usuario'
+    },
     medicaoMarcoSuperficialDetalhes: {
       collection: 'medicaoMarcoSuperficialDetalhes',
       via: 'owner'

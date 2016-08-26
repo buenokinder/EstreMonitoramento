@@ -40,6 +40,9 @@ module.exports = {
     alertas: {
       collection: 'Piezometro',
       via: 'owner'
+    },
+    usuario: {
+        model: 'Usuario'
     }
     
   }

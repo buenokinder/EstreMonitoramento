@@ -7,32 +7,32 @@
 
 module.exports = {
 
-  attributes: {
-    dataMedicao: {
-      type: 'date',
-      required: true
-    },
-    tipoEstaca: {
-      type: 'string',
-      required: true
-    },
-    altura: {
-      type: 'float',
-      required: true
-    },
-    comprimento: {
-      type: 'float',
-      required: true
-    },
-     aterro: {
-      model: 'Aterro'
-    },
-     usuario: {
-      model: 'Usuario'
-    },
-     secaoCorte: {
-      model: 'secaoCorte'
+    attributes: {
+        dataMedicao: {
+            type: 'date',
+            required: true
+        },
+        tipoEstaca: {
+            type: 'string',
+            required: true
+        },
+        altura: {
+            type: 'float',
+            required: true
+        },
+        comprimento: {
+            type: 'float',
+            required: true
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        },
+        secaoCorte: {
+            model: 'secaoCorte'
+        }
     }
-  }
 };
 
