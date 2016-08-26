@@ -462,7 +462,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                 $http.get(countUrl).then(function (results) {
 
-                    $scope.TotalItens = results.data.count;
+                    $scope.TotalItens = results.data;
                     var range = [];
                     var total = ($scope.TotalItens / $scope.pagesize);
                     for (var i = 0; i < total; i++) {
