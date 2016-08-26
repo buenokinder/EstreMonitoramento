@@ -994,16 +994,45 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 return true;
             };
 
-
             $scope.verificaBotaoSubmit = function () {
-               
+                var usuarioId = "";
+
+                if (typeof $scope.data.usuario === "object") {
+                    usuarioId = $scope.data.usuario.id;
+                } else {
+                    usuarioId = $scope.data.usuario;
+                }
                 //if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined" || (!$scope.nopview && $scope.nopupdate && $scope.data!=([])))
+
                 if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
                     return false;
 
-                return true;
-            };
+                //pode visualizar e pode criar
+                if (!$scope.nopview && !$scope.nopNew && usuarioId == $scope.me._id) {
+                    return true;
+                }
 
+                //não pode atualizar, mas pode visualizar e criar 
+                if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && usuarioId == $scope.me._id) {
+                    return true;
+                }
+
+                //não pode atualizar, mas pode criar 
+                if ($scope.nopupdate && !$scope.nopNew && usuarioId == $scope.me._id) {
+                    return true;
+                }
+
+                //pode atualizar, pode criar 
+                if ((!$scope.nopupdate && usuarioId == $scope.me._id)
+                    || (!$scope.nopupdate && $scope.me._perfil!='Operacional')
+                    || (!$scope.nopNew && usuarioId == $scope.me._id))
+                {
+                    return true;
+                }
+
+
+                return false;
+            };
 
             $scope.getResourceIndex = function (resources, resource) {
                 var index = -1;
@@ -1042,8 +1071,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         },
                                 function (isConfirm) {
                                     if (isConfirm) {
-
-
                                         var params = {};
                                         for (var field in $scope.fields) {
                                             params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
@@ -1055,12 +1082,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             $scope.data[$(this).prop("name")] = $(this).val();
                                         });
 
-
                                         $(".datetimepicker").each(function (i, el) {
                                             params[$(this).prop("name")] = getDateTime($(this).val());
                                             $scope.data[$(this).prop("name")] = $(this).val();
                                         });
-
 
                                         $http({
                                             method: 'PUT',

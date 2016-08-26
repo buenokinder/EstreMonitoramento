@@ -76,7 +76,7 @@
                             <p ng-show="perfil=='Gerente'">
                                 <b>Observação do Gestor: </b>
                                 <span class="editable-wrap editable-text ng-scope">
-                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}" ng-show="perfil=='Gerente'">
                                         <input type="text" name="obsGestor" ng-model="inserted.obsGestor" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
 
                                         <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
