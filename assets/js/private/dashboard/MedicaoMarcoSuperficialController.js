@@ -10,7 +10,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.me = window.SAILS_LOCALS;
     $scope.perfil = '';
     $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
-
+    $scope.aterros =([]);
     $scope.monitoramentos = {
       dataInicial:'',
       dataFinal:'',
@@ -32,6 +32,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
           $scope.monitoramentos.dataInicial = getDateTimeString(dtIni);
           $scope.monitoramentos.dataFinal = getDateTimeString(dtFim);
+          $http.get('/Aterro').success(function(response, status){
+            $scope.aterros = response; 
+            console.log('response', response);            
+          });
 
           $http.get('/MarcoSuperficial').success(function(response, status){
               var marcosSuperficiais = [];

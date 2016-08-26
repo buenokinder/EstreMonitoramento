@@ -72,6 +72,15 @@
                                     </div>
                                 </span>
                             </p>
+                            <p ng-show="perfil=='Administrador'">
+                                <b>Aterro: </b>
+                                <div class="form-group" id="sign-up-form">
+                                
+                                    <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="aterro" required="" ng-model="inserted.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true">
+                                        <!-- <option value="?" selected="selected"></option> -->
+                                    </select>
+                                </div>
+                            </p>
 
                             <p ng-show="perfil=='Gerente'">
                                 <b>Observação do Gestor: </b>
@@ -84,13 +93,14 @@
                                 </span>
                             </p>
 
+
                             <div class="buttons">
                                 <button type="button" class="btn btn-default ng-hide">Adicionar</button>
 
                                 <span class="">
                                     <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="addMedicao()">Salvar</button>
 
-                                    <button type="button" class="btn btn-default" ng-click="closeMedicao()">Cancelar</button>
+                                    <button type="button" class="btn btn-default" onclick="fecharModal('modalView')">Cancelar</button>
                                 </span>
                             </div>
                         </form>
