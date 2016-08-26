@@ -58,6 +58,10 @@
                     <label ng-class="inputClass" for="ano">Ano</label>
                     <select class='browser-default active' id='' required ng-model='ano' ng-options='x as x.id for x in anos track by x.id'></select>
                 </div>
+                <div class="col s6 m4 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class='browser-default active' id='' required ng-model='aterroid' ng-options='x.id as x.nome for x in aterros track by x.id'></select>
+                </div>                
                 <div class="right col s1" aria-hidden="false">
                     <a ng-click="search()" class="btn-floating btn-small waves-effect waves-light">
                         <i class="mdi-action-search"></i>

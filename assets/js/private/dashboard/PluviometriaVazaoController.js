@@ -7,7 +7,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     $scope.anosToAssociateWithFile = ([]);
     $scope.anoAssociatedWithFile = ([]);
     $scope.mesAssociatedWithFile = ([]);
-    $scope.aterros = [];
+    $scope.aterros = ([]);
     $scope.usuarios = [];
     $scope.currentAno = (new Date()).getFullYear();
     $scope.totalSent = 0;
@@ -16,9 +16,10 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     $scope.aterro = null;
     $scope.excel = ([]);
     $scope.usuario = window.SAILS_LOCALS;
-
-    $scope.search = function () {
-        $http.get('/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id).success(function (data) {
+    $scope.aterroid;
+    
+    $scope.search = function () {        
+        $http.get('/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id + '&aterro=' + $scope.aterroid).success(function (data) {
             $scope.operacaoPluviometrias = angular.fromJson(data);
         });
     };
