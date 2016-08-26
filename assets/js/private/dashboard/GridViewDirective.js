@@ -647,6 +647,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     case 'textAngular':
                         HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\"," + $scope.fields[key].name + ")' ng-model='" + $scope.fields[key].name + "'></div></div></div></div></div></div>";
                         break;
+                    case 'textarea':
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><textarea id='"+ $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "' class='materialize-textarea'></textarea><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        break;
                     case 'usuario':
                         break;
 

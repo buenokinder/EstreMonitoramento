@@ -56,6 +56,10 @@ module.exports = {
         },
         owner: {
             model: 'piezometro'
+        },
+        obsGestor:{
+          type: 'longtext',
+          required: false      
         }
     }
 };
