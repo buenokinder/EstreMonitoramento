@@ -29,6 +29,9 @@ module.exports = {
       model: 'marcoSuperficial',
       required: true
     },
+    aterro: {
+        model: 'Aterro'
+    },
     usuario: {
         model: 'Usuario'
     },

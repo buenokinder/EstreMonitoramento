@@ -33,6 +33,9 @@ module.exports = {
       type: 'string',
       required: false      
     },
+    aterro: {
+        model: 'Aterro'
+    },
     usuario: {
         model: 'Usuario'
     },

@@ -18,6 +18,10 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		SecaoCorte.find(filtro)
 		.populate('aterro')
 		.populate('usuario')
@@ -42,6 +46,10 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 		
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		SecaoCorte.count(filtro)
 		.exec(function result(err, ret) {
 		  if (err) {
