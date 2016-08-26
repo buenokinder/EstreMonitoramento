@@ -797,8 +797,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.nopupdate = !$scope.userInProfiles($scope.updateperfil);
             $scope.nopview = !$scope.userInProfiles($scope.viewperfil);
 
-
-
             $scope.showBotaoSubmit = false;
 
             $scope.verificaBotaoSubmit = function () {
