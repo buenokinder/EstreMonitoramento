@@ -20,6 +20,11 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
+
 		MedicaoPiezometro.find(filtro)
 		.populate('owner')
 		.exec(function result(err, ret) {
@@ -43,6 +48,11 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 		
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
+
 		MedicaoPiezometro.count(filtro)
 		.exec(function result(err, ret) {
 		  if (err) {

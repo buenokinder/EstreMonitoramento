@@ -214,6 +214,10 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		Piezometro.find(filtro)
 		.populate('aterro')
 		.populate('alertas')
@@ -239,6 +243,10 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 		
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		Piezometro.count(filtro)
 		.exec(function result(err, ret) {
 		  if (err) {

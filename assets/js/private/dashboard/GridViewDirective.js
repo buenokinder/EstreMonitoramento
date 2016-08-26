@@ -293,9 +293,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 angular.extend(data, item);
                             }
 
-                            var params = { usuario: $scope.me._id };
+                            var params = {};
                             for (var field in $scope.fields) {
                                 params[$scope.fields[field].name] = data[$scope.fields[field].name];
+                            }
+
+                            if (undefined == params['aterro']) {
+                                params['aterro'] = $scope.me._aterro;
                             }
 
                             $http({
@@ -407,7 +411,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     $scope[field.model] = JSON.parse(field.datarest);
                 }
                 else {
-                    $http.get("/" + field.api).then(function (results) {
+                    var url = "/" + field.api;
+
+                    if ($scope.me._perfil == "Gerente" || $scope.me._perfil == "Operacional") {
+                        url += "/search";
+                    }
+
+                    $http.get(url).then(function (results) {
                         $scope[field.model] = results.data;
                     });
                 }
@@ -441,13 +451,14 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     id = $scope.$parent.data.id;
 
                 var parent = "";
-                var countUrl = "/" + $scope.listaname + "/count";
+                var countUrl = "/" + $scope.listaname + "/searchcount";
                 var plus = ($scope.listaname.indexOf("?") < 0) ? "?" : "&";
 
                 if ($scope.parentkey !== undefined) {
                     parent = $scope.parentkey + "=" + id;
                     countUrl += plus + parent;
                 }
+
 
                 $http.get(countUrl).then(function (results) {
 
@@ -471,8 +482,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 if ($scope.fields.length)
                     query = query.substring(0, query.length - 1);
 
-
-                $http.get("/" + $scope.listaname + plus + "skip=" + $scope.skip + '&' + parent + "&limit=" + $scope.pagesize).then(function (results) {
+                $http.get("/" + $scope.listaname + "/search/" + plus + "skip=" + $scope.skip + '&' + parent + "&limit=" + $scope.pagesize).then(function (results) {
                     $scope.data = angular.fromJson(results.data);
                 });
             };
@@ -856,8 +866,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
                 else {
                     $scope.comboFields.push(field);
+                    var url = "/" + field.api + "/search/";
 
-                    $http.get("/" + field.api).then(function (results) {
+                    $http.get(url).then(function (results) {
                         $scope[field.model] = results.data;
 
                         angular.forEach($scope[field.model], function (value, key) {
@@ -996,39 +1007,65 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
             $scope.verificaBotaoSubmit = function () {
                 var usuarioId = "";
+                var aterroId = "";
 
                 if (typeof $scope.data.usuario === "object") {
                     usuarioId = $scope.data.usuario.id;
                 } else {
                     usuarioId = $scope.data.usuario;
                 }
+
+                if (typeof $scope.data.aterro === "object") {
+                    aterroId = $scope.data.aterro.id;
+                } else {
+                    aterroId = $scope.data.aterro;
+                }
+
                 //if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined" || (!$scope.nopview && $scope.nopupdate && $scope.data!=([])))
 
                 if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
                     return false;
 
                 //pode visualizar e pode criar
-                if (!$scope.nopview && !$scope.nopNew && usuarioId == $scope.me._id) {
+                if (!$scope.nopview && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
                     return true;
                 }
 
+
                 //não pode atualizar, mas pode visualizar e criar 
-                if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && usuarioId == $scope.me._id) {
+                if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
                     return true;
                 }
 
                 //não pode atualizar, mas pode criar 
-                if ($scope.nopupdate && !$scope.nopNew && usuarioId == $scope.me._id) {
+                if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
                     return true;
                 }
 
                 //pode atualizar, pode criar 
-                if ((!$scope.nopupdate && usuarioId == $scope.me._id)
-                    || (!$scope.nopupdate && $scope.me._perfil!='Operacional')
-                    || (!$scope.nopNew && usuarioId == $scope.me._id))
-                {
+                if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
+                    || (!$scope.nopupdate && $scope.me._perfil != 'Operacional')
+                    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))) {
                     return true;
                 }
+
+                ////não pode atualizar, mas pode visualizar e criar 
+                //if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                //    return true;
+                //}
+
+                ////não pode atualizar, mas pode criar 
+                //if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                //    return true;
+                //}
+
+                ////pode atualizar, pode criar 
+                //if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
+                //    || (!$scope.nopupdate && $scope.me._perfil!='Operacional')
+                //    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)))
+                //{
+                //    return true;
+                //}
 
 
                 return false;
@@ -1074,6 +1111,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                         var params = {};
                                         for (var field in $scope.fields) {
                                             params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                        }
+
+                                        if (undefined == params['aterro']) {
+                                            params['aterro'] = $scope.me._aterro;
                                         }
 
                                         $(".datepicker").each(function (i, el) {
@@ -1134,6 +1175,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                     var params = { usuario: $scope.me._id };
                                     for (var field in $scope.fields) {
                                         params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                    }
+
+                                    if (undefined == params['aterro']) {
+                                        params['aterro'] = $scope.me._aterro;
                                     }
 
                                     $(".datepicker").each(function (i, el) {
@@ -1447,6 +1492,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     var params = {};
                     for (var field in $scope.fields) {
                         params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                    }
+
+                    if (undefined == params['aterro']) {
+                        params['aterro'] = $scope.me._aterro;
                     }
 
                     $(".datepicker").each(function (i, el) {

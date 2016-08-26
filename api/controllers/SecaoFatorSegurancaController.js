@@ -18,6 +18,11 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
+
 		SecaoFatorSeguranca.find(filtro)
 		.populate('usuario')
 		.exec(function result(err, ret) {
@@ -40,6 +45,11 @@ module.exports = {
 			if(req.param(key) == undefined) continue;
 			filtro[key] = req.param(key);
 		}
+
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		
 		SecaoFatorSeguranca.count(filtro)
 		.exec(function result(err, ret) {

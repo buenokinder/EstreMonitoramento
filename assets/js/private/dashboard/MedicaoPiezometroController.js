@@ -4,7 +4,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
     $scope.verMedicoes = false;
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
-    $scope.inserted = { data: getDateTimeString(new Date()), piezometro: ([]), usuario: $scope.usuario._id};
+    $scope.inserted = { data: getDateTimeString(new Date()), piezometro: ([]), usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
 
     $scope.monitoramentos = {
         dataInicial: '',
@@ -101,7 +101,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
                             $scope.refreshChilds = true;
                             $scope.verMedicoes = false;
                             $scope.closeMedicao();
-                            $scope.inserted = { data: '', nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
+                            $scope.inserted = { data: '', nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
                             swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                             Materialize.toast('Registro inserido com sucesso!', 4000);
                         })

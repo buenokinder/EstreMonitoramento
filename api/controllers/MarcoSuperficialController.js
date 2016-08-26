@@ -86,7 +86,6 @@ module.exports = {
 		return result;
 	},
 
-
 	summarizeMonitoramentoMapa: function (marcosSuperficiais) {
 
 	    var result = [];
@@ -467,10 +466,12 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
-		if(req.session.me.perfil == "Gerente"){
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
             
             filtro.aterro = req.session.me.aterro.id;
-        }
+		}
+
+		console.log("filtro", filtro);
 
 		MarcoSuperficial.find(filtro)
 		.populate('aterro')
@@ -495,10 +496,12 @@ module.exports = {
 			if(req.param(key) == undefined) continue;
 			filtro[key] = req.param(key);
 		}
-		if(req.session.me.perfil == "Gerente"){
-            
-            filtro.aterro = req.session.me.aterro.id;
-        }
+
+		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+
+		    filtro.aterro = req.session.me.aterro.id;
+		}
+
 		
 		MarcoSuperficial.count(filtro)
 		.exec(function result(err, ret) {

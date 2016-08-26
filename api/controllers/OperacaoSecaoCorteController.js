@@ -29,7 +29,12 @@ module.exports = {
             if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
         }
-        console.log("filtro", filtro);
+
+        if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+            filtro.aterro = req.session.me.aterro.id;
+        }
+
+
 
         OperacaoSecaoCorte.find(filtro)
 		.populate('aterro')
@@ -54,6 +59,10 @@ module.exports = {
             }
             if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
+        }
+
+        if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+            filtro.aterro = req.session.me.aterro.id;
         }
 
         OperacaoSecaoCorte.count(filtro)

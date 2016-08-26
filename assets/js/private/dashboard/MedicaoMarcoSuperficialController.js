@@ -9,7 +9,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     $scope.refreshChilds = false;
     $scope.me = window.SAILS_LOCALS;
     $scope.perfil = '';
-    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id };
+    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
 
     $scope.monitoramentos = {
       dataInicial:'',
@@ -49,9 +49,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
       pesquisarResumo:function(marcosSuperficiais,data, callback){
           var query="?order="+$scope.monitoramentos.ordenacao;
-/*          query+="&dtIni=1970-01-01";
-          query += "&dtFim=" + getDateQuery(getDate(new Date()));*/
-          console.log('data string', getDateQuery(data));
+
           query+="&data=" + getDateQuery(data);
           query+="&ms="+marcosSuperficiais;
 
@@ -143,6 +141,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
             medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
             medicaoMarcoSuperficialDetalhes['usuario'] = $scope.usuario._id;
+            medicaoMarcoSuperficialDetalhes['aterro'] = $scope.usuario._aterro;
 
             $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function(data, status){
                 $scope.refreshChilds = true;
@@ -211,16 +210,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                   if (isConfirm) {     
 
                       var params = $scope.inserted;
-                      
-                      /*if(params["data"].toString().indexOf("/")>=0){
-                        var ret = params["data"].split('/');
-                        data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
-                      }else{
-                         data = new Date(params["data"]);
-                      }*/
-                
+  
                       params["data"] = getDateTime($scope.inserted.data);
                       params['usuario'] = $scope.usuario._id;
+                      params['aterro'] = $scope.usuario._aterro;
 
                       $http({
                           method: 'POST',
@@ -232,7 +225,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           $scope.refreshChilds = true;
                           $scope.verMedicoes = false;
                           fecharModal("modalView");
-                          $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '' };
+                          $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
                       })
