@@ -5,6 +5,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
     $scope.usuario = window.SAILS_LOCALS;
     $scope.refreshChilds = false;
     $scope.inserted = { data: getDateTimeString(new Date()), piezometro: ([]), usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
+    $scope.aterros = ([]);
 
     $scope.monitoramentos = {
         dataInicial: '',
@@ -33,6 +34,10 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
             $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
+            
+            $http.get('/Aterro').success(function (response, status) {
+                $scope.aterros = response;
+            });
 
             $http.get('/Piezometro').success(function (response, status) {
                 var piezometros = [];

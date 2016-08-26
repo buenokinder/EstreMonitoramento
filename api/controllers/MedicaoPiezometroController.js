@@ -27,6 +27,7 @@ module.exports = {
 
 		MedicaoPiezometro.find(filtro)
 		.populate('owner')
+		.populate('aterro')
 		.exec(function result(err, ret) {
 		  if (err) {
 		    return res.negotiate(err);
