@@ -89,7 +89,7 @@ $scope.selecionarAterro = function(aterro) {
     $scope.mapa = [];
     $scope.getSrc = function() {
         if($scope.mapa != null){
-        var url = "http://localhost:1337/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data=2016-09-09";
+        var url = "http://estre.sennit.com.br:1337/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data=2016-09-09";
         return $sce.trustAsResourceUrl(url);
         }
         return null;
