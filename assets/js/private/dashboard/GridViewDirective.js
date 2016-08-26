@@ -837,10 +837,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     return true;
                 }
 
-                //não pode atualizar, mas pode visualizar e criar 
+                //não pode atualizar, mas pode visualizar e criar. Só exibe caso seja um novo registro.
                 if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                    $scope.showBotaoSubmit = true;
-                    return true;
+                    $scope.showBotaoSubmit = ($scope.data.id == '' || $scope.data.id == undefined);
+                    return $scope.showBotaoSubmit
                 }
 
                 //não pode atualizar, mas pode criar 
@@ -1017,9 +1017,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.newitem = function () {
 
                 $scope.data = ([]);
-                //$scope.data['id'] = '';
                 $scope.init();
-                //$scope.data['id'] = '';
                 $scope.inputClass = "";
                 $('select').material_select();
                 $scope.verificaBotaoSubmit();
