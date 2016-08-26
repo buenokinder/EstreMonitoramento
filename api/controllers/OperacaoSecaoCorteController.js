@@ -9,15 +9,15 @@ module.exports = {
     search: function (req, res) {
         var filtro = {};
 
-        if (undefined!=req.param('datainicial') && undefined==req.param('datafinal')) {
+        if ((undefined!=req.param('datainicial') && ''!=req.param('datainicial')) && (undefined==req.param('datafinal') || ''==req.param('datafinal'))) {
             filtro.dataMedicao = { '>=': new Date(req.param('datainicial')) };
         }
 
-        if (undefined!=req.param('datafinal') && undefined==req.param('datainicial')) {
-            filtro.dataMedicao = { '<=': new Date(req.param('datainicial')) };
+        if ((undefined!=req.param('datafinal') && ''!=req.param('datafinal')) && (undefined==req.param('datainicial') || ''==req.param('datainicial'))) {
+            filtro.dataMedicao = { '<=': new Date(req.param('datafinal')) };
         }
 
-        if (undefined!=req.param('datainicial') && undefined!=req.param('datafinal')) {
+        if (undefined!=req.param('datainicial') && undefined!=req.param('datafinal') && ''!=req.param('datainicial') && ''!=req.param('datafinal')) {
             filtro.dataMedicao = { '>=': new Date(req.param('datainicial')), '<=': new Date(req.param('datafinal')) };
         }
 

@@ -18,6 +18,12 @@
                         <option value="?" selected="selected"></option>
                     </select>
                 </div>
+                <div class="form-group col m3" id="sign-up-form">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="aterro" required="" ng-model="querydapesquisa.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true">
+                        <option value="?" selected="selected"></option>
+                    </select>
+                </div>
                 <div class="right col s1" aria-hidden="false"><a ng-click="pesquisar()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a></div>
                 <div>
                     <table class="table table-bordered table-hover table-condensed">
