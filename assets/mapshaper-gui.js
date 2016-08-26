@@ -2367,6 +2367,8 @@ if(item.criterioAlertaHorizontalMetodologia1 == 'Paralisação'){
     color = "black";
   }
 
+  console.log("Cor:" + color);
+
   if (size > 0) {
     var offs = size / 2;
     x = Math.round(x - offs);
