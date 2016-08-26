@@ -80,30 +80,28 @@
                                         <th rowspan="3" style="text-align:center">SALIÊNCIA </th>
                                         <th rowspan="3">Profundidade total - ATUAL</th>
                                         <th rowspan="3">Prof. média câmara de carga - ATUAL</th>
-                                        <th>Prolongamento/corte</th>
+                                        <th rowspan="3">Prolongamento/corte</th>
                                         <th colspan="4">Medições de nível de chorume</th>
                                         <th rowspan="3">ru</th>
                                         <th rowspan="3">CRITÉRIO DE ALERTA ru</th>
-                                        <th colspan="2" style="text-align:center">PRESSÃO (mca)</th>
-                                        <th rowspan="3">Pressão de Gás(kPa)</th>
-                                        <th rowspan="3">Presão de Gas(mca)</th>
-
+                                        <th colspan="4" style="text-align:center">PRESSÃO</th>
                                     </tr>
 
-                                    <tr>
-                                        <th rowspan="2">Colocar valores apenas na data em que foi realizado o prolongamento (+) ou corte (-)</th>
-
+                                    <tr>                                        
                                         <th colspan="2" style="text-align:center"> Com pressão (Rg.Fechado)</th>
                                         <th colspan="2" style="text-align:center">Sem Pressão(Rg.Aberto)</th>
-                                        <th rowspan="2">Chorume</th>
-                                        <th rowspan="2">Gás - pio </th>
+                                        <th rowspan="2" style="text-align:center">Chorume(mca)</th>
+                                        <th colspan="3" style="text-align:center">Gás</th>
                                     </tr>
 
                                     <tr>
                                         <th style="text-align:center">Nível medido (m)</th>
                                         <th style="text-align:center">Nível efetivo (m)</th>
                                         <th style="text-align:center">Nível medido (m)</th>
-                                        <th style="text-align:center">Nível efetivo (m)</th>
+                                        <th style="text-align:center">Nível efetivo (m)</th>                                        
+                                        <th style="text-align:center">Pio(mca)</th>
+                                        <th style="text-align:center">Manômetro(mca)</th>
+                                        <th style="text-align:center">Manômetro(kPa)</th>
                                     </tr>
                                 </thead>
 
@@ -122,8 +120,8 @@
                                         <td style="text-align:center">{{monitoramento.criterioAlertaRu}}</td>
                                         <td style="text-align:center">{{monitoramento.pressaoMcaChorume}}</td>                                      
                                         <td style="text-align:center">{{monitoramento.pressaoMcaGasPio}}</td>
-                                        <td style="text-align:center">{{monitoramento.pressaoGasKpa}}</td>
                                         <td style="text-align:center">{{monitoramento.pressaoGasMca}}</td>
+                                        <td style="text-align:center">{{monitoramento.pressaoGasKpa}}</td>
 
                                     </tr>
                                 </tbody>
