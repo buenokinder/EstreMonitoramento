@@ -161,7 +161,7 @@
                     </li>
                     <li><a href="" ng-click="goto('/Mapa')" class="white estre-green-icon">Mapa</a></li>
                     <li><a href="" ng-click="goto('/OperacaoSecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
-                    <li><a href="" ng-click="goto('/FatorSeguranca')" class="white estre-green-icon">Fator de Segurança</a></li>
+                    <li ng-hide="(perfil == 'Operacional')"><a href="" ng-click="goto('/FatorSeguranca')" class="white estre-green-icon">Fator de Segurança</a></li>
 
                     <li><a href="" ng-click="goto('/PocosVisita')" class="white estre-green-icon">Poços de visita</a></li>
                 </ul>

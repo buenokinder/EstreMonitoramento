@@ -10,7 +10,7 @@
         <div class="row">
 
             <div class="col s12 m12 l6">
-                <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false" strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true">
+                <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false" strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]" deleteperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]">
                 </grid-view>
 
                 <button class="btn btn-large  ng-scope" aria-hidden="false" id="btMonitoramentos">Monitoramentos</button>
@@ -161,7 +161,7 @@
                     <div class="card-panel ng-scope">
                         <div class="card-content black-text">
                             <p>Detalhes da Medição</p>
-                            <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor', 'updateperfil':[{ 'perfil': 'Gerente'}] },{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true, 'updateperfil':[{ 'perfil': 'Operacional'}] }  ]" label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Operacional'}]"></edit-view>
+                            <edit-view fields="[{'name': 'data' , 'value': 'Data/Hora', 'type':'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar' },{'name': 'temperatura' , 'value': 'Temperatura' },{'name':'obsGestor', 'value':'Observação do Gestor', 'updateperfil':[{ 'perfil': 'Gerente'}] },{'name':'obsOperacional', 'value':'Observação do Operacional', 'readonly':true, 'updateperfil':[{ 'perfil': 'Operacional'}] }  ]" label="Formulário de Medições'" nocard="true" listaname="MedicaoMarcoSuperficial" strupdate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}]"></edit-view>
 
 
 

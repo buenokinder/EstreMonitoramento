@@ -740,7 +740,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             HtmlFormBody += "<div class='input-field col s12'>";
             HtmlFormBody += "   <a ng-click='newitem()' ng-hide='nopNew' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
 
-            HtmlFormBody += "   <button ng-show='verificaBotaoSubmit()' type='submit' class='btn cyan waves-effect waves-light right' >";
+            HtmlFormBody += "   <button ng-show='showBotaoSubmit' type='submit' class='btn cyan waves-effect waves-light right' >";
             HtmlFormBody += "       <span ng-show='!sennitForm.loading'>Submeter</span>";
             HtmlFormBody += "       <span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
             HtmlFormBody += "       <span ng-show='sennitForm.loading'>Aguarde...</span>";
@@ -757,7 +757,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                     $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
                     $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
-
+                    $scope.verificaBotaoSubmit();
                     clearInterval(interval);
                 }
             }, 0);
@@ -793,6 +793,93 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.nopNew = !$scope.userInProfiles($scope.adicionarperfil);
             $scope.nopupdate = !$scope.userInProfiles($scope.updateperfil);
             $scope.nopview = !$scope.userInProfiles($scope.viewperfil);
+
+
+
+            $scope.showBotaoSubmit = false;
+
+            $scope.verificaBotaoSubmit = function () {
+                var usuarioId = "";
+                var aterroId = "";
+                $scope.showBotaoSubmit = false;
+
+                if (typeof $scope.data.usuario === "object") {
+                    usuarioId = $scope.data.usuario.id;
+                } else {
+                    usuarioId = $scope.data.usuario;
+                }
+
+                if (typeof $scope.data.aterro === "object") {
+                    aterroId = $scope.data.aterro.id;
+                } else {
+                    aterroId = $scope.data.aterro;
+                }
+
+                //if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined" || (!$scope.nopview && $scope.nopupdate && $scope.data!=([])))
+
+
+                //pode visualizar, pode criar mas nao pode editar. Só exibe caso seja um novo registro.
+                if (!$scope.nopview && !$scope.nopNew && $scope.nopupdate) {
+                    $scope.showBotaoSubmit = ($scope.data.id == '' || $scope.data.id == undefined);
+                    return $scope.showBotaoSubmit;
+                }
+
+
+                if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined") {
+                    $scope.showBotaoSubmit = false;
+                    return false;
+                }
+
+
+                //pode visualizar e pode criar
+                if (!$scope.nopview && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                    $scope.showBotaoSubmit = true;
+                    return true;
+                }
+
+                //não pode atualizar, mas pode visualizar e criar 
+                if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                    $scope.showBotaoSubmit = true;
+                    return true;
+                }
+
+                //não pode atualizar, mas pode criar 
+                if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                    $scope.showBotaoSubmit = true;
+                    return true;
+                }
+
+                //pode atualizar, pode criar 
+                if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
+                    || (!$scope.nopupdate && $scope.me._perfil != 'Operacional')
+                    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))) {
+                    $scope.showBotaoSubmit = true;
+                    return true;
+                }
+
+                ////não pode atualizar, mas pode visualizar e criar 
+                //if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                //    return true;
+                //}
+
+                ////não pode atualizar, mas pode criar 
+                //if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
+                //    return true;
+                //}
+
+                ////pode atualizar, pode criar 
+                //if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
+                //    || (!$scope.nopupdate && $scope.me._perfil!='Operacional')
+                //    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)))
+                //{
+                //    return true;
+                //}
+
+
+                return false;
+            };
+
+            $scope.verificaBotaoSubmit();
 
             $scope.removeItem = function (item, model) {
 
@@ -928,9 +1015,14 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
 
             $scope.newitem = function () {
+
+                $scope.data = ([]);
+                //$scope.data['id'] = '';
                 $scope.init();
+                //$scope.data['id'] = '';
                 $scope.inputClass = "";
                 $('select').material_select();
+                $scope.verificaBotaoSubmit();
             };
 
             $scope.unSelectMultiCombo = function () {
@@ -983,6 +1075,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 $scope.inputClass = "active";
                 $('select').material_select();
                 $scope.setSelectedItensMultiCombo();
+                $scope.verificaBotaoSubmit();
             });
 
 
@@ -1005,71 +1098,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 return true;
             };
 
-            $scope.verificaBotaoSubmit = function () {
-                var usuarioId = "";
-                var aterroId = "";
-
-                if (typeof $scope.data.usuario === "object") {
-                    usuarioId = $scope.data.usuario.id;
-                } else {
-                    usuarioId = $scope.data.usuario;
-                }
-
-                if (typeof $scope.data.aterro === "object") {
-                    aterroId = $scope.data.aterro.id;
-                } else {
-                    aterroId = $scope.data.aterro;
-                }
-
-                //if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined" || (!$scope.nopview && $scope.nopupdate && $scope.data!=([])))
-
-                if ($scope.strnew == 'false' && typeof $scope.data.id == "undefined")
-                    return false;
-
-                //pode visualizar e pode criar
-                if (!$scope.nopview && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                    return true;
-                }
-
-
-                //não pode atualizar, mas pode visualizar e criar 
-                if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                    return true;
-                }
-
-                //não pode atualizar, mas pode criar 
-                if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                    return true;
-                }
-
-                //pode atualizar, pode criar 
-                if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
-                    || (!$scope.nopupdate && $scope.me._perfil != 'Operacional')
-                    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))) {
-                    return true;
-                }
-
-                ////não pode atualizar, mas pode visualizar e criar 
-                //if ($scope.nopupdate && !$scope.nopView && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                //    return true;
-                //}
-
-                ////não pode atualizar, mas pode criar 
-                //if ($scope.nopupdate && !$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)) {
-                //    return true;
-                //}
-
-                ////pode atualizar, pode criar 
-                //if ((!$scope.nopupdate && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro))
-                //    || (!$scope.nopupdate && $scope.me._perfil!='Operacional')
-                //    || (!$scope.nopNew && (usuarioId == $scope.me._id || aterroId == $scope.me._aterro)))
-                //{
-                //    return true;
-                //}
-
-
-                return false;
-            };
 
             $scope.getResourceIndex = function (resources, resource) {
                 var index = -1;
