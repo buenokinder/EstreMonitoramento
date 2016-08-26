@@ -390,8 +390,7 @@ module.exports = {
 
 			Alerta.find({}, function(err, alertas){
 			    _that._alertas = alertas;
-			    var filtro = _that.getFiltrosMarco(req);
-				
+			    var filtro = _that.getFiltrosMarco(req);				
 				
 				var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
 				var sortString = req.param('order');
