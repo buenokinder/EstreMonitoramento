@@ -13,20 +13,25 @@ module.exports = {
 
     _totalRequests:0,
     _totalResponses : 0,
+    _ret: {errors:[],sucess:[]},
 
     _findOrCreatePerfil: function (perfil) {
         var _that = this;
-
-        Usuario.findOne({
+        Perfil.findOne({
             name: perfil
         }).exec(function (err, perfilRet) {
+
             _that._totalResponses += 1;
             if (err) {
-                ret.push(err);
+                _that._ret.errors.push(err);
             } else {
                 if (!perfilRet) {
                     Perfil.create({ name: perfil }).exec(function (err, perfis) {
-                        if (err) { ret.push(err); }
+                        if (err) {
+                            _that._ret.errors.push(err);
+                        } else {
+                            _that._ret.sucess.push(perfis);
+                        }
                     });
                 }
             }
@@ -42,22 +47,25 @@ module.exports = {
             _that._totalResponses += 1;
 
             if (err) {
-                ret.push(err);
+                _that._ret.errors.push(err);
             }
             else {
                 if (!alertaRet) {
                     Alerta.create(alerta).exec(function (err, alertas) {
-                        if (err) { ret.push(err); }
+                        if (err) {
+                            _that._ret.errors.push(err);
+                        } else {
+                            _that._ret.sucess.push(alertas);
+                        }
                     });
                 }
             }
-
         });
     },
 
     setup:function(req,res){
 
-        var ret = [];
+        
         var _that = this;
 
         var execute = new Promise(function (resolve, reject) {
@@ -83,7 +91,7 @@ module.exports = {
 
             var itv = setInterval(function () {
                 if (_that._totalRequests == _that._totalResponses) {
-                    return resolve(ret);
+                    return resolve(_that._ret);
                     clearInterval(itv);
                 }
             }, 10);
