@@ -5,12 +5,96 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-
+var Promise = require('bluebird');
 var Passwords = require('machinepack-passwords');
 var Gravatar = require('machinepack-gravatar');
 
 module.exports = {
 
+    _totalRequests:0,
+    _totalResponses : 0,
+
+    _findOrCreatePerfil: function (perfil) {
+        var _that = this;
+
+        Usuario.findOne({
+            name: perfil
+        }).exec(function (err, perfilRet) {
+            _that._totalResponses += 1;
+            if (err) {
+                ret.push(err);
+            } else {
+                if (!perfilRet) {
+                    Perfil.create({ name: perfil }).exec(function (err, perfis) {
+                        if (err) { ret.push(err); }
+                    });
+                }
+            }
+        });
+    },
+
+    _findOrCreateAlerta: function (alerta) {
+        var _that = this;
+
+        Alerta.findOne({
+            nivel: alerta.nivel
+        }).exec(function (err, alertaRet) {
+            _that._totalResponses += 1;
+
+            if (err) {
+                ret.push(err);
+            }
+            else {
+                if (!alertaRet) {
+                    Alerta.create(alerta).exec(function (err, alertas) {
+                        if (err) { ret.push(err); }
+                    });
+                }
+            }
+
+        });
+    },
+
+    setup:function(req,res){
+
+        var ret = [];
+        var _that = this;
+
+        var execute = new Promise(function (resolve, reject) {
+
+            var perfis = ["Administrador", "Diretor", "Gerente", "Operacional"];
+            for (var i = 0; i < perfis.length; i++) {
+                _that._totalRequests += 1;
+                _that._findOrCreatePerfil(perfis[i]);
+            }
+
+            var niveis = {
+                "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
+                "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal" },
+                "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
+                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervenções localizadas", velocidade: "14", periodicidade: "Diária" },
+                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operações, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
+            };
+
+            for (var nivel in niveis) {
+                _that._totalRequests += 1;
+                _that._findOrCreateAlerta(niveis[nivel]);
+            }
+
+            var itv = setInterval(function () {
+                if (_that._totalRequests == _that._totalResponses) {
+                    return resolve(ret);
+                    clearInterval(itv);
+                }
+            }, 10);
+
+        });
+
+        execute.then(function (results) {
+            res.json(results);
+        });
+
+    },
 
     login: function (req, res) {
 
@@ -258,9 +342,9 @@ module.exports = {
                 return res.negotiate(err);
             } else {
 
-                for (var i = 0; i < ret.length; i++) {
-                    ret[i].perfil = ret[i].perfil.name;
-                }
+                //for (var i = 0; i < ret.length; i++) {
+                //    ret[i].perfil = ret[i].perfil.name;
+                //}
 
                 res.json(ret);
             }
