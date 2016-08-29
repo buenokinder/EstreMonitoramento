@@ -50,15 +50,15 @@
             <h4 class="header2">Pluviometria e Vazão</h4>
 
             <div class="row">
-                <div class="col s6 m4 l4 col-lg-offset-2">
+                <div class="col s6 m2 l4 col-lg-offset-2">
                     <label ng-class="inputClass" for="mes">Mês</label>
                     <select class='browser-default active' id='' required ng-model='mes' ng-options='x as x.name for x in meses track by x.id'></select>
                 </div>
-                <div class="col s6 m4 l4 col-lg-offset-2">
+                <div class="col s6 m2 l2 col-lg-offset-2">
                     <label ng-class="inputClass" for="ano">Ano</label>
                     <select class='browser-default active' id='' required ng-model='ano' ng-options='x as x.id for x in anos track by x.id'></select>
                 </div>
-                <div class="col s6 m4 l4 col-lg-offset-2">
+                <div class="col s6 m2 l4 col-lg-offset-2">
                     <label ng-class="inputClass" for="aterro">Aterro</label>
                     <select class='browser-default active' id='' required ng-model='aterroid' ng-options='x.id as x.nome for x in aterros track by x.id'></select>
                 </div>                
@@ -68,6 +68,8 @@
                     </a>
                 </div>
             </div>
+
+
 
             <div class="row">
                 <div>
@@ -79,47 +81,41 @@
                             <td style="width:15%">Aterro</td>
                             <td style="text-align:center;width:15%">Pluviometria (mm)</td>
                             <td style="text-align:center;width:15%">Vazão (m³/dia)</td>
-                            <td style="text-align:center;width:15%">Ações</td>
+                            <td style="text-align:center;width:15%" ng-show="hasFullPermission">Ações</td>
                         </tr>
 
-                        <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias" title="Clique para editar." style="cursor:pointer">
-                            <td ng-click="rowform.$show()">
-                                <!-- editable username (text with validation) -->
+                        <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias">
+                            <td>
                                 <span editable-text="operacaoPluviometria.dia" class="datepicker" e-name="dia" e-form="rowform" e-required>
                                     {{ operacaoPluviometria.dia || '' }}
                                 </span>
                             </td>
 
                             <td>
-                                <!-- editable status (select-local) -->
-                                <span ng-click="rowform.$show()" e-name="usuario" e-form="rowform">
+                                <span e-name="usuario" e-form="rowform">
                                     {{ operacaoPluviometria.usuario.name || '' }}
                                 </span>
                             </td>
 
                             <td>
-                                <!-- editable status (select-local) -->
-                                <span ng-click="rowform.$show()" e-name="aterro" e-form="rowform">
+                                <span e-name="aterro" e-form="rowform">
                                     {{ operacaoPluviometria.aterro.nome || '' }}
                                 </span>
                             </td>
 
                             <td style="text-align:center;">
-                                <!-- editable status (select-local) -->
-                                <span editable-number="operacaoPluviometria.pluviometria" ng-click="rowform.$show()" e-name="pluviometria" e-form="rowform">
+                                <span editable-number="operacaoPluviometria.pluviometria" e-name="pluviometria" e-form="rowform">
                                     {{ operacaoPluviometria.pluviometria || '0' }}
                                 </span>
                             </td>
 
-                            <td style="text-align:center;" ng-click="rowform.$show()">
-                                <!-- editable status (select-local) -->
+                            <td style="text-align:center;">
                                 <span editable-number="operacaoPluviometria.vazao" e-name="vazao" e-form="rowform">
                                     {{ operacaoPluviometria.vazao || '0' }}
                                 </span>
                             </td>
 
                             <td style="text-align:center;" style="white-space: nowrap">
-                                <!-- form -->
                                 <form editable-form name="rowform" onbeforesave="savePluviometria(rowform,$index, $data, operacaoPluviometria.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoPluviometria">
                                     <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
                                         <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
@@ -129,9 +125,15 @@
                                         <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
                                     </a>
                                 </form>
-                                <div class="buttons" ng-show="!rowform.$visible">
-                                    <!--<a ng-click="rowform.$show()"><i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i></a>-->
-                                    <a ng-click="removePluviometria($index)"><i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i></a>
+
+                                <div class="buttons" ng-show="!rowform.$visible && hasFullPermission">
+                                    <a ng-click="rowform.$show()">
+                                        <i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+
+                                    <a ng-click="removePluviometria($index)">
+                                        <i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

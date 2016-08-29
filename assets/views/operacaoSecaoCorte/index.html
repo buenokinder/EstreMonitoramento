@@ -38,7 +38,7 @@
                             <td style="width:15%">Criado por</td>
                             <td style="width:15%">Aterro</td>
 
-                            <td style="width:15%">Ações</td>
+                            <td style="width:15%" ng-show="hasFullPermission">Ações</td>
                         </tr>
 
                         <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
@@ -86,7 +86,7 @@
                                 </span>
                             </td>
                             <td style="white-space: nowrap">
-                                <!-- form -->
+
                                 <form editable-form name="rowform" onbeforesave="saveSecaoCorte($data, operacaoSecaoCorte.id, $index)" onshow="formatDates()" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">
                                     <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
                                         <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
@@ -95,9 +95,14 @@
                                         <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
                                     </a>
                                 </form>
-                                <div class="buttons" ng-show="!rowform.$visible">
-                                    <a ng-click="rowform.$show()"><i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i></a>
-                                    <a ng-click="removeSecaoCorte(operacaoSecaoCorte.id, $index)"><i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i></a>
+
+                                <div class="buttons" ng-show="!rowform.$visible && hasFullPermission">
+                                    <a ng-click="rowform.$show()">
+                                        <i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+                                    <a ng-click="removeSecaoCorte(operacaoSecaoCorte.id, $index)">
+                                        <i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

@@ -17,7 +17,8 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     $scope.excel = ([]);
     $scope.usuario = window.SAILS_LOCALS;
     $scope.aterroid;
-    
+    $scope.hasFullPermission = $scope.usuario._perfil != 'Gerente'; //O gerente só pode visualizar e criar
+
     $scope.search = function () {        
         $http.get('/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id + '&aterro=' + $scope.aterroid).success(function (data) {
             $scope.operacaoPluviometrias = angular.fromJson(data);
@@ -152,11 +153,16 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                     if (null == result) {
                         $scope.addMedicao(medicao);
                     } else {
-                        $scope.removeMedicao(result, function () {
-                            $scope.addMedicao(medicao);
-                        }, function () {
-                            swal("Erro", "Ocorreu uma falha ao atualizar a medição do dia '" + medicao.dia + "/" + medicao.mes + "/" + medicao.ano + "'. :(", "error");
-                        });
+
+                        if (!$scope.hasFullPermission) {//Não tem permissão full, não pode editar um registro.
+                            swal("Erro", "Não será possível incluir o registro referente a '" + medicao.data + "', pois já existe outra medição para esse mesmo dia. :(", "error");
+                        } else {
+                            $scope.removeMedicao(result, function () {
+                                $scope.addMedicao(medicao);
+                            }, function () {
+                                swal("Erro", "Ocorreu uma falha ao atualizar a medição do dia '" + medicao.dia + "/" + medicao.mes + "/" + medicao.ano + "'. :(", "error");
+                            });
+                        }
                     }
                 });
             }

@@ -3,6 +3,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     $scope.usuario = window.SAILS_LOCALS;
     $scope.secaoCortes = ([]);
     $scope.querydape = [];
+    $scope.hasFullPermission = $scope.usuario._perfil != 'Gerente'; //O gerente só pode visualizar e criar
 
     $scope.pesquisar = function () {
         var query = "";
@@ -65,7 +66,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
         if (null == value || undefined == value) return;
         return getDate(value);
     };
-    
+
     $scope.showSecaoCorte = function (data) {
         if (data.secaoCorte && $scope.secaoCortes.length) {
             var selected = $filter('filter')($scope.secaoCortes, { id: data.secaoCorte });
@@ -92,7 +93,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     };
 
     $scope.saveSecaoCorte = function (data, id, index) {
-        var value = $('table tr:eq(' + (index+1) + ') .datetimepicker').val();
+        var value = $('table tr:eq(' + (index + 1) + ') .datetimepicker').val();
 
         if (undefined == data.secaoCorte) {
             swal("Dados Inválidos!", "Selecione a seção de corte.", "error");

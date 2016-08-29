@@ -10,7 +10,7 @@
         <div class="row">
 
             <div class="col s12 m12 l6">
-                <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false" strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]" deleteperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]">
+                <grid-view fields="[{'name': 'data' , 'value': 'Data/Hora', type:'datetimepicker'},{'name': 'nomeTopografo' , 'value': 'Topógrafo','filter':'true' } ,{'name': 'nomeAuxiliar' , 'value': 'Auxiliar','filter':'true' } ]" listaname="MedicaoMarcoSuperficial" autopage="true" adicionar="" add="false" strupdate="true" popup="true" label="Lista de Medições" view="MedicaoMarcoSuperficial" calculatetitle="Resumos" pagesize="5" editinline="false" calculate="true" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]" deleteperfil="[{'perfil':'Administrador'}, {'perfil':'Diretor'}]">
                 </grid-view>
 
                 <button class="btn btn-large  ng-scope" aria-hidden="false" id="btMonitoramentos">Monitoramentos</button>
@@ -186,7 +186,7 @@
 
                         <div>
                             <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" popup="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
-                                       view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'}]" updateperfil=" [{ 'perfil': 'Administrador' }, { 'perfil': 'Gerente' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
+                                       view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil=" [{ 'perfil': 'Administrador' }, { 'perfil': 'Diretor' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
                             </grid-view>
                         </div>
 
