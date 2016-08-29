@@ -250,11 +250,18 @@ module.exports = {
             filtro[key] = req.param(key);
         }
 
-        Usuario.find(filtro)
+        Usuario
+        .find(filtro)
+        .populate("perfil")
         .exec(function result(err, ret) {
             if (err) {
                 return res.negotiate(err);
             } else {
+
+                for (var i = 0; i < ret.length; i++) {
+                    ret[i].perfil = ret[i].perfil.name;
+                }
+
                 res.json(ret);
             }
         });
