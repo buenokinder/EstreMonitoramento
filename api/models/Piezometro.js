@@ -34,6 +34,22 @@ module.exports = {
             required: true
         },
 
+        nivelAtencao:  {
+            type: 'float'
+        },
+        nivelAceitavel: {
+            type: 'float'
+        },
+        nivelRegular:{
+            type: 'float'
+        },
+        nivelIntervencao: {
+            type: 'float'
+        },
+        nivelParalisacao: {
+            type: 'float'
+        },
+
         habilitado: {
             type: 'boolean',
             required: true,
