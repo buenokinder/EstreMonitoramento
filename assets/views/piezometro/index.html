@@ -1,0 +1,184 @@
+<div class="section" ng-controller="PiezometroController">
+    <div class="row section">
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m12 l6">
+                <grid-view fields="[{'name': 'nome' , 'value': 'Nome','filter':'true'}, {'name': 'createdAt', 'value': 'Data Criação', 'uiFilter':'date', 'type':'datepicker'}, {'name': 'aterro' , 'value': 'Aterro', 'sub':'nome', 'type': 'combobox', 'combo':'true', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome'},{'name': 'habilitado' , 'value': 'Habilitado'}, {'name':'usuario', 'value': 'Criado por', 'sub':'name'}]" listaname="Piezometro" autopage="true" label="Lista de Piezômetro" adicionar="" add="false" view="Piezometro" pagesize="5" strupdate="true"></grid-view>
+            </div>
+
+            <div class="col s12 m12 l6">
+
+                <form-view fields="[{'name': 'nome', 'value': 'Nome'}, {'name': 'salienciaInicial', 'value': 'Saliência inicial', 'uiMask':'ui-number-mask'}, {'name': 'celulaPiezometrica', 'value': 'Célula Piezométrica ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeTotalInicial', 'value': 'Profundidade total inicial ', 'uiMask':'ui-number-mask'}, {'name': 'profundidadeMediaCamaraCargaInicial', 'value': 'Prof. Média da Câmara de Carga ', 'uiMask':'ui-number-mask'}, {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome', 'defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}] }, {'name': 'alertas', 'value': 'Alertas', 'model': 'alertas','input': 'alerta' ,'uiMask':'ui-number-mask','type':'listview', fields: [ {'name': 'coeficienteRU', 'value': 'CoeficienteRu', 'uiFilter':'number'}, {'name': 'date', 'value': 'Data', 'uiFilter': 'date', 'type':'datepicker'}]}, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }, {'name': 'usuario', 'type':'usuario'}]"
+                           updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Gerente'}, { 'perfil': 'Operacional'}]" adicionarperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'},{ 'perfil': 'Operacional'},  { 'perfil': 'Diretor'}]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Gerente'},{ 'perfil': 'Operacional'},  { 'perfil': 'Diretor'}]" deleteperfil="[{ 'perfil': 'Administrador'}]" label="Formulário de Piezômetro" listaname="Piezometro" strupdate="false"></form-view>
+
+                <button type="button" class="btn cyan waves-effect waves-light right" style="margin-right:5px" ng-click="showNivelAlerta()">Níveis de Alerta</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 m12 l6">
+                <div id="modalView" class="modal modal-fixed-footer">
+                    <div class="modal-content">
+                        <h4>Níveis de Alerta</h4>
+
+                        <form editable-form="" name="editableForm" class="ng-pristine ng-scope ng-invalid ng-invalid-date">
+
+                            <p>
+                                <b class="aceitavel">Aceitável</b>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="data" ng-model="data.nivelAceitavel" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" ui-number-mask='2'>
+                                        <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                                    </div>
+                                </span>
+                            </p>
+
+                            <p>
+                                <b class="regular">Regular</b>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="regular" ng-model="data.nivelRegular" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" ui-number-mask='2'>
+                                        <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                                    </div>
+                                </span>
+                            </p>
+
+
+                            <p>
+                                <b class="atencao">Atenção</b>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="atencao" ng-model="data.nivelAtencao" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" ui-number-mask='2'>
+                                        <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                                    </div>
+                                </span>
+                            </p>
+
+
+                            <p>
+                                <b class="intervencao">Intervenção</b>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="intervencao" ng-model="data.nivelIntervencao" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" ui-number-mask='2'>
+                                        <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                                    </div>
+                                </span>
+                            </p>
+
+                            <p>
+                                <b class="paralisacao">Paralisação</b>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="paralisacao" ng-model="data.nivelParalisacao" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" ui-number-mask='2'>
+                                        <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                                    </div>
+                                </span>
+                            </p>
+
+                            <div class="buttons">
+                                <button type="button" class="btn btn-default ng-hide">Adicionar</button>
+
+                                <span class="">
+                                    <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="saveNivelAlerta()">Salvar</button>
+
+                                    <button type="button" class="btn btn-default" onclick="fecharModal('modalView')">Cancelar</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="row" style="display:none;">
+            <div class="col s12 m12 l6">
+            </div>
+
+            <div class="col s12 m12 l6">
+
+                <pre>
+            var niveisAlerta =$("#niveis-alerta-template")
+            .clone()
+            .prop('id','niveis-alerta')
+            .css('display','block');
+
+            $("#sign-up-form div[class=row]:nth-child(7)").prepend(niveisAlerta);
+        </pre>
+
+
+
+                <div class="row" id="niveis-alerta-template" style="display:none;margin-top:12px;margin-bottom:12px">
+                    <div class="input-field col s12">
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ng-binding ng-scope">Nível de Alerta</th>
+                                    <th class="text-center ng-binding ng-scope">Valor</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td class="aceitavel">Aceitável</td>
+
+                                    <td ng-click="rowform.$show()">
+                                        <a href="#" editable-text="data.nivelAceitavel" e-name="nivelAceitavel" ng-model="data.nivelAceitavel">{{data.nivelAceitavel}}</a>
+                                    </td>
+
+                                    <td style="white-space: nowrap">
+                                        <form editable-form name="rowform" onbeforesave="saveNivelAlerta($data, $index)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">
+                                            <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
+                                                <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                            </button>
+                                            <a ng-disabled="rowform.$waiting" ng-click="cancel($index, rowform)">
+                                                <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                            </a>
+                                        </form>
+
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <a ng-click="rowform.$show()">
+                                                <i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="regular">Regular</td>
+                                    <td>
+                                        <span editable-text="data.nivelRegular" e-name="nivelRegular" ng-model="data.nivelRegular">{{data.nivelRegular}}</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="atencao">Atenção</td>
+                                    <td>
+                                        <span editable-text="data.nivelAtencao" e-name="nivelAtencao" ng-model="data.nivelAtencao">{{data.nivelAtencao}}</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="intervencao">Intervenção</td>
+                                    <td>
+                                        <span editable-text="data.nivelIntervencao" e-name="nivelIntervencao" ng-model="data.nivelIntervencao">{{data.nivelIntervencao}}</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="paralisacao">Paralisação</td>
+                                    <td>
+                                        <span editable-text="data.nivelParalisacao" e-name="nivelParalisacao" ng-model="data.nivelParalisacao">{{data.nivelParalisacao}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+    </div>
+</div>
+
