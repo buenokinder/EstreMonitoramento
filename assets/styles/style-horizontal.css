@@ -13,8 +13,8 @@ header .brand-logo img {
 
 #layouts-horizontal .sidebar-collapse {
   position: absolute;
-  left: 10px;
-  top: 10px;
+/*  left: 10px;
+  top: 10px;*/
   z-index: 999;
 }
 
