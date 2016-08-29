@@ -94,8 +94,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
                 HtmlFormBody += "</td>";
                 
-
-                
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
                 HtmlFormBody += "<a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
                 HtmlFormBody += "<a ng-show='exibir(relatorio)' href='/visualizacao?id={{datum.id}}' target='_blank' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -105,8 +103,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'>";
                 HtmlFormBody += "<i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>";
                 HtmlFormBody += "</td>"
-              
-
 
                 HtmlFormBody += "<td style='white-space: nowrap'>";
                 HtmlFormBody += "<form editable-form name='rowform' ng-show='rowform.$visible' class='form-buttons form-inline' onbeforesave='save(datum)' ng-show='rowform.$visible' shown='edited == datum'>";
@@ -1161,6 +1157,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             data: params
                                         }).then(function onSuccess(sailsResponse) {
                                             $scope.inputClass = null;
+                                            sennitCommunicationService.prepForBroadcast(sailsResponse, "save");
                                             $scope.data = ({});
                                             $scope.inputClass = "disabled";
                                             $scope.newitem();
@@ -1226,7 +1223,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                     .then(function onSuccess(sailsResponse) {
                                         swal("Registro Incluido!", "Seu registro foi incluido com sucesso.", "success");
                                         Materialize.toast('Registro incluido com sucesso!', 4000);
-                                        sennitCommunicationService.prepForBroadcastDataList(sailsResponse);
+                                        sennitCommunicationService.prepForBroadcastDataList(sailsResponse, "save");
+                                        sennitCommunicationService.prepForBroadcast(sailsResponse, "save");
                                         $scope.newitem();
                                         $scope.sennitForm.loading = false;
 
@@ -1258,7 +1256,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
     sennitCommunicationService.type = 'select';
 
     sennitCommunicationService.prepForBroadcast = function (data, type) {
-        this.type = undefined == type ? 'select' : 'calculate';
+        //this.type = undefined == type ? 'select' : 'calculate';
+        this.type = undefined == type ? 'select' : type;
         this.data = data;
         this.broadcastItem(type);
         $('select').material_select();
