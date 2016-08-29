@@ -12,6 +12,11 @@
                     <label ng-class="inputClass" for="ano">Ano</label>
                     <select class='browser-default active' id='' required ng-model='anoAssociatedWithFile' ng-options='x as x.id for x in anosToAssociateWithFile track by x.id' title='Selecione o ano que deseja associar com as medições do arquivo.'></select>
                 </div>
+
+                <div class="col s6 m2 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class='browser-default active' id='' required ng-model='aterroAssociatedWithFile' ng-options='x.id as x.nome for x in aterrosAssociatedWithFile track by x.id'></select>
+                </div> 
             </div>
 
             <div class="row">
@@ -140,7 +145,6 @@
                     </table>
 
                     <a class="btn-floating btn-large waves-effect waves-light" ng-click="addPluviometria()" title="Incluir nova medição"><i class="mdi-content-add"></i></a>
-
                     <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadPluviometria()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
 
                 </div>

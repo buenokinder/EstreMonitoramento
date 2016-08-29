@@ -1,94 +1,90 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Estre</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="msapplication-tap-highlight" content="no">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+
     <link rel="stylesheet" href="/styles/materialize.css">
     <link rel="stylesheet" href="/styles/page-center.css">
     <link rel="icon" href="favicon.png" type="image/x-icon">
-
-    
     <link rel="stylesheet" href="/styles/materialize.css">
-   
-  
-
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection">
-       
     <link href="/styles/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
-
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
+        window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
     </script>
 
-  </head>
+</head>
 
-  <body  ng-app="EstreLoginApp" ng-cloak>
-
-
- <div id="loader-wrapper">
-      <div id="loader"></div>        
-      <div class="loader-section section-left"></div>
-      <div class="loader-section section-right"></div>
-  </div>
-  <!-- End Page Loading -->
+<body ng-app="EstreLoginApp" ng-cloak>
 
 
-
-  <div id="login-page"  ng-controller="HomepageController" class="row">
-    <div class="col s12 z-depth-4 card-panel">
-      <form ng-submit="submitLoginForm()"  class="login-form">
-        <div class="row">
-          <div class="input-field col s12 center">
-            <img src="/images/logo_estre.png" alt="" class="responsive-img valign">
-            <p class="center login-form-text">Estre - Sistema de Medições</p>
-          </div>
-        </div>
-        <div class="row margin">
-          <div class="input-field col s12">
-            <i class="mdi-social-person-outline prefix"></i>
-            <input id="username" ng-model="loginForm.email" type="text">
-            <label for="username"  class="center-align">Usuario</label>
-          </div>
-        </div>
-        <div class="row margin">
-          <div class="input-field col s12">
-            <i class="mdi-action-lock-outline prefix"></i>
-            <input id="password" ng-model="loginForm.password" type="password">
-            <label for="password">Senha</label>
-          </div>
-        </div>
-        <div class="row">          
-          <div class="input-field col s12 m12 l12  login-text">
-              <input type="checkbox" id="remember-me" />
-              <label for="remember-me">Lembrar senha</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <button type="submit" class="btn waves-effect waves-light col s12"><span ng-show="!loginForm.loading">Logar</span>
-                <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
-                <span ng-show="loginForm.loading">Logando...</span></button>
-          </div>
-        </div>
-        <div class="row">
-          
-          <div class="input-field col s6 m6 l6">
-              <p class="margin right-align medium-small"><a href="page-forgot-password.html">Recuperar senha</a></p>
-          </div>          
-        </div>
-
-      </form>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
     </div>
-  </div>
+    <!-- End Page Loading -->
 
-  
+
+
+    <div id="login-page" ng-controller="HomepageController" class="row">
+        <div class="col s12 z-depth-4 card-panel">
+            <form ng-submit="submitLoginForm()" class="login-form">
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        <img src="/images/logo_estre.png" alt="" class="responsive-img valign">
+                        <p class="center login-form-text">Estre - Sistema de Medições</p>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="username" ng-model="loginForm.email" type="text">
+                        <label for="username" class="center-align">Usuario</label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="password" ng-model="loginForm.password" type="password">
+                        <label for="password">Senha</label>
+                    </div>
+                </div>
+                <div class="row" ng-hide="true">
+                    <div class="input-field col s12 m12 l12  login-text">
+                        <input type="checkbox" id="remember-me" />
+                        <label for="remember-me">Lembrar senha</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn waves-effect waves-light col s12">
+                            <span ng-show="!loginForm.loading">Logar</span>
+                            <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
+                            <span ng-show="loginForm.loading">Logando...</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" ng-hide="true">
+
+                    <div class="input-field col s6 m6 l6">
+                        <p class="margin right-align medium-small"><a href="#">Recuperar senha</a></p>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
 
 
     <script src="/js/dependencies/sails.io.js"></script>
@@ -103,13 +99,13 @@
     <script src="/js/dependencies/angular-route.min.js"></script>
     <script src="/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="/js/dependencies/materialize.js"></script>
-      <script type="text/javascript" src="/js/public/homepage/plugins.js"></script
-	  <script type="text/javascript" src="/js/dependencies/materialize.js"></script>
+    <script type="text/javascript" src="/js/public/homepage/plugins.js"></script>
+    <script type="text/javascript" src="/js/dependencies/materialize.js"></script>
     <script src="/js/dependencies/load-dash.js"></script>
     <script src="/js/public/homepage/HomepageModule.js"></script>
     <script src="/js/public/homepage/HomepageController.js"></script>
-    
 
 
-  </body>
+
+</body>
 </html>

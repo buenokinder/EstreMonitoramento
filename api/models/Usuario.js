@@ -7,50 +7,51 @@
 
 module.exports = {
 
-  attributes: {
+    attributes: {
 
-    name: {
-      type: 'string',
-      required: true
-    },
+        name: {
+            type: 'string',
+            required: true
+        },
 
-    email: {
-      type: 'string',
-      required: true,
-      unique: true
-    },
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-
- 
-    encryptedPassword: {
-      type: 'string',
-      required: true
-    },
+        email: {
+            type: 'string',
+            required: true,
+            unique: true
+        },
+        habilitado: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
 
 
-    lastLoggedIn: {
-      type: 'date',
-      required: true,
-      defaultsTo: new Date(0)
-    },
-    
-    perfil: {
-      type: 'string',
-      enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
+        encryptedPassword: {
+            type: 'string',
+            required: true
+        },
 
-    },
-    aterros: {
-      collection: 'Aterro',
-      via: 'usuarios'
+
+        lastLoggedIn: {
+            type: 'date',
+            required: true,
+            defaultsTo: new Date(0)
+        },
+
+        //perfil: {
+        //    type: 'string',
+        //    enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
+
+        //},
+
+        perfil: {
+            model: 'perfil'
+        },
+
+        aterros: {
+            collection: 'Aterro',
+            via: 'usuarios'
+        }
     }
-
-   
-
-    
-  }
 };
 

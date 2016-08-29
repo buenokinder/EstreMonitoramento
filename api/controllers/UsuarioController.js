@@ -21,7 +21,7 @@ module.exports = {
 
         Usuario.findOne({
             email: req.param('email')
-        }).populate('aterros').exec(function foundUser(err, user) {
+        }).populate('perfil').populate('aterros').exec(function foundUser(err, user) {
             if (err) return res.negotiate(err);
             if (!user) return res.notFound();
 
@@ -40,6 +40,7 @@ module.exports = {
 
                 success: function () {
                     req.session.me = user;
+                    req.session.me.perfil = user.perfil.name;
                     req.session.name = user.name;
                     if (user.aterros.length > 0) {
                         req.session.me.aterro = user.aterros[0];
@@ -60,58 +61,64 @@ module.exports = {
 
     signup: function (req, res) {
 
-        var Passwords = require('machinepack-passwords');
+        Perfil.findOne({
+            name: req.param('perfil')
+        }).exec(function foundPerfil(err, perfil) {
+            if (err) return res.negotiate(err);
+            if (!perfil) return res.notFound();
 
+            var Passwords = require('machinepack-passwords');
 
-        Passwords.encryptPassword({
-            password: req.param('password'),
-            difficulty: 10,
-        }).exec({
+            Passwords.encryptPassword({
+                password: req.param('password'),
+                difficulty: 10,
+            }).exec({
 
-            error: function (err) {
-                return res.negotiate(err);
-            },
+                error: function (err) {
+                    return res.negotiate(err);
+                },
 
-            success: function (encryptedPassword) {
-                require('machinepack-gravatar').getImageUrl({
-                    emailAddress: req.param('email')
-                }).exec({
-                    error: function (err) {
-                        return res.negotiate(err);
-                    },
-                    success: function (gravatarUrl) {
+                success: function (encryptedPassword) {
+                    require('machinepack-gravatar').getImageUrl({
+                        emailAddress: req.param('email')
+                    }).exec({
+                        error: function (err) {
+                            return res.negotiate(err);
+                        },
+                        success: function (gravatarUrl) {
+                            Usuario.create({
+                                name: req.param('name'),
+                                email: req.param('email'),
+                                perfil: perfil,
+                                encryptedPassword: encryptedPassword,
+                                lastLoggedIn: new Date(),
+                                gravatarUrl: gravatarUrl
+                            }, function userCreated(err, newUser) {
+                                if (err) {
 
-                        Usuario.create({
-                            name: req.param('name'),
-                            email: req.param('email'),
-                            perfil: req.param('perfil'),
-                            encryptedPassword: encryptedPassword,
-                            lastLoggedIn: new Date(),
-                            gravatarUrl: gravatarUrl
-                        }, function userCreated(err, newUser) {
-                            if (err) {
+                                    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+                                      && err.invalidAttributes.email[0].rule === 'unique') {
+                                        return res.emailAddressInUse();
+                                    }
 
-                                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-                                  && err.invalidAttributes.email[0].rule === 'unique') {
-                                    return res.emailAddressInUse();
+                                    return res.negotiate(err);
                                 }
 
+                                req.session.me = newUser.id;
 
-                                return res.negotiate(err);
-                            }
-
-
-                            req.session.me = newUser.id;
-
-
-                            return res.json({
-                                id: newUser.id
+                                return res.json({
+                                    id: newUser.id
+                                });
                             });
-                        });
-                    }
-                });
-            }
+                        }
+                    });
+                }
+            });
+
+
         });
+
+
     },
 
     /**

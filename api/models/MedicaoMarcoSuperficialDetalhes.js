@@ -7,37 +7,37 @@
 
 module.exports = {
 
-  attributes: {
-     data: {
-      type: 'date',
-      required: true,
-      defaultsTo: new Date(0)
-    },
-    norte: {
-      type: 'string',
-      required: true
-    },
-    leste: {
-      type: 'string',
-      required: true
-    },   
-    cota: {
-      type: 'string',
-      required: true
-    }, 
-    marcoSuperficial: {
-      model: 'marcoSuperficial',
-      required: true
-    },
-    aterro: {
-        model: 'Aterro'
-    },
-    usuario: {
-        model: 'Usuario'
-    },
-    owner: {
-      model: 'medicaoMarcoSuperficial'
+    attributes: {
+        data: {
+            type: 'date',
+            required: true,
+            defaultsTo: new Date(0)
+        },
+        norte: {
+            type: 'string',
+            required: true
+        },
+        leste: {
+            type: 'string',
+            required: true
+        },
+        cota: {
+            type: 'string',
+            required: true
+        },
+        marcoSuperficial: {
+            model: 'marcoSuperficial',
+            required: true
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        },
+        owner: {
+            model: 'medicaoMarcoSuperficial'
 
+        }
     }
-  }
 };

@@ -5,22 +5,30 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     $scope.ano = { id: 2016 };
     $scope.anos = ([]);
     $scope.anosToAssociateWithFile = ([]);
-    $scope.anoAssociatedWithFile = ([]);
-    $scope.mesAssociatedWithFile = ([]);
+    $scope.anoAssociatedWithFile = undefined;
+    $scope.mesAssociatedWithFile = undefined;
+    $scope.aterrosAssociatedWithFile = ([]);
+    $scope.aterroAssociatedWithFile = undefined;
     $scope.aterros = ([]);
     $scope.usuarios = [];
     $scope.currentAno = (new Date()).getFullYear();
     $scope.totalSent = 0;
     $scope.totalErrors = 0;
-    $scope.usuario = null;
     $scope.aterro = null;
     $scope.excel = ([]);
-    $scope.usuario = window.SAILS_LOCALS;
+    $scope.usuario = null;
+    $scope.me = window.SAILS_LOCALS;
     $scope.aterroid;
-    $scope.hasFullPermission = $scope.usuario._perfil != 'Gerente'; //O gerente só pode visualizar e criar
+    $scope.hasFullPermission = $scope.me._perfil != 'Gerente'; //O gerente só pode visualizar e criar
 
-    $scope.search = function () {        
-        $http.get('/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id + '&aterro=' + $scope.aterroid).success(function (data) {
+    $scope.search = function () {
+        var url = '/PluviometriaVazao/search?mes=' + $scope.mes.id + '&ano=' + $scope.ano.id;
+
+        if ($scope.aterroid) {
+            url += '&aterro=' + $scope.aterroid;
+        }
+
+        $http.get(url).success(function (data) {
             $scope.operacaoPluviometrias = angular.fromJson(data);
         });
     };
@@ -55,24 +63,27 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     }
 
     $scope.loadAterros = function () {
-        return $scope.aterros.length ? null : $http.get('/Aterro').success(function (data) {
+        return $scope.aterros.length ? null : $http.get('/Aterro/Search').success(function (data) {
             $scope.aterros = angular.fromJson(data);
+            $scope.aterrosAssociatedWithFile = angular.fromJson(data);
 
             for (var i = 0; i < $scope.aterros.length; i++) {
-                if ($scope.aterros[i].id == window.SAILS_LOCALS._aterro) {
+                if ($scope.aterros[i].id == $scope.me._aterro) {
                     $scope.aterro = $scope.aterros[i];
                 }
             }
-
+            
         });
     };
 
+
+
     $scope.loadUsuarios = function () {
-        return $scope.usuarios.length ? null : $http.get('/Usuario').success(function (data) {
+        return $scope.usuarios.length ? null : $http.get('/Usuario/Search').success(function (data) {
             $scope.usuarios = data;
 
             for (var i = 0; i < $scope.usuarios.length; i++) {
-                if ($scope.usuarios[i].id == window.SAILS_LOCALS._id) {
+                if ($scope.usuarios[i].id == $scope.me._id) {
                     $scope.usuario = $scope.usuarios[i];
                 }
             }
@@ -107,7 +118,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     }
 
     $scope.getMedicao = function (medicao, callback) {
-        $http.get('/PluviometriaVazao?where={ "dia": "' + medicao.dia + '","mes": "' + medicao.mes + '","ano": "' + medicao.ano + '"}').success(function (data) {
+        $http.get('/PluviometriaVazao/search?dia=' + medicao.dia + '&mes=' + medicao.mes + '&ano=' + medicao.ano + '&aterro=' + medicao.aterro).success(function (data) {
             callback(data.length > 0 ? angular.fromJson(data[0]) : null);
         });
     };
@@ -122,7 +133,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
 
     $scope.addMedicao = function (medicao) {
 
-        medicao.usuario = $scope.usuario._id;
+        medicao.usuario = $scope.usuario.id;
 
         $http.post('/PluviometriaVazao', medicao).then(
           function (result) {
@@ -136,18 +147,44 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
           });
     };
 
+    $scope.validateUpload = function () {
+
+        if (undefined == $scope.mesAssociatedWithFile) {
+            swal("Erro", "Selecione o mês associado ao arquivo selecionado. :(", "error");
+            return false;
+        }
+
+        if (undefined == $scope.anoAssociatedWithFile) {
+            swal("Erro", "Selecione o ano associado ao arquivo selecionado. :(", "error");
+            return false;
+        }
+
+        if (undefined == $scope.aterroAssociatedWithFile) {
+            swal("Erro", "Selecione o aterro associado ao arquivo selecionado. :(", "error");
+            return false;
+        }
+
+        return true;
+    }
+
     $scope.loadFile = function () {
+        if (!$scope.validateUpload()) {
+            return;
+        }
+
         alasql('SELECT * FROM FILE(?,{headers:false})', [event], function (res) {
             $scope.excel = angular.fromJson(res);
             $("#excel-data").show();
             $scope.addMedicoes($scope.excel);
         });
+        
     };
 
     $scope.addMedicoes = function (medicoes) {
+        
         angular.forEach(medicoes, function (registro, index) {
             if (index != 0) {
-                var medicao = { data: registro.A + '/' + $scope.mesAssociatedWithFile.id + '/' + $scope.anoAssociatedWithFile.id, dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mesAssociatedWithFile.id, ano: $scope.anoAssociatedWithFile.id };
+                var medicao = { data: registro.A + '/' + $scope.mesAssociatedWithFile.id + '/' + $scope.anoAssociatedWithFile.id, dia: registro.A, pluviometria: registro.B, vazao: registro.C, aterro: $scope.aterroAssociatedWithFile, usuario: $scope.me._id, mes: $scope.mesAssociatedWithFile.id, ano: $scope.anoAssociatedWithFile.id };
 
                 $scope.getMedicao(medicao, function (result) {
                     if (null == result) {
@@ -216,7 +253,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                 if (isConfirm) {
                     $scope.getMedicao(medicao, function (result) {
                         if (null == result) {
-                            medicao.usuario = $scope.usuario._id;
+                            medicao.usuario = $scope.usuario.id;
                             $http.post('/PluviometriaVazao', medicao).then(function (itemInserted) {
                                 swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                                 Materialize.toast('Registro inserido com sucesso!', 4000);
@@ -313,13 +350,13 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         $scope.inserted = {
             dataMedicao: null,
             aterro: $scope.aterro,
-            usuario: $scope.usuario,
+            usuario: $scope.usuario.id,
             pluviometria: null,
             vazao: null
         };
         $scope.operacaoPluviometrias.push($scope.inserted);
     };
-
+    
 
     $(".dropify").on('dropify.afterClear', function (e) {
         $scope.excel = ([]);
