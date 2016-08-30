@@ -7,7 +7,7 @@ app.filter("asDate", function () {
     }
 });
 
-app.controller('DashboardController', ['$scope', '$location', '$rootScope', function ($scope, $location, $rootScope) {
+app.controller('DashboardController', ['$scope', '$http', '$location', '$rootScope', function ($scope, $http, $location, $rootScope) {
     $scope.pai = undefined;
     $scope.pathname = undefined;
     $scope.link = "";
