@@ -551,6 +551,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             adicionarperfil: '=',
             updateperfil: '=',
             viewperfil: '=',
+            actionbutton:'=',
             listaname: '@',
             noacess: '=',
             strupdate: '@',
@@ -739,11 +740,23 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             HtmlFormBody += "<div class='input-field col s12'>";
             HtmlFormBody += "   <a ng-click='newitem()' ng-hide='nopNew' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a>";
 
+
+
             HtmlFormBody += "   <button ng-show='showBotaoSubmit' type='submit' class='btn cyan waves-effect waves-light right' >";
             HtmlFormBody += "       <span ng-show='!sennitForm.loading'>Submeter</span>";
             HtmlFormBody += "       <span class='overlord-loading-spinner fa fa-spinner' ng-show='sennitForm.loading' ></span>";
             HtmlFormBody += "       <span ng-show='sennitForm.loading'>Aguarde...</span>";
             HtmlFormBody += "   </button>";
+
+
+            if ($scope.actionbutton) {
+                angular.forEach($scope.actionbutton, function (value, key) {
+
+                    HtmlFormBody += "   <button style='margin-right:8px' type='button' class='btn cyan waves-effect waves-light right' title='" + value.title + "' ng-click=execFn('" + value.action + "') >";
+                    HtmlFormBody += "       <span>" + value.value + "</span>";
+                    HtmlFormBody += "   </button>";
+                });
+            }
 
             HtmlFormBody += "</div>";
 
@@ -780,6 +793,18 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.inputClass = "";
             $scope.data = ({});
             $scope.url = ([]);
+
+            $scope.execFn = function (fnName) {
+                //$injector.get('Contact')['send'](email);
+
+                if ($scope[fnName]) {
+                    $scope[fnName]();
+                } else {
+                    if ($scope.$parent[fnName]) {
+                        $scope.$parent[fnName]();
+                    }
+                }
+            };
 
             $scope.userInProfiles = function (profiles) {
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
@@ -1018,6 +1043,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 $scope.inputClass = "";
                 $('select').material_select();
                 $scope.verificaBotaoSubmit();
+                sennitCommunicationService.prepForBroadcast($scope.data, "new");
             };
 
             $scope.unSelectMultiCombo = function () {
