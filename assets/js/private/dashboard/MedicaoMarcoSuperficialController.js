@@ -34,7 +34,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
           $scope.monitoramentos.dataFinal = getDateTimeString(dtFim);
           $http.get('/Aterro').success(function(response, status){
             $scope.aterros = response; 
-            console.log('response', response);            
           });
 
           $http.get('/MarcoSuperficial').success(function(response, status){
