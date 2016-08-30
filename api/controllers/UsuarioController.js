@@ -15,29 +15,6 @@ module.exports = {
     _totalResponses: 0,
     _ret: { errors: [], sucess: [] },
 
-    _findOrCreatePerfil: function (perfil) {
-        var _that = this;
-        Perfil.findOne({
-            name: perfil
-        }).exec(function (err, perfilRet) {
-
-            _that._totalResponses += 1;
-            if (err) {
-                _that._ret.errors.push(err);
-            } else {
-                if (!perfilRet) {
-                    Perfil.create({ name: perfil }).exec(function (err, perfis) {
-                        if (err) {
-                            _that._ret.errors.push(err);
-                        } else {
-                            _that._ret.sucess.push(perfis);
-                        }
-                    });
-                }
-            }
-        });
-    },
-
     _findOrCreateAlerta: function (alerta) {
         var _that = this;
 
@@ -65,16 +42,9 @@ module.exports = {
 
     setup: function (req, res) {
 
-
         var _that = this;
 
         var execute = new Promise(function (resolve, reject) {
-
-            var perfis = ["Administrador", "Diretor", "Gerente", "Operacional"];
-            for (var i = 0; i < perfis.length; i++) {
-                _that._totalRequests += 1;
-                _that._findOrCreatePerfil(perfis[i]);
-            }
 
             var niveis = {
                 "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
@@ -137,13 +107,10 @@ module.exports = {
                     if (user.aterros.length > 0) {
                         req.session.me.aterro = user.aterros[0];
                     }
-
                     else
                         req.session.me.aterro = "";
 
                     return res.ok();
-
-
                 }
             });
         });

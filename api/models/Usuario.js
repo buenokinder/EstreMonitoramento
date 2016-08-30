@@ -70,8 +70,6 @@ module.exports = {
                         return false;
                     },
                     success: function (gravatarUrl) {
-                        //value = { usuario: value.usuario, name: value.name, email: value.email, perfil: value.perfil, habilitado: value.habilitado, encryptedPassword: encryptedPassword, gravatarUrl: gravatarUrl, lastLoggedIn: value.lastLoggedIn };
-
                         value.encryptedPassword = encryptedPassword;
                         value.gravatarUrl = gravatarUrl;
                         delete value['password'];

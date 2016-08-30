@@ -296,7 +296,7 @@ module.exports = {
         for (var j = 0; j < marcoSuperficial.medicaoMarcoSuperficialDetalhes.length; j++) {
             var first = (j == 0);
 
-            var retorno = {
+            var monitoramento = {
                 deslocamentoHorizontalParcial: [],
                 deslocamentoHorizontalTotal: ([]),
                 velocidadeHorizontal: ([]),
@@ -319,59 +319,59 @@ module.exports = {
             DataAnterior = Math.floor(medicaoAnterior.data.getTime() / (3600 * 24 * 1000));
             DiferencaDatas = DataAtual - DataAnterior;
 
-            retorno.deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
-            retorno.deslocamentoVerticalTotal = parseFloat((medicaoAtual.cota - marcoSuperficial.cota) * 100).toFixed(4);
-            retorno.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
-            retorno.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(4);
+            monitoramento.deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
+            monitoramento.deslocamentoVerticalTotal = parseFloat((medicaoAtual.cota - marcoSuperficial.cota) * 100).toFixed(4);
+            monitoramento.deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
+            monitoramento.deslocamentoHorizontalTotal = parseFloat(Math.sqrt(deltaTotalNorte + deltaTotalEste) * 100).toFixed(4);
 
-            retorno.velocidadeHorizontal = (DiferencaDatas == 0 ? 0 : parseFloat(retorno.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(4));
-            retorno.velocidadeVertical = (DiferencaDatas == 0 ? 0 : parseFloat(Math.abs(retorno.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(4));
+            monitoramento.velocidadeHorizontal = (DiferencaDatas == 0 ? 0 : parseFloat(monitoramento.deslocamentoHorizontalParcial / DiferencaDatas).toFixed(4));
+            monitoramento.velocidadeVertical = (DiferencaDatas == 0 ? 0 : parseFloat(Math.abs(monitoramento.deslocamentoVerticalParcial / DiferencaDatas)).toFixed(4));
 
-            retorno.sentidoDeslocamentoDirerencaNorte = parseFloat((medicaoAtual.norte - marcoSuperficial.norte) * 100).toFixed(4);
-            retorno.sentidoDeslocamentoDirerencaEste = parseFloat((medicaoAtual.leste - marcoSuperficial.leste) * 100).toFixed(4);
+            monitoramento.sentidoDeslocamentoDirerencaNorte = parseFloat((medicaoAtual.norte - marcoSuperficial.norte) * 100).toFixed(4);
+            monitoramento.sentidoDeslocamentoDirerencaEste = parseFloat((medicaoAtual.leste - marcoSuperficial.leste) * 100).toFixed(4);
 
 
-            if (retorno.sentidoDeslocamentoDirerencaNorte > 0)
-                retorno.sentidoDeslocamentoNorteSul = "Norte";
+            if (monitoramento.sentidoDeslocamentoDirerencaNorte > 0)
+                monitoramento.sentidoDeslocamentoNorteSul = "Norte";
             else
-                retorno.sentidoDeslocamentoNorteSul = "Sul";
+                monitoramento.sentidoDeslocamentoNorteSul = "Sul";
 
-            if (retorno.sentidoDeslocamentoDirerencaEste > 0)
-                retorno.sentidoDeslocamentoLesteOeste = "Leste";
+            if (monitoramento.sentidoDeslocamentoDirerencaEste > 0)
+                monitoramento.sentidoDeslocamentoLesteOeste = "Leste";
             else
-                retorno.sentidoDeslocamentoLesteOeste = "Oeste";
+                monitoramento.sentidoDeslocamentoLesteOeste = "Oeste";
 
-            if (retorno.sentidoDeslocamentoNorteSul == "Sul" && retorno.sentidoDeslocamentoLesteOeste == "Leste") {
-                retorno.sentido = "Sudeste";
+            if (monitoramento.sentidoDeslocamentoNorteSul == "Sul" && monitoramento.sentidoDeslocamentoLesteOeste == "Leste") {
+                monitoramento.sentido = "Sudeste";
             }
             else {
-                if (retorno.sentidoDeslocamentoNorteSul == "Sul" && retorno.sentidoDeslocamentoLesteOeste == "Oeste") {
-                    retorno.sentido = "Sudoeste";
+                if (monitoramento.sentidoDeslocamentoNorteSul == "Sul" && monitoramento.sentidoDeslocamentoLesteOeste == "Oeste") {
+                    monitoramento.sentido = "Sudoeste";
                 } else {
-                    if (retorno.sentidoDeslocamentoNorteSul == "Norte" && retorno.sentidoDeslocamentoLesteOeste == "Leste") {
-                        retorno.sentido = "Nordeste";
+                    if (monitoramento.sentidoDeslocamentoNorteSul == "Norte" && monitoramento.sentidoDeslocamentoLesteOeste == "Leste") {
+                        monitoramento.sentido = "Nordeste";
                     } else {
-                        retorno.sentido = "Noroeste";
+                        monitoramento.sentido = "Noroeste";
                     }
                 }
             }
 
-            retorno.criterioAlertaHorizontalMetodologia1 = "Aceitável";
-            retorno.criterioAlertaVerticalMetodologia1 = "Aceitável";
+            monitoramento.criterioAlertaHorizontalMetodologia1 = "Aceitável";
+            monitoramento.criterioAlertaVerticalMetodologia1 = "Aceitável";
 
             for (k = 0; k < this._alertas.length; k++) {
-                if (retorno.velocidadeHorizontal > this._alertas[k].velocidade)
-                    retorno.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
+                if (monitoramento.velocidadeHorizontal > this._alertas[k].velocidade)
+                    monitoramento.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
 
-                if (retorno.velocidadeHorizontal > this._alertas[k].velocidade)
-                    retorno.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+                if (monitoramento.velocidadeHorizontal > this._alertas[k].velocidade)
+                    monitoramento.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
             }
 
-            retorno.vetorDeslocamentoSeno = parseFloat(Math.abs(retorno.sentidoDeslocamentoDirerencaEste / retorno.deslocamentoHorizontalTotal), 2).toFixed(4);
-            var angulo = Math.asin(retorno.vetorDeslocamentoSeno);
-            retorno.vetorDeslocamentoAngulo = parseFloat(graus(angulo), 2).toFixed(4);
+            monitoramento.vetorDeslocamentoSeno = parseFloat(Math.abs(monitoramento.sentidoDeslocamentoDirerencaEste / monitoramento.deslocamentoHorizontalTotal), 2).toFixed(4);
+            var angulo = Math.asin(monitoramento.vetorDeslocamentoSeno);
+            monitoramento.vetorDeslocamentoAngulo = parseFloat(graus(angulo), 2).toFixed(4);
 
-            marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].monitoramento = retorno;
+            marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].monitoramento = monitoramento;
 
         }
         this._marcosSuperficiais[marcoSuperficialId] = marcoSuperficial;
