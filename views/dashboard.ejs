@@ -220,34 +220,12 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="no-padding">
-                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-action-settings"></i> Dados Mestre</a>
-                                <div class="collapsible-body">
-                                    <ul>
-                                        <li ng-hide="(perfil == 'Operacional')">
-                                            <a href="" ng-click="goto('/Alerta')">Alerta</a>
-                                        </li>
-                                        <li>
-                                            <a href="" ng-click="goto('/Aterro')">Aterro</a>
-                                        </li>
 
-                                        <li>
-                                            <a href="" ng-click="goto('/MarcoSuperficial')">MS e INC</a>
-                                        </li>
-                                        <li>
-                                            <a href="" ng-click="goto('/SecaoFatorSeguranca')">Seção F.S</a>
-                                        </li>
-                                        <li>
-                                            <a href="" ng-click="goto('/SecaoCorte')">Seção de Corte</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="" ng-click="goto('/Piezometro')">Piezômetro</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="no-padding">
+                        </ul>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
                                 <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-hardware-desktop-windows"></i> Área de Trabalho</a>
                                 <div class="collapsible-body">
                                     <ul>
@@ -277,7 +255,12 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="no-padding" ng-hide="(perfil == 'Operacional')">
+                        
+                        </ul>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold" ng-hide="(perfil == 'Operacional')">
                                 <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-editor-insert-chart"></i> Relatórios</a>
                                 <div class="collapsible-body">
                                     <ul>
@@ -293,10 +276,12 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="no-padding" ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')">
-                                <a href="" ng-click="goto('/Dashboard')" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>
-                            </li>
-                            <li class="no-padding">
+                        
+                        </ul>
+                    </li>                                        
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
                                 <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-action-account-circle"></i> Usuário</a>
                                 <div class="collapsible-body">
                                     <ul>
@@ -308,6 +293,42 @@
                                         </li>
                                         <li>
                                             <a href="/logout">Sair</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>                            
+                        
+                        </ul>
+                    </li>                                     
+
+                    <li class="no-padding" ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')">
+                        <a href="" ng-click="goto('/Dashboard')" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-action-settings"></i> Dados Mestre</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li ng-hide="(perfil == 'Operacional')">
+                                            <a href="" ng-click="goto('/Alerta')">Alerta</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/Aterro')">Aterro</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="" ng-click="goto('/MarcoSuperficial')">MS e INC</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/SecaoFatorSeguranca')">Seção F.S</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/SecaoCorte')">Seção de Corte</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="" ng-click="goto('/Piezometro')">Piezômetro</a>
                                         </li>
                                     </ul>
                                 </div>
