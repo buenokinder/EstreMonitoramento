@@ -142,20 +142,24 @@ module.exports = {
 							medicao.criterioAlertaRu = "-";
 						}
 
-						if (!isNaN(medicao.ru) && medicao.ru<0.55){
-							medicao.criterioAlertaRu = "Bom";
+						if (!isNaN(medicao.ru) && medicao.ru <= piezometro.nivelAceitavel) {
+						    medicao.criterioAlertaRu = "Bom";
 						}
 
-						if (!isNaN(medicao.ru) && medicao.ru >= 0.55 && medicao.ru < 0.6) {
-							medicao.criterioAlertaRu = "Atenção";
+						if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelAceitavel && medicao.ru <= piezometro.nivelRegular) {
+						    medicao.criterioAlertaRu = "Regular";
 						}
 
-						if (!isNaN(medicao.ru) && medicao.ru >= 0.6 && medicao.ru < 0.8) {
-							medicao.criterioAlertaRu = "Alerta";
+						if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelRegular && medicao.ru <= piezometro.nivelAtencao) {
+						    medicao.criterioAlertaRu = "Atenção";
 						}
 
-						if (!isNaN(medicao.ru) && medicao.ru >= 0.8) {
-							medicao.criterioAlertaRu = "Intervenção";
+						if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelAtencao && medicao.ru <= piezometro.nivelIntervencao) {
+						    medicao.criterioAlertaRu = "Intervenção";
+						}
+
+						if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelIntervencao) {
+						    medicao.criterioAlertaRu = "Paralisação";
 						}
 
 						

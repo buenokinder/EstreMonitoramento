@@ -223,7 +223,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           method: 'POST',
                           url: '/MedicaoMarcoSuperficial/',
                           data: params
-                      }).then(function onSuccess(sailsResponse){
+                      }).then(function onSuccess(sailsResponse) {
                           $scope.inputClass = null;
                           $scope.inputClass = "disabled";
                           $scope.refreshChilds = true;
@@ -233,12 +233,12 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
                       })
-                      .catch(function onError(sailsResponse){
+                      .catch(function onError(sailsResponse) {
 
                       })
-                      .finally(function eitherWay(){
+                      .finally(function eitherWay() {
                           $scope.sennitForm.loading = false;
-                      })
+                      });
                   } else {
                           swal("Cancelado", "Seu registro não foi inserido :(", "error");
                   } 
