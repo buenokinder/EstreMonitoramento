@@ -77,11 +77,11 @@ module.exports = {
             }
 
             var niveis = {
-                "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
-                "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal" },
-                "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
-                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervenções localizadas", velocidade: "14", periodicidade: "Diária" },
-                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operações, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
+                "Aceitï¿½vel": { nivel: "Aceitï¿½vel", criterios: "Estï¿½vel", velocidade: "0.25", periodicidade: "Semanal" },
+                "Regular": { nivel: "Regular", criterios: "Estï¿½vel", velocidade: "1", periodicidade: "Semanal" },
+                "Atenï¿½ï¿½o": { nivel: "Atenï¿½ï¿½o", criterios: "Verificaï¿½ï¿½o \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
+                "Intervenï¿½ï¿½o": { nivel: "Intervenï¿½ï¿½o", criterios: "Paralisaï¿½ï¿½o imediata das operaï¿½ï¿½es no aterro e intervenï¿½ï¿½es localizadas", velocidade: "14", periodicidade: "Diï¿½ria" },
+                "Paralisaï¿½ï¿½o": { nivel: "Paralisaï¿½ï¿½o", criterios: "Definiï¿½ï¿½o de estado de alerta, paralisaï¿½ï¿½o imediata das operaï¿½ï¿½es, acionamento da Defesa Civil para as providï¿½ncias cabï¿½veis", velocidade: "14.01", periodicidade: "Diï¿½ria" }
             };
 
             for (var nivel in niveis) {
@@ -113,7 +113,7 @@ module.exports = {
 
         Usuario.findOne({
             email: req.param('email')
-        }).populate('perfil').populate('aterros').exec(function foundUser(err, user) {
+        }).populate('aterros').exec(function foundUser(err, user) {
             if (err) return res.negotiate(err);
             if (!user) return res.notFound();
 
@@ -132,7 +132,7 @@ module.exports = {
 
                 success: function () {
                     req.session.me = user;
-                    req.session.me.perfil = user.perfil.name;
+                    req.session.me.perfil = user.perfil;
                     req.session.name = user.name;
                     if (user.aterros.length > 0) {
                         req.session.me.aterro = user.aterros[0];
@@ -344,7 +344,6 @@ module.exports = {
 
         Usuario
         .find(filtro)
-        .populate("perfil")
         .exec(function result(err, ret) {
             if (err) {
                 return res.negotiate(err);

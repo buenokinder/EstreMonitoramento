@@ -38,15 +38,13 @@ module.exports = {
             defaultsTo: new Date(0)
         },
 
-        //perfil: {
-        //    type: 'string',
-        //    enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
-
-        //},
-
         perfil: {
-            model: 'perfil'
+            type: 'string',
+            enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
+
         },
+
+      
 
         aterros: {
             collection: 'Aterro',
