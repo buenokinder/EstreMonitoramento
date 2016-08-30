@@ -8,48 +8,14 @@
 module.exports = {
 
     search: function (req, res) {
-        var filtro = {};
-
-        for (key in req.allParams()) {
-            if (key == 'name') {
-                filtro.name = { 'contains': req.param('name') };
-                continue;
-            }
-
-            if (req.param(key) == undefined) continue;
-            filtro[key] = req.param(key);
-        }
-
-        Perfil.find(filtro)
-        .exec(function result(err, ret) {
-            if (err) {
-                return res.negotiate(err);
-            } else {
-                res.json(ret);
-            }
-        });
+        var data = [{id: 'Diretor', name: 'Diretor'},{id: 'Operacional', name: 'Operacional'},{id: 'Administrador', name: 'Administrador'},{id: 'Gerente', name: 'Gerente'}];
+  
+       // var json = JSON.stringify( data );
+        return res.json(data);
     },
 
     searchCount: function (req, res) {
-        var filtro = {};
-
-        for (key in req.allParams()) {
-            if (key == 'name') {
-                filtro.name = { 'contains': req.param('name') };
-                continue;
-            }
-            if (req.param(key) == undefined) continue;
-            filtro[key] = req.param(key);
-        }
-
-        Perfil.count(filtro)
-        .exec(function result(err, ret) {
-            if (err) {
-                return res.negotiate(err);
-            } else {
-                res.json(ret);
-            }
-        });
+        return 4;
     }
 
 };
