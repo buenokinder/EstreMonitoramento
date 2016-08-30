@@ -9,7 +9,6 @@ module.exports = {
 
 	showHomePage: function (req, res) {
 
-    console.log(req.session.me);
     if (req.session.me) {
 
       return res.view('dashboard', {

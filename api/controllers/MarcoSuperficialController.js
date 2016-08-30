@@ -257,7 +257,6 @@ module.exports = {
             dataFinal = this.getDate(req.param('data'), 23, 59, 59);
 
             filtro.data = { '>=': dataInicial, '<=': dataFinal };
-			console.log(filtro.data);
             return filtro;
         }
 
@@ -406,7 +405,13 @@ module.exports = {
 
 					for (var i = 0; i < marcosSuperficiais.length; i++) {
 
-					    var filtroDetalhes = _that.getFiltrosDetalhes(req);
+					    var filtroDetalhes = {};
+
+					    if (undefined == req.param('skipdatefilter')) {
+					        filtroDetalhes = _that.getFiltrosDetalhes(req);
+					    }
+					    
+
 					    filtroDetalhes.marcoSuperficial = marcosSuperficiais[i].id;
 					    marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes = [];
 					    marcosSuperficiais[i].data = marcosSuperficiais[i].dataInstalacao;
