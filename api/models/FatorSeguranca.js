@@ -14,7 +14,8 @@ module.exports = {
       required: true
     },
     mes: {
-      type: 'string'
+        type: 'string',
+        enum: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     },
     ano: {
       type: 'string'

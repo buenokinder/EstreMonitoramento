@@ -27,8 +27,8 @@ module.exports = {
 
 
         encryptedPassword: {
-            type: 'string',
-            required: true
+            type: 'string'
+           // required: true
         },
 
 
@@ -41,15 +41,48 @@ module.exports = {
         perfil: {
             type: 'string',
             enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
-
         },
-
-      
 
         aterros: {
             collection: 'Aterro',
             via: 'usuarios'
         }
+    },
+
+    beforeCreate: function (value, callback) {
+        var Passwords = require('machinepack-passwords');
+
+        Passwords.encryptPassword({
+            password: value.password,
+            difficulty: 10,
+        }).exec({
+            error: function (err) {
+                callback(err);
+                return false;
+            },
+
+            success: function (encryptedPassword) {
+                require('machinepack-gravatar').getImageUrl({
+                    emailAddress: value.email
+                }).exec({
+                    error: function (err) {
+                        callback(err);
+                        return false;
+                    },
+                    success: function (gravatarUrl) {
+                        //value = { usuario: value.usuario, name: value.name, email: value.email, perfil: value.perfil, habilitado: value.habilitado, encryptedPassword: encryptedPassword, gravatarUrl: gravatarUrl, lastLoggedIn: value.lastLoggedIn };
+
+                        value.encryptedPassword = encryptedPassword;
+                        value.gravatarUrl = gravatarUrl;
+                        delete value['password'];
+                        delete value['aterro'];
+                        delete value['usuario'];
+
+                        callback();
+                    }
+                });
+            }
+        });
     }
 };
 

@@ -11,9 +11,9 @@ var Gravatar = require('machinepack-gravatar');
 
 module.exports = {
 
-    _totalRequests:0,
-    _totalResponses : 0,
-    _ret: {errors:[],sucess:[]},
+    _totalRequests: 0,
+    _totalResponses: 0,
+    _ret: { errors: [], sucess: [] },
 
     _findOrCreatePerfil: function (perfil) {
         var _that = this;
@@ -63,9 +63,9 @@ module.exports = {
         });
     },
 
-    setup:function(req,res){
+    setup: function (req, res) {
 
-        
+
         var _that = this;
 
         var execute = new Promise(function (resolve, reject) {
@@ -77,11 +77,11 @@ module.exports = {
             }
 
             var niveis = {
-                "Aceit�vel": { nivel: "Aceit�vel", criterios: "Est�vel", velocidade: "0.25", periodicidade: "Semanal" },
-                "Regular": { nivel: "Regular", criterios: "Est�vel", velocidade: "1", periodicidade: "Semanal" },
-                "Aten��o": { nivel: "Aten��o", criterios: "Verifica��o \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
-                "Interven��o": { nivel: "Interven��o", criterios: "Paralisa��o imediata das opera��es no aterro e interven��es localizadas", velocidade: "14", periodicidade: "Di�ria" },
-                "Paralisa��o": { nivel: "Paralisa��o", criterios: "Defini��o de estado de alerta, paralisa��o imediata das opera��es, acionamento da Defesa Civil para as provid�ncias cab�veis", velocidade: "14.01", periodicidade: "Di�ria" }
+                "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
+                "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal" },
+                "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
+                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das opera��es no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária" },
+                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisa��o imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
             };
 
             for (var nivel in niveis) {
@@ -153,62 +153,56 @@ module.exports = {
 
     signup: function (req, res) {
 
-        Perfil.findOne({
-            name: req.param('perfil')
-        }).exec(function foundPerfil(err, perfil) {
-            if (err) return res.negotiate(err);
-            if (!perfil) return res.notFound();
 
-            var Passwords = require('machinepack-passwords');
+        var Passwords = require('machinepack-passwords');
 
-            Passwords.encryptPassword({
-                password: req.param('password'),
-                difficulty: 10,
-            }).exec({
+        Passwords.encryptPassword({
+            password: req.param('password'),
+            difficulty: 10,
+        }).exec({
 
-                error: function (err) {
-                    return res.negotiate(err);
-                },
+            error: function (err) {
+                return res.negotiate(err);
+            },
 
-                success: function (encryptedPassword) {
-                    require('machinepack-gravatar').getImageUrl({
-                        emailAddress: req.param('email')
-                    }).exec({
-                        error: function (err) {
-                            return res.negotiate(err);
-                        },
-                        success: function (gravatarUrl) {
-                            Usuario.create({
-                                name: req.param('name'),
-                                email: req.param('email'),
-                                perfil: perfil,
-                                encryptedPassword: encryptedPassword,
-                                lastLoggedIn: new Date(),
-                                gravatarUrl: gravatarUrl
-                            }, function userCreated(err, newUser) {
-                                if (err) {
+            success: function (encryptedPassword) {
+                require('machinepack-gravatar').getImageUrl({
+                    emailAddress: req.param('email')
+                }).exec({
+                    error: function (err) {
+                        return res.negotiate(err);
+                    },
+                    success: function (gravatarUrl) {
+                        Usuario.create({
+                            name: req.param('name'),
+                            email: req.param('email'),
+                            perfil: perfil,
+                            encryptedPassword: encryptedPassword,
+                            lastLoggedIn: new Date(),
+                            gravatarUrl: gravatarUrl
+                        }, function userCreated(err, newUser) {
+                            if (err) {
 
-                                    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-                                      && err.invalidAttributes.email[0].rule === 'unique') {
-                                        return res.emailAddressInUse();
-                                    }
-
-                                    return res.negotiate(err);
+                                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+                                    && err.invalidAttributes.email[0].rule === 'unique') {
+                                    return res.emailAddressInUse();
                                 }
 
-                                req.session.me = newUser.id;
+                                return res.negotiate(err);
+                            }
 
-                                return res.json({
-                                    id: newUser.id
-                                });
+                            req.session.me = newUser.id;
+
+                            return res.json({
+                                id: newUser.id
                             });
-                        }
-                    });
-                }
-            });
-
-
+                        });
+                    }
+                });
+            }
         });
+
+
 
 
     },

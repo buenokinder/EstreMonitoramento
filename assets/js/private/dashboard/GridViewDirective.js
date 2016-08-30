@@ -724,6 +724,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='number' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
 
                         break;
+                    case 'password':
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='password' maxlength='" + $scope.fields[key].maxlength + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        break;
+
+                    case 'email':
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='email' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        break;
 
                     default:
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
@@ -795,8 +802,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.url = ([]);
 
             $scope.execFn = function (fnName) {
-                //$injector.get('Contact')['send'](email);
-
                 if ($scope[fnName]) {
                     $scope[fnName]();
                 } else {
@@ -1090,6 +1095,27 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
             $scope.$on('handleBroadcast', function () {
                 $scope.data = sennitCommunicationService.data;
+
+                //Verificar se o atributo está relacionado a um dropdown e no $scope.data ele tem somente string. Ex: atributo perfil do model Usuário. 
+                //Se a condição for verdadeira transforma o valor em um objeto {id: value, name:value} e no momento de salvar "destransforma".
+                //for (var key in $scope.data) {
+                //    var item = $filter('filter')($scope.fields, { name: key })[0];
+                //    if (item && item.type == 'combobox' && typeof $scope.data[key] == "string") {
+                //        $scope.data[key] = { id: $scope.data[key], name: $scope.data[key]};
+                //    }
+                //}
+
+
+                var fields = $filter('filter')($scope.fields, { hasid: "false", type: 'combobox' });
+                for (var key in fields) {
+                    if (typeof $scope.data[fields[key].name] == "string") {
+                        $scope.data[fields[key].name] = { id: $scope.data[fields[key].name], name: $scope.data[fields[key].name] };
+                    }
+                }
+
+                
+
+
                 $scope.unSelectMultiCombo();
                 $scope.formatDateFields();
                 $scope.setSelectedItensMultiCombo();
@@ -1135,10 +1161,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.save = function () {
 
                 $scope.sennitForm.loading = true;
-                if ($scope.data.mes) {
-                    $scope.data.mes = $scope.data.mes.id;
-
-                }
+                //if ($scope.data.mes && $scope.fields["mes"].hasid==undefined) {
+                //    $scope.data.mes = $scope.data.mes.id;
+                //}
                 if ($scope.data.id) {
 
                     if (!$scope.nopupdate) {
@@ -1159,7 +1184,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                     if (isConfirm) {
                                         var params = {};
                                         for (var field in $scope.fields) {
-                                            params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                            if ($scope.fields[field].hasid == "false") {
+                                                params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name].id;
+                                            } else {
+                                                params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                            }
                                         }
 
                                         if (undefined == params['aterro']) {
@@ -1224,7 +1253,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                                     var params = { usuario: $scope.me._id };
                                     for (var field in $scope.fields) {
-                                        params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                        if ($scope.fields[field].hasid == "false") {
+                                            params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name].id;
+                                        } else {
+                                            params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                        }
                                     }
 
                                     if (undefined == params['aterro']) {
