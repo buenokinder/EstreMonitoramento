@@ -103,6 +103,7 @@ module.exports = {
                 filtro.cidade = { 'contains': req.param('cidade') };
                 continue;
             }
+
             if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
         }

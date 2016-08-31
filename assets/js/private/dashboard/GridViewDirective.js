@@ -477,7 +477,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                 if ($scope.fields.length)
                     query = query.substring(0, query.length - 1);
-
+                
                 $http.get("/" + $scope.listaname + "/search/" + plus + "skip=" + $scope.skip + '&' + parent + "&limit=" + $scope.pagesize).then(function (results) {
                     $scope.data = angular.fromJson(results.data);
                 });
