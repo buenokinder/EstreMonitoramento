@@ -120,7 +120,6 @@ module.exports = {
 
     signup: function (req, res) {
 
-
         Usuario.create({
             name: req.param('name'),
             email: req.param('email'),
