@@ -10,9 +10,11 @@
         //};
 
 
+        Piezometro.monitoramentos
+
         var request = require('request');
         request('http://localhost:1337/MarcoSuperficial/monitoramentos/?skipdatefilter=true', function (error, response, body) {
-           
+
             if (!error && response.statusCode == 200) {
                 var i = 0;
 
@@ -28,7 +30,7 @@
 
                 }
             }
-        })
+        });
 
     }
 }
