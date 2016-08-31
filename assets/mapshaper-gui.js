@@ -2464,11 +2464,11 @@ if(item.criterioAlertaHorizontalMetodologia1 == 'Aceitável'){
   }
 
 if(item.criterioAlertaHorizontalMetodologia1 == 'Regular'){
-    color = "orange";
+    color = "yellow";
   }
 
 if(item.criterioAlertaHorizontalMetodologia1 == 'Atenção'){
-    color = "yellow";
+    color = "orange";
   }
 
 if(item.criterioAlertaHorizontalMetodologia1 == 'Intervenção'){
@@ -2486,11 +2486,11 @@ if(item.criterioAlertaVerticalMetodologia1 == 'Aceitável'){
   }
 
 if(item.criterioAlertaVerticalMetodologia1 == 'Regular'){
-    color = "orange";
+    color = "yellow";
   }
 
 if(item.criterioAlertaVerticalMetodologia1 == 'Atenção'){
-    color = "yellow";
+    color = "orange";
   }
 
 if(item.criterioAlertaVerticalMetodologia1 == 'Intervenção'){
