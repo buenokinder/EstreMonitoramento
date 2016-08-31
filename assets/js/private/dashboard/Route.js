@@ -3,16 +3,18 @@ app.run(function(editableOptions) {
 });
 
 app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
+	    $routeProvider.caseInsensitiveMatch = true;
+
 	    $routeProvider.when('/home', {
 	      templateUrl: '/views/dashboard.html',
 	      controller : 'DashboardController'
 	    });
 
 	    $routeProvider.when('/SecaoCorte', {
-	        templateUrl: '/views/secaoCorte/index.html'
+	        templateUrl: '/views/secaocorte/index.html'	        
 	        // controller : 'LinhaCorteController'
-	    }).when('#/SecaoCorte/:id',{
-	        templateUrl: '/views/secaoCorte/index.html',
+	    }).when('/SecaoCorte/:id',{
+	        templateUrl: '/views/secaocorte/index.html',
 	        controller : 'SecaoCorteController'
 	    });
 
