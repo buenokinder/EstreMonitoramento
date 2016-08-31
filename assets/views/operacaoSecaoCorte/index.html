@@ -51,7 +51,7 @@
 
 
                             <td>
-                                <span editable-select="operacaoSecaoCorte.secaoCorte" e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in secaoCortes | filter:{habilitado: true}">
+                                <span editable-select="operacaoSecaoCorte.secaoCorte" e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in lsecaoCortes | filter: {habilitado: true}">
                                     {{ showSecaoCorte(operacaoSecaoCorte) }}
                                 </span>
                             </td>
