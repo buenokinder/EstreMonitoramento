@@ -999,8 +999,108 @@ function MouseArea(element) {
       _downEvt = procMouseEvent(e);
     }
   }
- 
+ var tipCanvas = document.getElementById("tip");
+var tipCtx = tipCanvas.getContext("2d");
+
+
+// Returns the max Y value in our data list
+function getMaxY() {
+    var max = 0;
+
+    for (var i = 0; i < data.values.length; i++) {
+        if (data.values[i].Y > max) {
+            max = data.values[i].Y;
+        }
+    }
+
+    max += 10 - max % 10;
+    return max;
+}
+
+// Returns the max X value in our data list
+function getMaxX() {
+    var max = 0;
+
+    for (var i = 0; i < data.values.length; i++) {
+        if (data.values[i].X > max) {
+            max = data.values[i].X;
+        }
+    }
+
+    // omited
+    //max += 10 - max % 10;
+    return max;
+}
+
+// Return the x pixel for a graph point
+function getXPixel(val) {
+    // uses the getMaxX() function
+    return ((graph.width - xPadding) / (getMaxX() + 1)) * val + (xPadding * 1.5);
+    // was
+    //return ((graph.width - xPadding) / getMaxX()) * val + (xPadding * 1.5);
+}
+
+// Return the y pixel for a graph point
+function getYPixel(val) {
+    return graph.height - (((graph.height - yPadding) / getMaxY()) * val) - yPadding;
+}
+
+function getPos(el) {
+    // yay readability
+    for (var lx=0, ly=0;
+         el != null;
+         lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+    return {x: lx,y: ly};
+}
+
+function drawBubble(ctx, x, y, w, h, radius)
+{
+  var r = x + w;
+  var b = y + h;
+  ctx.beginPath();
+  ctx.strokeStyle="black";
+  ctx.lineWidth="2";
+  ctx.moveTo(x+radius, y);
+  ctx.lineTo(x+radius/2, y-10);
+  ctx.lineTo(x+radius * 2, y);
+  ctx.lineTo(r-radius, y);
+  ctx.quadraticCurveTo(r, y, r, y+radius);
+  ctx.lineTo(r, y+h-radius);
+  ctx.quadraticCurveTo(r, b, r-radius, b);
+  ctx.lineTo(x+radius, b);
+  ctx.quadraticCurveTo(x, b, x, b-radius);
+  ctx.lineTo(x, y+radius);
+  ctx.quadraticCurveTo(x, y, x+radius, y);
+  ctx.stroke();
+}
+
   function onMouseMove(e) {
+var elemento = getPos(document.getElementById('map-layers'));
+
+   mouseX = parseInt(e.clientX - elemento.x);
+    mouseY = parseInt(e.clientY - elemento.y);
+
+    // Put your mousemove stuff here
+    var hit = false;
+    for (var i = 0; i < dots.length; i++) {
+        var dot = dots[i];
+        var dx = mouseX - dot.x;
+        var dy = mouseY - dot.y +15;
+    
+        if (dx * dx + dy * dy < dot.rXr) {
+            tipCanvas.style.left = (elemento.x) + "px";
+            tipCanvas.style.top = (elemento.y) + "px";
+            tipCtx.clearRect(0, 0, tipCanvas.width, tipCanvas.height);
+            //                  tipCtx.rect(0,0,tipCanvas.width,tipCanvas.height);
+            tipCtx.font = 'italic 12pt sans-serif';
+            tipCtx.fillText(dot.marco, 10, 25);
+            hit = true;
+              _popup.show('', 'bosta', '');
+        }
+    }
+    if (!hit) {
+        tipCanvas.style.left = "-200px";
+    }
     var evt = procMouseEvent(e);
     if (!_dragging && _downEvt && _downEvt.hover) {
       _dragging = true;
@@ -2171,6 +2271,8 @@ function DisplayCanvas() {
       _ctx = _canvas.getContext('2d'),
       _ext;
  
+
+
   _self.prep = function(extent) {
     var w = extent.width(),
         h = extent.height(),
@@ -2345,9 +2447,18 @@ function drawSquare(x, y, size, ctx) {
     ctx.fillRect(x, y, size, size);
   }
 }
- 
+ var dots = [];
+
 function drawPin(x, y, size, ctx, item) {
+  console.log(item);
   var color = "white";
+ dots.push({
+        x: x,
+        y: y,
+         rXr: 16,
+        marco: item.marcoSuperficial
+    });
+  if(myParam.tipo == 'horizontal'){
 if(item.criterioAlertaHorizontalMetodologia1 == 'Aceitável'){
     color = "green";
   }
@@ -2365,6 +2476,30 @@ if(item.criterioAlertaHorizontalMetodologia1 == 'Intervenção'){
   }
 if(item.criterioAlertaHorizontalMetodologia1 == 'Paralisação'){
     color = "black";
+  }
+
+
+  }else{
+
+if(item.criterioAlertaVerticalMetodologia1 == 'Aceitável'){
+    color = "green";
+  }
+
+if(item.criterioAlertaVerticalMetodologia1 == 'Regular'){
+    color = "orange";
+  }
+
+if(item.criterioAlertaVerticalMetodologia1 == 'Atenção'){
+    color = "yellow";
+  }
+
+if(item.criterioAlertaVerticalMetodologia1 == 'Intervenção'){
+    color = "red";
+  }
+if(item.criterioAlertaVerticalMetodologia1 == 'Paralisação'){
+    color = "black";
+  }
+
   }
 
   console.log("Cor:" + color);
@@ -3232,6 +3367,7 @@ function Popup() {
   var content = El('div').addClass('popup-content').appendTo(el);
  
   this.show = function(rec, table, editable) {
+
     var maxHeight = parent.node().clientHeight - 36;
     this.hide(); // clean up if panel is already open
     render(content, rec, table, editable);

@@ -8,10 +8,14 @@ app.filter("asDate", function () {
 
 app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http, $sce){
     $scope.aterros = [];
+    $scope.data = {};
     $scope.mapas = [];
     $scope.loadAterros = function() {
         return $http.get('/Aterro').success(function(data) {
             $scope.aterros = data;
+
+   $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
+
                   $('.dropdown-button').dropdown({
       inDuration: 300,
       outDuration: 225,
@@ -24,6 +28,10 @@ app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http
   );
         });
     };
+
+   
+     
+
 
     $scope.buscarMapas = function(id) {   
     	$scope.uploadData.id = id;
@@ -45,8 +53,6 @@ $scope.selecionarAterro = function(aterro) {
         console.log(aterro);
          $scope.aterro =  aterro;
           $scope.buscarMapas(aterro.id);
-
-
 
 
 
@@ -79,17 +85,35 @@ $scope.selecionarAterro = function(aterro) {
         });
     }
 
- 
+    
+function isValidDate(s) {
+  var bits = s.split('/');
+  var d = new Date(bits[2], bits[1] - 1, bits[0]);
+  return d && (d.getMonth() + 1) == bits[1];
+} 
+    $scope.medicaoTipo = { name: 'horizontal'} ;
 
-
+    
     $scope.aterro = {};
     $scope.uploadData = {
         id:  'teasddda'
     };
+    $scope.query = { data: ''};
     $scope.mapa = [];
     $scope.getSrc = function() {
+      
+        if($scope.query.data == '')
+            return null;
+
+    
+
+        var bits = $scope.query.data.split('/');
+     
+ // var d = new Date(bits[2], bits[1] - 1, bits[0]);
+        var dataFinal  =  bits[2]+ '-' +bits[1]+ '-'+ bits[0];
         if($scope.mapa != null){
-        var url = "/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data=2016-09-09";
+        var url = "/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data="+  dataFinal +"&tipo=" + $scope.medicaoTipo.name;
+        console.log(url);
         return $sce.trustAsResourceUrl(url);
         }
         return null;

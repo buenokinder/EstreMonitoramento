@@ -1,10 +1,31 @@
 <div class="section"   ng-init="loadAterros()" >
  <div class="row section">
   <div class="divider"></div>
-
+<form action="#">
+   
       <div class="col s12 m12 l12">
+        
                                 <div class="map-card">
                                     <div class="card">
+<div class="row">
+                            <div class='input-field col  s2 m2 l2'> 
+                            
+
+
+      <input name="group1" type="radio" value="horizontal"   ng-model="medicaoTipo.name" id="test1" />
+      <label for="test1">Horizontal</label>
+ 
+      <input name="group1" type="radio" value="vertical" ng-model="medicaoTipo.name" id="test2" />
+      <label for="test2">Vertical</label>
+<br>
+   
+ <br>
+                            </div><div>
+                                  <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Medição</label><input type="text" id="datainicial" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="query.data" aria-invalid="false"></div>
+                                  
+                            </div>
+                     
+	    </div>
                                         <div class="card-image waves-effect waves-block waves-light" >
                                                 <my-iframe src="getSrc()" width="100%" height="400px" >
                                         </div>
@@ -35,9 +56,6 @@
 	                        </select>-->
                         </div>
 
-                        
-                     
-	    </div>
          <h4 class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Detalhes do Aterro</a>
                                             </h4>
               <div class='row' ng-show="aterro.nome">
@@ -89,6 +107,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                 </form>
                             </div>
 
 
