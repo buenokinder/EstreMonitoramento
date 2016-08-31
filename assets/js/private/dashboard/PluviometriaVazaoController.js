@@ -322,10 +322,11 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         }
 
         swal({
-            title: "",
-            text: "Você tem certeza que deseja excluir a medição ?",
+            title: "Você tem certeza que deseja excluir?",
+            text: "Não será mais possivel recuperar esse Registro!",
             type: "warning",
             showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
             confirmButtonText: "Sim",
             cancelButtonText: "Cancelar",
             closeOnConfirm: false,
@@ -335,7 +336,6 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                 $scope.removeMedicao($scope.operacaoPluviometrias[index], function (d) {
                     $scope.operacaoPluviometrias.splice(index, 1);
                     swal("Registro Removido!", "Seu registro foi removido com sucesso.", "success");
-                    Materialize.toast('Registro inserido com sucesso!', 4000);
                 }, function (error) {
                     swal("Erro", "Seu registro não foi removido :(", "error");
                 });
@@ -343,7 +343,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                 swal("Cancelado", "Seu registro não foi removido :(", "error");
             }
         }
-          );
+      );
     };
 
     $scope.addPluviometria = function () {
