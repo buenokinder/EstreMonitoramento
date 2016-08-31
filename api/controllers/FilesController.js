@@ -20,6 +20,7 @@ module.exports = {
 
 
 
+
     Mapa.create({ dataCriacao : new Date(),
                     usuarioCriador: req.session.me ,
                     mapaFile: filename,
