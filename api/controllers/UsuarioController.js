@@ -121,52 +121,28 @@ module.exports = {
     signup: function (req, res) {
 
 
-        var Passwords = require('machinepack-passwords');
-
-        Passwords.encryptPassword({
+        Usuario.create({
+            name: req.param('name'),
+            email: req.param('email'),
+            perfil: req.param('perfil'),
             password: req.param('password'),
-            difficulty: 10,
-        }).exec({
+            lastLoggedIn: new Date()
+        }, function userCreated(err, newUser) {
+            if (err) {
 
-            error: function (err) {
+                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+                    && err.invalidAttributes.email[0].rule === 'unique') {
+                    return res.emailAddressInUse();
+                }
+
                 return res.negotiate(err);
-            },
-
-            success: function (encryptedPassword) {
-                require('machinepack-gravatar').getImageUrl({
-                    emailAddress: req.param('email')
-                }).exec({
-                    error: function (err) {
-                        return res.negotiate(err);
-                    },
-                    success: function (gravatarUrl) {
-                        Usuario.create({
-                            name: req.param('name'),
-                            email: req.param('email'),
-                            perfil: req.param('perfil'),
-                            encryptedPassword: encryptedPassword,
-                            lastLoggedIn: new Date(),
-                            gravatarUrl: gravatarUrl
-                        }, function userCreated(err, newUser) {
-                            if (err) {
-
-                                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-                                    && err.invalidAttributes.email[0].rule === 'unique') {
-                                    return res.emailAddressInUse();
-                                }
-
-                                return res.negotiate(err);
-                            }
-
-                            req.session.me = newUser.id;
-
-                            return res.json({
-                                id: newUser.id
-                            });
-                        });
-                    }
-                });
             }
+
+            req.session.me = newUser.id;
+
+            return res.json({
+                id: newUser.id
+            });
         });
     },
 

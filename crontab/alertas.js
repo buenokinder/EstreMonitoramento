@@ -8,11 +8,8 @@
     //     - Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
 
     _mustSendNotificacao: function (medicao) {
-        //item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacoes: detalhe.owner.notificacoes };
-
-        if (medicao.medicaoMarcoSuperficial.obsGestor != undefined && medicao.medicaoMarcoSuperficial.obsGestor !='') {
-
-
+        if (undefined != medicao.medicaoMarcoSuperficial.obsGestor && null != medicao.medicaoMarcoSuperficial.obsGestor && medicao.medicaoMarcoSuperficial.obsGestor.length > 0) {
+            return false;
         }
 
         return (medicao.criterioAlertaHorizontalMetodologia1 == 'Atenção' || medicao.criterioAlertaVerticalMetodologia1 == 'Atenção')

@@ -83,7 +83,7 @@ module.exports = {
 				item.vetorDeslocamentoSeno = detalhe.monitoramento.vetorDeslocamentoSeno;
 				item.vetorDeslocamentoAngulo = detalhe.monitoramento.vetorDeslocamentoAngulo;
 
-				item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacoes: detalhe.owner.notificacoes };
+				item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacao: detalhe.owner.notificacao };
 
 
 				result.push(item);
