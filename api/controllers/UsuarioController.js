@@ -143,7 +143,7 @@ module.exports = {
                         Usuario.create({
                             name: req.param('name'),
                             email: req.param('email'),
-                            perfil: perfil,
+                            perfil: req.param('perfil'),
                             encryptedPassword: encryptedPassword,
                             lastLoggedIn: new Date(),
                             gravatarUrl: gravatarUrl
@@ -168,10 +168,6 @@ module.exports = {
                 });
             }
         });
-
-
-
-
     },
 
     /**
