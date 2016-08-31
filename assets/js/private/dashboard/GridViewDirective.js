@@ -1206,6 +1206,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             $scope.data[$(this).prop("name")] = $(this).val();
                                         });
 
+                                        delete params['icon'];
+                                        delete params['teste'];
+
+
                                         $http({
                                             method: 'PUT',
                                             url: '/' + $scope.listaname + '/' + $scope.data.id,
@@ -1264,6 +1268,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                         params['aterro'] = $scope.me._aterro;
                                     }
 
+
                                     $(".datepicker").each(function (i, el) {
                                         var value = $(this).val().split("/");
                                         params[$(this).prop("name")] = new Date(value[2], parseInt(value[1]) - 1, value[0]);
@@ -1275,6 +1280,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                         $scope.data[$(this).prop("name")] = $(this).val();
                                     });
 
+
+                                    delete params['icon'];
+                                    delete params['teste'];
 
                                     var inJson = angular.toJson(params);
                                     query = JSON.parse(inJson);

@@ -51,34 +51,41 @@ module.exports = {
 
 			item.aterro = { id: marcosSuperficiais[i].aterro.id, nome: marcosSuperficiais[i].aterro.nome };
 
+			console.log("aterro", marcosSuperficiais[i].aterro);
+
 			result.push(item);
 
-			for(var j=0;j<marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length;j++){
+			for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
+			    var detalhe = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
 				var item = {};
 				item.marcoSuperficial = marcosSuperficiais[i].nome;
 				item.norte = marcosSuperficiais[i].norte;
 				item.leste = marcosSuperficiais[i].leste;
 				item.cota = marcosSuperficiais[i].cota;
-				item.data = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data
-				item.nomeTopografo = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeTopografo;
-				item.temperatura = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.temperatura;
-				item.nomeAuxiliar =marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].owner.nomeAuxiliar;
-				item.deslocamentoHorizontalParcial = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalParcial;
-				item.deslocamentoHorizontalTotal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoHorizontalTotal;
-				item.velocidadeHorizontal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.velocidadeHorizontal;
-				item.velocidadeVertical = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.velocidadeVertical;
-				item.criterioAlerta= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlerta;
-				item.deslocamentoVerticalParcial= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoVerticalParcial;
-				item.deslocamentoVerticalTotal= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.deslocamentoVerticalTotal;
-				item.sentidoDeslocamentoDirerencaNorte= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoDirerencaNorte;
-				item.sentidoDeslocamentoDirerencaEste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoDirerencaEste;
-				item.sentidoDeslocamentoNorteSul= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoNorteSul;
-				item.sentidoDeslocamentoLesteOeste= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentidoDeslocamentoLesteOeste;
-				item.sentido= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.sentido;
-				item.criterioAlertaHorizontalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
-				item.criterioAlertaVerticalMetodologia1= marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
-				item.vetorDeslocamentoSeno = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoSeno;
-				item.vetorDeslocamentoAngulo =  marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.vetorDeslocamentoAngulo;
+				item.data = detalhe.data
+				item.nomeTopografo = detalhe.owner.nomeTopografo;
+				item.temperatura = detalhe.owner.temperatura;
+				item.nomeAuxiliar = detalhe.owner.nomeAuxiliar;
+				item.deslocamentoHorizontalParcial = detalhe.monitoramento.deslocamentoHorizontalParcial;
+				item.deslocamentoHorizontalTotal = detalhe.monitoramento.deslocamentoHorizontalTotal;
+				item.velocidadeHorizontal = detalhe.monitoramento.velocidadeHorizontal;
+				item.velocidadeVertical = detalhe.monitoramento.velocidadeVertical;
+				item.criterioAlerta = detalhe.monitoramento.criterioAlerta;
+				item.deslocamentoVerticalParcial = detalhe.monitoramento.deslocamentoVerticalParcial;
+				item.deslocamentoVerticalTotal = detalhe.monitoramento.deslocamentoVerticalTotal;
+				item.sentidoDeslocamentoDirerencaNorte = detalhe.monitoramento.sentidoDeslocamentoDirerencaNorte;
+				item.sentidoDeslocamentoDirerencaEste = detalhe.monitoramento.sentidoDeslocamentoDirerencaEste;
+				item.sentidoDeslocamentoNorteSul = detalhe.monitoramento.sentidoDeslocamentoNorteSul;
+				item.sentidoDeslocamentoLesteOeste = detalhe.monitoramento.sentidoDeslocamentoLesteOeste;
+				item.sentido = detalhe.monitoramento.sentido;
+				item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
+				item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
+				item.vetorDeslocamentoSeno = detalhe.monitoramento.vetorDeslocamentoSeno;
+				item.vetorDeslocamentoAngulo = detalhe.monitoramento.vetorDeslocamentoAngulo;
+
+				item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacoes: detalhe.owner.notificacoes };
+
+
 				result.push(item);
 			}
 		}
@@ -433,7 +440,7 @@ module.exports = {
 					        var possuiDetalhes = null != detalhes && undefined != detalhes && detalhes.length;
 					        var marcoSuperficialId = possuiDetalhes ? detalhes[0].marcoSuperficial : '';
 
-					        if (marcoSuperficialId != '') {
+					        if (_that._marcosSuperficiais[marcoSuperficialId]) {
 					            _that._marcosSuperficiais[marcoSuperficialId].medicaoMarcoSuperficialDetalhes = detalhes;
 					            _that.loadMedicoesDetalhes(marcoSuperficialId);
 					        }

@@ -22,9 +22,6 @@
     },
     owner: {
       model: 'Piezometro'
-    },
-    usuario: {
-        model: 'Usuario'
     }
   }
 };

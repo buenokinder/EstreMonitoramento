@@ -45,6 +45,12 @@ module.exports = {
         model: 'Usuario'
     }
     
+  },
+
+  beforeCreate: function (value, callback) {
+      delete value['aterro'];
+     
+      callback();
   }
 };
 
