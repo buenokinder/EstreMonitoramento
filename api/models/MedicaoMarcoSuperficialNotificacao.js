@@ -1,5 +1,5 @@
 /**
- * AlertasPiezometro.js
+ * MedicaoMarcoSuperficialNotificacao.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -11,19 +11,29 @@ module.exports = {
         data: {
             type: 'datetime',
             required: true,
-            defaultsTo: new Date(0)
+            defaultsTo: new Date()
         },
 
         status: {
             type: 'string',
             required: true,
-            enum: ['Pendente', 'Finalizada']
+            enum: ['Pendente', 'Finalizada'],
+            defaultsTo: 'Pendente'
         },
 
         owner: {
-            required: true,
             model: 'MedicaoMarcoSuperficial'
         }
+    },
+
+    beforeCreate: function (value, callback) {
+        console.log("value", value);
+
+        MedicaoMarcoSuperficialNotificacao.find({ owner: value.owner }, function (err, notificacao) {
+            if (!notificacao || notificacao.length==0) {
+                callback();
+            }
+        });
     }
 };
 

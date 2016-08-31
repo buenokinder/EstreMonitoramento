@@ -90,7 +90,16 @@ module.exports = {
     //         });
     //     });
     // },
-
+    findAll: function (req, res) {
+        Aterro.find().populate("usuarios")
+        .exec(function result(err, ret) {
+            if (err) {
+                return res.negotiate(err);
+            } else {
+                res.json(ret);
+            }
+        });
+    },
     search: function (req, res) {
         var filtro = {};
 

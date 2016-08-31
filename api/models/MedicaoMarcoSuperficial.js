@@ -43,7 +43,7 @@ module.exports = {
             collection: 'medicaoMarcoSuperficialDetalhes',
             via: 'owner'
         },
-        notificacao: {
+        notificacoes: {
             collection: 'medicaoMarcoSuperficialNotificacao',
             via: 'owner'
         }
