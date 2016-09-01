@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UserController
  *
  * @description :: Server-side logic for managing users
@@ -50,8 +50,8 @@ module.exports = {
                 "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
                 "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal" },
                 "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
-                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das opera��es no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária" },
-                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisa��o imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
+                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária" },
+                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
             };
 
             for (var nivel in niveis) {
