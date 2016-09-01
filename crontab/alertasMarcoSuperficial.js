@@ -53,11 +53,9 @@
 
     _urlBase: 'http://localhost:1337/',
     _notificacoes: {},
-    _alertas: ['Aceitável', 'Atenção', 'Intervenção', 'Paralisação'],
+    _alertas: ['Atenção', 'Intervenção', 'Paralisação'],
     _emailsEnviados: {},
     _mustSendNotificacao: function (medicao) {
-
-        return true;
 
         if (medicao.notificacao.status == "Finalizada") {
             return false;
@@ -146,7 +144,6 @@
             medicao.notificacao = notificacao;
         })
     },
-
 
     _getEmailBody: function (detalhes) {
 
