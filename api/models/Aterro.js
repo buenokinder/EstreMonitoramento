@@ -7,44 +7,50 @@
 
 module.exports = {
 
-  attributes: {
-    nome: {
-      type: 'string',
-      required: true
+    attributes: {
+        nome: {
+            type: 'string',
+            required: true
+        },
+        cidade: {
+            type: 'string',
+            required: true
+        },
+        endereco: {
+            type: 'string',
+            required: true
+        },
+        telefone: {
+            type: 'string',
+            required: true
+        },
+        usuarios: {
+            collection: 'Usuario',
+            via: 'aterros'
+        },
+        observacao: {
+            type: 'string',
+            required: false
+        },
+        situacao: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
+        alertas: {
+            collection: 'Piezometro',
+            via: 'owner'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
+
     },
-    cidade: {
-      type: 'string',
-      required: true
-    },
-    endereco: {
-      type: 'string',
-      required: true
-    },
-    telefone: {
-      type: 'string',
-      required: true
-    },    
-    usuarios: {
-      collection: 'Usuario',
-      via: 'aterros'
-    },
-    observacao: {
-      type: 'string',
-      required: false
-    },
-    situacao: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-    alertas: {
-      collection: 'Piezometro',
-      via: 'owner'
-    },
-    usuario: {
-        model: 'Usuario'
+
+    beforeCreate: function (value, callback) {
+        delete value['aterro'];
+
+        callback();
     }
-    
-  }
 };
 
