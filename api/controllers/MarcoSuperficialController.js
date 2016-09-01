@@ -502,6 +502,10 @@ module.exports = {
 
             var medicaoAtual = marcoSuperficial.medicaoMarcoSuperficialDetalhes[j];
             var medicaoAnterior = first ? marcoSuperficial : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1];
+            
+            if(medicaoAtual.owner==undefined){
+                console.log("medicaoAtual.owner", medicaoAtual);
+            }
 
             medicaoAtual.data = medicaoAtual.owner.data;
             medicaoAnterior.data = first ? marcoSuperficial.data : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1].owner.data;
