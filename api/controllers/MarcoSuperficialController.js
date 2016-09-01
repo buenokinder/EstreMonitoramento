@@ -65,6 +65,7 @@ module.exports = {
 
     },
 
+
     summarizeMonitoramentoNotificacao: function () {
         var result = [];
         var _that = this;
