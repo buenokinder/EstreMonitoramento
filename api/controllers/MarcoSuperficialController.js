@@ -37,13 +37,9 @@ module.exports = {
             var owners = _extractOwners(marcoSuperficiais[i].medicoes);
 
             for (var item in owners) {
-                var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, notificacao: owners[item].notificacao, detalhes: [] };
+                var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: [] };
 
                 for (var j = 0; j < marcoSuperficiais[i].medicoes.length; j++) {
-
-                    if (marcoSuperficiais[i].medicoes[j].owner == undefined) {
-                        console.log("marcoSuperficiais[i].medicoes", marcoSuperficiais[i].medicoes[j]);
-                    }
 
                     if (marcoSuperficiais[i].medicoes[j].owner.id == owners[item].id) {
                         var detalhe = { id: marcoSuperficiais[i].medicoes[j].id, nome: marcoSuperficiais[i].medicoes[j].nome, data: marcoSuperficiais[i].medicoes[j].data, criterioAlertaHorizontalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaHorizontalMetodologia1, criterioAlertaVerticalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaVerticalMetodologia1 };
@@ -308,6 +304,7 @@ module.exports = {
             var medicao = {
                 id: detalhes[i].owner.id,
                 obsGestor: detalhes[i].owner.obsGestor,
+                data: new Date(detalhes[i].owner.data),
                 notificacao: {}
             };
 

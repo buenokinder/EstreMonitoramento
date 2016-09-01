@@ -2,12 +2,12 @@ module.exports.crontab = {
 
     crons: function () {
         var jobs = [];
-        jobs.push({ interval: '*/1 * * * *', method: 'alertas' });
+        jobs.push({ interval: '*/1 * * * *', method: 'alertasMarcoSuperficial' });
         return jobs;
     },
 
-    alertas: function () {
-        require('../crontab/alertas.js').run();
+    alertasMarcoSuperficial: function () {
+        require('../crontab/alertasMarcoSuperficial.js').run();
 
     }
 };

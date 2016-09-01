@@ -4,10 +4,10 @@ module.exports.email = {
   port: 587,
   secure: false,
   auth: {
-    user: "carlos@sennit.com.br",
-    pass: "HZui1199"
+      user: "michel.oliveira@sennit.com.br",
+    pass: "Meusucesso1"
   }
 },
-  from: 'carlos@sennit.com.br',
+  from: 'michel.oliveira@sennit.com.br',
   testMode: false
 }
