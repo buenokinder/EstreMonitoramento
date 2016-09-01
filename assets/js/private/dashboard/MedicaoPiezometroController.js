@@ -1,3 +1,4 @@
+
 app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', 'sennitCommunicationService', function ($scope, $interval, $http, sennitCommunicationService) {
     $scope.data = [];
     $scope.medicoes = ([]);
