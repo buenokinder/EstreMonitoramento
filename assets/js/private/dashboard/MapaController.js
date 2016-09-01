@@ -70,7 +70,10 @@ $scope.selecionarAterro = function(aterro) {
         $('.card-reveal').attr('style','transform: translateY(-0%)');
         $scope.mapa = mapa;
     }
-
+    $scope.mapaLista = function(){
+        $('.card-reveal').attr('style','display: block; transform: translateY(-100%)');
+       
+    }
     $scope.onComplete = function(response){
         Materialize.toast('Upload de Mapa efetuado com sucesso!', 4000)
         $('#modal5').closeModal();
@@ -100,16 +103,16 @@ function isValidDate(s) {
     };
     $scope.query = { data: ''};
     $scope.mapa = [];
+
+    $scope.carregarMapa = function(){
+
+
+    }
+
     $scope.getSrc = function() {
-      
-        if($scope.query.data == '')
-            return null;
 
-    
-
-        var bits = $scope.query.data.split('/');
-     
- // var d = new Date(bits[2], bits[1] - 1, bits[0]);
+        if($("#datainicial").val() == "") return;
+        var bits = $("#datainicial").val().split('/');
         var dataFinal  =  bits[2]+ '-' +bits[1]+ '-'+ bits[0];
         if($scope.mapa != null){
         var url = "/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data="+  dataFinal +"&tipo=" + $scope.medicaoTipo.name;
