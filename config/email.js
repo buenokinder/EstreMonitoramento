@@ -5,11 +5,7 @@ module.exports.email = {
   secure: false,
   auth: {
       user: "michel.oliveira@sennit.com.br",
-<<<<<<< HEAD
-    pass: "Meusucesso1"
-=======
     pass: "senha do email"
->>>>>>> 2016_08_29__2016_09_02
   }
 },
   from: 'michel.oliveira@sennit.com.br',
