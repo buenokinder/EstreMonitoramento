@@ -53,10 +53,17 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     };
 
     $scope.loadSecaoCorte = function () {
-        return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte').success(function (data) {
-            $scope.secaoCortes = data;
-        });
-    };
+        if($scope.usuario._aterro) {
+            return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte/search?aterro='+$scope.usuario._aterro).success(function (data) {
+                $scope.lsecaoCortes = data;
+            });            
+        } else {
+            return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte').success(function (data) {
+                $scope.lsecaoCortes = data;
+            });             
+        }
+    }
+    $scope.loadSecaoCorte();
 
     $scope.formatDates = function (el) {
         $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });

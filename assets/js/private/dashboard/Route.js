@@ -3,16 +3,18 @@ app.run(function(editableOptions) {
 });
 
 app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
+	    $routeProvider.caseInsensitiveMatch = true;
+
 	    $routeProvider.when('/home', {
 	      templateUrl: '/views/dashboard.html',
 	      controller : 'DashboardController'
 	    });
 
 	    $routeProvider.when('/SecaoCorte', {
-	        templateUrl: '/views/secaoCorte/index.html'
+	        templateUrl: '/views/secaocorte/index.html'	        
 	        // controller : 'LinhaCorteController'
-	    }).when('#/SecaoCorte/:id',{
-	        templateUrl: '/views/secaoCorte/index.html',
+	    }).when('/SecaoCorte/:id',{
+	        templateUrl: '/views/secaocorte/index.html',
 	        controller : 'SecaoCorteController'
 	    });
 
@@ -69,37 +71,37 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 		$routeProvider.when("/MedicaoMarcoSuperficial", {
-			templateUrl: "/views/MedicaoMarcoSuperficial/index.html",
+			templateUrl: "/views/medicaomarcosuperficial/index.html",
 			 controller : 'MedicaoMarcoSuperficialController'
 		});
  
 
 		$routeProvider.when("/MedicaoPiezometro", {
-			templateUrl: "/views/MedicaoPiezometro/index.html",
+			templateUrl: "/views/medicaopiezometro/index.html",
 			 controller : 'MedicaoPiezometroController'
 		});
  
 
  
 	 	$routeProvider.when('/MonitoramentoMarcoSuperficial', {
-		    templateUrl: '/views/MedicaoMarcoSuperficial/monitoramento.html',
+		    templateUrl: '/views/medicaomarcosuperficial/monitoramento.html',
 		    controller : 'MedicaoMarcoSuperficialController'
 		});
 
 	 	$routeProvider.when('/MonitoramentoPiezometro', {
-		    templateUrl: '/views/Piezometro/monitoramento.html',
+		    templateUrl: '/views/piezometro/monitoramento.html',
 		    controller : 'MedicaoPiezometroController'
 		});
 
 
 
   		$routeProvider.when("/PluviometriaVazao", {
-			templateUrl: "/views/pluviometriaVazao/index.html",
+			templateUrl: "/views/pluviometriavazao/index.html",
 			        controller : 'PluviometriaVazaoController'
 		});
 
 		$routeProvider.when("/OperacaoSecaoCorte", {
-			templateUrl: "/views/operacaoSecaoCorte/index.html",
+			templateUrl: "/views/operacaosecaocorte/index.html",
 			   controller : 'OperacaoSecaoCorteController'
 		});
 		 
@@ -116,9 +118,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 	  	$routeProvider.when("/MarcoSuperficial", {
-			templateUrl: "/views/marcoSuperficial/index.html"
+			templateUrl: "/views/marcosuperficial/index.html"
 		}).when("/MarcoSuperficial/:id", {		
-		  templateUrl: "/views/marcoSuperficial/index.html"
+		  templateUrl: "/views/marcosuperficial/index.html"
 		});
 
 		$routeProvider.when("/PocosVisita", {
@@ -134,9 +136,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		});
 
 		$routeProvider.when("/SecaoFatorSeguranca", {
-			templateUrl: "/views/SecaoFatorSeguranca/index.html"
+			templateUrl: "/views/secaofatorseguranca/index.html"
 		}).when("/SecaoFatorSeguranca/:id", {		
-		  templateUrl: "/views/SecaoFatorSeguranca/index.html"
+		  templateUrl: "/views/secaofatorseguranca/index.html"
 		});
 
 	  	$routeProvider.when("/Piezometro", {
