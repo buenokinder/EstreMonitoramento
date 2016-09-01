@@ -376,7 +376,7 @@ module.exports = {
         return ret;
     },
 
-    getDate: function (value, hr, min, sec) {
+    _getDate: function (value, hr, min, sec) {
         var ret = value.split('-');
         var ano = ret[0];
         var mes = parseInt(ret[1]) - 1;
@@ -399,7 +399,7 @@ module.exports = {
 
     },
 
-    getFiltrosMarco: function (req) {
+    _getFiltrosMarco: function (req) {
 
         var filtro = {};
         //var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
@@ -414,15 +414,15 @@ module.exports = {
         }
 
         //if (undefined != req.param('data')) {
-        //    dataInicial = this.getDate(req.param('data'), 0, 0, 0);
-        //    dataFinal = this.getDate(req.param('data'), 23, 59, 59);
+        //    dataInicial = this._getDate(req.param('data'), 0, 0, 0);
+        //    dataFinal = this._getDate(req.param('data'), 23, 59, 59);
 
         //    filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
         //    return filtro;
         //}
 
         //if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-        //    dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+        //    dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
         //} else {
         //    dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
         //    dataInicial.setHours(0);
@@ -431,7 +431,7 @@ module.exports = {
         //}
 
         //if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-        //    dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+        //    dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
         //} else {
         //    dataFinal = new Date();
         //    dataInicial.setHours(23);
@@ -444,7 +444,7 @@ module.exports = {
         return filtro;
     },
 
-    getFiltrosDetalhes: function (req) {
+    _getFiltrosDetalhes: function (req) {
 
         var filtro = {};
 
@@ -453,15 +453,15 @@ module.exports = {
 
         if (undefined != req.param('data') && '' != req.param('data')) {
             dt = req.param('data').split('-');
-            dataInicial = this.getDate(req.param('data'), 0, 0, 0);
-            dataFinal = this.getDate(req.param('data'), 23, 59, 59);
+            dataInicial = this._getDate(req.param('data'), 0, 0, 0);
+            dataFinal = this._getDate(req.param('data'), 23, 59, 59);
 
             filtro.data = { '>=': dataInicial, '<=': dataFinal };
             return filtro;
         }
 
         if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-            dataInicial = this.getDate(req.param('dtIni'), 0, 0, 0);
+            dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
         }
         else {
             dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
@@ -471,7 +471,7 @@ module.exports = {
         }
 
         if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-            dataFinal = this.getDate(req.param('dtFim'), 23, 59, 59);
+            dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
         } else {
             dataFinal = new Date();
             dataInicial.setHours(23);
@@ -690,7 +690,7 @@ module.exports = {
 
             Alerta.find({}, function (err, alertas) {
                 _that._alertas = alertas;
-                var filtro = _that.getFiltrosMarco(req);
+                var filtro = _that._getFiltrosMarco(req);
 
                 var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
                 var sortString = req.param('order');
@@ -710,7 +710,7 @@ module.exports = {
                         var filtroDetalhes = {};
 
                         if (undefined == req.param('skipdatefilter')) {
-                            filtroDetalhes = _that.getFiltrosDetalhes(req);
+                            filtroDetalhes = _that._getFiltrosDetalhes(req);
                         }
 
 
