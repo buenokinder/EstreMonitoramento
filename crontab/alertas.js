@@ -1,12 +1,5 @@
 ﻿module.exports = {
 
-//    - OBTER PRIMEIRO MEDICAOMARCOSUPERFICIAL
-//	- OBTER OS DETALHES DA MEDICAO E PRA CADA UMA BUSCAR O NIVEL DE ALERTA
-
-//ISSO, POIS O CONTROLE DE ENVIO DE EMAIL VAI FICAR MAIS SIMPLES, POIS O RETORNO DA API SERÁ 
-//UMA LISTA DE MEDICOES E DENTRO DE CADA ITEM DA LISTA HAVERÁ OS DETALHES COM SEUS ALERTAS QUE SERÃO AGRUPADOS NO EMAIL.
-
-
     //1 - Pegar as notificações enviadas para a medição.
     //     - Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
     //     - Existe notificações > Sim > O Status está como pendente > Não > Finaliza a notificação;
@@ -17,26 +10,33 @@
     _urlBase:'http://localhost:1337/',
     _notificacoes: {},
     _mustSendNotificacao: function (medicao) {
-        return true;
+
+        if (medicao.notificacao.status == "Finalizada") {
+            return false;
+        }
+
         if (medicao.medicaoMarcoSuperficial == undefined) {
             return false;
         }
 
-        if (undefined != medicao.medicaoMarcoSuperficial.obsGestor && null != medicao.medicaoMarcoSuperficial.obsGestor && medicao.medicaoMarcoSuperficial.obsGestor.length > 0) {
+        if (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0) {
             return false;
         }
 
-        return (medicao.criterioAlertaHorizontalMetodologia1 == 'Atenção' || medicao.criterioAlertaVerticalMetodologia1 == 'Atenção')
-        || (medicao.criterioAlertaHorizontalMetodologia1 == 'Intervenção' || medicao.criterioAlertaVerticalMetodologia1 == 'Intervenção')
-        || (medicao.criterioAlertaHorizontalMetodologia1 == 'Paralisação' || medicao.criterioAlertaVerticalMetodologia1 == 'Paralisação');
+        return true;
+        
+
+        //return (medicao.criterioAlertaHorizontalMetodologia1 == 'Atenção' || medicao.criterioAlertaVerticalMetodologia1 == 'Atenção')
+        //|| (medicao.criterioAlertaHorizontalMetodologia1 == 'Intervenção' || medicao.criterioAlertaVerticalMetodologia1 == 'Intervenção')
+        //|| (medicao.criterioAlertaHorizontalMetodologia1 == 'Paralisação' || medicao.criterioAlertaVerticalMetodologia1 == 'Paralisação');
     },
 
 
-    _getEmail: function (tipo, medicao) {
+    _getEmail: function (tipo, usuarios) {
         var emails = [];
 
-        for (var i = 0; i < medicao.aterro.usuarios; i++) {
-            var usuario = medicao.aterro.usuarios[i];
+        for (var i = 0; i < usuarios.length; i++) {
+            var usuario = usuarios[i];
             if (usuario.perfil == "Diretor") {
                 emails.push(usuario.email);
             }
@@ -45,16 +45,16 @@
         return emails;
     },
 
-    _getEmailGerente: function (medicao) {
-        return this._getEmail("Gerente", medicao);
+    _getEmailGerente: function (usuarios) {
+        return this._getEmail("Gerente", usuarios);
     },
 
-    _getEmailAdministrador: function (medicao) {
-        return this._getEmail("Administrador", medicao);
+    _getEmailAdministrador: function (usuarios) {
+        return this._getEmail("Administrador", usuarios);
     },
 
-    _getEmailDiretor: function (medicao) {
-        return this._getEmail("Diretor", medicao);
+    _getEmailDiretor: function (usuarios) {
+        return this._getEmail("Diretor", usuarios);
     },
 
     _existsNotificacao: function(medicao){
@@ -63,7 +63,7 @@
             return true;
         }
 
-        if (this._notificacoes[medicao.medicaoMarcoSuperficial.id]!=undefined) {
+        if (this._notificacoes[medicao.id]!=undefined) {
             return true;
         }
         return false;
@@ -74,7 +74,7 @@
         var request = require('request');
         var body = {
             data: new Date(),
-            owner: medicao.medicaoMarcoSuperficial.id,
+            owner: medicao.id,
             status: 'Pendente'
         };
 
@@ -90,36 +90,130 @@
                 _that._logError(err);
                 return;
             }
-            _that._notificacoes[medicao.medicaoMarcoSuperficial.id] = notificacao;
+            _that._notificacoes[medicao.id] = notificacao;
             medicao.notificacao = notificacao;
         })
     },
+    
+    _padLeftZero: function(value) {
+        return parseInt(value) < 10 ? "0" + value.toString() : value.toString();
+    },
+    
+    _getDateTimeString: function (value) {
+        var data = new Date(value);
+        var ano = data.getFullYear();
+        var mes = data.getMonth() + 1;
+        var dia = data.getDate();
+        var hora = data.getHours();
+        var minuto = data.getMinutes()
 
-    _sendEmailResponsaveisAterro: function(medicao){
-        var emails = this._getEmailDiretor(medicao);
-        emails.push(this._getEmailAdministrador(medicao));
-        emails.push(this._getEmailGerente(medicao));
+        if (isNaN(dia) || isNaN(mes) || isNaN(ano)) {
+            return value;
+        }
 
+        var retorno = "";
+        if (parseInt(hora) == 0 && parseInt(minuto) == 0) {
+            retorno = dia + "/" + mes + "/" + ano;
+        } else {
+            retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
+        }
 
+        return retorno;
+    },
 
-        sails.hooks.email.send(
-          "alertamedicaomarcosuperficial",
-          {
-              link: context._urlBase,
-              medicoes: "",
-              data: medicao.medicaoMarcoSuperficial.data
-          },
-          {
-              to: "michel@coltrane.co",
-              subject: "(Geotecnia) Notificação de Nível de Alerta"
-          },
-          function (err) { console.log(err || "Email enviado!"); }
-        )
+    _getEmailBody:function(detalhes){
+
+        var body = "";
+
+        for (var i = 0; i < detalhes.length; i++) {
+
+            var mustSend = (detalhes[i].criterioAlertaHorizontalMetodologia1 == 'Atenção' || detalhes[i].criterioAlertaVerticalMetodologia1 == 'Atenção')
+             || (detalhes[i].criterioAlertaHorizontalMetodologia1 == 'Intervenção' || detalhes[i].criterioAlertaVerticalMetodologia1 == 'Intervenção')
+             || (detalhes[i].criterioAlertaHorizontalMetodologia1 == 'Paralisação' || detalhes[i].criterioAlertaVerticalMetodologia1 == 'Paralisação');
+
+            if (mustSend) {
+                body += "<p>";
+                body += "<b>" + detalhes[i].nome + " - Alerta Horizontal: " + detalhes[i].criterioAlertaHorizontalMetodologia + " - Alerta Vertical: " + detalhes[i].criterioAlertaVerticalMetodologia1 + "</b>";
+                body += "</p>";
+            }
+        }
+
+        return body;
 
     },
 
-    _sendEmailDiretor: function (medicao) {
-        var emails = this._getEmailDiretor(medicao);
+    _sendEmailGerenteAdministrador: function (usuarios, detalhes) {
+        var emails =  this._getEmailAdministrador(usuarios);
+        emails.push(this._getEmailGerente(usuarios));
+        var _that = this;
+        var body = this._getEmailBody(detalhes);
+
+        if (body == "") return;
+
+        for (var i = 0; i < emails.length; i++) {
+            sails.hooks.email.send(
+              "alertagerenteadministradormedicaomarcosuperficial",
+              {
+                  link: context._urlBase,
+                  medicoes: body,
+                  data: _that._getDateTimeString(medicao.medicaoMarcoSuperficial.data)
+              },
+              {
+                  to: emails[i],
+                  subject: "(Geotecnia) Notificação de Nível de Alerta"
+              },
+              function (err) { console.log(err || "Email enviado!"); }
+            );
+
+        }
+
+    },
+
+    _sendEmailGerenteAdministradorDiretor: function (usuarios, detalhes) {
+        var emails = this._getEmailDiretor(usuarios);
+        emails.push(this._getEmailAdministrador(usuarios));
+        emails.push(this._getEmailGerente(usuarios));
+        var _that = this;
+        var body = this._getEmailBody(detalhes);
+
+        if (body == "") return;
+
+        for (var i = 0; i < emails.length; i++) {
+            sails.hooks.email.send(
+              "alertagerenteadministradordiretormedicaomarcosuperficial",
+              {
+                  link: context._urlBase,
+                  medicoes: body,
+                  data: _that._getDateTimeString(medicao.medicaoMarcoSuperficial.data)
+              },
+              {
+                  to: emails[i],
+                  subject: "(Geotecnia) Notificação de Nível de Alerta"
+              },
+              function (err) { console.log(err || "Email enviado!"); }
+            );
+
+        }
+
+    },
+    _sendEmailDiretor: function (usuariosAterro, observacoes) {
+        var emails = this._getEmailDiretor(usuariosAterro);
+
+        for (var i = 0; i < emails.length; i++) {
+            sails.hooks.email.send(
+              "alertadiretormedicaomarcosuperficial",
+              {
+                  link: context._urlBase,
+                  observacoes: observacoes,
+                  data: _that._getDateTimeString(medicao.medicaoMarcoSuperficial.data)
+              },
+              {
+                  to: emails[i],
+                  subject: "(Geotecnia) Notificação de Nível de Alerta"
+              },
+              function (err) { console.log(err || "Email enviado!"); }
+            );
+        }
     },
 
     _listMonitoramentos: function(callback, calbackError){
@@ -138,51 +232,55 @@
     _inspectMonitoramentos: function(context, monitoramentos){
 
         for (var i = 0; i < monitoramentos.length; i++) {
-            var medicao = monitoramentos[i];
-            
-            if (!context._mustSendNotificacao(medicao)) {
-                continue;
-            }
+            for (var j = 0; j < monitoramentos.medicoes.length; j++) {
 
-
-            //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
-            if (context._existsNotificacao(medicao) == false) {
-                context._notificacoes[medicao.medicaoMarcoSuperficial.id] = "";
-                context._createNoticacao(medicao);
-                continue;
-            }
-            
-            //Existe notificações > Sim > O Status está como pendente > Não > Finaliza a notificação;
-            if (medicao.notificacao == 'Finalizada') {
-                continue;
-            }
-
-            if (context._notificacoes[medicao.medicaoMarcoSuperficial.id] && context._notificacoes[medicao.medicaoMarcoSuperficial.id] != "") {
-                medicao.notificacao = context._notificacoes[medicao.medicaoMarcoSuperficial.id];
-            }
-
-            if (medicao.notificacao) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
-                //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
-                var hoje = Math.floor((new Date()).getTime() / (3600 * 24 * 1000));
-                var dataMedicao = Math.floor(new Date(medicao.notificacao.data).getTime() / (3600 * 24 * 1000));
-                var diferencaDatas = hoje - dataMedicao;
-                if (diferencaDatas < 1) {
+                var medicao = monitoramentos[i].medicoes[j];
+                
+                if (!context._mustSendNotificacao(medicao)) {
                     continue;
                 }
 
-                //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
-                if (undefined == medicao.medicaoMarcoSuperficial.obsGestor
-                    || null == medicao.medicaoMarcoSuperficial.obsGestor
-                    || medicao.medicaoMarcoSuperficial.obsGestor.length == 0) {
-
-                    context._sendEmailResponsaveisAterro(medicao);
-                    return false;
+                //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
+                if (context._existsNotificacao(medicao) == false) {
+                    context._notificacoes[medicao.id] = "";
+                    context._createNoticacao(medicao);
+                    context._sendEmailGerenteAdministrador(monitoramentos[i].usuariosAterro, medicao.detalhes);
+                    continue;
                 }
 
-                //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
-                if (medicao.medicaoMarcoSuperficial.obsGestor != '') {
-                    context._sendEmailDiretor(medicao);
+                //Existe notificações > Sim > O Status está como pendente > Não > Finaliza a notificação;
+                if (medicao.notificacao.status == 'Finalizada') {
+                    continue;
                 }
+
+                if (context._notificacoes[medicao.id] && context._notificacoes[medicao.id] != "") {
+                    medicao.notificacao = context._notificacoes[medicao.id];
+                }
+
+                if (medicao.notificacao) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
+                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
+                    var hoje = Math.floor((new Date()).getTime() / (3600 * 24 * 1000));
+                    var dataMedicao = Math.floor(new Date(medicao.notificacao.data).getTime() / (3600 * 24 * 1000));
+                    var diferencaDatas = hoje - dataMedicao;
+                    if (diferencaDatas < 1) {
+                        continue;
+                    }
+
+                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
+                    if (undefined == medicao.obsGestor
+                        || null == medicao.obsGestor
+                        || medicao.obsGestor.length == 0) {
+
+                        context._sendEmailGerenteAdministadorDiretor(monitoramentos[i].usuariosAterro, medicao.detalhes);
+                        continue;
+                    }
+
+                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
+                    if (medicao.obsGestor != '') {
+                        context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao.obsGestor);
+                    }
+                }
+
             }
 
         }

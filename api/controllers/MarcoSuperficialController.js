@@ -9,51 +9,130 @@
 var Promise = require('bluebird');
 
 module.exports = {
-
+    _marcoSuperficiaisNotificacao: ([]),
     _marcosSuperficiais: ([]),
     _alertas: ([]),
     _aterros: ([]),
     _totalMarcosSuperficias: 0,
     _totalMarcosSuperficiasCarregados: 0,
+    _rearrange:function(marcoSuperficiais){
 
-    summarizeMonitoramentoNotificacao: function (marcosSuperficiais) {
-        var result = [];
-        var _that = this;
-        var getAterro = function (id) {
-            for (var i = 0; i < _that._aterros.length; i++) {
-                if (_that._aterros[i].id == id) {
-                    return _that._aterros[i];
+        var ret = [];
+        var extractOwners = function (medicoes) {
+
+            var owners = {};
+            for (var j = 0; j < medicoes.length; j++) {
+                if (owners[medicoes[j].owner.id] == undefined) {
+                    var owner = medicoes[j].owner;
+                    owners[medicoes[j].owner.id] = owner;
                 }
             }
-        }
 
-        for (var i in marcosSuperficiais) {
-            if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
+            return owners;
+        };
 
+        for (var i = 0; i < marcoSuperficiais.length; i++) {
 
-            for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
-                var detalhe = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
-                var item = {};
-                item.marcoSuperficial = marcosSuperficiais[i].nome;
-                item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
-                item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
-                item.aterro = getAterro(marcosSuperficiais[i].aterro.id);
+            var ms = { marcoSuperficial: marcoSuperficiais[i].marcoSuperficial, usuariosAterro: [], medicoes: [] };
+            var owners = extractOwners(marcoSuperficiais[i].medicoes);
 
-                var notificacao = ([]);
-                if (detalhe.owner.notificacoes.length > 0) {
-                    notificacao = detalhe.owner.notificacoes[0];
-                    if (notificacao.status == 'Finalizada') {
-                        continue;
+            for (var item in owners) {
+                var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, notificacao: owners[item].notificacao, detalhes: [] };
+
+                for (var j = 0; j < marcoSuperficiais[i].medicoes.length; j++) {
+
+                    if (marcoSuperficiais[i].medicoes[j].owner == undefined) {
+                        console.log("marcoSuperficiais[i].medicoes", marcoSuperficiais[i].medicoes[j]);
+                    }
+
+                    if (marcoSuperficiais[i].medicoes[j].owner.id == owners[item].id) {
+                        var detalhe = { id: marcoSuperficiais[i].medicoes[j].id, nome: marcoSuperficiais[i].medicoes[j].nome, data: marcoSuperficiais[i].medicoes[j].data, criterioAlertaHorizontalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaHorizontalMetodologia1, criterioAlertaVerticalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaVerticalMetodologia1 };
+                        medicao.detalhes.push(detalhe);
                     }
                 }
-
-                item.medicaoMarcoSuperficial = { id: detalhe.owner.id, data: detalhe.owner.data, obsGestor: detalhe.owner.obsGestor, notificacao: notificacao };
-
-                result.push(item);
+                ms.medicoes.push(medicao);
             }
+
+            for (var j = 0; j < marcoSuperficiais[i].usuariosAterro.length; j++) {
+                var usuario = { name: marcoSuperficiais[i].usuariosAterro[j].name, email: marcoSuperficiais[i].usuariosAterro[j].email, perfil: marcoSuperficiais[i].usuariosAterro[j].perfil };
+                ms.usuariosAterro.push(usuario);
+            }
+
+            ret.push(ms);
         }
 
-        return result;
+        return ret;
+
+    },
+
+    summarizeMonitoramentoNotificacao: function () {
+        var result = [];
+        var _that = this;
+
+
+        var sortDateAsc = function (a, b) {
+            if (a.data < b.data)
+                return -1;
+            if (a.data > b.data)
+                return 1;
+
+            return 0;
+        }
+
+
+        for (var item in this._marcoSuperficiaisNotificacao) {
+            var marcoSuperficial = this._marcoSuperficiaisNotificacao[item];
+
+            if (undefined == marcoSuperficial) continue;
+
+            var first = true;
+
+            marcoSuperficial.medicoes.sort(this.sortDateAsc);
+            var ms = { marcoSuperficial: marcoSuperficial.nome, usuariosAterro: marcoSuperficial.usuariosaterro, medicoes:[]};
+
+
+            for (var i = 0; i < marcoSuperficial.medicoes.length; i++) {
+                var medicaoAtual = marcoSuperficial.medicoes[i];
+                var medicaoAnterior = first ? marcoSuperficial : marcoSuperficial.medicoes[i - 1];
+
+                var deltaParcialNorte = Math.pow((medicaoAtual.norte - medicaoAnterior.norte), 2);
+                var deltaParcialEste = Math.pow((medicaoAtual.leste - medicaoAnterior.leste), 2);
+
+                var dataAtual = Math.floor(medicaoAtual.data.getTime() / (3600 * 24 * 1000));
+                var dataAnterior = Math.floor(medicaoAnterior.data.getTime() / (3600 * 24 * 1000));
+                var diferencaDatas = dataAtual - dataAnterior;
+
+                var deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
+                var deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
+                var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(deslocamentoHorizontalParcial / diferencaDatas).toFixed(4));
+                var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(deslocamentoVerticalParcial / diferencaDatas)).toFixed(4));
+
+
+                for (k = 0; k < this._alertas.length; k++) {
+                    if (velocidadeHorizontal > this._alertas[k].velocidade)
+                        marcoSuperficial.medicoes[i].criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
+
+                    if (velocidadeHorizontal > this._alertas[k].velocidade)
+                        marcoSuperficial.medicoes[i].criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+                }
+
+                if (first) {
+                    first = false;
+                }
+
+                ms.notificacoes = marcoSuperficial.medicoes[i].notificacoes;
+
+                var dt = marcoSuperficial.medicoes[i];
+                delete dt['norte'];
+                delete dt['leste'];
+                delete dt['cota'];
+                ms.medicoes.push(dt);
+            }
+
+            result.push(ms);
+        }
+
+        return this._rearrange(result);
     },
 
     summarizeMonitoramento: function (marcosSuperficiais) {
@@ -208,6 +287,75 @@ module.exports = {
 
 
         return owners;
+    },
+
+    _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes) {
+        for (var i = 0; i < detalhes.length; i++) {
+            var exists = this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] != undefined;
+
+            if (!exists) {
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] = {};
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].nome = detalhes[i].marcoSuperficial.nome;
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].leste = detalhes[i].marcoSuperficial.leste;
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].norte = detalhes[i].marcoSuperficial.norte;
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].cota = detalhes[i].marcoSuperficial.cota;
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].aterro = detalhes[i].marcoSuperficial.aterro;
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].data = new Date(detalhes[i].marcoSuperficial.dataInstalacao);
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].usuariosaterro = this._extractUsuariosAterro(detalhes[i].aterro);
+                this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes = [];
+            }
+
+            var medicao = {
+                id: detalhes[i].owner.id,
+                obsGestor: detalhes[i].owner.obsGestor,
+                notificacao: { }
+            };
+
+            if (notificacoes.length > 0) {
+                medicao.notificacao.id = notificacoes[0].id;
+                medicao.notificacao.status = notificacoes[0].status;
+                medicao.notificacao.data = notificacoes[0].data;
+            }
+
+            var detalhe = {
+                id: detalhes[i].id,
+                nome: detalhes[i].nome,
+                norte: detalhes[i].norte,
+                leste: detalhes[i].leste,
+                cota: detalhes[i].cota,
+                data: new Date(detalhes[i].owner.data),
+                criterioAlertaHorizontalMetodologia1: 'Aceitável',
+                criterioAlertaVerticalMetodologia1:'Aceitável',
+                owner: medicao
+            };
+            this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes.push(detalhe);
+
+            //var medicoes = this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes;
+            //var encontrou = false;
+            //for (var j = 0; j < medicoes.length; j++) {
+            //    if (medicoes[j].id == detalhes[i].owner.id) {
+            //        medicoes[j].detalhes.push(detalhe);
+            //        encontrou = true;
+            //        break;
+            //    }
+            //}
+
+            //if (!encontrou) {
+            //    var medicao = {
+            //        id: detalhes[i].owner.id,
+            //        obsGestor: detalhes[i].owner.obsGestor,
+            //        data: new Date(detalhes[i].owner.data),
+            //        usuariosaterro: this._extractUsuariosAterro(detalhes[i].aterro),
+            //        notificacoes:notificacoes,
+            //        detalhes:[]
+            //    };
+
+            //    medicao.detalhes.push(detalhe);
+            //    medicoes.push(medicao);
+            //}
+
+            //this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes = medicoes;
+        }
     },
 
     listDetalhesByOwnerDate: function (detalhes) {
@@ -428,170 +576,98 @@ module.exports = {
         this._marcosSuperficiais[marcoSuperficialId] = marcoSuperficial;
     },
 
+    _getMedicoesPendentes:function(medicoes){
 
-//TODO - REFAZER O MÉTODO ABAIXO:
-//    - OBTER PRIMEIRO MEDICAOMARCOSUPERFICIAL
-////	- OBTER OS DETALHES DA MEDICAO E PRA CADA UMA BUSCAR O NIVEL DE ALERTA
-////ISSO, POIS O CONTROLE DE ENVIO DE EMAIL VAI FICAR MAIS SIMPLES, POIS O RETORNO DA API SERÁ 
-////UMA LISTA DE MEDICOES E DENTRO DE CADA ITEM DA LISTA HAVERÁ OS DETALHES COM SEUS ALERTAS QUE SERÃO AGRUPADOS NO EMAIL.
-    loadMedicoesDetalhesNotificacao: function (marcoSuperficialId) {
+        var ret = [];
+        for (var i = 0; i < medicoes.length; i++) {
+            var notificacoes = medicoes[i].notificacoes;
 
-
-        var marcoSuperficial = this._marcosSuperficiais[marcoSuperficialId];
-
-        for (var j = 0; j < marcoSuperficial.medicaoMarcoSuperficialDetalhes.length; j++) {
-            var first = (j == 0);
-
-            var monitoramento = {};
-
-            var medicaoAtual = marcoSuperficial.medicaoMarcoSuperficialDetalhes[j];
-            var medicaoAnterior = first ? marcoSuperficial : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1];
-
-            medicaoAtual.data = medicaoAtual.owner.data;
-            medicaoAnterior.data = first ? marcoSuperficial.data : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1].owner.data;
-
-            var deltaParcialNorte = Math.pow((medicaoAtual.norte - medicaoAnterior.norte), 2);
-            var deltaParcialEste = Math.pow((medicaoAtual.leste - medicaoAnterior.leste), 2);
-
-            var dataAtual = Math.floor(medicaoAtual.data.getTime() / (3600 * 24 * 1000));
-            var dataAnterior = Math.floor(medicaoAnterior.data.getTime() / (3600 * 24 * 1000));
-            var diferencaDatas = dataAtual - dataAnterior;
-
-            var deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
-            var deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
-            var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(deslocamentoHorizontalParcial / diferencaDatas).toFixed(4));
-            var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(deslocamentoVerticalParcial / diferencaDatas)).toFixed(4));
-
-            monitoramento.criterioAlertaHorizontalMetodologia1 = "Aceitável";
-            monitoramento.criterioAlertaVerticalMetodologia1 = "Aceitável";
-
-            for (k = 0; k < this._alertas.length; k++) {
-                if (velocidadeHorizontal > this._alertas[k].velocidade)
-                    monitoramento.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
-
-                if (velocidadeHorizontal > this._alertas[k].velocidade)
-                    monitoramento.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+            for (var j = 0; j < notificacoes.length; j++) {
+                if (notificacoes[j].status == "Pendente") {
+                    ret.push(medicoes[i]);
+                    break;
+                }
             }
-
-            marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].monitoramento = monitoramento;
-
         }
-        this._marcosSuperficiais[marcoSuperficialId] = marcoSuperficial;
+
+        return ret;
     },
 
+    _extractUsuariosAterro: function (aterro) {
+        var ret = [];
+
+        for (var i = 0; i < this._aterros.length; i++) {
+            if (this._aterros[i].id == aterro.id) {
+                ret = this._aterros[i].usuarios;
+                break;
+            }
+        }
+
+        return ret;
+    },
+ 
     monitoramentosNotificacao: function (req, res) {
         var _that = this;
 
         var execute = new Promise(function (resolve, reject) {
-
             _that._totalMarcosSuperficias = 0;
-            _that._totalMarcosSuperficiasCarregados = 0;
-            _that._marcosSuperficiais = ([]);
+            _that._marcoSuperficiaisNotificacao = ([]);
             _that._alertas = ([]);
             _that._aterros = ([]);
 
             Aterro.find({}).populate("usuarios").exec(function (err, aterros) {
+                if (err) {
+                    return resolve(err);
+                }
 
                 _that._aterros = aterros;
                 Alerta.find({}, function (err, alertas) {
+                    if (err) {
+                        return resolve(err);
+                    }
+
                     _that._alertas = alertas;
-                    var filtro = _that.getFiltrosMarco(req);
 
-                    var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
-                    var sortString = req.param('order');
+                    var executeMedicoes = new Promise(function (resolveMedicoes, rejectMedicoes) {
 
-                    marcoSuperficial.sort(sortString);
-
-                    marcoSuperficial.exec(function result(err, marcosSuperficiais) {
-
-                        if (null == marcosSuperficiais || marcosSuperficiais.length == 0) {
-                            return resolve(marcosSuperficiais);
-                        }
-
-                        _that._totalMarcosSuperficias = marcosSuperficiais.length;
-
-                        var filtroDetalhes = {};
-                        if (undefined == req.param('skipdatefilter')) {
-                            filtroDetalhes = _that.getFiltrosDetalhes(req);
-                        }
-
-                        if (req.param('limitMedicoes') != undefined) {
-                            f.limit = req.param('limitMedicoes');
-                        }
-
-                        var sort = 'data Desc';
-                        if (undefined != req.param('order') && (req.param('order').toLowerCase().indexOf("asc") >= 0)) {
-                            sort = 'data Asc';
-                        }
-
-                        for (var i = 0; i < marcosSuperficiais.length; i++) {
-
-                            marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes = [];
-                            marcosSuperficiais[i].data = marcosSuperficiais[i].dataInstalacao;
-                            _that._marcosSuperficiais[marcosSuperficiais[i].id] = marcosSuperficiais[i];
-
-                            var loadDetalhes = function (marcoSuperficialId) {
-                                filtroDetalhes.marcoSuperficial = marcoSuperficialId;
-
-                                MedicaoMarcoSuperficialDetalhes.find({ where: filtroDetalhes, sort: sort }).populate("owner").exec(function (err, detalhes) {
-
-                                    var associateMedicaoDetalhes = function (filtroMedicao, index) {
-                                        MedicaoMarcoSuperficial.findOne(filtroMedicao).populate("notificacoes").exec(function (err, medicao) {
-                                            if (medicao) {
-                                                medicoes[medicao.id] = medicao;
-                                                detalhes[index].owner = medicao;
-                                                detalhes[index].data = medicao.data;
-                                            }
-                                            totalDetalhesCarregados += 1;
-                                        });
-                                    }
-
-                                    var possuiDetalhes = null != detalhes && undefined != detalhes && detalhes.length && detalhes.length > 0;
-
-                                    if (!possuiDetalhes) {
-                                        _that._totalMarcosSuperficiasCarregados += 1;
-                                    }
-                                    else {
-                                        var medicoes = {};
-                                        var totalDetalhesCarregados = 0;
-
-                                        for (var d = 0; d < detalhes.length; d++) {
-                                            if (medicoes[detalhes[d].owner.id]) {
-                                                detalhes[d].owner = medicoes[detalhes[d].owner.id];
-                                                detalhes[d].data = detalhes[d].owner.data;
-
-                                                totalDetalhesCarregados += 1;
-                                            } else {
-                                                var filtroMedicao = { id: detalhes[d].owner.id };
-                                                associateMedicaoDetalhes(filtroMedicao, d);
-                                            }
-                                        }
-
-                                        var itv = setInterval(function () {
-
-                                            if (totalDetalhesCarregados == detalhes.length) {
-                                                clearInterval(itv);
-                                                _that._marcosSuperficiais[marcoSuperficialId].medicaoMarcoSuperficialDetalhes = detalhes;
-                                                _that.loadMedicoesDetalhesNotificacao(marcoSuperficialId);
-                                                _that._totalMarcosSuperficiasCarregados += 1;
-                                            }
-                                        }, 100);
-                                    }
-
-                                });
-                            };
-
-                            loadDetalhes(marcosSuperficiais[i].id);
-                        }
-
-
-                        var itv = setInterval(function () {
-                            if (_that._totalMarcosSuperficias == _that._totalMarcosSuperficiasCarregados) {
-                                clearInterval(itv);
-
-                                return resolve(_that.summarizeMonitoramentoNotificacao(_that._marcosSuperficiais));
+                        MedicaoMarcoSuperficial.find().populate("notificacoes").exec(function (err, result) {
+                            if (err) {
+                                return resolve(err);
                             }
-                        }, 100);
+
+                            //var medicoes = _that._getMedicoesPendentes(result);
+
+                            var medicoes = result;
+                            var totalDetalhesCarregados = 0;
+                            if (medicoes.length == 0) {
+                                return resolveMedicoes(medicoes);
+                            }
+
+                            for (var i = 0; i < medicoes.length; i++) {
+
+                                var loadMedicoes = function (index) {
+                                    var filtroDetalhes = { owner: medicoes[index].id };
+
+                                    MedicaoMarcoSuperficialDetalhes.find(filtroDetalhes).populate("owner").populate("marcoSuperficial").populate("aterro").exec(function (err, detalhes) {
+                                        if (err) {
+                                            return resolve(err);
+                                        }
+                                        _that._joinMedicoesDetalhesNotificacoes(detalhes, medicoes[index].notificacoes);
+                                        totalDetalhesCarregados += 1;
+
+                                        if (totalDetalhesCarregados == medicoes.length) {
+                                            return resolveMedicoes();
+                                        }
+                                    });
+                                };
+                                loadMedicoes(i);
+                            }
+
+                        });
+                    });
+
+                    executeMedicoes.then(function () {
+                        return resolve(_that.summarizeMonitoramentoNotificacao());
                     });
                 });
 
@@ -602,7 +678,6 @@ module.exports = {
             res.json(results);
         });
     },
-
 
     monitoramentos: function (req, res) {
         var _that = this;
