@@ -80,11 +80,17 @@
                                     {{ showUsuario(operacaoSecaoCorte) }}
                                 </span>
                             </td>
-                            <td>
+                            <td ng-if="usuario._perfil !== 'Administrador'">
                                 <span editable-text="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
                                     {{ showAterro(operacaoSecaoCorte) }}
                                 </span>
+                            </td>                            
+                            <td ng-if="usuario._perfil == 'Administrador'">
+                                <span editable-select="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
+                                    {{ showAterro(operacaoSecaoCorte) }}
+                                </span>
                             </td>
+
                             <td style="white-space: nowrap">
 
                                 <form editable-form name="rowform" onbeforesave="saveSecaoCorte($data, operacaoSecaoCorte.id, $index)" onshow="formatDates()" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">

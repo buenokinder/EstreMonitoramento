@@ -2,6 +2,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     $scope.operacaoSecaoCortes = [];
     $scope.usuario = window.SAILS_LOCALS;
     $scope.secaoCortes = ([]);
+    $scope.lsecaoCortes = ([]);
     $scope.querydape = [];
     $scope.hasFullPermission = $scope.usuario._perfil != 'Gerente'; //O gerente só pode visualizar e criar
 
@@ -34,10 +35,18 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
 
         $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
 
-        $http.get('/OperacaoSecaoCorte').success(function (data) {
-            $scope.operacaoSecaoCortes = angular.fromJson(data);
-            $scope.configOperacaoSecaoCortes();
-        });
+        
+        if($scope.usuario._aterro) {
+            $http.get('/OperacaoSecaoCorte/Search?aterro='+$scope.usuario._aterro).success(function (data) {
+                $scope.operacaoSecaoCortes = angular.fromJson(data);
+                $scope.configOperacaoSecaoCortes();
+            });            
+        } else {
+            $http.get('/OperacaoSecaoCorte').success(function (data) {
+                $scope.operacaoSecaoCortes = angular.fromJson(data);                    
+                $scope.configOperacaoSecaoCortes();
+            });
+        }        
     };
 
     $scope.configOperacaoSecaoCortes = function () {
@@ -54,11 +63,11 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
 
     $scope.loadSecaoCorte = function () {
         if($scope.usuario._aterro) {
-            return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte/search?aterro='+$scope.usuario._aterro).success(function (data) {
+            return $http.get('/SecaoCorte/search?aterro='+$scope.usuario._aterro).success(function (data) {
                 $scope.lsecaoCortes = data;
             });            
         } else {
-            return $scope.secaoCortes.length ? null : $http.get('/SecaoCorte').success(function (data) {
+            return $http.get('/SecaoCorte').success(function (data) {
                 $scope.lsecaoCortes = data;
             });             
         }
@@ -84,7 +93,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     };
 
     $scope.showAterro = function (data) {
-        var selected = [];
+        var selected = [];        
         if (data.aterro) {
             selected = $filter('filter')($scope.aterros, { id: data.aterro });
         }
@@ -100,6 +109,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
     };
 
     $scope.saveSecaoCorte = function (data, id, index) {
+        console.log('data', data);
         var value = $('table tr:eq(' + (index + 1) + ') .datetimepicker').val();
 
         if (undefined == data.secaoCorte) {
@@ -113,7 +123,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
         }
 
         data.dataMedicao = getDateTime(value);
-        data.usuario = $scope.usuario._id;
+        //data.usuario = $scope.usuario._id;
 
         $scope.operacaoSecaoCortes[index].dataMedicao = data.dataMedicao;
 
@@ -156,7 +166,7 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
             swal(configModal,
                 function (isConfirm) {
                     if (isConfirm) {
-                        angular.extend(data, { usuario: $scope.usuario._id }, { aterro: $scope.usuario._aterro });
+                        angular.extend(data, { usuario: $scope.usuario._id }, { aterro: $scope.usuario._aterro || data.aterro});
                         return $http({
                             method: 'POST',
                             url: '/OperacaoSecaoCorte/',
