@@ -1,0 +1,119 @@
+<div class="row" ng-init="init()">
+
+    <div class="col s1 m1 l1">
+        &nbsp;
+    </div>
+    <div class="col s10 m10 l10 col-lg-offset-2">
+        <div class="card-panel ng-scope">
+            <h4 class="header2">
+                Operação Seção de Corte
+            </h4>
+            <div class="row">
+                <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Inicial</label><input type="text" id="datainicial" class="form-control ng-pristine ng-untouched ng-valid ng-empty date datetimepicker" ng-model="querydapesquisa.dataInicial" aria-invalid="false"></div>
+                <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Final</label><input type="text" id="datafinal" class="form-control ng-pristine ng-untouched ng-valid ng-empty date datetimepicker" ng-model="querydapesquisa.dataFinal" aria-invalid="false"></div>
+
+                <div class="form-group col m3" id="sign-up-form">
+                    <label ng-class="inputClass" for="aterro">Seção de Corte</label>
+                    <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="marcoSuperficial" required="" ng-model="querydapesquisa.secaoCorte" ng-options="x.id as x.nome for x in secaoCortes" aria-invalid="true">
+                        <option value="?" selected="selected"></option>
+                    </select>
+                </div>
+                <div class="form-group col m3" id="sign-up-form">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="aterro" required="" ng-model="querydapesquisa.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true">
+                        <option value="?" selected="selected"></option>
+                    </select>
+                </div>
+                <div class="right col s1" aria-hidden="false"><a ng-click="pesquisar()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a></div>
+                <div>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <tr style="font-weight: bold">
+                            <td style="width:15%">Data Medição</td>
+
+                            <td style="width:15%">Seção de Corte</td>
+                            <td style="width:15%">Altura</td>
+                            <td style="width:15%">Comprimento</td>
+                            <td style="width:15%">Tipo Estaca</td>
+                            <td style="width:15%">Data Criação</td>
+                            <td style="width:15%">Criado por</td>
+                            <td style="width:15%">Aterro</td>
+
+                            <td style="width:15%" ng-show="hasFullPermission">Ações</td>
+                        </tr>
+
+                        <tr ng-repeat="operacaoSecaoCorte in operacaoSecaoCortes">
+                            <td>
+                                <span editable-text="operacaoSecaoCorte.dataMedicao" e-name="dataMedicao" e-form="rowform" onshow="formatDates(this)" e-class="datetimepicker">
+
+                                    {{showDate(operacaoSecaoCorte.dataMedicao)}}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span editable-select="operacaoSecaoCorte.secaoCorte" e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in secaoCortes | filter:{habilitado: true}">
+                                    {{ showSecaoCorte(operacaoSecaoCorte) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-number="operacaoSecaoCorte.altura" e-name="altura" e-form="rowform">
+                                    {{ operacaoSecaoCorte.altura || '' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-number="operacaoSecaoCorte.comprimento" e-name="comprimento" e-form="rowform">
+                                    {{ operacaoSecaoCorte.comprimento || '' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-text="operacaoSecaoCorte.tipoEstaca" e-name="tipoEstaca" e-form="rowform">
+                                    {{ operacaoSecaoCorte.tipoEstaca || '' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-text="operacaoSecaoCorte.createdAt" e-name="datacriacao" e-form="rowform" edit-disabled="true">
+                                    {{ operacaoSecaoCorte.createdAt | date : 'dd/MM/yyyy' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-text="operacaoSecaoCorte.usuario" e-name="usuario" e-form="rowform" edit-disabled="true">
+                                    {{ showUsuario(operacaoSecaoCorte) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-text="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
+                                    {{ showAterro(operacaoSecaoCorte) }}
+                                </span>
+                            </td>
+                            <td style="white-space: nowrap">
+
+                                <form editable-form name="rowform" onbeforesave="saveSecaoCorte($data, operacaoSecaoCorte.id, $index)" onshow="formatDates()" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoSecaoCorte">
+                                    <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
+                                        <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </button>
+                                    <a ng-disabled="rowform.$waiting" ng-click="cancel($index, rowform)">
+                                        <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+                                </form>
+
+                                <div class="buttons" ng-show="!rowform.$visible && hasFullPermission">
+                                    <a ng-click="rowform.$show()">
+                                        <i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+                                    <a ng-click="removeSecaoCorte(operacaoSecaoCorte.id, $index)">
+                                        <i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a class="btn-floating btn-large waves-effect waves-light" ng-click="addSecaoCorte()"><i class="mdi-content-add"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
