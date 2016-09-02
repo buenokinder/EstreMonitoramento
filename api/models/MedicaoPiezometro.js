@@ -49,7 +49,8 @@ module.exports = {
             required: true
         },
         aterro: {
-            model: 'Aterro'
+            model: 'Aterro',
+            required: true
         },
         usuario: {
             model: 'Usuario'
