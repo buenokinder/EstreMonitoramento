@@ -1351,8 +1351,16 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             width: '@width',
             scrolling: '@scrolling'
         },
-        template: '<iframe class="frame" height="{{height}}" width="{{width}}" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="{{scrolling}}" src="{{src()}}"></iframe>',
-        link: linkFn
+        template: '  <a  href="" ng-click="open()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a><br><iframe class="frame" height="{{height}}" width="{{width}}" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="{{scrolling}}" src="{{src()}}"></iframe>',
+        link: linkFn,
+        controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
+                $scope.open = function(){
+
+                    console.log($scope.src());
+                    window.open('http://localhost:1337' + $scope.src(), '_blank');
+                  
+                }
+        }
     };
 }).directive('customOnChange', function () {
     return {
