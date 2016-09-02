@@ -5,24 +5,24 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
- module.exports = {
+module.exports = {
 
-  attributes: {
-    date: {
-      type: 'datetime',
-      required: true
-    },
-    usuario: {
-      model: 'Usuario',
-      required: false
-    },
-    coeficienteRU: {
-      type: 'float',
-      required: true
-    },
-    owner: {
-      model: 'Piezometro'
+    attributes: {
+        date: {
+            type: 'datetime',
+            required: true
+        },
+        usuario: {
+            model: 'Usuario',
+            required: false
+        },
+        coeficienteRU: {
+            type: 'float',
+            required: true
+        },
+        owner: {
+            model: 'Piezometro'
+        }
     }
-  }
 };
 

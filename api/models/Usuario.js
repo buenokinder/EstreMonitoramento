@@ -7,50 +7,80 @@
 
 module.exports = {
 
-  attributes: {
+    attributes: {
 
-    name: {
-      type: 'string',
-      required: true
-    },
+        name: {
+            type: 'string',
+            required: true
+        },
 
-    email: {
-      type: 'string',
-      required: true,
-      unique: true
-    },
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-
- 
-    encryptedPassword: {
-      type: 'string',
-      required: true
-    },
+        email: {
+            type: 'string',
+            required: true,
+            unique: true
+        },
+        habilitado: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
 
 
-    lastLoggedIn: {
-      type: 'date',
-      required: true,
-      defaultsTo: new Date(0)
-    },
-    
-    perfil: {
-      type: 'string',
-      enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
+        encryptedPassword: {
+            type: 'string'
+           // required: true
+        },
 
+
+        lastLoggedIn: {
+            type: 'date',
+            required: true,
+            defaultsTo: new Date(0)
+        },
+
+        perfil: {
+            type: 'string',
+            enum: ['Administrador', 'Diretor', 'Gerente', 'Operacional']
+        },
+
+        aterros: {
+            collection: 'Aterro',
+            via: 'usuarios'
+        }
     },
-    aterros: {
-      collection: 'Aterro',
-      via: 'usuarios'
+
+    beforeCreate: function (value, callback) {
+        var Passwords = require('machinepack-passwords');
+
+        Passwords.encryptPassword({
+            password: value.password,
+            difficulty: 10,
+        }).exec({
+            error: function (err) {
+                callback(err);
+                return false;
+            },
+
+            success: function (encryptedPassword) {
+                require('machinepack-gravatar').getImageUrl({
+                    emailAddress: value.email
+                }).exec({
+                    error: function (err) {
+                        callback(err);
+                        return false;
+                    },
+                    success: function (gravatarUrl) {
+                        value.encryptedPassword = encryptedPassword;
+                        value.gravatarUrl = gravatarUrl;
+                        delete value['password'];
+                        delete value['aterro'];
+                        delete value['usuario'];
+
+                        callback();
+                    }
+                });
+            }
+        });
     }
-
-   
-
-    
-  }
 };
 

@@ -1,429 +1,558 @@
-
+﻿
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Estre</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="msapplication-tap-highlight" content="no">
-     <link rel="icon" href="favicon.png" type="image/x-icon">
-   	<!-- <link rel="stylesheet" href="page.css"> -->
-	<link rel="stylesheet" href="elements.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <!-- <link rel="stylesheet" href="page.css"> -->
+    <link rel="stylesheet" href="/js/private/dashboard/isteven-multi-select.css">
+    <link rel="stylesheet" href="elements.css">
     <link rel="stylesheet" href="/styles/materialize.css">
-
-
-
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection">
-       <link rel="stylesheet" href="/styles/style-horizontal.css">
+    <link rel="stylesheet" href="/styles/style-horizontal.css">
     <link href="/styles/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+    <link rel="stylesheet" href="/styles/bootstrap-material-datetimepicker.css" />
+    <link href="/styles/fonts.googleapi.com.roboto.css" rel='stylesheet' type='text/css'>
+    <link href="/styles/fonts.googleapi.com.material.icons.css" rel="stylesheet">
+
     <!--STYLES END-->
     <link href="/js/dependencies/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
-<link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
 
-  <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = { _id: "<%= me.id %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};
+        window.SAILS_LOCALS = { _id: "<%= me.id %>" , _perfil: "<%= me.perfil %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};
     </script>
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
-  </head>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
 
-<body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="DashboardController" >
-<div ng-controller="MapaController">
-    <!-- Start Page Loading -->
-   <div id="loader-wrapper">
-        <div id="loader"></div>
-        <div class="loader-section section-left"></div>
-        <div class="loader-section section-right"></div>
-    </div>
-    <!-- End Page Loading -->
+</head>
 
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
+<body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="DashboardController">
+    <div ng-controller="MapaController">
+        <!-- Start Page Loading -->
+        <div id="loader-wrapper">
+            <div id="loader"></div>
+            <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+        </div>
+        <!-- End Page Loading -->
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+        <!-- START HEADER -->
+        <header id="header" class="page-topbar">
+            <!-- start header nav-->
+            <div class="navbar-fixed">
+                <nav class="navbar-color">
+                    <div class="nav-wrapper">
+                        <ul class="left">
+                            <li><h1 class="logo-wrapper"><a href="#/" class="brand-logo center darken-1"><img src="images/logo_estre_xs.png" alt="estre logo" style="margin-top: -10px;"></a> <span class="logo-text">Estre</span></h1></li>
+                        </ul>
 
-    <!-- START HEADER -->
-    <header id="header" class="page-topbar">
-        <!-- start header nav-->
-        <div class="navbar-fixed">
-            <nav class="navbar-color">
-                <div class="nav-wrapper">
-                    <ul class="left">
-                      <li><h1 class="logo-wrapper"><a href="#/" class="brand-logo darken-1"><img src="images/logo_estre_xs.png" alt="estre logo" style="margin-top: -10px;"></a> <span class="logo-text">Estre</span></h1></li>
-                    </ul>
-                    <div class="header-search-wrapper hide-on-med-and-down">
-                        <i class="mdi-action-search"></i>
-                        <input type="text" name="Search" class="header-search-input z-depth-2" placeholder="Pesquisar"/>
+                        <!-- <ul class="right hide-on-med-and-down">
+
+                            <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i class="mdi-action-settings-overscan estre-green-icon"></i></a>
+                            </li>
+                           <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications estre-green-icon"><small class="notification-badge " style="background: #777777 !important;">5</small></i>
+
+                            </a>
+                            </li>
+
+                        </ul> -->
+                        <!-- notifications-dropdown -->
+                        <!--  <ul id="notifications-dropdown" class="dropdown-content">
+                            <li>
+                              <h5>ALERTAS </h5>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                              <a href="#/"><i class="mdi-action-add-shopping-cart"></i> Alerta 1!</a>
+                              <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 2 horas</time>
+                            </li>
+                            <li>
+                              <a href="#/"><i class="mdi-action-stars"></i> Tarefas Pendentesk</a>
+                              <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 3 dias </time>
+                            </li>
+                            <li>
+                              <a href="#/"><i class="mdi-action-settings"></i> Atualzicao de Linha de corte</a>
+                              <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 4 dias</time>
+                            </li>
+
+                          </ul> -->
+                    </div>
+                </nav>
+
+                <!-- HORIZONTL NAV START-->
+                <nav id="horizontal-nav" class="estre-green hide-on-med-and-down">
+                    <div class="nav-wrapper">
+                        <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
+                            <li ng-hide="(perfil != 'Administrador')">
+                                <a href="#/" class="right  dropdown-menu cyan-text" data-activates="Administracaodropdown">
+                                    <i class="mdi-action-assignment-ind"></i>
+                                    <span>Administração<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#/" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
+                                    <i class="mdi-action-settings"></i>
+                                    <span>Dados Mestre<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
+                                    <i class="mdi-hardware-desktop-windows"></i>
+                                    <span>
+                                        Área de Trabalho
+                                        <i class="mdi-navigation-arrow-drop-down right"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li ng-hide="(perfil == 'Operacional')">
+                                <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
+                                    <i class="mdi-editor-insert-chart"></i>
+                                    <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                                </a>
+                            </li>
+                            <li ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')">
+                                <a href="" ng-click="goto('/Dashboard')" class="cyan-text">
+                                    <i class="mdi-action-dashboard"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                        <ul id="ul-horizontal-nav" class="right hide-on-med-and-down">
+                            <li>
+                                <a class=" right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
+                                    <i class="mdi-action-account-circle"></i>
+                                    <span>Usuário<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
 
-                    <ul class="right hide-on-med-and-down">
+                </nav>
 
-                        <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i class="mdi-action-settings-overscan estre-green-icon"></i></a>
-                        </li>
-                        <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications estre-green-icon"><small class="notification-badge " style="background: #777777 !important;">5</small></i>
 
+                <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
+                    <li>
+                        <a href="" ng-click="goto('/Bombeamento')" class="white estre-green-icon">Bombeamento</a>
+                    </li>
+                    <li>
+                        <a href="" ng-click="goto('/PluviometriaVazao')" class="white estre-green-icon">Pluviometria e Vazão</a>
+                    </li>
+                    <li>
+                        <a href="" ng-click="goto('/MedicaoMarcoSuperficial')" class="white estre-green-icon">
+                            Marco Superficial
                         </a>
-                        </li>
+                    </li>
+                    <li>
+                        <a href="" ng-click="goto('/MedicaoPiezometro')" class="white estre-green-icon">
+                            Piezômetro
+                        </a>
+                    </li>
+                    <li><a href="" ng-click="goto('/Mapa')" class="white estre-green-icon">Mapa</a></li>
+                    <li><a href="" ng-click="goto('/OperacaoSecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
+                    <li ng-hide="(perfil == 'Operacional')"><a href="" ng-click="goto('/FatorSeguranca')" class="white estre-green-icon">Fator de Segurança</a></li>
 
-                    </ul>
-
-
-                    <!-- notifications-dropdown -->
-                    <ul id="notifications-dropdown" class="dropdown-content">
-                      <li>
-                        <h5>ALERTAS </h5>
-                      </li>
-                      <li class="divider"></li>
-                      <li>
-                        <a href="#/"><i class="mdi-action-add-shopping-cart"></i> Alerta 1!</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 2 horas</time>
-                      </li>
-                      <li>
-                        <a href="#/"><i class="mdi-action-stars"></i> Tarefas Pendentesk</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 3 dias </time>
-                      </li>
-                      <li>
-                        <a href="#/"><i class="mdi-action-settings"></i> Atualzicao de Linha de corte</a>
-                        <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">há 4 dias</time>
-                      </li>
-
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- HORIZONTL NAV START-->
-             <nav id="horizontal-nav" class="estre-green hide-on-med-and-down">
-                <div class="nav-wrapper">
-                    <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
-                        <li>
-                            <a href="#/" class="right  dropdown-menu cyan-text"  data-activates="Administracaodropdown">
-                                <i class="mdi-action-assignment-ind"></i>
-                                <span>Administração<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#/" class="right  dropdown-menu cyan-text" data-activates="DadosMestredropdown">
-                                <i class="mdi-action-settings"></i>
-                                <span>Dados Mestre<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                            </a>
-                        </li>
-
-                         <li>
-                            <a class="dropdown-menu cyan-text" href="#/" data-activates="Trabalhodropdown">
-                                <i class="mdi-hardware-desktop-windows"></i>
-                                <span>Área de Trabalho<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-menu cyan-text" href="#/" data-activates="Chartsdropdown">
-                                <i class="mdi-editor-insert-chart"></i>
-                                <span>Relatórios<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a ng-click="goto('/Dashboard')" class="cyan-text">
-                                <i class="mdi-action-dashboard"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                    <ul id="ul-horizontal-nav" class="right hide-on-med-and-down">
-                        <li >
-                            <a class=" right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
-                                <i class="mdi-action-account-circle"></i>
-                                <span>Usuário<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-              </nav>
-
-
-            <ul id="Trabalhodropdown" class="dropdown-content dropdown-horizontal-list">
-            <li><a  ng-click="goto('/Bombeamento')"  class="white estre-green-icon">Bombeamento</a></li>
-                    <li><a  ng-click="goto('/PluviometriaVazao')"  class="white estre-green-icon">Pluviometria e Vazão</a></li>
-                    <li><a  ng-click="goto('/MedicaoMarcoSuperficial')"  class="white estre-green-icon">Marco Superficial</a></li>
-                    <li><a  ng-click="goto('/Mapa')"  class="white estre-green-icon">Mapa</a></li>
-                    <li><a  ng-click="goto('/OperacaoSecaoCorte')"  class="white estre-green-icon">Seção de Corte</a></li>
-                     <li><a  ng-click="goto('/FatorSeguranca')"  class="white estre-green-icon">Fator de Segurança</a></li>
-
-                   <li><a  ng-click="goto('/PocosVisita')"  class="white estre-green-icon">Poços de visita</a></li>
+                    <li><a href="" ng-click="goto('/PocosVisita')" class="white estre-green-icon">Poços de visita</a></li>
                 </ul>
 
                 <ul id="DadosMestredropdown" class="dropdown-content dropdown-horizontal-list">
-                  <li><a  ng-click="goto('/Alerta')"  class="white estre-green-icon">Alerta</a></li>
-                  <li><a  ng-click="goto('/Aterro')"  class="white estre-green-icon">Aterro</a></li>
+                    <li ng-hide="(perfil == 'Operacional')"><a href="" ng-click="goto('/Alerta')" class="white estre-green-icon">Alerta</a></li>
+                    <li><a href="" ng-click="goto('/Aterro')" class="white estre-green-icon">Aterro</a></li>
 
-                  <li><a  ng-click="goto('/MarcoSuperficial')"  class="white estre-green-icon">Marco Superficial e Inclinomêtro</a></li>
-                  <li><a ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
-                  <li><a ng-click="goto('/SecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
+                    <li><a href="" ng-click="goto('/MarcoSuperficial')" class="white estre-green-icon">Marco Superficial e Inclinomêtro</a></li>
+                    <li><a href="" ng-click="goto('/SecaoFatorSeguranca')" class="white estre-green-icon">Seção de Fator de Segurança</a></li>
+                    <li><a href="" ng-click="goto('/SecaoCorte')" class="white estre-green-icon">Seção de Corte</a></li>
 
-                  <li><a ng-click="goto('/Piezometro')"   class="white estre-green-icon">Piezômetro</a></li>
+                    <li><a href="" ng-click="goto('/Piezometro')" class="white estre-green-icon">Piezômetro</a></li>
                 </ul>
-              <ul id="Administracaodropdown" class="dropdown-content dropdown-horizontal-list">
-                  <li><a  ng-click="goto('/Usuario')" class="white estre-green-icon">Usuário</a></li>
+                <ul id="Administracaodropdown" class="dropdown-content dropdown-horizontal-list">
+                    <li><a href="" ng-click="goto('/Usuario')" class="white estre-green-icon">Usuário</a></li>
                 </ul>
-
-
-
 
                 <!-- Usersdropdown -->
                 <ul id="Usersdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a ng-click="goto('/Perfil')"  class="white estre-green-icon">Perfil</a></li>
-                    <li><a ng-click="goto('/Settings')"  class="white estre-green-icon">Configurações</a></li>
-                    <li> <a href="/logout"  class="white estre-green-icon">
-                    Sair
-                    </a></li>
+                    <li><a href="" ng-click="goto('/Perfil')" class="white estre-green-icon">Perfil</a></li>
+                    <li><a href="" ng-click="goto('/Settings')" class="white estre-green-icon">Configurações</a></li>
+                    <li>
+                        <a href="/logout" class="white estre-green-icon">Sair</a>
+                    </li>
                 </ul>
 
                 <!-- Chartsdropdown -->
                 <ul id="Chartsdropdown" class="dropdown-content dropdown-horizontal-list">
-                    <li><a ng-click="goto('/Template')" class="white estre-green-icon">Template</a></li>
-                    <li><a ng-click="goto('/Relatorio')" class="white estre-green-icon">Relatório</a></li>
-                    <li><a ng-click="goto('/')" class="white estre-green-icon">Parametrização</a></li>
+                    <li><a href="" ng-click="goto('/Template')" class="white estre-green-icon">Template</a></li>
+                    <li><a href="" ng-click="goto('/Relatorio')" class="white estre-green-icon">Relatório</a></li>
+                    <li><a href="" ng-click="goto('/')" class="white estre-green-icon">Parametrização</a></li>
 
                 </ul>
-            <!-- HORIZONTL NAV END-->
-        </div>
-        <!-- end header nav-->
-    </header>
-    <!-- END HEADER -->
-
-
-  <!-- START MAIN -->
-    <div id="main">
-        <!-- START WRAPPER -->
-        <div class="wrapper">
-
-
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
-
-            <!-- START CONTENT -->
-            <section id="content">
-        <!--breadcrumbs start-->
-        <div id="breadcrumbs-wrapper" >
-            <!-- Search for small screen -->
-            <div class="header-search-wrapper grey hide-on-large-only">
-                <i class="mdi-action-search active"></i>
-                <input type="text" name="Search" class="header-search-input z-depth-2" placeholder="Pesquisar">
+                <!-- HORIZONTL NAV END-->
             </div>
-            <div class="container">
-                <div class="row">
-                  <div class="col s12 m12 l12">
-                    <h5 class="breadcrumbs-title" style="color: #767676 !important;"></h5>
-                    <ol class="breadcrumbs">
-                        <a href="/#/" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-alarm-add estre-darkgreen-icon"> </i>--> Home</a>
-                        <a ng-show="pai != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-stars"></i>  -->    {{pai}}</a>
-                        <a ng-show="pathname != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-language"></i>  -->{{pathname}}</a>
-                    </ol>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <!--breadcrumbs end-->
-                <!--start container-->
-                <div class="container">
+            <!-- end header nav-->
+        </header>
+        <!-- END HEADER -->
+        <!-- START MAIN -->
+        <div id="main">
+            <!-- START WRAPPER -->
+            <div class="wrapper">
 
+            <aside id="left-sidebar-nav">
+                <ul id="slide-out" class="side-nav leftside-navigation  hide-on-large-only">
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold" ng-hide="(perfil != 'Administrador')">
+                                <a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-assignment-ind"></i> Administração</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="" href="" ng-click="goto('/Usuario')">Usuário</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
 
-                  <ng-view></ng-view>
-
-
-
-
-                </div>
-                <!--end container-->
-            </section>
-            <!-- END CONTENT -->
-
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
-
-            <!-- START RIGHT SIDEBAR NAV-->
-<!--             <aside id="right-sidebar-nav">
-                <ul id="chat-out" class="side-nav rightside-navigation">
-                    <li class="li-hover">
-                    <a href="#" data-activates="chat-out" class="chat-close-collapse right"><i class="mdi-navigation-close"></i></a>
-                    <div id="right-search" class="row">
-                        <form class="col s12">
-                            <div class="input-field">
-                                <i class="mdi-action-search prefix"></i>
-                                <input id="icon_prefix" type="text" class="validate">
-                                <label for="icon_prefix">Search</label>
-                            </div>
-                        </form>
-                    </div>
-                    </li>
-                    <li class="li-hover">
-                        <ul class="chat-collapsible" data-collapsible="expandable">
-                        <li>
-                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Recent Activity</div>
-                            <div class="collapsible-body recent-activity">
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">just now</a>
-                                        <p>Jim Doe Purchased new equipments for zonal office.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-device-airplanemode-on"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">Yesterday</a>
-                                        <p>Your Next flight for USA will be on 15th August 2015.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">5 Days Ago</a>
-                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-store"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">Last Week</a>
-                                        <p>Jessy Jay open a new store at S.G Road.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">5 Days Ago</a>
-                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header light-blue white-text active"><i class="mdi-editor-attach-money"></i>Sales Repoart</div>
-                            <div class="collapsible-body sales-repoart">
-                                <div class="sales-repoart-list  chat-out-list row">
-                                    <div class="col s8">Target Salse</div>
-                                    <div class="col s4"><span id="sales-line-1"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Payment Due</div>
-                                    <div class="col s4"><span id="sales-bar-1"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Total Delivery</div>
-                                    <div class="col s4"><span id="sales-line-2"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Total Progress</div>
-                                    <div class="col s4"><span id="sales-bar-2"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header red white-text"><i class="mdi-action-stars"></i>Favorite Associates</div>
-                            <div class="collapsible-body favorite-associates">
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Eileen Sideways</p>
-                                        <p class="place">Los Angeles, CA</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Zaham Sindil</p>
-                                        <p class="place">San Francisco, CA</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Renov Leongal</p>
-                                        <p class="place">Cebu City, Philippines</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Weno Carasbong</p>
-                                        <p>Tokyo, Japan</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Nusja Nawancali</p>
-                                        <p class="place">Bangkok, Thailand</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
                         </ul>
                     </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-hardware-desktop-windows"></i> Área de Trabalho</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="" ng-click="goto('/Bombeamento')">Bombeamento</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/PluviometriaVazao')">Pluviometria e Vazão</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/MedicaoMarcoSuperficial')">MS e INC</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/MedicaoPiezometro')">Piezômetro</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/Mapa')">Mapa</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/OperacaoSecaoCorte')">Seção de Corte</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/FatorSeguranca')">Fator de Segurança</a>
+                                        </li>
+
+                                        <li><a href="" ng-click="goto('/PocosVisita')">Poços de visita</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold" ng-hide="(perfil == 'Operacional')">
+                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-editor-insert-chart"></i> Relatórios</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="" ng-click="goto('/Template')">Template</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/Relatorio')">Relatório</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/')">Parametrização</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        
+                        </ul>
+                    </li>                                        
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-action-account-circle"></i> Usuário</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="" ng-click="goto('/Perfil')">Perfil</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/Settings')">Configurações</a>
+                                        </li>
+                                        <li>
+                                            <a href="/logout">Sair</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>                            
+                        
+                        </ul>
+                    </li>                                     
+
+                    <li class="no-padding" ng-hide="(perfil == 'Operacional' || perfil == 'Gerente')">
+                        <a href="" ng-click="goto('/Dashboard')" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan"><i class="mdi-action-settings"></i> Dados Mestre</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li ng-hide="(perfil == 'Operacional')">
+                                            <a href="" ng-click="goto('/Alerta')">Alerta</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/Aterro')">Aterro</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="" ng-click="goto('/MarcoSuperficial')">MS e INC</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/SecaoFatorSeguranca')">Seção F.S</a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goto('/SecaoCorte')">Seção de Corte</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="" ng-click="goto('/Piezometro')">Piezômetro</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
-            </aside> -->
-            <!-- LEFT RIGHT SIDEBAR NAV-->
+                <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></a>
+            </aside>
 
-        </div>
-        <!-- END WRAPPER -->
-<!--             <div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
-                        <a class="btn-floating btn-large">
-                          <i class="mdi-action-stars"></i>
-                        </a>
-                        <ul>
-                          <li><a href="css-helpers.html" class="btn-floating red"><i class="large mdi-communication-live-help"></i></a></li>
-                          <li><a href="app-widget.html" class="btn-floating yellow darken-1"><i class="large mdi-device-now-widgets"></i></a></li>
-                          <li><a href="app-calendar.html" class="btn-floating green"><i class="large mdi-editor-insert-invitation"></i></a></li>
-                          <li><a href="app-email.html" class="btn-floating blue"><i class="large mdi-communication-email"></i></a></li>
-                        </ul>
+                <!-- //////////////////////////////////////////////////////////////////////////// -->
+                <!-- START CONTENT -->
+                <section id="content">
+                    <!--breadcrumbs start-->
+                    <div id="breadcrumbs-wrapper">
+                        <!-- Search for small screen -->
+                        <!--             <div class="header-search-wrapper grey hide-on-large-only">
+                                        <i class="mdi-action-search active"></i>
+                                        <input type="text" name="Search" class="header-search-input z-depth-2" placeholder="Pesquisar">
+                                    </div> -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <h5 class="breadcrumbs-title" style="color: #767676 !important;"></h5>
+                                    <ol class="breadcrumbs">
+                                        <a href="/#/" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-alarm-add estre-darkgreen-icon"> </i>--> Home</a>
+                                        <a ng-show="pai != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-stars"></i>  -->    {{pai}}</a>
+                                        <a ng-show="pathname != undefined" class="breadcrumb estre-darkgreen-icon"><!-- <i class="mdi-action-language"></i>  -->{{pathname}}</a>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <!--breadcrumbs end-->
+                    <!--start container-->
+                    <div class="container">
 
 
-            </div> -->
-    <!-- END MAIN -->
-
- <div  id="modal-bottom-sheet">
+                        <ng-view></ng-view>
 
 
 
 
+                    </div>
+                    <!--end container-->
+                </section>
+                <!-- END CONTENT -->
+                <!-- //////////////////////////////////////////////////////////////////////////// -->
+                <!-- START RIGHT SIDEBAR NAV-->
+                <!--             <aside id="right-sidebar-nav">
+                                <ul id="chat-out" class="side-nav rightside-navigation">
+                                    <li class="li-hover">
+                                    <a href="#" data-activates="chat-out" class="chat-close-collapse right"><i class="mdi-navigation-close"></i></a>
+                                    <div id="right-search" class="row">
+                                        <form class="col s12">
+                                            <div class="input-field">
+                                                <i class="mdi-action-search prefix"></i>
+                                                <input id="icon_prefix" type="text" class="validate">
+                                                <label for="icon_prefix">Search</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </li>
+                                    <li class="li-hover">
+                                        <ul class="chat-collapsible" data-collapsible="expandable">
+                                        <li>
+                                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Recent Activity</div>
+                                            <div class="collapsible-body recent-activity">
+                                                <div class="recent-activity-list chat-out-list row">
+                                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
+                                                    </div>
+                                                    <div class="col s9 recent-activity-list-text">
+                                                        <a href="#">just now</a>
+                                                        <p>Jim Doe Purchased new equipments for zonal office.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="recent-activity-list chat-out-list row">
+                                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-device-airplanemode-on"></i>
+                                                    </div>
+                                                    <div class="col s9 recent-activity-list-text">
+                                                        <a href="#">Yesterday</a>
+                                                        <p>Your Next flight for USA will be on 15th August 2015.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="recent-activity-list chat-out-list row">
+                                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
+                                                    </div>
+                                                    <div class="col s9 recent-activity-list-text">
+                                                        <a href="#">5 Days Ago</a>
+                                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="recent-activity-list chat-out-list row">
+                                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-store"></i>
+                                                    </div>
+                                                    <div class="col s9 recent-activity-list-text">
+                                                        <a href="#">Last Week</a>
+                                                        <p>Jessy Jay open a new store at S.G Road.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="recent-activity-list chat-out-list row">
+                                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
+                                                    </div>
+                                                    <div class="col s9 recent-activity-list-text">
+                                                        <a href="#">5 Days Ago</a>
+                                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="collapsible-header light-blue white-text active"><i class="mdi-editor-attach-money"></i>Sales Repoart</div>
+                                            <div class="collapsible-body sales-repoart">
+                                                <div class="sales-repoart-list  chat-out-list row">
+                                                    <div class="col s8">Target Salse</div>
+                                                    <div class="col s4"><span id="sales-line-1"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="sales-repoart-list chat-out-list row">
+                                                    <div class="col s8">Payment Due</div>
+                                                    <div class="col s4"><span id="sales-bar-1"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="sales-repoart-list chat-out-list row">
+                                                    <div class="col s8">Total Delivery</div>
+                                                    <div class="col s4"><span id="sales-line-2"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="sales-repoart-list chat-out-list row">
+                                                    <div class="col s8">Total Progress</div>
+                                                    <div class="col s4"><span id="sales-bar-2"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="collapsible-header red white-text"><i class="mdi-action-stars"></i>Favorite Associates</div>
+                                            <div class="collapsible-body favorite-associates">
+                                                <div class="favorite-associate-list chat-out-list row">
+                                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <p>Eileen Sideways</p>
+                                                        <p class="place">Los Angeles, CA</p>
+                                                    </div>
+                                                </div>
+                                                <div class="favorite-associate-list chat-out-list row">
+                                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <p>Zaham Sindil</p>
+                                                        <p class="place">San Francisco, CA</p>
+                                                    </div>
+                                                </div>
+                                                <div class="favorite-associate-list chat-out-list row">
+                                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <p>Renov Leongal</p>
+                                                        <p class="place">Cebu City, Philippines</p>
+                                                    </div>
+                                                </div>
+                                                <div class="favorite-associate-list chat-out-list row">
+                                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <p>Weno Carasbong</p>
+                                                        <p>Tokyo, Japan</p>
+                                                    </div>
+                                                </div>
+                                                <div class="favorite-associate-list chat-out-list row">
+                                                    <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <p>Nusja Nawancali</p>
+                                                        <p class="place">Bangkok, Thailand</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </aside> -->
+                <!-- LEFT RIGHT SIDEBAR NAV-->
+
+            </div>
+            <!-- END WRAPPER -->
+            <!--             <div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
+                                    <a class="btn-floating btn-large">
+                                      <i class="mdi-action-stars"></i>
+                                    </a>
+                                    <ul>
+                                      <li><a href="css-helpers.html" class="btn-floating red"><i class="large mdi-communication-live-help"></i></a></li>
+                                      <li><a href="app-widget.html" class="btn-floating yellow darken-1"><i class="large mdi-device-now-widgets"></i></a></li>
+                                      <li><a href="app-calendar.html" class="btn-floating green"><i class="large mdi-editor-insert-invitation"></i></a></li>
+                                      <li><a href="app-email.html" class="btn-floating blue"><i class="large mdi-communication-email"></i></a></li>
+                                    </ul>
+                                </div>
+
+
+                        </div> -->
+            <!-- END MAIN -->
+
+            <div id="modal-bottom-sheet">
                 <div id="modal5" class="modal bottom-sheet">
-                  <div class="modal-content">
-                    <h4>Upload de Mapa</h4>
+                    <div class="modal-content">
+                        <h4>Upload de Mapa</h4>
 
-                    	<upload-button
-          class="dropify"
-          url="/file/upload"
-           on-complete="onComplete(response)"
-          param="Mapas"
-          data="uploadData">
+                        <upload-button class="dropify"
+                                       url="/file/upload"
+                                       on-complete="onComplete(response)"
+                                       param="Mapas"
+                                       data="uploadData">
 
-      </upload-button>
-                  </div>
+                        </upload-button>
+                    </div>
                 </div>
-
-
-              </div>
             </div>
-          </div>
-</div>
+        </div>
+    </div>
+    </div>
     <!-- //////////////////////////////////////////////////////////////////////////// -->
-
     <!-- START FOOTER -->
     <footer class="page-footer">
 
@@ -436,12 +565,6 @@
     </footer>
     <!-- END FOOTER -->
 
-
-
-
-
-
-
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/angular.min.js"></script>
     <script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
@@ -450,11 +573,12 @@
     <script src="/js/dependencies/angular-br-filters/release/angular-br-filters.js"></script>
     <script src="/js/dependencies/angular-material.min.js"></script>
     <script src="/js/jquery-1.11.2.min.js"></script>
-	<script type="text/javascript" src="/js/dependencies/materialize.js"></script>
+    <script type="text/javascript" src="/js/dependencies/materialize.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/isteven-multi-select.js"></script>
     <script src="/js/dependencies/perfect-scrollbar.min.js"></script>
     <script type="text/javascript" src="/js/sparkline/jquery.sparkline.min.js"></script>
     <script type="text/javascript" src="/js/sparkline/sparkline-script.js"></script>
-        <script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="/js/plugins.js"></script>
     <script src="/js/dependencies/custom-script.js"></script>
     <link rel='stylesheet' href='/js/dependencies/font-awesome/css/font-awesome.css'>
@@ -481,31 +605,166 @@
     <script src="/js/private/dashboard/App.js"></script>
     <script src="/js/private/dashboard/GridViewDirective.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
-        <script src="/js/private/dashboard/MapaController.js"></script>
-    <script src="/js/private/dashboard/SecaoCorteController.js"></script>
+    <script src="/js/private/dashboard/MapaController.js"></script>
+    <!-- <script src="/js/private/dashboard/SecaoCorteController.js"></script> -->
     <script src="/js/private/dashboard/TemplateUpdateController.js"></script>
+
     <script src="/js/private/dashboard/ProfileController.js"></script>
     <script src="/js/private/dashboard/Route.js"></script>
-<script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
-<script src="/js/private/dashboard/OperacaoSecaoCorteController.js"></script>
-<script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
-<script src="/js/private/dashboard/TemplateUpdateController.js"></script>
-<script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
+    <script src="/js/private/dashboard/PluviometriaVazaoController.js"></script>
+    <script src="/js/private/dashboard/OperacaoSecaoCorteController.js"></script>
+    <script src="/js/private/dashboard/PiezometroController.js"></script>
+    <script src="/js/private/dashboard/MedicaoMarcoSuperficialController.js"></script>
+    <script src="/js/private/dashboard/MedicaoPiezometroController.js"></script>
+    <script src="/js/private/dashboard/TemplateUpdateController.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/dropify.min.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/jquery.maskedinput.min.js"></script>
 
-<script src="http://cdn.jsdelivr.net/alasql/latest/alasql.min.js"></script>
-<script src="/js/private/dashboard/xlsx.core.min.js"></script>
-<script>
-  $(document).ready(function() {
-                 $('.dropify').dropify({
-                messages: {
-                    default: 'Arraste seu Arquivo ZIP contendo os arquivos Shapefile de seu mapa',
 
-                }
-            });
-	    $('input.materialize-textarea').characterCounter();
-  });
+    <script type="text/javascript" src="/js/private/dashboard/material.min.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/bootstrap-material-datetimepicker.js"></script>
 
-</script>
+    <script src="http://cdn.jsdelivr.net/alasql/latest/alasql.min.js"></script>
+    <script src="/js/private/dashboard/xlsx.core.min.js"></script>
+    <script>
+	  $(document).ready(function() {
+			$('.dropify').dropify({
+				messages: {
+					default: 'Arraste seu Arquivo ZIP contendo os arquivos Shapefile de seu mapa',
+				}
+			});
+			$('input.materialize-textarea').characterCounter();
+	  });
+    </script>
 
-  </body>
+    <script type="text/javascript">
+
+		function padLeftZero(value){
+			return parseInt(value)<10?"0"+value.toString():value.toString();
+		}
+
+        function fecharModal(modal){
+          $('#'+modal+'').closeModal();
+        };
+
+        function getDate(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+                var ret = value.split('/');
+                data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
+            }else{
+               data = new Date(value);
+            }
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+            var retorno = dia + "/" + mes + "/" + ano;
+            return retorno;
+        }
+
+		function getDateQuery(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+                var ret = value.split('/');
+                data  = new Date(ret[2], parseInt(ret[1]-1), ret[0]);
+            }else{
+               data = new Date(value);
+            }
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+            var retorno = ano + "-" + mes + "-" + dia;
+            return retorno;
+        }
+
+		function getDateTimeString(value){
+            var data = getDateTime(value);
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+			var hora = data.getHours();
+			var minuto = data.getMinutes()
+
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+			var retorno = "";
+			if(parseInt(hora)==0 && parseInt(minuto)==0){
+				retorno = dia + "/" + mes + "/" + ano;
+			}else{
+				retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
+			}
+
+            return retorno;
+        }
+
+		function getDateTimeStringQuery(value){
+            var data = getDateTime(value);
+            var ano = data.getFullYear();
+            var mes = data.getMonth() + 1;
+            var dia = data.getDate();
+			var hora = data.getHours();
+			var minuto = data.getMinutes()
+
+            if(isNaN(dia) || isNaN(mes) || isNaN(ano)){
+                return value;
+            }
+
+			var retorno = "";
+			if(parseInt(hora)==0 && parseInt(minuto)==0){
+				retorno = ano + "-" + mes + "-" + dia;
+			}else{
+				retorno = ano + "-" + padLeftZero(mes) + "-" + padLeftZero(dia) + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
+			}
+
+            return retorno;
+        }
+
+		function getDateTime(value){
+            var data=null;
+
+            if(value.toString().indexOf("/")>=0){
+				var ret = value.split("/");
+				var mes = parseInt(ret[1]) - 1;
+				var dia = ret[0];
+				ret = ret[2].split(' ');
+				var ano = ret[0];
+				var hora = 0;
+				var minuto = 0;
+				var possuiHoras =  ret.length>1;
+
+				if(possuiHoras){
+					ret = ret[1].split(':')
+					hora = ret[0];
+					minuto = ret[1];
+				}
+				data = new Date(ano, mes, dia, hora, minuto);
+            }else{
+               data = new Date(value);
+            }
+
+			return data;
+        }
+
+		$(function(){
+			$('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
+			$('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+		});
+    </script>
+
+</body>
 </html>

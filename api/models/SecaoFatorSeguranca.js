@@ -7,15 +7,21 @@
 
 module.exports = {
 
-  attributes: {
-  	nome: {
-      type: 'string',
-      required: true
-    },
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
+    attributes: {
+        nome: {
+            type: 'string',
+            required: true
+        },
+        habilitado: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };

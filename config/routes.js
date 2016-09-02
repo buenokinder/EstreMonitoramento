@@ -34,10 +34,14 @@ module.exports.routes = {
 
     'GET /signup': {view: 'signup'},
     'POST /signup': 'UsuarioController.signup',
+    'GET /setup': 'UsuarioController.setup',
     'PUT /login': 'UsuarioController.login',
     'GET /logout': 'UsuarioController.logout',
     'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
+    'GET /aterro': 'AterroController.search',
+    'GET /marcosuperficial': 'MarcoSuperficialController.search',
+     'GET /marcosuperficial/count': 'MarcoSuperficialController.searchcount',
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
     'GET /visualizacao': 'PageController.visualizacao'

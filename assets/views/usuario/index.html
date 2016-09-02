@@ -5,10 +5,10 @@
 
   <div class="row">
     <div class="col s12 m12 l6">
-      <grid-view fields="[{'name': 'name', 'value': 'Nome', 'filter': 'false' },{'name': 'perfil', 'value': 'Perfil'},{'name': 'habilitado' , 'value': 'Habilitado'} ]" listaname="usuario" autopage="true"  label="Lista de Usuário"  adicionar="" add="false" view="usuario" pagesize="5" update="true" strdelete="true"></grid-view>
+        <grid-view fields="[{'name': 'name', 'value': 'Nome', 'filter': 'true' },{'name': 'perfil', 'value': 'Perfil', 'sub':'name'},{'name': 'habilitado' , 'value': 'Habilitado'} ]" listaname="usuario" autopage="true" label="Lista de Usuário" adicionar="" add="false" view="usuario" pagesize="5" update="true" strdelete="true" updateperfil="[{ 'perfil': 'Administrador'}]" adicionarperfil="[{ 'perfil': 'Administrador'}]" deleteperfil="[{ 'perfil': 'Administrador'}]" viewperfil="[{ 'perfil': 'Administrador'}]"></grid-view>
     </div>
     <div class="col s12 m12 l6">
-      <form-view fields="[{'name': 'name', 'value': 'Nome'}, {'name': 'perfil' , 'value': 'Perfis', 'type': 'combobox', 'text': 'perfil', 'api': 'Perfil', 'model': 'perfis',  'fieldid': 'id', 'fieldname': 'name' }, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }]" label="Formulário de Usuário" listaname="usuario"  strupdate="false"></form-view>
+        <form-view fields="[{'name': 'name', 'value': 'Nome'}, {'name': 'email', 'value': 'E-mail', 'type':'email'},{'name': 'password', 'value': 'Password', 'type':'password', 'maxlength':'8'},{'name': 'perfil' , 'value': 'Perfis', 'type': 'combobox', 'text': 'perfil', 'api': 'Perfil', 'model': 'perfis',  'fieldid': 'id', 'fieldname': 'name', 'hasid':'false' }, {'name': 'habilitado' , 'value': 'Habilitado', 'type': 'checkbox' }]" label="Formulário de Usuário" listaname="usuario" strupdate="false" updateperfil="[{ 'perfil': 'Administrador'}]" adicionarperfil="[{ 'perfil': 'Administrador'}]" deleteperfil="[{ 'perfil': 'Administrador'}]" viewperfil="[{ 'perfil': 'Administrador'}]"></form-view>
     </div>
   </div>
 </div>

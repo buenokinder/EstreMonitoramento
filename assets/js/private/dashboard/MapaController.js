@@ -8,10 +8,14 @@ app.filter("asDate", function () {
 
 app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http, $sce){
     $scope.aterros = [];
+    $scope.data = {};
     $scope.mapas = [];
     $scope.loadAterros = function() {
-        return $http.get('/Aterro?where={"gerente": "' + window.SAILS_LOCALS._csrf  + '"}').success(function(data) {
+        return $http.get('/Aterro').success(function(data) {
             $scope.aterros = data;
+
+   $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
+
                   $('.dropdown-button').dropdown({
       inDuration: 300,
       outDuration: 225,
@@ -24,6 +28,10 @@ app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http
   );
         });
     };
+
+   
+     
+
 
     $scope.buscarMapas = function(id) {   
     	$scope.uploadData.id = id;
@@ -48,8 +56,6 @@ $scope.selecionarAterro = function(aterro) {
 
 
 
-
-
           $scope.uploadData = aterro;
         return $http.get('/Mapa?where={"aterro": "' + aterro.id  + '"}&sort=dataCriacao DESC&limit=1').success(function(data) {
             if(data.length > 0)
@@ -64,7 +70,10 @@ $scope.selecionarAterro = function(aterro) {
         $('.card-reveal').attr('style','transform: translateY(-0%)');
         $scope.mapa = mapa;
     }
-
+    $scope.mapaLista = function(){
+        $('.card-reveal').attr('style','display: block; transform: translateY(-100%)');
+       
+    }
     $scope.onComplete = function(response){
         Materialize.toast('Upload de Mapa efetuado com sucesso!', 4000)
         $('#modal5').closeModal();
@@ -79,17 +88,35 @@ $scope.selecionarAterro = function(aterro) {
         });
     }
 
- 
+    
+function isValidDate(s) {
+  var bits = s.split('/');
+  var d = new Date(bits[2], bits[1] - 1, bits[0]);
+  return d && (d.getMonth() + 1) == bits[1];
+} 
+    $scope.medicaoTipo = { name: 'horizontal'} ;
 
-
+    
     $scope.aterro = {};
     $scope.uploadData = {
         id:  'teasddda'
     };
+    $scope.query = { data: ''};
     $scope.mapa = [];
+
+    $scope.carregarMapa = function(){
+
+
+    }
+
     $scope.getSrc = function() {
+
+        if($("#datainicial").val() == "") return;
+        var bits = $("#datainicial").val().split('/');
+        var dataFinal  =  bits[2]+ '-' +bits[1]+ '-'+ bits[0];
         if($scope.mapa != null){
-        var url = "http://localhost:1337/mapas?id=" + $scope.mapa.mapaFile;
+        var url = "/mapas?id=" + $scope.mapa.mapaFile + "&aterro=" + $scope.aterro.id + "&data="+  dataFinal +"&tipo=" + $scope.medicaoTipo.name;
+        console.log(url);
         return $sce.trustAsResourceUrl(url);
         }
         return null;

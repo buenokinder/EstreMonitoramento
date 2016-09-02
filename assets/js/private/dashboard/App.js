@@ -1,6 +1,6 @@
 var app = angular.module('DashboardModule', ['xeditable','ui.bootstrap',
     	'ngRoute','ngMaterial', 'lr.upload',
-    	'ngResource','leaflet-directive', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
+    	'ngResource','leaflet-directive','isteven-multi-select', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
     	]);
 
  app.directive('onReadFile', function ($parse) {
@@ -24,3 +24,13 @@ var app = angular.module('DashboardModule', ['xeditable','ui.bootstrap',
 		}
 	};
 });
+
+app.config(['$httpProvider', function($httpProvider) {
+  if (!$httpProvider.defaults.headers.get) {
+    $httpProvider.defaults.headers.get = {};    
+  }  
+    
+  $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+  $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+  $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+}]);

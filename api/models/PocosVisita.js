@@ -8,21 +8,24 @@
 
 module.exports = {
 
-  attributes: {
-    data: {
-      type: 'date',
-      required: true
-    },
-  	saliencia: {
-      type: 'string',
-      required: true
-    },
-    nivelChorume: {
-      type: 'string',
-      required: true
-    },
-    aterro: {
-      model:'Aterro'
+    attributes: {
+        data: {
+            type: 'date',
+            required: true
+        },
+        saliencia: {
+            type: 'string',
+            required: true
+        },
+        nivelChorume: {
+            type: 'string',
+            required: true
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };

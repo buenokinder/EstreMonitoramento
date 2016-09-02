@@ -9,12 +9,16 @@
 module.exports = {
 
   attributes: {
-    analise: {
+    saturacao: {
       type: 'json',
       required: true
     },
     mes: {
-      type: 'json'
+        type: 'string',
+        enum: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    },
+    ano: {
+      type: 'string'
     },
     valorRu: {
       type: 'float'
@@ -27,6 +31,9 @@ module.exports = {
     },
     aterro: {
       model:'Aterro'
+    },
+    usuario: {
+        model: 'Usuario'
     }
   }
 };

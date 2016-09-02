@@ -1,3 +1,4 @@
+
 angular.module('VisualizacaoApp', ['ngSanitize' ]).controller('ViewTemplateController', ['$scope', '$http', '$element','$compile', function($scope, $http, $element, $compile) {
 		
 function getParameterByName(name, url) {
@@ -52,9 +53,88 @@ function getParameterByName(name, url) {
                 tipo: '@',
                 filter: '='
             },
+            
             templateUrl: 'views/reports/grafico.html',
             link: function ($scope, $element, attrs) {
- $('#container').highcharts({
+                $scope.data = ([]);
+                if($scope.tipo == 'marcovertical'){
+		            $http.get("/MarcoSuperficial/monitoramentos/").then(function (results) {                                
+				        $scope.data  = results.data;
+                        console.log($scope.data[2]);
+                        //respostas.forEach(myFunction);
+                    });
+                };
+
+                $('#container').highcharts({
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Fator de Segurança e Pluviometria'
+        },
+        xAxis: [{
+            categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            crosshair: true
+        }],
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: 'Fator de Segurança',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: 'Pliviometria',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} mm',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+          
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: [{
+            name: 'Pluviometria',
+            type: 'column',
+        
+            yAxis: 1,
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            tooltip: {
+                valueSuffix: ' mm'
+            }
+
+        }, {
+            name: 'Fator Segurança',
+
+                color: 'red',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            tooltip: {
+                valueSuffix: '°C'
+            }
+        }]
+    });
+
+        $('#container').highcharts({
         title: {
             text: 'MSD 01 - Vertical',
             x: -20 //center

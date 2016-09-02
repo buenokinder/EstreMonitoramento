@@ -1,0 +1,136 @@
+
+ <style>
+    .table-responsive table, .table-responsive th, .table-responsive td {
+        font-size: 10px;
+    }
+      #pesquisa table, #pesquisa th, #pesquisa td {
+        border: solid 1px;
+  }  
+
+  .fixed table tr {
+      border-bottom: 1px solid;      
+  }  
+</style>
+
+<div class="section">
+    <div class="row section">
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="card-panel ng-scope">
+                    <h4 class="header2">Monitoramentos</h4>
+                    <div class="row">
+
+                        <div class="form-group col m3" id="sign-up-form">
+                            <label class='active' for='piezometro'>Piezômetro</label>
+                            <div isteven-multi-select input-model='monitoramentos.piezometros' item-label='icon perfil name' button-label='icon name'
+                                 tick-property='teste' output-model='monitoramentos.piezometrosSearch'>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Data Inicial</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched datetimepicker" id="dataInicial" name="monitoramentos.dataInicial" ng-model="monitoramentos.dataInicial" aria-invalid="false">
+                        </div>
+
+                        <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Data Final</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched datetimepicker" id="dataFinal" name="monitoramentos.dataFinal" ng-model="monitoramentos.dataFinal" aria-invalid="false">
+                        </div>
+
+
+                        <div class="form-group col m3" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Ordenação</label>
+                            <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required" id="ordenacao" required="" ng-model="monitoramentos.ordenacao" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Data Crescente" value="asc">Data Crescente</option>
+                                <option label="Data Decrescente" value="desc">Data Decrescente</option>
+                            </select>
+                        </div>
+
+                        <div class="right col s1" aria-hidden="false">
+                            <a ng-click="monitoramentos.pesquisar()" class="btn-floating btn-small waves-effect waves-light">
+                                <i class="mdi-action-search"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-show="monitoramentos.pesquisa!=null && monitoramentos.pesquisa.length>0">
+                        <div style="float:left" class="table-responsive col m1" id="fixed">
+                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                <thead>
+                                    <tr style="height:93px">
+                                        <th>PIEZÔMETRO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
+                                        <td>{{monitoramento.owner.nome}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="overflow-x: scroll;" class="table-responsive col m10">
+                            <table class="table table-striped table-bordered table-hover table-condensed" id="pesquisa">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="3">DATA</th>
+                                        <th rowspan="3" style="text-align:center">SALIÊNCIA </th>
+                                        <th rowspan="3">Profundidade total - ATUAL</th>
+                                        <th rowspan="3">Prof. média câmara de carga - ATUAL</th>
+                                        <th rowspan="3">Prolongamento/corte</th>
+                                        <th colspan="4">Medições de nível de chorume</th>
+                                        <th rowspan="3">ru</th>
+                                        <th rowspan="3">CRITÉRIO DE ALERTA ru</th>
+                                        <th colspan="4" style="text-align:center">PRESSÃO</th>
+                                    </tr>
+
+                                    <tr>                                        
+                                        <th colspan="2" style="text-align:center"> Com pressão (Rg.Fechado)</th>
+                                        <th colspan="2" style="text-align:center">Sem Pressão(Rg.Aberto)</th>
+                                        <th rowspan="2" style="text-align:center">Chorume(mca)</th>
+                                        <th colspan="3" style="text-align:center">Gás</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="text-align:center">Nível medido (m)</th>
+                                        <th style="text-align:center">Nível efetivo (m)</th>
+                                        <th style="text-align:center">Nível medido (m)</th>
+                                        <th style="text-align:center">Nível efetivo (m)</th>                                        
+                                        <th style="text-align:center">Pio(mca)</th>
+                                        <th style="text-align:center">Manômetro(mca)</th>
+                                        <th style="text-align:center">Manômetro(kPa)</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
+                                        <td style="text-align:center">{{monitoramento.dataMedicao | date:'dd/MM/yyyy HH:mm'}}</td>
+                                        <td style="text-align:center">{{monitoramento.saliencia}}</td>
+                                        <td style="text-align:center">{{monitoramento.profundidadeTotalAtual}}</td>
+                                        <td style="text-align:center">{{monitoramento.profundidadeMediaCamaradeCarga}}</td>
+                                        <td style="text-align:center">{{monitoramento.prolongamentoCorte}}</td>
+                                        <td style="text-align:center">{{monitoramento.medicoesNivelChorumeComPressaoNivelMedido}}</td>
+                                        <td style="text-align:center">{{monitoramento.medicoesNivelChorumeComPressaoNivelEfetivo}}</td>
+                                        <td style="text-align:center">{{monitoramento.medicoesNivelChorumeSemPressaoNivelMedido}}</td>
+                                        <td style="text-align:center">{{monitoramento.medicoesNivelChorumeSemPressaoNivelEfetivo}}</td>
+                                        <td class='{{getCssClass(monitoramento.ru)}}' style="text-align:center">{{monitoramento.ru}}</td>
+                                        <td style="text-align:center">{{monitoramento.criterioAlertaRu}}</td>
+                                        <td style="text-align:center">{{monitoramento.pressaoMcaChorume}}</td>                                      
+                                        <td style="text-align:center">{{monitoramento.pressaoMcaGasPio}}</td>
+                                        <td style="text-align:center">{{monitoramento.pressaoGasMca}}</td>
+                                        <td style="text-align:center">{{monitoramento.pressaoGasKpa}}</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

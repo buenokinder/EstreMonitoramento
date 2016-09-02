@@ -8,56 +8,73 @@
 
 module.exports = {
 
-  attributes: {
-  	nome: {
-      type: 'string',
-      required: true
-    },
-  	dataCriacao: {
-      type: 'date',
-      required: true
-    },
-  	usuarioCriador: {
-      model: 'Usuario',
-      required: false
-    },
-  	salienciaInicial: {
-      type: 'string',
-      required: true
-    },
-  	celulaPiezometrica: {
-      type: 'string',
-      required: true
-    },
-   	profundidadeTotalInicial: {
-      type: 'string',
-      required: true
-    },  
-   	profundidadeTotalCamaraCarga: {
-      type: 'string',
-      required: true
-    },  
+    attributes: {
+        nome: {
+            type: 'string',
+            required: true
+        },
+        usuarioCriador: {
+            model: 'Usuario',
+            required: false
+        },
+        salienciaInicial: {
+            type: 'string',
+            required: true
+        },
+        celulaPiezometrica: {
+            type: 'string',
+            required: true
+        },
+        profundidadeTotalInicial: {
+            type: 'string',
+            required: true
+        },
+        profundidadeMediaCamaraCargaInicial: {
+            type: 'string',
+            required: true
+        },
 
-    habilitado: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false
-    },
-    alertas: {
-      collection: 'alertasPiezometro',
-      via: 'owner'
-    },
-    owner: {
-      model: 'Aterro'
-    },
-    aterro: {
-      model: 'Aterro',
-      required: true
+        nivelAtencao:  {
+            type: 'float'
+        },
+        nivelAceitavel: {
+            type: 'float'
+        },
+        nivelRegular:{
+            type: 'float'
+        },
+        nivelIntervencao: {
+            type: 'float'
+        },
+        nivelParalisacao: {
+            type: 'float'
+        },
+
+        habilitado: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false
+        },
+        alertas: {
+            collection: 'alertasPiezometro',
+            via: 'owner'
+        },
+        medicoes: {
+            collection: 'medicaoPiezometro',
+            via: 'owner'
+        },
+        owner: {
+            model: 'Aterro'
+        },
+        aterro: {
+            model: 'Aterro'
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };
 /*    prolongamentoCortePiezometro: {
       type: 'string',
       required: true
     },*/
- 

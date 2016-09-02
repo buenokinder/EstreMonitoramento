@@ -23,7 +23,10 @@ module.exports = {
     criterios: {
       type: 'string',
       required: true
-    } 
+    },
+    usuario: {
+        model: 'Usuario'
+    }
   }
 };
 
