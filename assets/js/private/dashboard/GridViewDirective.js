@@ -308,6 +308,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 $scope.inputClass = "disabled";
                                 swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                 Materialize.toast('Registro alterado com sucesso!', 4000);
+                                sennitCommunicationService.prepForBroadcastDataList(sailsResponse, "save");
+                                sennitCommunicationService.prepForBroadcast(sailsResponse, "save");
                                 return true;
                             })
                             .catch(function onError(sailsResponse) {
@@ -574,6 +576,40 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             else
                 HtmlFormBody += "";
             for (var key in $scope.fields) {
+
+                var canEdit = true;
+                var canAdd = true;
+                var canView = true;
+
+                if ($scope.fields[key].updateperfil) {
+                    var perfis = angular.fromJson($scope.fields[key].updateperfil);
+                    var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                    canEdit = (perfil && perfil.length > 0);
+                }
+
+                if ($scope.fields[key].adicionarperfil) {
+                    perfis = angular.fromJson($scope.fields[key].adicionarperfil);
+                    perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                    canAdd = (perfil && perfil.length > 0);
+                }
+
+                if ($scope.fields[key].viewperfil) {
+                    perfis = angular.fromJson($scope.fields[key].viewperfil);
+                    perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                    canView = (perfil && perfil.length > 0);
+                }
+
+                var readonly = "";
+                if (canEdit == false && canAdd == false && canView==true) {
+                    readonly = "readonly";
+                }
+
+                if (canEdit == false && canAdd == false && canView == false) {
+                    continue;
+                }
+
+                //if (!canEdit) continue;
+
                 switch ($scope.fields[key].type) {
 
                     case 'table-add-remove':
@@ -638,14 +674,15 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         HtmlFormBody += "</div></div>";
                         break;
                     case 'checkbox':
-                        HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='" + $scope.fields[key].name + "' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
-
+                        var disabled = (readonly == "readonly" ? "disabled" : "");
+                        HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><input " + disabled + " type='checkbox'  ng-model='data." + $scope.fields[key].name + "'  id='" + $scope.fields[key].name + "' /><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label></div></div></div>";
                         break;
+
                     case 'textAngular':
                         HtmlFormBody += "<div class='row'><div class='collection-item dismissable'><div class='input-field col s12'><label for='" + $scope.fields[key].name + "' >" + $scope.fields[key].value + "</label><br><br><div class='row'><div class='col s12'><div text-angular ng-change='change(\"" + $scope.fields[key].name + "\"," + $scope.fields[key].name + ")' ng-model='" + $scope.fields[key].name + "'></div></div></div></div></div></div>";
                         break;
                     case 'textarea':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><textarea id='"+ $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "' class='materialize-textarea'></textarea><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><textarea " + readonly + " id='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "' class='materialize-textarea'></textarea><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                         break;
                     case 'usuario':
                         break;
@@ -653,12 +690,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     case 'date':
                     case 'datepicker':
                         var value = getDate($scope.fields[key].value);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='date datepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input " + readonly + "  class='date datepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
                         break;
 
                     case 'datetimepicker':
                         var value = getDate($scope.fields[key].value);
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input class='datetimepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "   class='datetimepicker' type='text' name='" + $scope.fields[key].name + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + value + "</label></div></div>";
+                  
                         break;
 
                     case 'combobox':
@@ -666,22 +704,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                         $scope.totalRequests += 1;
                         $scope.getCombo($scope.fields[key], key, function (key) {
-                            var canSelect = true;
                             var valueToShow = "";
-                            var htmlElement = "";   
-                            var dep = $scope.fields[key].dependencia;                            
+                            var htmlElement = "";
 
-                            if(dep != undefined) {                                
-                                $scope.olharDepencencia($scope.fields[key]);
-                            }         
-
-                            if ($scope.fields[key].updateperfil) {
-                                var perfis = angular.fromJson($scope.fields[key].updateperfil);
-                                var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
-                                canSelect = (perfil && perfil.length > 0);
-                            }
-
-                            
                             if (undefined != $scope.fields[key].default) {
                                 var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
                                 var defaultValue = "";
@@ -702,11 +727,25 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 }
                             }
 
+                            var canSelect = false;
+                            var canAddSelect = false;
+
+                            if ($scope.fields[key].updateperfil) {
+                                var perfis = angular.fromJson($scope.fields[key].updateperfil);
+                                var perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                                canSelect = (perfil && perfil.length > 0);
+                            }
+
+                            if ($scope.fields[key].adicionarperfil) {
+                                perfis = angular.fromJson($scope.fields[key].adicionarperfil);
+                                perfil = $filter('filter')(perfis, { perfil: $scope.me._perfil });
+                                canAddSelect = (perfil && perfil.length > 0);
+                            }
 
                             htmlElement += "<div class='row'><div class='input-field col s12'>";
                             htmlElement += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
 
-                            if (canSelect) {
+                            if (canSelect == true || canAddSelect) {
                                 htmlElement += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='data." + $scope.fields[key].name + "' ng-options='x as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + " track by x." + $scope.fields[key].fieldid + "'><option value='Todos'></option></select>";
                             } else {
                                 htmlElement += "<span>" + valueToShow + "</span>";
@@ -728,19 +767,19 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         break;
 
                     case 'number':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='number' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "   type='number' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
 
                         break;
                     case 'password':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='password' maxlength='" + $scope.fields[key].maxlength + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "  type='password' maxlength='" + $scope.fields[key].maxlength + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                         break;
 
                     case 'email':
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='email' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "  type='email' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                         break;
 
                     default:
-                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input type='text' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "  type='text' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
                         break;
                 }
 
@@ -817,16 +856,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     }
                 }
             };
-
-            $scope.olharDepencencia = function(field) {                     
-                var dependencia = 'data.'+field.dependencia;           
-                $scope.$watch(dependencia, function(newValue, oldValue) {                    
-                    if(newValue != undefined) {
-                        field.pai = newValue.id;
-                        $scope.getCombo(field);
-                    }
-                });
-            }
 
             $scope.userInProfiles = function (profiles) {
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
@@ -997,13 +1026,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
                 else {
                     $scope.comboFields.push(field);
-                    var url;                    
-                    if(field.pai && field.dependencia) {
-                        url = "/" + field.api + "/search?"+field.dependencia+"="+field.pai;
-                    }
-                    else {
-                        url= "/" + field.api + "/search/";
-                    }
+                    var url = "/" + field.api + "/search/";
 
                     $http.get(url).then(function (results) {
                         $scope[field.model] = results.data;
@@ -1374,16 +1397,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             width: '@width',
             scrolling: '@scrolling'
         },
-        template: '  <a  href="" ng-click="open()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a><br><iframe class="frame" height="{{height}}" width="{{width}}" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="{{scrolling}}" src="{{src()}}"></iframe>',
-        link: linkFn,
-        controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
-                $scope.open = function(){
-
-                    console.log($scope.src());
-                    window.open('http://localhost:1337' + $scope.src(), '_blank');
-                  
-                }
-        }
+        template: '<iframe class="frame" height="{{height}}" width="{{width}}" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="{{scrolling}}" src="{{src()}}"></iframe>',
+        link: linkFn
     };
 }).directive('customOnChange', function () {
     return {
@@ -1423,9 +1438,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 canEditAll = (perfil && perfil.length > 0);
             }
 
-
-
-
             for (var key in $scope.fields) {
 
                 var canEdit = true;
@@ -1440,8 +1452,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                 HtmlFormBody += '<p>';
                 HtmlFormBody += '<b>' + $scope.fields[key].value + ': </b>';
-
- 
 
                 switch ($scope.fields[key].type) {
                     case 'date':
@@ -1595,6 +1605,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             }
 
             $scope.$on('handleBroadcast', function () {
+                if (sennitCommunicationService.type == 'save') return;
+
                 $scope.data = sennitCommunicationService.data;
                 $scope.inputClass = "active";
             });
@@ -1642,10 +1654,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                     url: '/' + $scope.listaname + '/' + $scope.data.id,
                                     data: params
                                 }).then(function onSuccess(sailsResponse) {
-                                    $scope.inputClass = null;
                                     $scope.inputClass = "disabled";
                                     swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
                                     Materialize.toast('Registro alterado com sucesso!', 4000);
+                                    sennitCommunicationService.prepForBroadcast(sailsResponse, "save");
                                 })
                                 .catch(function onError(sailsResponse) {
 

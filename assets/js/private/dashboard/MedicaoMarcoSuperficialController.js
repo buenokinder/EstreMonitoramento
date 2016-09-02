@@ -182,6 +182,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 
                 $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
             }
+
+            //ENVIAR EMAIL.
+            if ($scope.mustSendEmail()) {
+                $scope.sendEmail();
+            }
+
+
             $scope.content = $fileContent;
         };
 
@@ -231,6 +238,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                           $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
                           swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                           Materialize.toast('Registro inserido com sucesso!', 4000);
+
+                          //ENVIAR EMAIL.
+                          if ($scope.mustSendEmail()) {
+                              $scope.sendEmail();
+                          }
                       })
                       .catch(function onError(sailsResponse) {
 
@@ -286,7 +298,57 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         );   
     };
 
-    $scope.$on('handleBroadcast', function(e, type) {
+    $scope.mustSendEmail = function () {
+        console.log("mustsendemail", $scope.me._perfil == "Gerente");
+
+        return $scope.me._perfil == "Gerente";
+    };
+
+    $scope.getAterro = function (id, callback) {
+        $http.get('/Aterro/' + id).success(function (data) {
+            callback(data);
+        });
+    };
+
+    getEmailAdministrador = function (usuarios) {
+        var emails = [];
+
+        for (var i = 0; i < usuarios.length; i++) {
+            var usuario = usuarios[i];
+            if (usuario.perfil == "Administrador") {
+                emails.push(usuario.email);
+            }
+        }
+        return emails;
+    }
+
+    $scope.sendEmail = function () {
+        console.log("Enviar Email");
+
+        $scope.getAterro($scope.me._aterro, function (aterro) {
+            var emails = getEmailAdministrador(aterro.usuarios);
+
+            if (emails.length > 0) {
+                console.log("enviando email para", emails);
+            }
+
+            //sails.hooks.email.send(
+            //"alertaalteracaomarcosuperficial",
+            //{
+            //    data: getDateTimeString(new Date()),
+            //    link: "http://localhost:1337",
+            //},
+            //{
+            //    to: emails,
+            //    subject: "(Geotecnia) Dados de Pluviometria"
+            //},
+            //function (err) {
+            //    console.log(err || "Email enviado!");
+            //});
+        });
+    },
+
+    $scope.$on('handleBroadcast', function (e, type) {
       $scope.data = sennitCommunicationService.data;
 
       if(sennitCommunicationService.type=='select'){
@@ -294,8 +356,16 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         $scope.inputClass = "active";
         $scope.verResumos =false;
         $scope.verMedicoes = true;
-      }else{
-        
+        return;
+      }
+
+      if (sennitCommunicationService.type == 'save') {
+          //ENVIAR EMAIL.
+          if ($scope.mustSendEmail()) {
+              $scope.sendEmail();
+          }
+      }
+      else {
         $scope.verMedicoes = false;
         $scope.monitoramentos.resumo = ([]);
         var data = $scope.data.data;

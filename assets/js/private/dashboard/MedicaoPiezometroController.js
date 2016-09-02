@@ -186,4 +186,48 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
         $('#modalMedicaoUpload').openModal();
     };
 
+    $scope.mustSendEmail = function () {
+
+        return $scope.me._perfil == "Gerente";
+    };
+
+    $scope.getAterro = function (id, callback) {
+        $http.get('/Aterro/' + id).success(function (data) {
+            callback(data);
+        });
+    };
+
+    getEmailAdministrador = function (usuarios) {
+        var emails = [];
+
+        for (var i = 0; i < usuarios.length; i++) {
+            var usuario = usuarios[i];
+            if (usuario.perfil == "Administrador") {
+                emails.push(usuario.email);
+            }
+        }
+        return emails;
+    }
+
+    $scope.sendEmail = function () {
+
+        $scope.getAterro($scope.me._aterro, function (aterro) {
+            var emails = getEmailAdministrador(aterro.usuarios);
+
+            if (emails.length > 0) {
+                console.log("enviando email para", emails);
+            }
+        });
+    };
+
+    $scope.$on('handleBroadcast', function (e, type) {
+        $scope.data = sennitCommunicationService.data;
+
+        if (sennitCommunicationService.type == 'save') {
+            if ($scope.mustSendEmail()) {
+                $scope.sendEmail();
+            }
+        }
+    });
+
 }]);

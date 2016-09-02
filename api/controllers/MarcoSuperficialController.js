@@ -15,6 +15,7 @@ module.exports = {
     _aterros: ([]),
     _totalMarcosSuperficias: 0,
     _totalMarcosSuperficiasCarregados: 0,
+
     _rearrange: function (marcoSuperficiais) {
 
         var ret = [];
@@ -326,32 +327,6 @@ module.exports = {
                 owner: medicao
             };
             this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes.push(detalhe);
-
-            //var medicoes = this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes;
-            //var encontrou = false;
-            //for (var j = 0; j < medicoes.length; j++) {
-            //    if (medicoes[j].id == detalhes[i].owner.id) {
-            //        medicoes[j].detalhes.push(detalhe);
-            //        encontrou = true;
-            //        break;
-            //    }
-            //}
-
-            //if (!encontrou) {
-            //    var medicao = {
-            //        id: detalhes[i].owner.id,
-            //        obsGestor: detalhes[i].owner.obsGestor,
-            //        data: new Date(detalhes[i].owner.data),
-            //        usuariosaterro: this._extractUsuariosAterro(detalhes[i].aterro),
-            //        notificacoes:notificacoes,
-            //        detalhes:[]
-            //    };
-
-            //    medicao.detalhes.push(detalhe);
-            //    medicoes.push(medicao);
-            //}
-
-            //this._marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes = medicoes;
         }
     },
 
@@ -631,7 +606,7 @@ module.exports = {
 
                     var executeMedicoes = new Promise(function (resolveMedicoes, rejectMedicoes) {
 
-                        MedicaoMarcoSuperficial.find().populate("notificacoes").exec(function (err, result) {
+                        MedicaoMarcoSuperficial.find().populate("notificacoes").sort("dataInstalacao asc").exec(function (err, result) {
                             if (err) {
                                 return resolve(err);
                             }
@@ -649,7 +624,7 @@ module.exports = {
                                 var loadMedicoes = function (index) {
                                     var filtroDetalhes = { owner: medicoes[index].id };
 
-                                    MedicaoMarcoSuperficialDetalhes.find(filtroDetalhes).populate("owner").populate("marcoSuperficial").populate("aterro").exec(function (err, detalhes) {
+                                    MedicaoMarcoSuperficialDetalhes.find(filtroDetalhes).populate("owner").populate("marcoSuperficial").populate("aterro").sort("data asc").exec(function (err, detalhes) {
                                         if (err) {
                                             return resolve(err);
                                         }
@@ -720,9 +695,9 @@ module.exports = {
                         marcosSuperficiais[i].data = marcosSuperficiais[i].dataInstalacao;
                         _that._marcosSuperficiais[marcosSuperficiais[i].id] = marcosSuperficiais[i];
 
-                        var sort = 'data Desc';
-                        if (undefined != req.param('order') && (req.param('order').toLowerCase().indexOf("asc") >= 0)) {
-                            sort = 'data Asc';
+                        var sort = 'data Asc';
+                        if (undefined != req.param('order') && (req.param('order').toLowerCase().indexOf("desc") >= 0)) {
+                            sort = 'data Desc';
                         }
 
                         var f = { where: filtroDetalhes, sort: sort };

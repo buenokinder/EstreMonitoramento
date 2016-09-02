@@ -109,13 +109,6 @@ function isValidDate(s) {
 
     }
 
-     $scope.open = function(){
-
-                  
-                    window.open('http://sennit.ddns.net:1337' + $scope.getSrc(), '_blank');
-                  
-                }
-
     $scope.getSrc = function() {
 
         if($("#datainicial").val() == "") return;

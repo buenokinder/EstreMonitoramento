@@ -49,8 +49,7 @@ module.exports = {
             required: true
         },
         aterro: {
-            model: 'Aterro',
-            required: true
+            model: 'Aterro'
         },
         usuario: {
             model: 'Usuario'
@@ -61,6 +60,10 @@ module.exports = {
         obsGestor:{
           type: 'longtext',
           required: false      
+        },
+        notificacoes: {
+            collection: 'medicaoPiezometroNotificacao',
+            via: 'owner'
         }
     }
 };

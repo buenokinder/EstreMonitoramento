@@ -1,4 +1,3 @@
-
 app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', function ($scope, $http, $filter) {
     $scope.operacaoSecaoCortes = [];
     $scope.usuario = window.SAILS_LOCALS;
