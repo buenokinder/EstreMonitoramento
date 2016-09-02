@@ -216,6 +216,7 @@ module.exports = {
   	},
 
 
+
 	monitoramentos: function(req, res){
 		var _that = this;
 		var itens = [];

@@ -16,6 +16,7 @@ module.exports = {
     _totalMarcosSuperficias: 0,
     _totalMarcosSuperficiasCarregados: 0,
 
+	
     _rearrange: function (marcoSuperficiais) {
 
         var ret = [];

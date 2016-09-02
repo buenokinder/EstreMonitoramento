@@ -5,7 +5,7 @@ module.exports.email = {
   secure: false,
   auth: {
       user: "michel.oliveira@sennit.com.br",
-    pass: "Meusucesso1"
+    pass: "asdasd"
   }
 },
   from: 'michel.oliveira@sennit.com.br',
