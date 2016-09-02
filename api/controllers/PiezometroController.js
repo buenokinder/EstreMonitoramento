@@ -50,6 +50,9 @@ module.exports = {
   	    return ret;
   	},
 
+	
+	
+	
   	monitoramentosnotificacao: function (req, res) {
   	    var _that = this;
   	    var piezometrosRet = [];
@@ -216,10 +219,7 @@ module.exports = {
   	},
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2016_08_29__2016_09_02
 	monitoramentos: function(req, res){
 		var _that = this;
 		var itens = [];

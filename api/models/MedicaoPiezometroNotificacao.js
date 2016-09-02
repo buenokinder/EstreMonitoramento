@@ -1,12 +1,11 @@
 /**
- * MedicaoMarcoSuperficialNotificacao.js
+ * MedicaoPiezometroNotificacao.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
 module.exports = {
-
 
     attributes: {
         data: {
@@ -21,15 +20,14 @@ module.exports = {
             enum: ['Pendente', 'Finalizada'],
             defaultsTo: 'Pendente'
         },
-
         owner: {
-            model: 'MedicaoMarcoSuperficial'
+            model: 'MedicaoPiezometro'
         }
     },
 
     beforeCreate: function (value, callback) {
 
-        MedicaoMarcoSuperficialNotificacao.find({ owner: value.owner }, function (err, notificacao) {
+        MedicaoPiezometroNotificacao.find({ owner: value.owner }, function (err, notificacao) {
             if (!notificacao || notificacao.length == 0) {
                 callback();
             }
