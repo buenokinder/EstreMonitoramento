@@ -668,7 +668,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         $scope.getCombo($scope.fields[key], key, function (key) {
                             var canSelect = true;
                             var valueToShow = "";
-                            var htmlElement = "";
+                            var htmlElement = "";   
+                            var dep = $scope.fields[key].dependencia;                            
+
+                            if(dep != undefined) {                                
+                                $scope.olharDepencencia($scope.fields[key]);
+                            }         
 
                             if ($scope.fields[key].updateperfil) {
                                 var perfis = angular.fromJson($scope.fields[key].updateperfil);
@@ -676,6 +681,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 canSelect = (perfil && perfil.length > 0);
                             }
 
+                            
                             if (undefined != $scope.fields[key].default) {
                                 var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
                                 var defaultValue = "";
@@ -695,6 +701,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                     }
                                 }
                             }
+
 
                             htmlElement += "<div class='row'><div class='input-field col s12'>";
                             htmlElement += "<label class='active' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
@@ -810,6 +817,16 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     }
                 }
             };
+
+            $scope.olharDepencencia = function(field) {                     
+                var dependencia = 'data.'+field.dependencia;           
+                $scope.$watch(dependencia, function(newValue, oldValue) {                    
+                    if(newValue != undefined) {
+                        field.pai = newValue.id;
+                        $scope.getCombo(field);
+                    }
+                });
+            }
 
             $scope.userInProfiles = function (profiles) {
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
@@ -980,7 +997,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
                 else {
                     $scope.comboFields.push(field);
-                    var url = "/" + field.api + "/search/";
+                    var url;                    
+                    if(field.pai && field.dependencia) {
+                        url = "/" + field.api + "/search?"+field.dependencia+"="+field.pai;
+                    }
+                    else {
+                        url= "/" + field.api + "/search/";
+                    }
 
                     $http.get(url).then(function (results) {
                         $scope[field.model] = results.data;
