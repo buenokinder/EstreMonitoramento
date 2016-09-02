@@ -16,7 +16,10 @@ module.exports = {
         });
     },
 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 2016_08_29__2016_09_02
     findOne: function (req, res) {
 
         Aterro.find({ id: req.param('id') }).populate("usuarios")

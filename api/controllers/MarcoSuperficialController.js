@@ -16,7 +16,10 @@ module.exports = {
     _totalMarcosSuperficias: 0,
     _totalMarcosSuperficiasCarregados: 0,
 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 2016_08_29__2016_09_02
     _rearrange: function (marcoSuperficiais) {
 
         var ret = [];
