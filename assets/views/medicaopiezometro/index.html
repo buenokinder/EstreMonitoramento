@@ -13,15 +13,14 @@
 
 
       <div class="col s12 m12 l6">
-          <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'datetimepicker'}, {'name': 'owner' , 'value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome' },
+          <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'datetimepicker'},{'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname':'nome','defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Diretor'},{ 'perfil': 'Administrador'}]  }, {'name': 'owner' , 'dependencia':'aterro','value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome' },
           {'name': 'temperatura', 'value': 'Temperatura', 'uiMask':'ui-number-mask=1'},
           {'name': 'saliencia', 'value': 'Saliência', 'uiMask':'ui-number-mask'},
           {'name': 'prolongamentoCorte', 'value': 'Prolongamento(+)/Corte(-)'},
           {'name': 'medicoesNivelChorumeComPressaoNivelMedido', 'value': 'Medição de Nível de Chorume com Pressão (Rg. Fechado) Nível Medido (m)', 'uiMask':'ui-number-mask'},
           {'name': 'medicoesNivelChorumeSemPressaoNivelMedido', 'value': 'Medição de Nível de Chorume Sem Pressão (Rg. Aberto) Nível Medido (m)', 'uiMask':'ui-number-mask'},
           {'name': 'pressaoGasKpa', 'value': 'Pressão de Gás(kPa)', 'uiMask':'ui-number-mask'},
-          {'name': 'pressaoGasMca', 'value': 'Pressão de Gás(mca)', 'uiMask':'ui-number-mask'},
-          {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname':'nome','defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Diretor'},{ 'perfil': 'Administrador'}]  },
+          {'name': 'pressaoGasMca', 'value': 'Pressão de Gás(mca)', 'uiMask':'ui-number-mask'},          
           {'name': 'obsGestor', 'value': 'Observação Gestor' ,'type':'textarea'},
         ]" label="Formulário de Medição" listaname="MedicaoPiezometro" strupdate="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]" adicionarperfil="[{ 'perfil': 'Administrador'},{'perfil': 'Gerente'},{'perfil': 'Operacional'},{'perfil':'Diretor'}]"></form-view>
       </div>
