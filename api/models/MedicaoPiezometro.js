@@ -60,6 +60,10 @@ module.exports = {
         obsGestor:{
           type: 'longtext',
           required: false      
+        },
+        notificacoes: {
+            collection: 'medicaoPiezometroNotificacao',
+            via: 'owner'
         }
     }
 };

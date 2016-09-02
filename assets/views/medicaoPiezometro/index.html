@@ -13,7 +13,7 @@
 
 
       <div class="col s12 m12 l6">
-          <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'datetimepicker'}, {'name': 'owner' , 'value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome' },
+          <form-view fields="[ {'name': 'dataMedicao', 'value': 'Data', 'type':'datetimepicker'}, {'name': 'owner' , 'value': 'Piezômetro', 'type': 'combobox', 'text': 'owner', 'api': 'Piezometro', 'model': 'owner',  'fieldid': 'id', 'fieldname': 'nome', 'updateperfil':[{ 'perfil': 'Operacional'},{ 'perfil': 'Gerente'},{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}], 'adicionarperfil':[{ 'perfil': 'Operacional'},{ 'perfil': 'Gerente'},{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}], 'viewperfil':[{ 'perfil': 'Operacional'},{ 'perfil': 'Gerente'},{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}] },
           {'name': 'temperatura', 'value': 'Temperatura', 'uiMask':'ui-number-mask=1'},
           {'name': 'saliencia', 'value': 'Saliência', 'uiMask':'ui-number-mask'},
           {'name': 'prolongamentoCorte', 'value': 'Prolongamento(+)/Corte(-)'},
@@ -22,7 +22,7 @@
           {'name': 'pressaoGasKpa', 'value': 'Pressão de Gás(kPa)', 'uiMask':'ui-number-mask'},
           {'name': 'pressaoGasMca', 'value': 'Pressão de Gás(mca)', 'uiMask':'ui-number-mask'},
           {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname':'nome','defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Diretor'},{ 'perfil': 'Administrador'}]  },
-          {'name': 'obsGestor', 'value': 'Observação Gestor' ,'type':'textarea'},
+          {'name': 'obsGestor', 'value': 'Observação Gestor' ,'type':'textarea', 'updateperfil':[{ 'perfil': 'Gerente'}], 'adicionarperfil':[{ 'perfil': 'Gerente'}], 'viewperfil':[{ 'perfil': 'Gerente', 'perfil': 'Diretor', 'perfil': 'Administrador'}] },
         ]" label="Formulário de Medição" listaname="MedicaoPiezometro" strupdate="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]" adicionarperfil="[{ 'perfil': 'Administrador'},{'perfil': 'Gerente'},{'perfil': 'Operacional'},{'perfil':'Diretor'}]"></form-view>
       </div>
         

@@ -16,6 +16,15 @@ module.exports = {
         });
     },
 
+    findOne: function (req, res) {
+
+        Aterro.find({ id: req.param('id') }).populate("usuarios")
+        .exec(function (err, goal) {
+            if (err) return res.json(err, 400);
+            return res.json(goal[0]);
+        });
+    },
+
 
     teste: function (req, res) {
 
@@ -90,6 +99,7 @@ module.exports = {
     //         });
     //     });
     // },
+
     findAll: function (req, res) {
         Aterro.find().populate("usuarios")
         .exec(function result(err, ret) {

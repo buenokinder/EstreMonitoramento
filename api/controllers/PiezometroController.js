@@ -13,7 +13,7 @@ module.exports = {
         return new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
     },
 
-    orderByDateAsc: function (a,b) {
+    _orderByDateAsc: function (a,b) {
           if (a.dataMedicao < b.dataMedicao)
             return -1;
           if (a.dataMedicao> b.dataMedicao)
@@ -22,13 +22,200 @@ module.exports = {
           return 0;
     },
 
-  	orderByDateDesc: function (a,b) {
+  	_orderByDateDesc: function (a,b) {
           if (a.dataMedicao > b.dataMedicao)
             return -1;
           if (a.dataMedicao< b.dataMedicao)
             return 1;
           return 0;
-    },
+  	},
+
+  	_aterros: [],
+
+  	_extractUsuariosAterro: function (aterro) {
+  	    var ret = [];
+
+  	    for (var i = 0; i < this._aterros.length; i++) {
+  	        if (this._aterros[i].id == aterro.id) {
+  	            var usuarios = this._aterros[i].usuarios;
+
+  	            for (var j = 0; j < usuarios.length; j++) {
+  	                var usuario = { name: usuarios[j].name, email: usuarios[j].email, perfil: usuarios[j].perfil };
+  	                ret.push(usuario);
+  	            }
+  	            break;
+  	        }
+  	    }
+
+  	    return ret;
+  	},
+
+  	monitoramentosnotificacao: function (req, res) {
+  	    var _that = this;
+  	    var piezometrosRet = [];
+
+  	    var execute = new Promise(function (resolve, reject) {
+
+  	        Aterro.find({}).populate("usuarios").exec(function (err, aterros) {
+  	            if (err) {
+  	                return resolve(err);
+  	            }
+
+  	            _that._aterros = aterros;
+
+  	            var piezometro = Piezometro.find({}).
+                                    populate('aterro').
+                                    populate('medicoes');
+
+  	            piezometro.exec(function result(err, piezometros) {
+  	                var totalMedicoes = 0;
+  	                var totalMedicoesCarregadas = 0;
+  	                for (var i = 0; i < piezometros.length; i++) {
+  	                    totalMedicoes+=piezometros[i].medicoes.length;
+  	                }
+
+  	                for (var i = 0; i < piezometros.length; i++) {
+  	                    var piezometro = piezometros[i];
+  	                    piezometros[i].medicoes.sort(_that._orderByDateAsc);
+
+  	                    var first = true;
+
+  	                    piezometrosRet.push({
+  	                        id: piezometro.id, nome: piezometro.nome,
+  	                        aterro: {
+  	                            id: piezometro.aterro.id,
+  	                            nome: piezometro.aterro.nome,
+  	                            usuarios: _that._extractUsuariosAterro(piezometro.aterro)
+  	                        },
+  	                        medicoes: []
+  	                    });
+
+  	                    for (var j = 0; j < piezometro.medicoes.length; j++) {
+
+  	                        var medicao = piezometro.medicoes[j];
+
+  	                        medicao.owner = { id: piezometro.id, nome: piezometro.nome };
+  	                        medicao.saliencia = parseFloat(medicao.saliencia);
+  	                        medicao.celulaPiezometrica = parseFloat(piezometro.celulaPiezometrica);
+  	                        medicao.salienciaInicialEstimada = (medicao.saliencia - 1);
+  	                        medicao.profundidadeMediaCamaraCargaInicial = parseFloat(piezometro.profundidadeMediaCamaraCargaInicial);
+  	                        medicao.profundidadeTotalInicial = parseFloat(piezometro.profundidadeTotalInicial);
+  	                        medicao.profundidadeDescontandoCortes = 0;
+  	                        medicao.prolongamentoCorte = parseFloat(medicao.prolongamentoCorte);
+
+  	                        if (first == true) {
+  	                            medicao.profundidadeDescontandoCortes = medicao.prolongamentoCorte == "-" ?
+                                                                            medicao.profundidadeTotalInicial :
+                                                                            parseFloat(medicao.profundidadeTotalInicial + parseFloat(medicao.prolongamentoCorte));
+  	                        } else {
+  	                            var medicaoAnterior = piezometro.medicoes[j - 1];
+
+  	                            medicao.profundidadeDescontandoCortes =
+                                    medicao.prolongamentoCorte == "-" || medicao.prolongamentoCorte == 0 ?
+                                        medicaoAnterior.profundidadeDescontandoCortes :
+                                        parseFloat(medicaoAnterior.profundidadeDescontandoCortes + parseFloat(medicao.prolongamentoCorte));
+  	                        }
+  	                        medicao.profundidadeTotalAtual = parseFloat(medicao.profundidadeDescontandoCortes - medicao.salienciaInicialEstimada);
+  	                        medicao.profundidadeMediaCamaradeCargaDescontandoCortes = 0;
+
+  	                        if (first == true) {
+  	                            first = false;
+
+  	                            medicao.profundidadeMediaCamaradeCargaDescontandoCortes =
+                                    medicao.prolongamentoCorte == "-" ?
+                                        medicao.profundidadeMediaCamaraCargaInicial :
+                                        parseFloat(medicao.profundidadeMediaCamaraCargaInicial + medicao.prolongamentoCorte);
+  	                        } else {
+  	                            var medicaoAnterior = piezometro.medicoes[j - 1];
+
+  	                            medicao.profundidadeMediaCamaradeCargaDescontandoCortes =
+                                    medicao.prolongamentoCorte == "-" || medicao.prolongamentoCorte == 0 ?
+                                        parseFloat(medicaoAnterior.profundidadeMediaCamaradeCargaDescontandoCortes) :
+                                        parseFloat(medicaoAnterior.profundidadeMediaCamaradeCargaDescontandoCortes + medicao.prolongamentoCorte);
+  	                        }
+
+  	                        medicao.profundidadeMediaCamaradeCarga = (medicao.profundidadeMediaCamaradeCargaDescontandoCortes - medicao.salienciaInicialEstimada);
+  	                        medicao.medicoesNivelChorumeComPressaoNivelEfetivo = parseFloat(medicao.medicoesNivelChorumeComPressaoNivelMedido - medicao.saliencia);
+  	                        medicao.medicoesNivelChorumeSemPressaoNivelEfetivo = parseFloat(medicao.medicoesNivelChorumeSemPressaoNivelMedido - medicao.saliencia);
+  	                        medicao.baseAteNivelU = parseFloat(medicao.profundidadeTotalAtual - medicao.celulaPiezometrica - medicao.medicoesNivelChorumeSemPressaoNivelEfetivo);
+  	                        medicao.profundidadeEnterradaZ = medicao.profundidadeTotalAtual;
+  	                        medicao.ru = medicao.profundidadeEnterradaZ == 0 ? "-"
+                                            : (parseFloat(medicao.baseAteNivelU / medicao.profundidadeEnterradaZ).toFixed(2));
+
+
+  	                        medicao.criterioAlertaRu = "-";
+
+  	                        if (isNaN(medicao.ru)) {
+  	                            medicao.ru = "-";
+  	                        }
+
+  	                        if (medicao.ru == "-" || medicao.ru == null) {
+  	                            medicao.criterioAlertaRu = "-";
+  	                        }
+
+  	                        if (!isNaN(medicao.ru) && medicao.ru <= piezometro.nivelAceitavel) {
+  	                            medicao.criterioAlertaRu = "Aceitável";
+  	                        }
+
+  	                        if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelAceitavel && medicao.ru <= piezometro.nivelRegular) {
+  	                            medicao.criterioAlertaRu = "Regular";
+  	                        }
+
+  	                        if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelRegular && medicao.ru <= piezometro.nivelAtencao) {
+  	                            medicao.criterioAlertaRu = "Atenção";
+  	                        }
+
+  	                        if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelAtencao && medicao.ru <= piezometro.nivelIntervencao) {
+  	                            medicao.criterioAlertaRu = "Intervenção";
+  	                        }
+
+  	                        if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelIntervencao) {
+  	                            medicao.criterioAlertaRu = "Paralisação";
+  	                        }
+
+  	                        var loadNotificacoes = function (index, medicao) {
+  	                            MedicaoPiezometroNotificacao.find({ owner: medicao.id}).exec(function (err, notificacoes) {
+  	                                totalMedicoesCarregadas += 1;
+  	                                var notificacao = {};
+  	                                if (notificacoes && notificacoes.length > 0) {
+  	                                    if (notificacoes[0].status == "Finalizada") {
+  	                                        return;
+  	                                    }
+  	                                    notificacao = { data: notificacoes[0].data, status: notificacoes[0].status, id: notificacoes[0].id };
+  	                                }
+
+  	                                piezometrosRet[index].medicoes.push({
+  	                                    id: medicao.id,
+  	                                    criterioAlertaRu: medicao.criterioAlertaRu,
+  	                                    obsGestor: medicao.obsGestor,
+  	                                    data: medicao.dataMedicao,
+  	                                    notificacao: notificacao
+  	                                });
+  	                            });
+  	                        };
+
+  	              
+  	                        loadNotificacoes(piezometrosRet.length - 1, medicao);
+  	                    }
+  	                }
+
+  	                var itv = setInterval(function () {
+  	                    if (totalMedicoes == totalMedicoesCarregadas) {
+  	                        clearInterval(itv);
+  	                        return resolve(piezometrosRet);
+  	                    }
+  	                }, 10);
+  	                
+  	            });
+  	        });
+  	    });
+
+  	    execute.then(function (results) {
+  	        res.json(results);
+  	    });
+  	},
+
+
 	monitoramentos: function(req, res){
 		var _that = this;
 		var itens = [];
@@ -55,21 +242,16 @@ module.exports = {
 								populate('aterro').
 								populate('medicoes');
 
-			var sortString = "desc";
-
-			if(req.param('order')=="asc" || req.param('order')==""  || req.param('order')==undefined){
-				sortString = "asc";
-			}
-			
+			var sortString = req.param('order') || "asc";
 
 			piezometro.exec(function result(err, piezometros) {
 
 				for(var i=0;i<piezometros.length;i++){
 					var piezometro = piezometros[i];
 					if(sortString=="asc"){
-						piezometros[i].medicoes.sort(_that.orderByDateAsc);
+						piezometros[i].medicoes.sort(_that._orderByDateAsc);
 					}else{
-						piezometros[i].medicoes.sort(_that.orderByDateDesc);
+						piezometros[i].medicoes.sort(_that._orderByDateDesc);
 					}
 
 					var first = true;
@@ -134,6 +316,9 @@ module.exports = {
 						medicao.ru = medicao.profundidadeEnterradaZ==0?"-"
 										:(parseFloat(medicao.baseAteNivelU/medicao.profundidadeEnterradaZ).toFixed(2));
 
+
+						medicao.criterioAlertaRu = "-";
+						console.log("sem notificacao - medicao.ru", medicao.ru);
 						if (isNaN(medicao.ru)) {
 						    medicao.ru = "-";
 						}
@@ -143,7 +328,7 @@ module.exports = {
 						}
 
 						if (!isNaN(medicao.ru) && medicao.ru <= piezometro.nivelAceitavel) {
-						    medicao.criterioAlertaRu = "Bom";
+						    medicao.criterioAlertaRu = "Aceitável";
 						}
 
 						if (!isNaN(medicao.ru) && medicao.ru > piezometro.nivelAceitavel && medicao.ru <= piezometro.nivelRegular) {

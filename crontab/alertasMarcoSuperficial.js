@@ -61,9 +61,9 @@
             return false;
         }
 
-        if (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0) {
-            return false;
-        }
+        //if (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0) {
+        //    return false;
+        //}
 
         for (var i = 0; i < medicao.detalhes.length; i++) {
             var detalhe = medicao.detalhes[i];
@@ -145,6 +145,35 @@
         })
     },
 
+    _updateNoticacao: function (medicao) {
+        var _that = this;
+        var request = require('request');
+        var body = {
+            data: new Date(),
+            owner: medicao.id,
+            status: 'Finalizada',
+            id: medicao.notificacao.id
+        };
+
+        var options = {
+            method: 'put',
+            body: body,
+            json: true,
+            url: _that._urlBase + 'MedicaoMarcoSuperficialNotificacao/' + medicao.notificacao.id
+        };
+
+        request(options, function (err, res, notificacao) {
+            if (err) {
+                console.log("erro ao atualizar a notificacao", err);
+                _that._logError(err);
+                return;
+            }
+            console.log("sucesso ao atualizar a notificacao", notificacao);
+            _that._notificacoes[medicao.id] = notificacao;
+            medicao.notificacao = notificacao;
+        })
+    },
+
     _getEmailBody: function (detalhes) {
 
         var body = "";
@@ -169,24 +198,22 @@
         var body = this._getEmailBody(detalhes);
 
         if (body == "") return;
+        console.log("enviando email para", emails);
 
-        for (var i = 0; i < emails.length; i++) {
-            console.log("enviando email para", emails);
-            sails.hooks.email.send(
-              "alertagerenteadministradormedicaomarcosuperficial",
-              {
-                  link: _that._urlBase,
-                  medicoes: body,
-                  data: _that.Utils._getDateTimeString(data)
-              },
-              {
-                  to: emails[i],
-                  subject: "(Geotecnia) Notificação de Nível de Alerta"
-              },
-              function (err) { console.log(err || "Email enviado!"); }
-            );
+        sails.hooks.email.send(
+            "alertagerenteadministradormedicaomarcosuperficial",
+            {
+                link: _that._urlBase,
+                medicoes: body,
+                data: _that.Utils._getDateTimeString(data)
+            },
+            {
+                to: emails[i],
+                subject: "(Geotecnia) Notificação de Nível de Alerta"
+            },
+            function (err) { console.log(err || "Email enviado!"); }
+        );
 
-        }
 
     },
 
@@ -199,49 +226,47 @@
 
         if (body == "") return;
 
-        for (var i = 0; i < emails.length; i++) {
-            sails.hooks.email.send(
-              "alertagerenteadministradordiretormedicaomarcosuperficial",
-              {
-                  link: _that._urlBase,
-                  medicoes: body,
-                  data: _that.Utils._getDateTimeString(data)
-              },
-              {
-                  to: emails[i],
-                  subject: "(Geotecnia) Notificação de Nível de Alerta"
-              },
-              function (err) { console.log(err || "Email enviado!"); }
-            );
+        console.log("enviando email para", emails);
 
-        }
-
+        sails.hooks.email.send(
+            "alertagerenteadministradordiretormedicaomarcosuperficial",
+            {
+                link: _that._urlBase,
+                medicoes: body,
+                data: _that.Utils._getDateTimeString(data)
+            },
+            {
+                to: emails,
+                subject: "(Geotecnia) Notificação de Nível de Alerta"
+            },
+            function (err) { console.log(err || "Email enviado!"); }
+        );
     },
 
-    _sendEmailDiretor: function (usuariosAterro, data, observacoes) {
-        var emails = this._getEmailDiretor(usuariosAterro);
+    _sendEmailDiretor: function (usuarios, data, observacoes) {
+        var emails = this._getEmailDiretor(usuarios);
+        emails.push(this._getEmailAdministrador(usuarios));
+        console.log("enviando email para", emails);
 
-        for (var i = 0; i < emails.length; i++) {
-            sails.hooks.email.send(
-              "alertadiretormedicaomarcosuperficial",
-              {
-                  link: _that._urlBase,
-                  observacoes: observacoes,
-                  data: _that.Utils._getDateTimeString(data)
-              },
-              {
-                  to: emails[i],
-                  subject: "(Geotecnia) Notificação de Nível de Alerta"
-              },
-              function (err) { console.log(err || "Email enviado!"); }
-            );
-        }
+        sails.hooks.email.send(
+            "alertadiretormedicaomarcosuperficial",
+            {
+                link: _that._urlBase,
+                observacoes: observacoes,
+                data: _that.Utils._getDateTimeString(data)
+            },
+            {
+                to: emails,
+                subject: "(Geotecnia) Notificação de Nível de Alerta"
+            },
+            function (err) { console.log(err || "Email enviado!"); }
+        );
     },
 
     _listMonitoramentos: function (callback, calbackError) {
         var _that = this;
         var request = require('request');
-        request(_that._urlBase + 'MarcoSuperficial/monitoramentosNotificacao', function (error, response, body) {
+        request(_that._urlBase + 'marcosuperficial/monitoramentosnotificacao', function (error, response, body) {
             if (error || response.statusCode != 200) {
                 calbackError(error);
             } else {
@@ -343,15 +368,14 @@
                         if (context._sentEmailToday(medicao, "D") == false) {
                             console.log("enviando email para o diretor");
                             context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao.data, medicao.obsGestor);
+                            context._updateNoticacao(medicao);
                             context._setEmailEnviado(medicao, "D");
                         } else {
                             console.log("email para o diretor já foi enviado hoje.");
                         }
                     }
                 }
-
             }
-
         }
     },
 
@@ -360,7 +384,7 @@
     },
 
     run: function () {
-        this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
+        //this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
     }
 }
 

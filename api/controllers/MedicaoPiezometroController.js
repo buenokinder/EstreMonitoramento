@@ -37,6 +37,26 @@ module.exports = {
 		});
 	},
 
+	update: function (req, res) {
+
+	    MedicaoPiezometro.update({
+	        id: req.param('id')
+	    }, req.allParams(), function (err, result) {
+
+	        if (err) return res.negotiate(err);
+
+	        MedicaoPiezometro.findOne({ id: req.param('id') })
+                .populate("notificacoes")
+                .populate("aterro")
+                .populate("usuario")
+                .populate("owner").exec(function (err, result) {
+                    //ENVIAR EMAIL.
+                    return res.json(result);
+                });
+	    });
+
+	},
+
 	searchCount: function(req, res) {
 		var filtro = {};
 		
