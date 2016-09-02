@@ -1,6 +1,6 @@
 module.exports.email = {
   transporter: {
-  host: 'smtp.office365.com', // Godaddy SMTP server
+  host: 'smtp.office365.com',
   port: 587,
   secure: false,
   auth: {
