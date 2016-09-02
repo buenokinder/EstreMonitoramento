@@ -112,7 +112,7 @@ function isValidDate(s) {
      $scope.open = function(){
 
                   
-                    window.open('http://localhost:1337' + $scope.getSrc(), '_blank');
+                    window.open('http://sennit.ddns.net:1337' + $scope.getSrc(), '_blank');
                   
                 }
 
