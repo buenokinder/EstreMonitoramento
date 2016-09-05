@@ -332,19 +332,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 console.log("enviando email para", emails);
             }
 
-            //sails.hooks.email.send(
-            //"alertaalteracaomarcosuperficial",
-            //{
-            //    data: getDateTimeString(new Date()),
-            //    link: "http://localhost:1337",
-            //},
-            //{
-            //    to: emails,
-            //    subject: "(Geotecnia) Dados de Pluviometria"
-            //},
-            //function (err) {
-            //    console.log(err || "Email enviado!");
-            //});
         });
     },
 

@@ -33,12 +33,7 @@
                 return value;
             }
 
-            var retorno = "";
-            if (parseInt(hora) == 0 && parseInt(minuto) == 0) {
-                retorno = dia + "/" + mes + "/" + ano;
-            } else {
-                retorno = this._padLeftZero(dia) + "/" + this._padLeftZero(mes) + "/" + ano + " " + this._padLeftZero(hora) + ":" + this._padLeftZero(minuto);
-            }
+            var retorno = this._padLeftZero(dia) + "/" + this._padLeftZero(mes) + "/" + ano + " " + this._padLeftZero(hora) + ":" + this._padLeftZero(minuto);
 
             return retorno;
         }

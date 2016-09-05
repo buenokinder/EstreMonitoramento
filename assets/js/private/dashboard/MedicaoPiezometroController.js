@@ -216,6 +216,17 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             if (emails.length > 0) {
                 console.log("enviando email para", emails);
+
+                $http({
+                    method: 'POST',
+                    url: '/email/sendalteracaopiezometro',
+                    data: { emails: angular.toJson(emails) }
+                }).then(function onSuccess(sailsResponse) {
+                })
+                .catch(function onError(sailsResponse) {
+                })
+                .finally(function eitherWay() {
+                });
             }
         });
     };
