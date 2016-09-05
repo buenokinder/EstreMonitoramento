@@ -5,7 +5,7 @@ module.exports.crontab = {
         jobs.push({ interval: '*/1 * * * *', method: 'alertasMarcoSuperficial' });
         jobs.push({ interval: '*/1 * * * *', method: 'alertasPiezometro' });
         jobs.push({ interval: '*/1 * * * *', method: 'alertasPluviometria' });
-        
+
         return jobs;
     },
 

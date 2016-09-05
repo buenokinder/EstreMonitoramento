@@ -20,6 +20,21 @@ module.exports = {
             enum: ['Pendente', 'Finalizada'],
             defaultsTo: 'Pendente'
         },
+
+        emailgerenteadmin: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+
+        emailgerenteadmindiretor: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+
+        emaildiretor: {
+            type: 'boolean',
+            defaultsTo: false
+        },
         owner: {
             model: 'MedicaoPiezometro'
         }
@@ -28,6 +43,7 @@ module.exports = {
     beforeCreate: function (value, callback) {
 
         MedicaoPiezometroNotificacao.find({ owner: value.owner }, function (err, notificacao) {
+
             if (!notificacao || notificacao.length == 0) {
                 callback();
             }

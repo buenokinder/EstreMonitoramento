@@ -5,7 +5,10 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 module.exports = {
-    
+    _padLeftZero: function (value) {
+        return parseInt(value) < 10 ? "0" + value.toString() : value.toString();
+    },
+
     _getDateTimeString: function (value) {
         var data = new Date(value);
         var ano = data.getFullYear();
@@ -24,11 +27,11 @@ module.exports = {
     },
 
     sendMarcoSuperficial: function (req, res) {
-
+        var _that = this;
         sails.hooks.email.send(
             "alertaalteracaomarcosuperficial",
         {
-            data: getDateTimeString(new Date()),
+            data: _that._getDateTimeString(new Date(req.param('data'))),
             link: "http://localhost:1337",
         },
         {
@@ -36,16 +39,16 @@ module.exports = {
             subject: "(Geotecnia) Alteração de Medição"
         },
         function (err) {
-            console.log(err || "Email enviado!");
+            res.send(err || "Email enviado");
         });
     },
 
     sendAlteracaoPiezometro: function (req, res) {
-
+        var _that = this;
         sails.hooks.email.send(
             "alertaalteracaopiezometro",
         {
-            data: getDateTimeString(new Date()),
+            data: _that._getDateTimeString(new Date(req.param('data'))),
             link: "http://localhost:1337",
         },
         {
@@ -53,7 +56,7 @@ module.exports = {
             subject: "(Geotecnia) Alteração de Medição"
         },
         function (err) {
-            console.log(err || "Email enviado!");
+            res.send(err || "Email enviado");
         });
     }
 

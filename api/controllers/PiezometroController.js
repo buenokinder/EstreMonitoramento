@@ -184,7 +184,14 @@ module.exports = {
   	                                    if (notificacoes[0].status == "Finalizada") {
   	                                        return;
   	                                    }
-  	                                    notificacao = { data: notificacoes[0].data, status: notificacoes[0].status, id: notificacoes[0].id };
+  	                                    notificacao = {
+  	                                        data: notificacoes[0].data,
+  	                                        status: notificacoes[0].status,
+  	                                        id: notificacoes[0].id,
+  	                                        emailgerenteadmin: notificacoes[0].emailgerenteadmin,
+  	                                        emailgerenteadmindiretor: notificacoes[0].emailgerenteadmindiretor,
+  	                                        emaildiretor: notificacoes[0].emaildiretor
+  	                                    };
   	                                }
 
   	                                piezometrosRet[index].medicoes.push({
