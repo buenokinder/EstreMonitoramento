@@ -138,14 +138,14 @@
 
             if (err) {
                 _that._logError(err);
-                callback(err)
+                callback(err);
                 return;
             }
 
             if (notificacao != undefined) {
                 _that._notificacoes[item.medicao.id] = notificacao;
                 item.medicao.notificacao = notificacao;
-                callback(undefined, item)
+                callback(undefined, item);
             }
         })
     },
@@ -354,6 +354,9 @@
                     context._createNoticacao(item, function (err, ret) {
                         if (err) return;
 
+                        ///*************************
+                        //AO CRIAR A NOTIFICAÇÃO JÁ FAZER OS 3 PASSOS A SEGUIR, ASSIM ELIMINA O CALLBACK.
+                        ///*************************
                         if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
                             context._sendEmailGerenteAdministrador(ret.usuarios, ret.medicao, ret.body);
                             context._setEmailEnviado(ret.medicao, "GA");
@@ -398,11 +401,6 @@
 
                         //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
                         if (diferencaDatas >= 1) {
-                            console.log("context._sentEmailToday(medicao, 'GAD') ", context._sentEmailToday(medicao, "GAD"));
-                            console.log("medicao.notificacao.emailgerenteadmindiretor", medicao.notificacao.emailgerenteadmindiretor);
-
-
-
                             if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {
                                 context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].aterro.usuarios, medicao, body);
                                 context._setEmailEnviado(medicao, "GAD");

@@ -112,12 +112,12 @@
         return false;
     },
 
-    _createNoticacao: function (medicao) {
+    _createNoticacao: function (item, callback) {
         var _that = this;
         var request = require('request');
         var body = {
             data: new Date(),
-            owner: medicao.id,
+            owner: item.medicao.id,
             status: 'Pendente'
         };
 
@@ -131,14 +131,14 @@
         request(options, function (err, res, notificacao) {
             if (err) {
                 _that._logError(err);
+                callback(err);
                 return;
             }
             if (notificacao != undefined) {
-                _that._notificacoes[medicao.id] = notificacao;
-                medicao.notificacao = notificacao;
+                _that._notificacoes[item.medicao.id] = notificacao;
+                item.medicao.notificacao = notificacao;
+                callback(undefined, item);
             }
-
-
         })
     },
 
@@ -352,6 +352,9 @@
                     context._createNoticacao(item, function (err, ret) {
                         if (err) return;
 
+                        ///*************************
+                        //AO CRIAR A NOTIFICAÇÃO JÁ FAZER OS 3 PASSOS A SEGUIR, ASSIM ELIMINA O CALLBACK.
+                        ///*************************
                         if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
                             context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
                             context._setEmailEnviado(ret.medicao, "GA");
