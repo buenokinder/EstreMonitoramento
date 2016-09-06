@@ -371,7 +371,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             $scope.verMedicoes = false;
             $scope.monitoramentos.resumo = ([]);
             var data = $scope.data;
-            if ($scope.data.medicaoMarcoSuperficialDetalhes.length > 0) {
+
+            if (undefined!=$scope.data.medicaoMarcoSuperficialDetalhes && $scope.data.medicaoMarcoSuperficialDetalhes.length > 0) {
                 var ms = "";
                 var mss = [];
 
