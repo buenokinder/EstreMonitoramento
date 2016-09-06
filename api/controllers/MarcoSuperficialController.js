@@ -642,7 +642,7 @@ module.exports = {
                 var filtro = _that._getFiltrosMarco(req);
 
                 var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
-                var sortString = req.param('order');
+                var sortString = req.param('order') || 'dataInstalacao asc';
 
                 marcoSuperficial.sort(sortString);
 

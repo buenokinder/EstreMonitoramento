@@ -16,7 +16,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
         piezometrosSearch: ([]),
         monitoramentos: ([]),
         pesquisa: null,
-        ordenacao: 'dataInstalacao ASC',
+        ordenacao: 'asc',
 
         init: function () {
 
@@ -124,6 +124,11 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
         );
     };
 
+    $scope.getClass = function (criterio) {
+        var name = criterio.toLowerCase();
+        var className = name.replace('ã', 'a').replace('á', 'a').replace('ã', 'a');
+        return className;
+    }
 
     $scope.saveObsOperacional = function () {
         swal({
