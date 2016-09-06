@@ -103,10 +103,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
     $scope.createMarcoSuperficial = function (marcoSuperficial, callback) {
         $http.post('/MarcoSuperficial', marcoSuperficial).success(function (response, status) {
-            callback(response, status);
+            callback(response);
         }).error(function (err, status) {
             swal("Erro", "Ocorreu uma falha ao importar o marco superficial '" + marcoSuperficial.nome + "' :(", "error");
-            callback(err, status);
+            callback(null, err);
         });
     };
 
@@ -126,11 +126,11 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
                 $scope.createMarcoSuperficial(marcosuperficial, callback);
             } else {
-                callback(response[0], status);
+                callback(response[0]);
             }
 
         }).error(function (err, status) {
-            callback(err, status);
+            callback(null, err);
         });
     };
 
@@ -139,7 +139,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
         //medicaoMarcoSuperficialDetalhes.owner = $scope.data;
         medicaoMarcoSuperficialDetalhes.data = getDateTime(medicaoMarcoSuperficialDetalhes.owner.data);
 
-        $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function (marcoSuperficial, status) {
+        $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function (marcoSuperficial, err) {
+
+            if (err) {
+                swal("Erro!", "Ocorreu uma falha ao associar o arquivo à medição :(", "error");
+                return;
+            }
+
             if (null != marcoSuperficial && undefined != marcoSuperficial) {
 
                 medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
