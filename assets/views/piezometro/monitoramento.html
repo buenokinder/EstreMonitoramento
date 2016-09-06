@@ -79,6 +79,7 @@
                                     <tr>
                                         <th rowspan="3">DATA</th>
                                         <th rowspan="3" style="text-align:center">SALIÊNCIA </th>
+                                        <th rowspan="3" style="text-align:center">Saliência inicial estimada = 1 m - Excedente </th>
                                         <th rowspan="3">Profundidade total - ATUAL</th>
                                         <th rowspan="3">Prof. média câmara de carga - ATUAL</th>
                                         <th rowspan="3">Prolongamento/corte</th>
@@ -110,6 +111,7 @@
                                     <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
                                         <td style="text-align:center">{{monitoramento.dataMedicao | date:'dd/MM/yyyy HH:mm'}}</td>
                                         <td style="text-align:center">{{monitoramento.saliencia}}</td>
+                                        <td style="text-align:center">{{monitoramento.salienciaInicialEstimada}}</td>
                                         <td style="text-align:center">{{monitoramento.profundidadeTotalAtual}}</td>
                                         <td style="text-align:center">{{monitoramento.profundidadeMediaCamaradeCarga}}</td>
                                         <td style="text-align:center">{{monitoramento.prolongamentoCorte}}</td>
