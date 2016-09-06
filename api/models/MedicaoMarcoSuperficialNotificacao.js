@@ -24,6 +24,21 @@ module.exports = {
 
         owner: {
             model: 'MedicaoMarcoSuperficial'
+        },
+
+        emailgerenteadmin: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+
+        emailgerenteadmindiretor: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+
+        emaildiretor: {
+            type: 'boolean',
+            defaultsTo: false
         }
     },
 

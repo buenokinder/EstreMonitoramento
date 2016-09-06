@@ -313,6 +313,9 @@ module.exports = {
                 medicao.notificacao.id = notificacoes[0].id;
                 medicao.notificacao.status = notificacoes[0].status;
                 medicao.notificacao.data = notificacoes[0].data;
+                medicao.notificacao.emailgerenteadmin = notificacoes[0].emailgerenteadmin;
+                medicao.notificacao.emailgerenteadmindiretor = notificacoes[0].emailgerenteadmindiretor;
+                medicao.notificacao.emaildiretor = notificacoes[0].emaildiretor;
             }
 
             var detalhe = {
@@ -374,9 +377,7 @@ module.exports = {
     _getFiltrosMarco: function (req) {
 
         var filtro = {};
-        //var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        //var dataFinal = new Date();
-
+   
         if (req.param('ms') != undefined) {
             filtro.id = req.param('ms').split(',');
         }
@@ -384,34 +385,6 @@ module.exports = {
         if (req.param('aterro') != undefined) {
             filtro.aterro = req.param('aterro').split(',');
         }
-
-        //if (undefined != req.param('data')) {
-        //    dataInicial = this._getDate(req.param('data'), 0, 0, 0);
-        //    dataFinal = this._getDate(req.param('data'), 23, 59, 59);
-
-        //    filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
-        //    return filtro;
-        //}
-
-        //if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-        //    dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
-        //} else {
-        //    dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        //    dataInicial.setHours(0);
-        //    dataInicial.setMinutes(0);
-        //    dataInicial.setSeconds(0);
-        //}
-
-        //if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-        //    dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
-        //} else {
-        //    dataFinal = new Date();
-        //    dataInicial.setHours(23);
-        //    dataInicial.setMinutes(59);
-        //    dataInicial.setSeconds(59);
-        //}
-
-        //filtro.dataInstalacao = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;
     },

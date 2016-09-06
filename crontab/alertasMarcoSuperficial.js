@@ -5,7 +5,7 @@
         _padLeftZero: function (value) {
             return parseInt(value) < 10 ? "0" + value.toString() : value.toString();
         },
-        
+
         _getDateString: function (value) {
             var data = new Date(value);
             var ano = data.getFullYear();
@@ -33,12 +33,7 @@
                 return value;
             }
 
-            var retorno = "";
-            if (parseInt(hora) == 0 && parseInt(minuto) == 0) {
-                retorno = dia + "/" + mes + "/" + ano;
-            } else {
-                retorno = this._padLeftZero(dia) + "/" + this._padLeftZero(mes) + "/" + ano + " " + this._padLeftZero(hora) + ":" + this._padLeftZero(minuto);
-            }
+            var retorno = this._padLeftZero(dia) + "/" + this._padLeftZero(mes) + "/" + ano + " " + this._padLeftZero(hora) + ":" + this._padLeftZero(minuto);
 
             return retorno;
         }
@@ -117,12 +112,12 @@
         return false;
     },
 
-    _createNoticacao: function (medicao) {
+    _createNoticacao: function (item, callback) {
         var _that = this;
         var request = require('request');
         var body = {
             data: new Date(),
-            owner: medicao.id,
+            owner: item.medicao.id,
             status: 'Pendente'
         };
 
@@ -135,17 +130,19 @@
 
         request(options, function (err, res, notificacao) {
             if (err) {
-                console.log("erro ao criar a notificacao", err);
                 _that._logError(err);
+                callback(err);
                 return;
             }
-            console.log("sucesso ao criar a notificacao", notificacao);
-            _that._notificacoes[medicao.id] = notificacao;
-            medicao.notificacao = notificacao;
+            if (notificacao != undefined) {
+                _that._notificacoes[item.medicao.id] = notificacao;
+                item.medicao.notificacao = notificacao;
+                callback(undefined, item);
+            }
         })
     },
 
-    _updateNoticacao: function (medicao) {
+    _closeNoticacao: function (medicao) {
         var _that = this;
         var request = require('request');
         var body = {
@@ -164,11 +161,39 @@
 
         request(options, function (err, res, notificacao) {
             if (err) {
-                console.log("erro ao atualizar a notificacao", err);
                 _that._logError(err);
                 return;
             }
-            console.log("sucesso ao atualizar a notificacao", notificacao);
+            _that._notificacoes[medicao.id] = notificacao;
+            medicao.notificacao = notificacao;
+        })
+    },
+
+
+    _updateNoticacao: function (medicao) {
+        var _that = this;
+        var request = require('request');
+        var body = {
+            data: new Date(),
+            owner: medicao.id,
+            emailgerenteadmin: medicao.notificacao.emailgerenteadmin,
+            emailgerenteadmindiretor: medicao.notificacao.emailgerenteadmindiretor,
+            emaildiretor: medicao.notificacao.emaildiretor,
+            id: medicao.notificacao.id
+        };
+
+        var options = {
+            method: 'put',
+            body: body,
+            json: true,
+            url: _that._urlBase + 'MedicaoMarcoSuperficialNotificacao/' + medicao.notificacao.id
+        };
+
+        request(options, function (err, res, notificacao) {
+            if (err) {
+                _that._logError(err);
+                return;
+            }
             _that._notificacoes[medicao.id] = notificacao;
             medicao.notificacao = notificacao;
         })
@@ -191,75 +216,94 @@
 
     },
 
-    _sendEmailGerenteAdministrador: function (usuarios, data, detalhes) {
+    _sendEmailGerenteAdministrador: function (usuarios, medicao) {
         var emails = this._getEmailAdministrador(usuarios);
         emails.push(this._getEmailGerente(usuarios));
         var _that = this;
-        var body = this._getEmailBody(detalhes);
+        var body = this._getEmailBody(medicao.detalhes);
 
         if (body == "") return;
-        console.log("enviando email para", emails);
 
         sails.hooks.email.send(
             "alertagerenteadministradormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
                 medicoes: body,
-                data: _that.Utils._getDateTimeString(data)
+                data: _that.Utils._getDateTimeString(medicao.data)
             },
             {
                 to: emails[i],
                 subject: "(Geotecnia) Notificação de Nível de Alerta"
             },
-            function (err) { console.log(err || "Email enviado!"); }
+            function (err) {
+                if (err) {
+                    console.log("err", err);
+                } else {
+                    medicao.emailgerenteadmin = true;
+                    _that._updateNoticacao(medicao);
+                }
+
+            }
         );
 
 
     },
 
-    _sendEmailGerenteAdministradorDiretor: function (usuarios, data, detalhes) {
+    _sendEmailGerenteAdministradorDiretor: function (usuarios, medicao) {
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
         emails.push(this._getEmailGerente(usuarios));
         var _that = this;
-        var body = this._getEmailBody(detalhes);
+        var body = this._getEmailBody(medicao.detalhes);
 
         if (body == "") return;
 
-        console.log("enviando email para", emails);
 
         sails.hooks.email.send(
             "alertagerenteadministradordiretormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
                 medicoes: body,
-                data: _that.Utils._getDateTimeString(data)
+                data: _that.Utils._getDateTimeString(medicao.data)
             },
             {
                 to: emails,
                 subject: "(Geotecnia) Notificação de Nível de Alerta"
             },
-            function (err) { console.log(err || "Email enviado!"); }
+            function (err) {
+                if (err) {
+                    console.log("err", err);
+                } else {
+                    medicao.emailgerenteadmindiretor = true;
+                    _that._updateNoticacao(medicao);
+                }
+            }
         );
     },
 
-    _sendEmailDiretor: function (usuarios, data, observacoes) {
+    _sendEmailDiretor: function (usuarios, medicao) {
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
-        console.log("enviando email para", emails);
 
         sails.hooks.email.send(
             "alertadiretormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
-                observacoes: observacoes,
-                data: _that.Utils._getDateTimeString(data)
+                observacoes: medicao.obsGestor,
+                data: _that.Utils._getDateTimeString(medicao.data)
             },
             {
                 to: emails,
                 subject: "(Geotecnia) Notificação de Nível de Alerta"
             },
-            function (err) { console.log(err || "Email enviado!"); }
+            function (err) {
+                if (err) {
+                    console.log("err", err);
+                } else {
+                    medicao.emaildiretor = true;
+                    _that._updateNoticacao(medicao);
+                }
+            }
         );
     },
 
@@ -295,27 +339,27 @@
                 var medicao = monitoramentos[i].medicoes[j];
 
                 if (!context._mustSendNotificacao(medicao)) {
-                    console.log("Nao enviar notificacao");
                     continue;
                 }
 
-                console.log("enviar notificacao");
 
                 //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
                 if (context._existsNotificacao(medicao) == false) {
-                    console.log("não existe notificacao");
                     //context._notificacoes[medicao.id] = "";
-                    context._notificacoes[medicao.id] = { data: new Date() };
-                    console.log("criando notificacao");
-                    context._createNoticacao(medicao);
+                    context._notificacoes[medicao.id] = { data: new Date(), emailgerenteadmin: false, emailgerenteadmindiretor: false, emaildiretor: false };
+                    var item = { usuariosAterro: monitoramentos[i].aterro.usuariosAterro, medicao: medicao, body: body };
 
-                    console.log("enviando email para o gerente e administrador");
-                    if (context._sentEmailToday(medicao, "GA") == false) {
-                        context._sendEmailGerenteAdministrador(monitoramentos[i].usuariosAterro, medicao.data, medicao.detalhes);
-                        context._setEmailEnviado(medicao, "GA");
-                    } else {
-                        console.log("email para o gerente e administrador já foi enviado hoje.");
-                    }
+                    context._createNoticacao(item, function (err, ret) {
+                        if (err) return;
+
+                        ///*************************
+                        //AO CRIAR A NOTIFICAÇÃO JÁ FAZER OS 3 PASSOS A SEGUIR, ASSIM ELIMINA O CALLBACK.
+                        ///*************************
+                        if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
+                            context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
+                            context._setEmailEnviado(ret.medicao, "GA");
+                        }
+                    });
 
                     continue;
                 }
@@ -327,7 +371,6 @@
 
                 var notificacaoFoiCriadaNessaInteracao = context._notificacoes[medicao.id].data > dataBase;
                 if (notificacaoFoiCriadaNessaInteracao) {
-                    console.log("notificacaoFoiCriadaNessaInteracao", notificacaoFoiCriadaNessaInteracao);
                     continue;
                 }
 
@@ -335,44 +378,28 @@
                     medicao.notificacao = context._notificacoes[medicao.id];
                 }
 
-                if (medicao.notificacao) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
-                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
+                if (medicao.notificacao && medicao.notificacao.status) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
                     var hoje = Math.floor((new Date()).getTime() / (3600 * 24 * 1000));
                     var dataMedicao = Math.floor(new Date(medicao.notificacao.data).getTime() / (3600 * 24 * 1000));
                     var diferencaDatas = hoje - dataMedicao;
-                    console.log("diferencaDatas", diferencaDatas);
+                    var preencheuObs = (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0);
 
-                    if (diferencaDatas < 1) {
-                        continue;
-                    }
+                    //Existe notificações > Sim > O Status está como pendente > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
+                    if (preencheuObs) {
 
-                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
-                    if (undefined == medicao.obsGestor
-                        || null == medicao.obsGestor
-                        || medicao.obsGestor.length == 0) {
-
-                        if (context._sentEmailToday(medicao,"GAD") == false) {
-                            console.log("enviando email para o gerente, administrador e diretor");
-
-                            context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].usuariosAterro, medicao.data, medicao.detalhes);
-                            context._setEmailEnviado(medicao, "GAD");
-                        } else {
-                            console.log("email para o gerente, administrador e diretor já foi enviado hoje.");
-                        }
-                        continue;
-                    }
-
-                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
-                    if (medicao.obsGestor != '') {
-
-                        if (context._sentEmailToday(medicao, "D") == false) {
-                            console.log("enviando email para o diretor");
-                            context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao.data, medicao.obsGestor);
-                            context._updateNoticacao(medicao);
+                        if (context._sentEmailToday(medicao, "D") == false && medicao.notificacao.emaildiretor == false) {
+                            context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao);
+                            context._closeNoticacao(medicao);
                             context._setEmailEnviado(medicao, "D");
-                        } else {
-                            console.log("email para o diretor já foi enviado hoje.");
                         }
+                    } else {
+                        //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
+                        if (diferencaDatas >= 1) {
+                            if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {
+                                context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].usuariosAterro, medicao);
+                                context._setEmailEnviado(medicao, "GAD");
+                            }
+                        } //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
                     }
                 }
             }

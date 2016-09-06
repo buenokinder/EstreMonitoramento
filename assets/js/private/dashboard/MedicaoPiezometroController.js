@@ -35,7 +35,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
             $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
-            
+
             $http.get('/Aterro').success(function (response, status) {
                 $scope.aterros = response;
             });
@@ -188,7 +188,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
     $scope.mustSendEmail = function () {
 
-        return $scope.me._perfil == "Gerente";
+        return $scope.usuario._perfil == "Gerente";
     };
 
     $scope.getAterro = function (id, callback) {
@@ -209,25 +209,32 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
         return emails;
     }
 
-    $scope.sendEmail = function () {
+    $scope.sendEmail = function (dataMedicao) {
 
-        $scope.getAterro($scope.me._aterro, function (aterro) {
+        $scope.getAterro($scope.usuario._aterro, function (aterro) {
             var emails = getEmailAdministrador(aterro.usuarios);
 
             if (emails.length > 0) {
-                console.log("enviando email para", emails);
+                $http({
+                    method: 'POST',
+                    url: '/email/sendalteracaopiezometro',
+                    data: { emails: emails, data: dataMedicao }
+                }).then(function onSuccess(sailsResponse) {
+                });
             }
         });
     };
 
     $scope.$on('handleBroadcast', function (e, type) {
-        $scope.data = sennitCommunicationService.data;
+
+        if (sennitCommunicationService.data && sennitCommunicationService.data.data) {
+            $scope.data = sennitCommunicationService.data.data;
+        }
 
         if (sennitCommunicationService.type == 'save') {
             if ($scope.mustSendEmail()) {
-                $scope.sendEmail();
+                $scope.sendEmail($scope.data.dataMedicao);
             }
         }
     });
-
 }]);
