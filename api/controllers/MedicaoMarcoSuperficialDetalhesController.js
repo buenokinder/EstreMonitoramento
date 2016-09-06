@@ -58,17 +58,22 @@ module.exports = {
 
 	deleteall: function(req, res){
      	var parameters = req.allParams();
+     	if (parameters.id == undefined) {
+     	    res.status(500);
+     	    res.send("Parâmetros insuficientes para concluir a operação.");
+     	    return;
+     	}
 
-		MedicaoMarcoSuperficialDetalhes.destroy({
-			owner: parameters.id
-		    //marcoSuperficial: parameters.id
-		}, function result(err, ret) {
-		  if (err) {
-		    return res.negotiate(err);
-		  }else{
-		  	res.json('Ok'); 
-		  }
-		});
+     	MedicaoMarcoSuperficialDetalhes.destroy({
+     	    owner: parameters.id
+     	}, function result(err, ret) {
+     	    if (err) {
+     	        return res.negotiate(err);
+     	    } else {
+     	        res.json('Ok');
+     	    }
+     	});
+
 	}
 
 	

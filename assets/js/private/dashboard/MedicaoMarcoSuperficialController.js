@@ -136,7 +136,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
     $scope.saveMedicaoMarcoSuperficialDetalhes = function (medicaoMarcoSuperficialDetalhes) {
 
-        medicaoMarcoSuperficialDetalhes.owner = $scope.data;
+        //medicaoMarcoSuperficialDetalhes.owner = $scope.data;
         medicaoMarcoSuperficialDetalhes.data = getDateTime(medicaoMarcoSuperficialDetalhes.owner.data);
 
         $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function (marcoSuperficial, status) {
@@ -167,7 +167,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
     }
     $scope.showContent = function ($fileContent) {
 
-        var extractMedicaoMarcoSuperficialDetalhes = function (ret) {
+        var extractMedicaoMarcoSuperficialDetalhes = function (ret, err) {
+
+            if (err) {
+                swal("Erro!", "Ocorreu uma falha ao associar o arquivo à medição :(", "error");
+                return;
+            }
+
             $scope.medicoes = ([]);
             var linhas = $fileContent.split('\n');
 
@@ -178,7 +184,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                 if (colunas.length < 4) continue;
 
                 var medicao = { 'nome': colunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]) };
-                var medicaoMarcoSuperficialDetalhes = { 'nome': medicao.nome, 'norte': medicao.norte, 'leste': medicao.leste, 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
+                var medicaoMarcoSuperficialDetalhes = {owner: $scope.data, 'nome': medicao.nome, 'norte': medicao.norte, 'leste': medicao.leste, 'cota': medicao.cota, 'aterro': $scope.usuario._aterro };
 
                 $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
             }
@@ -201,9 +207,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
     $scope.deleteAllDetalhes = function (data, callback) {
         $http.post('/MedicaoMarcoSuperficialDetalhes/deleteall', data).success(function (response) {
-            callback(response, null);
+            callback(response);
         }).error(function (err, status) {
-            callback(err, status);
+            callback(null, err);
         });
     };
 
@@ -333,8 +339,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
             var emails = getEmailAdministrador(aterro.usuarios);
 
             if (emails.length > 0) {
-                console.log("enviando email para", emails);
-
                 $http({
                     method: 'POST',
                     url: '/email/sendmarcosuperficial',
@@ -347,48 +351,52 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
     $scope.$on('handleBroadcast', function (e, type) {
 
-
-
-        if (sennitCommunicationService.type == 'select') {
-            $scope.medicoes = ([]);
-            $scope.inputClass = "active";
-            $scope.verResumos = false;
-            $scope.verMedicoes = true;
-            return;
+        if (sennitCommunicationService.data) {
+            $scope.data = sennitCommunicationService.data;
         }
 
-        if (sennitCommunicationService.data && sennitCommunicationService.data.data) {
-            $scope.data = sennitCommunicationService.data.data;
+        switch(sennitCommunicationService.type){
+            case 'select':
+                $scope.medicoes = ([]);
+                $scope.inputClass = "active";
+                $scope.verResumos = false;
+                $scope.verMedicoes = true;
+                break;
+
+            case 'save':
+                //ENVIAR EMAIL.
+                if ($scope.mustSendEmail()) {
+                    $scope.sendEmail();
+                }
+                break;
+
+            default:
+                $scope.verMedicoes = false;
+                $scope.monitoramentos.resumo = ([]);
+
+                var data = $scope.data;
+
+                if (undefined != data.medicaoMarcoSuperficialDetalhes && data.medicaoMarcoSuperficialDetalhes.length > 0) {
+                    var ms = "";
+                    var mss = [];
+
+                    angular.forEach(data.medicaoMarcoSuperficialDetalhes, function (value, key) {
+                        if (mss.indexOf(value.marcoSuperficial) < 0) {
+                            ms += ((ms == "" ? "" : ",") + value.marcoSuperficial);
+                            mss.push(value.marcoSuperficial);
+                        }
+                    });
+
+                    $scope.monitoramentos.pesquisarResumo(ms, data, function () {
+                        $scope.verResumos = true;
+                    });
+                }
+                break;
         }
+ 
 
-        if (sennitCommunicationService.type == 'save') {
-            //ENVIAR EMAIL.
-            if ($scope.mustSendEmail()) {
-                $scope.sendEmail();
-            }
-        }
-        else {
-            $scope.verMedicoes = false;
-            $scope.monitoramentos.resumo = ([]);
-            var data = $scope.data;
 
-            if (undefined!=$scope.data.medicaoMarcoSuperficialDetalhes && $scope.data.medicaoMarcoSuperficialDetalhes.length > 0) {
-                var ms = "";
-                var mss = [];
-
-                angular.forEach($scope.data.medicaoMarcoSuperficialDetalhes, function (value, key) {
-                    if (mss.indexOf(value.marcoSuperficial) < 0) {
-                        ms += ((ms == "" ? "" : ",") + value.marcoSuperficial);
-                        mss.push(value.marcoSuperficial);
-                    }
-                });
-
-                $scope.monitoramentos.pesquisarResumo(ms, data, function () {
-                    $scope.verResumos = true;
-                });
-            }
-
-        }
+        
     });
 
 
