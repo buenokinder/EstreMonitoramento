@@ -225,7 +225,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
                         params["data"] = getDateTime($scope.inserted.data);
                         params['usuario'] = $scope.usuario._id;
-                        params['aterro'] = $scope.usuario._aterro;
+
+                        if ($scope.usuario._perfil != 'Administrador') {
+                            params['aterro'] = $scope.usuario._aterro;
+                        }
 
                         $http({
                             method: 'POST',
