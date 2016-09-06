@@ -1,0 +1,154 @@
+<div class="row" ng-init="init()">
+    <div id="modalPluviometria" class="modal modal-fixed-footer">
+        <div class="modal-content">
+
+            <div class="row">
+                <div class="col s6 m4 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="mes">Mês</label>
+                    <select class='browser-default active' id='' required ng-model='mesAssociatedWithFile' ng-options='x as x.name for x in meses track by x.id' title='Selecione o mês que deseja associar com as medições do arquivo.'></select>
+                </div>
+
+                <div class="col s6 m4 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="ano">Ano</label>
+                    <select class='browser-default active' id='' required ng-model='anoAssociatedWithFile' ng-options='x as x.id for x in anosToAssociateWithFile track by x.id' title='Selecione o ano que deseja associar com as medições do arquivo.'></select>
+                </div>
+
+                <div class="col s6 m2 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class='browser-default active' id='' required ng-model='aterroAssociatedWithFile' ng-options='x.id as x.nome for x in aterrosAssociatedWithFile track by x.id'></select>
+                </div> 
+            </div>
+
+            <div class="row">
+                <input id="readfile" type="file" class="dropify" data-height="200" custom-on-change="loadFile" />
+            </div>
+
+            <div class="row" id="excel-data" style="display:none">
+                <h4>Pluviometria processada a partir do arquivo:</h4>
+                <table class='striped'>
+                    <thead>
+                        <tr>
+                            <th class='text-center ng-binding ng-scope'>Data</th>
+                            <th class='text-center ng-binding ng-scope'>Pluviometria (mm)</th>
+                            <th class='text-center ng-binding ng-scope'>Vazão (m³/dia)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat='pluviometria in excel' ng-if="$index > 0">
+                            <th class="ng-scope">{{pluviometria.A}}</th>
+                            <th class="ng-scope">{{pluviometria.B}}</th>
+                            <th class="ng-scope">{{pluviometria.C}}</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col s2 m2 l2">
+    </div>
+
+    <div class="col s12 m12 l8 col-lg-offset-2">
+        <div class="card-panel ng-scope">
+            <h4 class="header2">Pluviometria e Vazão</h4>
+
+            <div class="row">
+                <div class="col s6 m2 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="mes">Mês</label>
+                    <select class='browser-default active' id='' required ng-model='mes' ng-options='x as x.name for x in meses track by x.id'></select>
+                </div>
+                <div class="col s6 m2 l2 col-lg-offset-2">
+                    <label ng-class="inputClass" for="ano">Ano</label>
+                    <select class='browser-default active' id='' required ng-model='ano' ng-options='x as x.id for x in anos track by x.id'></select>
+                </div>
+                <div class="col s6 m2 l4 col-lg-offset-2">
+                    <label ng-class="inputClass" for="aterro">Aterro</label>
+                    <select class='browser-default active' id='' required ng-model='aterroid' ng-options='x.id as x.nome for x in aterros track by x.id'></select>
+                </div>                
+                <div class="right col s1" aria-hidden="false">
+                    <a ng-click="search()" class="btn-floating btn-small waves-effect waves-light">
+                        <i class="mdi-action-search"></i>
+                    </a>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div>
+
+                    <table class="table table-bordered table-hover striped table-condensed">
+                        <tr style="font-weight: bold">
+                            <td style="width:15%">Dia</td>
+                            <td style="width:15%">Usuário</td>
+                            <td style="width:15%">Aterro</td>
+                            <td style="text-align:center;width:15%">Pluviometria (mm)</td>
+                            <td style="text-align:center;width:15%">Vazão (m³/dia)</td>
+                            <td style="text-align:center;width:15%" ng-show="hasFullPermission">Ações</td>
+                        </tr>
+
+                        <tr ng-repeat="operacaoPluviometria in operacaoPluviometrias">
+                            <td>
+                                <span editable-text="operacaoPluviometria.dia" class="datepicker" e-name="dia" e-form="rowform" e-required>
+                                    {{ operacaoPluviometria.dia || '' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span e-name="usuario" e-form="rowform">
+                                    {{ operacaoPluviometria.usuario.name || '' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span e-name="aterro" e-form="rowform">
+                                    {{ operacaoPluviometria.aterro.nome || '' }}
+                                </span>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <span editable-number="operacaoPluviometria.pluviometria" e-name="pluviometria" e-form="rowform">
+                                    {{ operacaoPluviometria.pluviometria || '0' }}
+                                </span>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <span editable-number="operacaoPluviometria.vazao" e-name="vazao" e-form="rowform">
+                                    {{ operacaoPluviometria.vazao || '0' }}
+                                </span>
+                            </td>
+
+                            <td style="text-align:center;" style="white-space: nowrap">
+                                <form editable-form name="rowform" onbeforesave="savePluviometria(rowform,$index, $data, operacaoPluviometria.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoPluviometria">
+                                    <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
+                                        <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </button>
+
+                                    <a ng-disabled="rowform.$waiting" ng-click="cancel($index, rowform)">
+                                        <i class="mdi-navigation-close estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+                                </form>
+
+                                <div class="buttons" ng-show="!rowform.$visible && hasFullPermission">
+                                    <a ng-click="rowform.$show()">
+                                        <i class="mdi-image-edit  estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>
+                                    </a>
+
+                                    <a ng-click="removePluviometria($index)">
+                                        <i class="mdi-action-delete estre-darkgreen-icon  small icon-demo"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a class="btn-floating btn-large waves-effect waves-light" ng-click="addPluviometria()" title="Incluir nova medição"><i class="mdi-content-add"></i></a>
+                    <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadPluviometria()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
