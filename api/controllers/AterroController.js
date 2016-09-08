@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var Promise = require('bluebird');
+
 module.exports = {
 
     findOne: function (req, res) {
@@ -25,6 +27,107 @@ module.exports = {
         });
     },
 
+    _orderByDateDesc: function (a, b) {
+        if (a.dataCriacao > b.dataCriacao)
+            return -1;
+        if (a.dataCriacao < b.dataCriacao)
+            return 1;
+        return 0;
+    },
+
+    _totalDatasResult: 0,
+
+    _mustAdd: function(aterro){
+        
+        if (aterro.dashboard.length == 0) {
+            return false;
+        }
+
+        if (aterro.dashboard[0].habilitado == false) {
+            return false;
+        }
+
+        return true;
+    },
+
+    _dashboards: [],
+
+    dashboard:function(req, res){
+        var _that = this;
+        _that._dashboards = [];
+        _that._totalDatasResult = 0;
+
+        Aterro.find({})
+            .populate("mapa")
+            .populate("dashboard")
+        .exec(function (err, aterros) {
+            if (err) {
+                return res.negotiate(err);
+            }
+
+            for (var i = 0; i < aterros.length; i++) {
+                var aterro = aterros[i];
+
+                if (!_that._mustAdd(aterro)) {
+                    continue;
+                }
+
+                if (aterro.mapa.length > 1) {
+                    aterro.mapa.sort(_that._orderByDateDesc);
+                }
+                
+                var item = {};
+                item.aterro = {
+                    id: aterro.id,
+                    nome: aterro.nome,
+                    cidade: aterro.cidade,
+                    endereco: aterro.endereco,
+                    telefone: aterro.telefone,
+                    dataultimamedicao: 1,
+                    mapaFile: aterro.mapa.length > 0 ? aterro.mapa[0].mapaFile : ''
+                };
+
+                item.config = {
+                    exibirmapahorizontal: aterro.dashboard[0].exibirmapahorizontal,
+                    exibirmapavertical: aterro.dashboard[0].exibirmapavertical,
+                    exibirlegenda: aterro.dashboard[0].exibirlegenda,
+                    fatorseguranca: aterro.dashboard[0].fatorsegurancao,
+                    exibirfatorseguranca: aterro.dashboard[0].exibirfatorseguranca,
+                    preview: aterro.dashboard[0].preview
+                };
+
+                _that._dashboards.push(item);
+            }
+
+            var execute = new Promise(function (resolve, reject) {
+                var totalItens = _that._dashboards.length;
+                for (var i = 0; i < _that._dashboards.length; i++) {
+
+                    var getLastDataMedicao = function (dashBoardIndex) {
+                        var aterroId = _that._dashboards[dashBoardIndex].aterro.id;
+
+                        MedicaoMarcoSuperficial.findOne({ aterro: aterroId }).sort("data DESC").exec(function (err, medicao) {
+                            _that._totalDatasResult += 1;
+
+                            var data = (medicao) ? new Date(medicao.data) : new Date();
+                            _that._dashboards[dashBoardIndex].aterro.dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
+
+                            if (_that._totalDatasResult == totalItens) {
+                                return resolve(_that._dashboards);
+                            }
+                        });
+                    };
+
+                    getLastDataMedicao(i);
+                }
+            });
+
+            execute.then(function (ret) {
+                return res.json(ret);
+            });
+        });
+
+    },
 
     teste: function (req, res) {
 

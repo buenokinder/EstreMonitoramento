@@ -7,24 +7,121 @@ app.filter("asDate", function () {
     }
 });
 
-app.controller('DashboardController', ['$scope', '$http', '$location', '$rootScope', function ($scope, $http, $location, $rootScope) {
+app.controller('DashboardController', ['$scope', '$http', '$location', '$rootScope','$interval', function ($scope, $http, $location, $rootScope, $interval) {
     $scope.pai = undefined;
     $scope.pathname = undefined;
     $scope.link = "";
+    $scope.loading = false;
+    $scope.aterros = ([]);
+    $scope.configFatorSeguranca = false;
+    $scope.data = {
+        fatorseguranca: 0,
+        aterro: null,
+        exibirmapahorizontal: false,
+        exibirmapavertical: false,
+        exibirlegendacriterios: false,
 
-    $http.get('/setup').success(function (response, status) {
-    });
+    }
+    $scope.init = function () {
+        $http.get('/aterro').success(function (aterros, status) {
+            $scope.aterros = aterros;
+        });
+
+        $http.get('/setup').success(function (response, status) {
+        });
+
+        $http.get('Aterro/dashboard')
+          .success(function (response) {
+              $scope.dashboard.itens = response;
+              $scope.refreshMapa();
+
+              $interval($scope.refreshMapa, $scope.DEZ_MINUTOS);
+          })
+          .error(function (err) {
+              console.log("err", err);
+          });
+    };
+
+    $scope.dashboard = {
+        current: {
+            aterro: {},
+            mapaHorizontal: '',
+            mapaVertical: '',
+            config: {
+                exibirmapahorizontal: true,
+                exibirmapavertical: true,
+                exibirlegenda: false,
+                fatorseguranca: 0,
+                exibirfatorseguranca: true,
+                preview: true
+            }
+        },
+        itens: ([]),
+        currentIndex: 0,
+        lastShowedIndex: -1
+    };
+
+    $scope.DEZ_MINUTOS = 1000*30;//600000;
+
+    
+
+    $scope.refreshMapa = function () {
+
+        if ($scope.dashboard.lastShowedIndex == $scope.dashboard.currentIndex) {
+            return;
+        }
+
+        var ticks = (new Date()).getTime()
+        var aterro = $scope.dashboard.itens[$scope.dashboard.currentIndex].aterro
+        $scope.dashboard.current.aterro = aterro;
+        $scope.dashboard.current.mapaHorizontal = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
+        $scope.dashboard.current.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks='+ticks;
+        $scope.dashboard.current.config = $scope.dashboard.itens[$scope.dashboard.currentIndex].config;
+
+        $scope.dashboard.lastShowedIndex = $scope.dashboard.currentIndex;
+
+        if (($scope.dashboard.currentIndex + 1) < $scope.dashboard.length) {
+            $scope.dashboard.currentIndex+= 1;
+        }else{
+            $scope.dashboard.currentIndex = 0;
+        }
+    };
+
+    $scope.showConfigFatorSeguranca = function () {
+
+        $('.dropify').dropify({
+            messages: {
+                default: 'Arraste seu Arquivo'
+            }
+        });
+
+        $scope.configFatorSeguranca = true;
+    };
 
     $scope.$watch('$routeUpdate', function () {
         $scope.link = $location.path();
         $scope.alteraStatusBreadcrumbs($location.path());
     });
+
     $scope.perfil = window.SAILS_LOCALS._perfil;
     //$scope.isAdmin =  window.SAILS_LOCALS.me.isAdmin;
     $scope.goto = function (path) {
         $location.path(path);
         $scope.alteraStatusBreadcrumbs(path);
     }
+
+    $scope.showFile = function () {
+
+    };
+
+    $scope.removeFile = function () {
+
+    };
+
+    $(".dropify").on('dropify.afterClear', function (e) {
+        $scope.removeFile();
+    });
+
 
     $scope.alteraStatusBreadcrumbs = function (pathname) {
         switch (pathname) {
@@ -77,4 +174,6 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
                 $scope.pathname = undefined;
         }
     };
+
+    $scope.init();
 }]);

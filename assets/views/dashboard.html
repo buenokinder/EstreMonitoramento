@@ -1,37 +1,161 @@
+<style>
+    table tr td {
+        font-size: 11px;
+    }
+</style>
+
+
+
+
 <div class="section">
 
     <div class="row">
-        <div class="col s6 m6 l6" style="height: 500px;">
+        <div class="col s6 m6">
+            <div class="card-panel ng-scope">
+                <h4 class="header2">Configuração</h4>
+                <div class="row" ng-hide="nopacess" aria-hidden="false">
+                    <form class="col s12 ng-valid ng-valid-br-phone-number ng-dirty ng-valid-parse" ng-submit="save()" id="sign-up-form">
+                        <div class="row">
+                            <div class="input-field col s4 m4">
+                                <label class=" active" for="aterro">Aterro</label>
+                                <select class="browser-default active ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" id="aterro" required="" ng-model="data.aterro" ng-options="x as x.nome for x in aterros track by x.id" aria-invalid="false"></select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s4 m4">
+                                <input type="text" ng-model="data.fatorseguranca" ui-number-mask="1" class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-br-phone-number" aria-invalid="false">
+                                <label ng-class="inputClass" for="fatorseguranca ">Fator de Segurança</label>
+                                <a ng-click="showConfigFatorSeguranca()" class="right  dropdown-menu cyan-text" title="Configurar Fator de Segurança">
+                                    <i class="mdi-action-settings"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="collection-item dismissable">
+                                <div class="input-field col s8 m8">
+                                    <input type="checkbox" ng-model="data.exibirmapahorizontal" id="exibirmapahorizontal" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <label for="exibirmapahorizontal">Exibir Mapa Horizontal</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="collection-item dismissable">
+                                <div class="input-field col s8 m8">
+                                    <input type="checkbox" ng-model="data.exibirmapavertical" id="exibirmapavertical" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <label for="exibirmapavertical">Exibir Mapa Vertical</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="collection-item dismissable">
+                                <div class="input-field col s8 m8">
+                                    <input type="checkbox" ng-model="data.exibirlegendacriterios" id="exibirlegendacriterios" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <label for="exibirlegendacriterios">Exibir Legenda de critérios</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" aria-hidden="false">
+                            <div class="input-field col s12 m12">
+                                <button type="submit" class="btn cyan waves-effect waves-light right" aria-hidden="false">
+                                    <span ng-show="!loading" aria-hidden="false">Submeter</span>
+                                    <span class="overlord-loading-spinner fa fa-spinner ng-hide" ng-show="loading" aria-hidden="true">
+                                    </span>
+                                    <span ng-show="loading" aria-hidden="true" class="ng-hide">Aguarde...</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s6 m6" ng-show="configFatorSeguranca">
+            
+            <div class="card-panel ng-scope">
+                <h4 class="header2">Configuração Fator Segurança</h4>
+                <div class="row" ng-hide="nopacess" aria-hidden="false">
+                    <input type="file" class="dropify" data-height="300" on-read-file="showFile($fileContent)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" ng--show="{{dashboard.current.config.exibirmapahorizontal}} && {{dashboard.current.config.exibirmapavertical}}">
+        <div class="col s6 m6 l6 parallax-container">
             <div class="row">
                 <p style="text-align:center">
                     Horizontal
                 </p>
-                
             </div>
 
-            <iframe src="http://localhost:1337/mapas?id=16c0e84a-4f66-443c-8b4a-3894404fe316.zip&aterro=57c6edeab7805675063b7709&data=2016-08-09&tipo=horizontal" style="border:none;width:100%;height:100%"></iframe>
-            
+            <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%"></iframe>
         </div>
 
-        <div class="col s6 m6 l6" style="height: 500px;">
+        <div class="col s6 m6 l6 parallax-container">
 
             <div class="row">
                 <p style="text-align:center">
                     Vertical
                 </p>
             </div>
-            <iframe src="http://localhost:1337/mapas?id=16c0e84a-4f66-443c-8b4a-3894404fe316.zip&aterro=57c6edeab7805675063b7709&data=2016-08-09&tipo=vertical" style="border:none;width:100%;height:100%"></iframe>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12 m12 l6">
-            LEGENDA
+
+            <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%"></iframe>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng--show="{{dashboard.current.config.exibirmapahorizontal}} && !{{dashboard.current.config.exibirmapavertical}}">
+        <div class="col s12 m12 l6 parallax-container">
+            <div class="row">
+                <p style="text-align:center">
+                    Horizontal
+                </p>
+            </div>
+
+            <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%"></iframe>
+        </div>
+
+    </div>
+
+    <div class="row" ng--show="!{{dashboard.current.config.exibirmapahorizontal}} && {{dashboard.current.config.exibirmapavertical}}">
+        <div class="col s12 m12 l6 parallax-container">
+            <div class="row">
+                <p style="text-align:center">
+                    Vertical
+                </p>
+            </div>
+
+            <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%"></iframe>
+        </div>
+
+    </div>
+
+    <div class="row" ng-show="{{dashboard.current.config.exibirlegenda}}" style="margin-top: 35px;">
+        <table>
+            <tr>
+                <td style="background-color:green"></td>
+                <td>Velocidade menor do que 0,25</td>
+                <td style="background-color:yellow"></td>
+                <td>Velocidade menor do que 1</td>
+                <td style="background-color:orange"></td>
+                <td>Velocidade menor do que 4</td>
+                <td style="background-color:red"></td>
+                <td>Velocidade menor do que 14</td>
+                <td style="background-color:black"></td>
+                <td>Velocidade maior do que 14</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row" ng-show="{{dashboard.current.config.exibirfatorseguranca}}">
         <div class="col s12 m12 l6">
-            FATOR SEGURAN�A
+            FATOR SEGURAN&Ccedil;A
         </div>
     </div>
+
 </div>

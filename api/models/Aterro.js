@@ -41,6 +41,14 @@ module.exports = {
             collection: 'Piezometro',
             via: 'owner'
         },
+        dashboard: {
+            collection: 'AterroDashboard',
+            via: 'owner'
+        },
+        mapa: {
+            collection: 'Mapa',
+            via: 'aterro'
+        },
         usuario: {
             model: 'Usuario'
         }

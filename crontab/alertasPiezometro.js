@@ -55,9 +55,9 @@
             return false;
         }
 
-        var mustSend = (this._alertas.indexOf(medicao.criterioAlertaRu) >= 0);
-        if (mustSend) {
-            return true;
+        
+        if (this._alertas.indexOf(medicao.criterioAlertaRu) < 0) {
+            return false;
         }
 
         return true;
@@ -341,7 +341,7 @@
                 if (!context._mustSendNotificacao(medicao)) {
                     continue;
                 }
-
+                
                 var body = monitoramentos[i].nome + " - " + medicao.criterioAlertaRu;
 
                 //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
