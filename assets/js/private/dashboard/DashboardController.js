@@ -7,7 +7,7 @@ app.filter("asDate", function () {
     }
 });
 
-app.controller('DashboardController', ['$scope', '$http', '$location', '$rootScope','$interval', function ($scope, $http, $location, $rootScope, $interval) {
+app.controller('DashboardController', ['$scope', '$http', '$location', '$rootScope', '$interval', function ($scope, $http, $location, $rootScope, $interval) {
     $scope.pai = undefined;
     $scope.pathname = undefined;
     $scope.link = "";
@@ -22,6 +22,9 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         exibirlegendacriterios: false,
 
     }
+
+    
+
     $scope.init = function () {
         $http.get('/aterro').success(function (aterros, status) {
             $scope.aterros = aterros;
@@ -40,6 +43,17 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
           .error(function (err) {
               console.log("err", err);
           });
+
+        $('.dropify').dropify({
+            messages: {
+                default: 'Arraste seu Arquivo'
+            }
+        });
+
+        //$canvas.droppable({
+        //    drop: dragDrop,
+        //});
+
     };
 
     $scope.dashboard = {
@@ -61,9 +75,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         lastShowedIndex: -1
     };
 
-    $scope.DEZ_MINUTOS = 1000*30;//600000;
-
-    
+    $scope.DEZ_MINUTOS = 1000 * 30;//600000;
 
     $scope.refreshMapa = function () {
 
@@ -75,23 +87,26 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         var aterro = $scope.dashboard.itens[$scope.dashboard.currentIndex].aterro
         $scope.dashboard.current.aterro = aterro;
         $scope.dashboard.current.mapaHorizontal = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
-        $scope.dashboard.current.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks='+ticks;
+        $scope.dashboard.current.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
         $scope.dashboard.current.config = $scope.dashboard.itens[$scope.dashboard.currentIndex].config;
 
         $scope.dashboard.lastShowedIndex = $scope.dashboard.currentIndex;
 
         if (($scope.dashboard.currentIndex + 1) < $scope.dashboard.length) {
-            $scope.dashboard.currentIndex+= 1;
-        }else{
+            $scope.dashboard.currentIndex += 1;
+        } else {
             $scope.dashboard.currentIndex = 0;
         }
     };
 
     $scope.showConfigFatorSeguranca = function () {
 
-        $('.dropify').dropify({
-            messages: {
-                default: 'Arraste seu Arquivo'
+        $("#sfatorseguranca").show();
+        html2canvas($("#sfatorseguranca"), {
+            onrendered: function (canvas) {
+                var screenshot = canvas.toDataURL("image/png");
+                $("#imgfatorseguranca").attr("src", screenshot);
+                $("#sfatorseguranca").hide();
             }
         });
 
@@ -110,10 +125,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         $scope.alteraStatusBreadcrumbs(path);
     }
 
-    $scope.showFile = function () {
-
-    };
-
+  
     $scope.removeFile = function () {
 
     };
@@ -122,6 +134,58 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         $scope.removeFile();
     });
 
+    var canvas = null;
+    var ctx = null;
+
+    function dragDrop(e, ui) {
+
+        var element = ui.draggable;
+        var data = element.data("url");
+        var x = parseInt(ui.offset.left - offsetX);
+        var y = parseInt(ui.offset.top - offsetY);
+        ctx.drawImage(element.data("image"), x - 1, y);
+    }
+
+    $(".dropify").on('dropify.fileReady', function (e, ipreviewable, imgData, file) {
+        //console.log("fileReady", imgData);
+
+        //canvas = document.getElementById("canvas");
+        //ctx = canvas.getContext("2d");
+
+        //$(".dropify").hide();
+        //$("#canvas").show();
+
+        ////var canvas = document.getElementById("canvas");
+        //canvas.width = 903;
+        //canvas.height = 657;
+        ////var ctx = canvas.getContext("2d");
+
+        //var background = new Image();
+        //background.src = imgData;
+        //background.onload = function () {
+        //    ctx.drawImage(background, 0, 0);
+        //};
+
+        //var $canvas = $("#canvas");
+        //var canvasOffset = $canvas.offset();
+        //var offsetX = canvasOffset.left;
+        //var offsetY = canvasOffset.top;
+
+        //var image1 = new Image();
+        //image1.src = $("#imgfatorseguranca").prop("src");
+        //var $fatorseguranca = $("#imgfatorseguranca");
+        //var $canvas = $("#canvas");
+
+        //$fatorseguranca.draggable({
+        //    helper: 'clone',
+        //});
+
+        //$fatorseguranca.data("image", image1);
+
+        //$canvas.droppable({
+        //    drop: dragDrop,
+        //});
+    });
 
     $scope.alteraStatusBreadcrumbs = function (pathname) {
         switch (pathname) {

@@ -4,9 +4,6 @@
     }
 </style>
 
-
-
-
 <div class="section">
 
     <div class="row">
@@ -24,7 +21,7 @@
 
                         <div class="row">
                             <div class="input-field col s4 m4">
-                                <input type="text" ng-model="data.fatorseguranca" ui-number-mask="1" class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-br-phone-number" aria-invalid="false">
+                                <input type="text" ng-model="data.fatorseguranca" ui-number-mask="1" class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-br-phone-number" aria-invalid="false" id="fatorseguranca">
                                 <label ng-class="inputClass" for="fatorseguranca ">Fator de Segurança</label>
                                 <a ng-click="showConfigFatorSeguranca()" class="right  dropdown-menu cyan-text" title="Configurar Fator de Segurança">
                                     <i class="mdi-action-settings"></i>
@@ -78,13 +75,27 @@
             
             <div class="card-panel ng-scope">
                 <h4 class="header2">Configuração Fator Segurança</h4>
+
                 <div class="row" ng-hide="nopacess" aria-hidden="false">
+                    <h4>1. Selecione uma imagem</h4>
                     <input type="file" class="dropify" data-height="300" on-read-file="showFile($fileContent)" />
+                    <canvas id="canvas" width=300 height=300 style="display:none"></canvas>
                 </div>
+
+                <div class="row" ng-hide="nopacess" aria-hidden="false">
+                    <h4>2. Clique, segure e arraste o fator de segurança abaixo sobre a imagem selecionada</h4>
+
+                    <span style="display:none" id="sfatorseguranca">{{data.fatorseguranca}}</span>
+                    <img id="imgfatorseguranca" src="" title="Clique segure e arraste sobre a imagem abaixo.">
+                </div>
+
+                <div class="row" ng-hide="nopacess" aria-hidden="false">
+                    <h4>3. Visualizar Resultado</h4>
+                </div>
+
             </div>
         </div>
     </div>
-
 
     <div class="row" ng--show="{{dashboard.current.config.exibirmapahorizontal}} && {{dashboard.current.config.exibirmapavertical}}">
         <div class="col s6 m6 l6 parallax-container">
