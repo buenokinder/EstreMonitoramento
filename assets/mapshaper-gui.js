@@ -2812,7 +2812,6 @@ function DisplayLayer(lyr, dataset, ext) {
  
   this.draw = function(canv, style) {
     style = style || lyr.display.style;
-    console.log('estudar');
     console.log(lyr);
     if (style.type == 'outline') {
       this.drawStructure(canv, style);
