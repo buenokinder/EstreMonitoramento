@@ -94,8 +94,8 @@ app.controller('MonitoramentoAterroController', ['$scope', '$http', '$location',
         var ticks = (new Date()).getTime()
         var aterro = $scope.dashboard.itens[$scope.dashboard.currentIndex].aterro
         $scope.dashboard.current.aterro = aterro;
-        $scope.dashboard.current.mapaHorizontal = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
-        $scope.dashboard.current.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
+        $scope.dashboard.current.mapaHorizontal = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
+        $scope.dashboard.current.mapaVertical = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
         $scope.dashboard.current.config = $scope.dashboard.itens[$scope.dashboard.currentIndex].config;
         $("#nomeaterro").html(aterro.nome);
 

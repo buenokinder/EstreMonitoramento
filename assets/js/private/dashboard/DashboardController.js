@@ -195,8 +195,8 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
 
         if (aterro.mapaFile != '') {
             var ticks = (new Date()).getTime();
-            $scope.preview.mapaHorizontal = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
-            $scope.preview.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
+            $scope.preview.mapaHorizontal = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
+            $scope.preview.mapaVertical = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
             $scope.setMapas();
         }
 
