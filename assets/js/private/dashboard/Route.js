@@ -93,6 +93,10 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		    controller : 'MedicaoPiezometroController'
 		});
 
+	 	$routeProvider.when('/MonitoramentoAterros', {
+	 	    templateUrl: '/views/aterro/monitoramento.html',
+	 	    controller: 'MonitoramentoAterroController'
+	 	});
 
 
   		$routeProvider.when("/PluviometriaVazao", {

@@ -32,12 +32,12 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-    'GET /signup': {view: 'signup'},
+  //  'GET /signup': {view: 'signup'},
     'POST /signup': 'UsuarioController.signup',
     'GET /setup': 'UsuarioController.setup',
     'PUT /login': 'UsuarioController.login',
     'GET /logout': 'UsuarioController.logout',
-    'GET /teste': 'AterroController.teste',
+    //'GET /teste': 'AterroController.teste',
     'GET /': 'PageController.showHomePage',
     'GET /aterro': 'AterroController.search',
     'GET /marcosuperficial': 'MarcoSuperficialController.search',
@@ -45,6 +45,7 @@ module.exports.routes = {
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
     'GET /visualizacao': 'PageController.visualizacao'
+    //'GET /MonitoramentoAterros'
     //'POST /MedicaoMarcoSuperficialDetalhes': 'MedicaoMarcoSuperficialController.medicao'
   /***************************************************************************
   *                                                                          *

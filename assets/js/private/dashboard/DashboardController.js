@@ -13,104 +13,219 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     $scope.link = "";
     $scope.loading = false;
     $scope.aterros = ([]);
-    $scope.configFatorSeguranca = false;
-    $scope.data = {
-        fatorseguranca: 0,
-        aterro: null,
-        exibirmapahorizontal: false,
-        exibirmapavertical: false,
-        exibirlegendacriterios: false,
+    
+    var canvas = null;
+    var ctx = null;
+    var $fatorseguranca = null;
+    var $canvas = null;
 
+    $scope.data = {
+        fatorSeguranca: 0,
+        aterro: null,
+        exibirMapaHorizontal: false,
+        exibirMapaVertical: false,
+        exibirLegenda: false,
+        exibirFatorSeguranca: false,
+        habilitado: false,
+        imagemFatorSeguranca:''
+    };
+    $scope.monitoramentos = function () {
+        document.location = '/#/MonitoramentoAterros';
+    }
+    $scope.preview = {
+        mapaHorizontal: '',
+        mapaVertical: '',
+
+        setImageFatorSeguranca:function (img) {
+            $("#preview").prop("src", img);
+            $scope.data.imagemFatorSeguranca = img;
+        }
+    };
+    
+    $scope.save = function () {
+
+        var params = {
+            owner: $scope.data.aterro.id,
+            exibirmapahorizontal: $scope.data.exibirMapaHorizontal,
+            exibirmapavertical: $scope.data.exibirMapaVertical,
+            exibirlegenda: $scope.data.exibirLegenda,
+            fatorseguranca: $scope.data.fatorSeguranca,
+            exibirfatorseguranca: $scope.data.exibirFatorSeguranca,
+            habilitado: $scope.data.habilitado,
+            imagemfatorseguranca: $scope.data.imagemFatorSeguranca
+        };
+
+        $http.get('/AterroDashBoard/?owner=' + params.owner).success(function (response, status) {
+            var verbo = 'POST';
+            var id = '';
+            if (null != response && response.length != 0) {
+                verbo = 'PUT';
+                params.id = response[0].id;
+                id = params.id;
+            }
+
+            $http({
+                method: verbo,
+                url: '/AterroDashBoard/' + id,
+                data: params
+            }).then(function onSuccess(sailsResponse) {
+                swal("Configuração Inserida!", "Seu registro foi inserido com sucesso.", "success");
+                Materialize.toast('Registro inserido com sucesso!', 4000);
+            })
+            .catch(function onError(sailsResponse) {
+                swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
+                Materialize.toast('Registro não inserido!', 4000);
+            })
+        }).error(function (err, status) {
+            swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
+            Materialize.toast('Registro não inserido!', 4000);
+        });;
+    };
+
+    $scope.showMapas = function () {
+
+        if ($scope.data.exibirMapaHorizontal && $scope.data.exibirMapaVertical) {
+            $("#doismapas").show();
+            $("#mapahorizontal").hide();
+            $("#mapavertical").hide();
+        }
+
+        if ($scope.data.exibirMapaHorizontal && !$scope.data.exibirMapaVertical) {
+            $("#doismapas").hide();
+            $("#mapahorizontal").show();
+            $("#mapavertical").hide();
+        }
+
+
+        if (!$scope.data.exibirMapaHorizontal && $scope.data.exibirMapaVertical) {
+            $("#doismapas").hide();
+            $("#mapahorizontal").hide();
+            $("#mapavertical").show();
+        }
+
+        if (!$scope.data.exibirMapaHorizontal && !$scope.data.exibirMapaVertical) {
+            $("#doismapas").hide();
+            $("#mapahorizontal").hide();
+            $("#mapavertical").hide();
+        }
     }
 
-    
-
     $scope.init = function () {
-        $http.get('/aterro').success(function (aterros, status) {
+        $http.get('/aterro/dashboardConfig').success(function (aterros, status) {
             $scope.aterros = aterros;
         });
 
         $http.get('/setup').success(function (response, status) {
         });
 
-        $http.get('Aterro/dashboard')
-          .success(function (response) {
-              $scope.dashboard.itens = response;
-              $scope.refreshMapa();
+        $scope.$watch("data.aterro", function () {
+            $scope.refresh();
+        });
+        $scope.$watch("data.exibirMapaHorizontal", function () {
+            $scope.showMapas();
+        });
 
-              $interval($scope.refreshMapa, $scope.DEZ_MINUTOS);
-          })
-          .error(function (err) {
-              console.log("err", err);
-          });
+        $scope.$watch("data.exibirMapaVertical", function () {
+            $scope.showMapas();
+        });
 
-        $('.dropify').dropify({
-            messages: {
-                default: 'Arraste seu Arquivo'
+        $scope.$watch("data.exibirLegenda", function () {
+            
+            if ($scope.data.exibirLegenda) {
+                $("#legenda").show();
+            } else {
+                $("#legenda").hide();
             }
         });
 
-        //$canvas.droppable({
-        //    drop: dragDrop,
-        //});
-
-    };
-
-    $scope.dashboard = {
-        current: {
-            aterro: {},
-            mapaHorizontal: '',
-            mapaVertical: '',
-            config: {
-                exibirmapahorizontal: true,
-                exibirmapavertical: true,
-                exibirlegenda: false,
-                fatorseguranca: 0,
-                exibirfatorseguranca: true,
-                preview: true
+        $scope.$watch("data.exibirFatorSeguranca", function () {
+            if ($scope.data.exibirFatorSeguranca) {
+                $("#fator").show();
+            } else {
+                $("#fator").hide();
             }
-        },
-        itens: ([]),
-        currentIndex: 0,
-        lastShowedIndex: -1
+        });
+
+        $('.dropify').dropify({
+            messages: {
+                default: 'Clique para selecionar uma imagem'
+            }
+        });
+    };
+    
+    $scope.setMapas = function () {
+        $(".mapv").each(function (i, o) {
+            $(this).prop("src", $scope.preview.mapaVertical);
+        });
+
+        $(".maph").each(function (i, o) {
+            $(this).prop("src", $scope.preview.mapaHorizontal);
+        });
     };
 
-    $scope.DEZ_MINUTOS = 1000 * 30;//600000;
+    $scope.reset = function () {
+        $scope.preview.mapaHorizontal = '';
+        $scope.preview.mapaVertical = '';
+        $scope.preview.setImageFatorSeguranca('');
+        $scope.data.exibirMapaHorizontal = false;
+        $scope.data.exibirMapaVertical = false;
+        $scope.data.exibirLegenda = false;
+        $scope.data.fatorSeguranca = false;
+        $scope.data.exibirFatorSeguranca = false;
+        $scope.data.habilitado = false;
+    };
 
-    $scope.refreshMapa = function () {
+    $scope.refresh = function () {
+        $scope.reset();
+        $scope.setMapas();
 
-        if ($scope.dashboard.lastShowedIndex == $scope.dashboard.currentIndex) {
+        var aterro = $scope.data.aterro;
+        if (null == aterro) {
             return;
         }
 
-        var ticks = (new Date()).getTime()
-        var aterro = $scope.dashboard.itens[$scope.dashboard.currentIndex].aterro
-        $scope.dashboard.current.aterro = aterro;
-        $scope.dashboard.current.mapaHorizontal = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
-        $scope.dashboard.current.mapaVertical = 'http://localhost:1337/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
-        $scope.dashboard.current.config = $scope.dashboard.itens[$scope.dashboard.currentIndex].config;
+        $scope.preview.setImageFatorSeguranca(aterro.imagemfatorseguranca);
+        $scope.data.exibirMapaHorizontal = aterro.exibirmapahorizontal;
+        $scope.data.exibirMapaVertical = aterro.exibirmapavertical;
+        $scope.data.exibirLegenda = aterro.exibirlegenda;
+        $scope.data.fatorSeguranca = aterro.fatorseguranca;
+        $scope.data.exibirFatorSeguranca = aterro.exibirfatorseguranca;
+        $scope.data.habilitado = aterro.habilitado;
+        $("#sfatorseguranca").html(aterro.fatorseguranca);
 
-        $scope.dashboard.lastShowedIndex = $scope.dashboard.currentIndex;
-
-        if (($scope.dashboard.currentIndex + 1) < $scope.dashboard.length) {
-            $scope.dashboard.currentIndex += 1;
-        } else {
-            $scope.dashboard.currentIndex = 0;
+        if (aterro.mapaFile != '') {
+            var ticks = (new Date()).getTime();
+            $scope.preview.mapaHorizontal = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=horizontal' + '&ticks=' + ticks;
+            $scope.preview.mapaVertical = '/mapas?id=' + aterro.mapaFile + '&aterro=' + aterro.id + '&data=' + aterro.dataultimamedicao + '&tipo=vertical' + '&ticks=' + ticks;
+            $scope.setMapas();
         }
+
+       // $scope.$apply();
+
+    };
+
+    $scope.removeImage = function () {
+        $("#dropify-container").show();
+        $(".preview").hide();
+        $(".dropify").trigger($.Event("dropify.clear"), [this]);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
     $scope.showConfigFatorSeguranca = function () {
 
+        $('#modalView').openModal();
+
+        $("#sfatorseguranca").html($scope.data.fatorSeguranca);
         $("#sfatorseguranca").show();
+
         html2canvas($("#sfatorseguranca"), {
             onrendered: function (canvas) {
                 var screenshot = canvas.toDataURL("image/png");
                 $("#imgfatorseguranca").attr("src", screenshot);
                 $("#sfatorseguranca").hide();
+                resetDrag();
             }
         });
-
-        $scope.configFatorSeguranca = true;
     };
 
     $scope.$watch('$routeUpdate', function () {
@@ -119,72 +234,78 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     });
 
     $scope.perfil = window.SAILS_LOCALS._perfil;
-    //$scope.isAdmin =  window.SAILS_LOCALS.me.isAdmin;
     $scope.goto = function (path) {
         $location.path(path);
         $scope.alteraStatusBreadcrumbs(path);
-    }
-
-  
-    $scope.removeFile = function () {
-
     };
 
-    $(".dropify").on('dropify.afterClear', function (e) {
-        $scope.removeFile();
-    });
+    function resetDrag() {
+        $fatorseguranca = $("#imgfatorseguranca");
+        $fatorseguranca.draggable({
+            helper: 'clone',
+            scroll: true
+        });
 
-    var canvas = null;
-    var ctx = null;
+        var imgFatorSeguranca = new Image();
+        imgFatorSeguranca.src = $("#imgfatorseguranca").prop("src");
+        $fatorseguranca.data("image", imgFatorSeguranca);
+        $fatorseguranca.css("cursor", "move");
+    }
 
     function dragDrop(e, ui) {
+        var canvasOffset = $canvas.offset();
+        var offsetX = canvasOffset.left;
+        var offsetY = canvasOffset.top;
 
         var element = ui.draggable;
         var data = element.data("url");
         var x = parseInt(ui.offset.left - offsetX);
-        var y = parseInt(ui.offset.top - offsetY);
+        var y = parseInt(ui.offset.top - offsetY);  
         ctx.drawImage(element.data("image"), x - 1, y);
+
+        $scope.preview.setImageFatorSeguranca(canvas.toDataURL());
+        resetDrag();
     }
 
+
+
     $(".dropify").on('dropify.fileReady', function (e, ipreviewable, imgData, file) {
-        //console.log("fileReady", imgData);
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
 
-        //canvas = document.getElementById("canvas");
-        //ctx = canvas.getContext("2d");
+        $("#dropify-container").hide();
+        $(".preview").show();
 
-        //$(".dropify").hide();
-        //$("#canvas").show();
+        var background = new Image();
+        background.src = imgData;
+        background.onload = function () {
+            var maxWidth = canvas.width;
+            var maxHeight = canvas.height;
+            var ratio = 0;  
+            var width = background.width;    
+            var height = background.height;  
 
-        ////var canvas = document.getElementById("canvas");
-        //canvas.width = 903;
-        //canvas.height = 657;
-        ////var ctx = canvas.getContext("2d");
+            if (width > maxWidth) {
+                ratio = maxWidth / width;   // ratio scaling
+                background.width =  maxWidth; 
+                background.height = height * ratio;  
+            }
 
-        //var background = new Image();
-        //background.src = imgData;
-        //background.onload = function () {
-        //    ctx.drawImage(background, 0, 0);
-        //};
+            if (height > maxHeight) {
+                ratio = maxHeight / height; // ratio scaling
+                background.height = maxHeight;   
+                background.width = width * ratio;
+            }
 
-        //var $canvas = $("#canvas");
-        //var canvasOffset = $canvas.offset();
-        //var offsetX = canvasOffset.left;
-        //var offsetY = canvasOffset.top;
+            ctx.drawImage(background, 0, 0, background.width, background.height);
+        };
 
-        //var image1 = new Image();
-        //image1.src = $("#imgfatorseguranca").prop("src");
-        //var $fatorseguranca = $("#imgfatorseguranca");
-        //var $canvas = $("#canvas");
+        $scope.preview.setImageFatorSeguranca(imgData);
 
-        //$fatorseguranca.draggable({
-        //    helper: 'clone',
-        //});
-
-        //$fatorseguranca.data("image", image1);
-
-        //$canvas.droppable({
-        //    drop: dragDrop,
-        //});
+        $canvas = $("#canvas");
+        $canvas.droppable({
+            drop: dragDrop,
+        });
     });
 
     $scope.alteraStatusBreadcrumbs = function (pathname) {
