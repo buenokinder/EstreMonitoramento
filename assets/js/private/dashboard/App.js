@@ -1,3 +1,5 @@
+
+
 var app = angular.module('DashboardModule', ['xeditable','ui.bootstrap',
     	'ngRoute','ngMaterial', 'lr.upload',
     	'ngResource','leaflet-directive','isteven-multi-select', 'ui.utils.masks', 'idf.br-filters', 'textAngular'

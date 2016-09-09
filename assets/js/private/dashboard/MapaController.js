@@ -117,7 +117,7 @@ $scope.getSrc = function() {
   var bits = $("#datainicial").val().split('/');
   var dataFinal  =  bits[2]+ '-' +bits[1]+ '-'+ bits[0];
   if($scope.mapa != null){
-    var testes = $scope.mapa.mapaFile.slice(-40);
+    var testes = $scope.mapa.mapaFile;
   console.log('estudando', testes)
     var url = "/mapas?id=" + testes + "&aterro=" + $scope.aterro.id + "&data="+  dataFinal +"&tipo=" + $scope.medicaoTipo.name;
     console.log(url);

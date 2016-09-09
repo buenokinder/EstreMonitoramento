@@ -120,21 +120,21 @@
 
 <div  style="width: 650px;" ng-show="(tipo=='kaiamoto')">
 <table>
-	<thead>
+	<thead class="gray">
 		<th colspan="4" style="text-align: center;">CRITÉRIO DE ALERTA DEFINIDOS POR KAIMOTO (2008)</th>
         
 		
 	</thead>
 	<tbody>
         	<th colspan="4" style="text-align: center;">DESLOCAMENTO HORIZONTAL (mm/dia)</th>
-		<tr>
-			<th class="verde" style="text-align: center;">Condição Mínima (1)
+		<tr >
+			<th class="green" style="text-align: center;">Condição Mínima (1)
 			</th>
-		    <th style="background-color: yellow;text-align: center;">Atenção (2)
+		    <th class="yellow"  style="background-color: yellow;text-align: center;">Atenção (2)
 			</th>
-            <th style="background-color: orange;text-align: center;">Alerta (3)
+            <th class="orange"  style="background-color: orange;text-align: center;">Alerta (3)
 			</th>
-            <th style="background-color: red;text-align: center;">Intervenção (4)
+            <th class="red"  style="background-color: red;text-align: center;">Intervenção (4)
 			</th>
 		</tr>
 		<tr>
@@ -147,15 +147,15 @@
             <th style="text-align: center;">x > 50
 			</th>
 		</tr>	
-        	<th colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
+        	<th class="gray" colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
 	<tr>
-			<th style="background-color: green;text-align: center;">Condição Mínima (1)
+			<th class="green"  style="background-color: green;text-align: center;">Condição Mínima (1)
 			</th>
-		    <th style="background-color: yellow;text-align: center;">Atenção (2)
+		    <th class="yellow"  style="background-color: yellow;text-align: center;">Atenção (2)
 			</th>
-            <th style="background-color: orange;text-align: center;">Alerta (3)
+            <th class="orange"  style="background-color: orange;text-align: center;">Alerta (3)
 			</th>
-            <th style="background-color: red;text-align: center;">Intervenção (4)
+            <th class="red"  style="background-color: red;text-align: center;">Intervenção (4)
 			</th>
 		</tr>
 		<tr>
@@ -174,7 +174,7 @@
 
 <div style="width: 650px;" ng-show="(tipo=='boskov')">
 <table  width=300 height=100>
-	<thead>
+	<thead class="gray">
 		<th colspan="4"  style="text-align: center;">CRITÉRIOS DE ALTERTA DEFINIDOS POR BOSCOV (2008)</th>
 		<tr>
 			<th style="text-align: center;">
@@ -187,15 +187,15 @@
 	</thead>
 	<tbody>
 		<tr>
-		    <th style="background-color: green;text-align: center;">
+		    <th  class="green">
                 Aceitável
             </th>
 			<th style="text-align: center;">Velocidade menor do que 0,25</th>
             <th style="text-align: center;">Semanal</th>
             <th style="text-align: center;">Estável</th>
 		</tr>
-			<tr>
-		    <th style="background-color: yellow;text-align: center;">
+			<tr  class="gray">
+		    <th  class="yellow">
                 Regular
             </th>
 			<th style="text-align: center;">Velocidade entre 0,25 e 1,0</th>
@@ -203,15 +203,15 @@
             <th style="text-align: center;">Aceitavel</th>
 		</tr>
         		<tr>
-		    <th style="background-color: orange;text-align: center;">
+		    <th  class="orange">
                 Atenção
             </th>
 			<th style="text-align: center;">Velocidade entre 1,0 e 4,0</th>
             <th style="text-align: center;">2 dias</th>
             <th style="text-align: center;">Verificação "in situ" de eventuais problemas</th>
 		</tr>
-        		<tr>
-		    <th style="background-color: red;text-align: center;">
+        		<tr  class="gray">
+		    <th   class="red">
                 Intervenção
             </th>
 			<th style="text-align: center;">Velocidade entre 4 e 14,0</th>
@@ -219,7 +219,7 @@
             <th style="text-align: center;">Paralisação imediata das operações no aterro e intervenções localizadas</th>
 		</tr>
         		<tr>
-		    <th style="background-color: black; color: white;text-align: center;">
+		    <th class="black">
                 Paralisação
             </th>
 			<th style="text-align: center;">Velocidade maior do que 14,0</th>

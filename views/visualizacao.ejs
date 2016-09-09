@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html ng-app="VisualizacaoApp">
 	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Visualização</title>
 		 <link rel="stylesheet" href="/styles/prism.css">
   <link rel="stylesheet" href="/styles/normalize.css">
@@ -10,10 +11,203 @@
   <script src="/js/public/modernizr.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
 
-  <style media="print">
-verde {background-color: green;} 
+  <style >
+@media screen {
+    header.onlyprint, footer.onlyprint{
+        display: none; /* Hide from screen */
+    }
+}
+	@media print {
+
+		* { 
+        background: transparent !important; 
+        color: #000 !important; 
+        text-shadow: none !important; 
+        filter:none !important; 
+        -ms-filter: none !important; 
+    } 
+
+header.onlyprint {
+        position: fixed; /* Display only on print page (each) */
+        top: 0; /* Because it's header */
+    }
+    footer.onlyprint {
+        position: fixed;
+        bottom: 0; /* Because it's footer */
+    }
+
+		  .no-print, nav, footer, video, audio, object, embed { 
+        display:none; 
+    }
+
+    .print {
+        display: block;
+    }
+
+
+		 img {
+        max-width: 100%;
+    }
+
+    aside {
+        display:block;
+        page-break-before: always;
+    }
+
+		.page-break { 
+        page-break-before: always; 
+    }
+    
+    /*Estilos da Demo*/
+    .header.print h1{
+        width: 100%;
+        margin-bottom: 0.5cm;
+        font-size: 18pt;
+    }
+
+    .header.print:after {
+        content: "Este artigo foi escrito pela designer Dani Guerrato e retirado do site Tableless.";
+    }
+
+   h1 {
+      color: #000;
+      background: none;
+   }
+
+	 thead {display: table-header-group;}
+
+   nav, aside {
+      display: none;
+   }
+h1::before {
+	@top-right {
+        content: "Pagina " counter(chapter) ": ";
+        
+    }
+    
+}
+   body, article {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+   }
+
+h1 {
+    page-break-before: right;
+    prince-page-group: start;
+    string-set: chapter content();
+    counter-increment: chapter;
+    counter-reset: section;
+}
+
+
+	table {
+    background: #fff;
+    margin-bottom: 1.25rem;
+    border: 1px solid #ddd;
+    table-layout: fixed;
+    width: 100%;
+}
+   
+
+table tr:nth-of-type(even) {
+    background: #f9f9f9;
+}
+
+th.green {
+	background-color: green!important;text-align: center;
+font-color: white!important;
+    -webkit-print-color-adjust: exact; 
+}
+
+thead.gray {
+	background-color: #f5f5f5!important;
+    -webkit-print-color-adjust: exact; 
+}
+
+tr.gray {
+	background-color: #f5f5f5!important;
+    -webkit-print-color-adjust: exact; 
+}
+
+th.yellow {
+	background-color: yellow!important;text-align: center;
+    -webkit-print-color-adjust: exact; 
+		font-color: white!important;
+}
+
+th.orange {
+	background-color: orange!important;text-align: center;
+    -webkit-print-color-adjust: exact; 
+		font-color: white!important;
+}
+  
+
+th.red {
+	background-color: red!important;text-align: center;
+    -webkit-print-color-adjust: exact; 
+		font-color: white!important;
+}
+
+th.black {
+	background-color: black!important;text-align: center;
+    -webkit-print-color-adjust: exact; 
+		font-color: white!important;
+}
+
+
+
+@page {
+    size: A4;
+		    font-family: Times, Serif;
+    font-size: 11pt;
+    text-align: justify;
+    margin-top: 2cm;
+    margin-bottom: 2cm;
+    margin-inside: 3.5cm;
+    margin-outside: 2.5cm;
+}
+@page :left {
+  margin-left: 3cm;
+}
+
+@page :right {
+  margin-left: 4cm;
+}
+
+
+@page :first {
+
+}
+
+@page :blank {
+  @top-center { content: "This page is intentionally left blank." }
+}
+
+h1 {
+  page-break-before: always;
+}
+
+
+@page {
+	
+	@top-center {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    content: '';
+  }}
+}
+
+}
+
+
+
+
+
 </style>
 	</head>
+
 
 	<body ng-controller="ViewTemplateController">
 

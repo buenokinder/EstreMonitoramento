@@ -2,6 +2,12 @@ describe('textAngularManager', function(){
 	'use strict';
 	beforeEach(module('textAngular'));
 
+	describe('getVersion', function(){
+		it('should return a valid version in the correct format!', inject(function(textAngularManager){
+			expect(/v\d+.\d+.\d+/i.test(textAngularManager.getVersion())).toBe(true);
+		}));
+	});
+
 	describe('toolbar', function(){
 		describe('registration', function(){
 			it('should require a scope object', inject(function(textAngularManager){
@@ -43,6 +49,23 @@ describe('textAngularManager', function(){
 				textAngularManager.registerToolbar({name: 'test'});
 				textAngularManager.unregisterToolbar('test');
 				expect(textAngularManager.retrieveToolbar('test')).toBeUndefined();
+			}));
+		});
+
+		describe('unregister-cleanup', function(){
+			it('should not have any toolbarScopes left', inject(function(textAngularManager){
+				textAngularManager.registerEditor('testeditor', {}, ['test', 'test1']);
+				textAngularManager.registerToolbar({name: 'test'});
+				textAngularManager.registerToolbar({name: 'test1'});
+				expect(textAngularManager.getToolbarScopes().length).toBe(2);
+				// note: unregisterToolbar does nothing to the toolbarScopes
+				textAngularManager.unregisterToolbar('test');
+				expect(textAngularManager.getToolbarScopes().length).toBe(2);
+				textAngularManager.unregisterToolbar('test1');
+				expect(textAngularManager.getToolbarScopes().length).toBe(2);
+				textAngularManager.unregisterEditor('testeditor');
+				// this will have deleted the toolbarScopes held in the editor
+				expect(textAngularManager.getToolbarScopes().length).toBe(0);
 			}));
 		});
 
@@ -204,8 +227,14 @@ describe('textAngularManager', function(){
 		describe('interacting', function(){
 			var $rootScope, textAngularManager, editorFuncs, testbar1, testbar2, testbar3;
 			var editorScope = {};
-			beforeEach(inject(function(_textAngularManager_){
+			var $log;
+			beforeEach(inject(function(_textAngularManager_, _$log_){
 				textAngularManager = _textAngularManager_;
+				$log = _$log_;
+			}));
+			afterEach(inject(function(){
+				// turn on to display log messages when needed
+				//console.log($log.debug.logs);
 			}));
 
 			describe('active state', function(){
@@ -230,7 +259,8 @@ describe('textAngularManager', function(){
 					it('should set the active editor to the editor', function(){
 						expect(testbar1._parent).toBe(editorScope);
 						expect(testbar2._parent).toBe(editorScope);
-						expect(testbar3._parent).toNotBe(editorScope);
+						// syntax change Jasmine 1.x -> 2.x ==> toNotBe -> not.toBe
+						expect(testbar3._parent).not.toBe(editorScope);
 					});
 				});
 				describe('unfocus', function(){
@@ -367,6 +397,7 @@ describe('textAngularManager', function(){
 					$rootScope.$digest();
 					editorScope = textAngularManager.retrieveEditor('test');
 				}));
+
 				describe('updateSelectedStyles', function(){
 					describe('should activate buttons correctly', function(){
 						it('without rangyrange passed through', function(){
@@ -376,6 +407,21 @@ describe('textAngularManager', function(){
 						});
 						it('with rangyrange passed through', function(){
 							editorScope.editorFunctions.updateSelectedStyles({});
+							$rootScope.$digest();
+							expect(element.find('.ta-toolbar button.active').length).toBe(1);
+						});
+					});
+				});
+
+				describe('updateSelectedStyles through textAngularMananger', function(){
+					describe('should activate buttons correctly', function(){
+						it('without rangyrange passed through', function(){
+							textAngularManager.updateStyles();
+							$rootScope.$digest();
+							expect(element.find('.ta-toolbar button.active').length).toBe(1);
+						});
+						it('with rangyrange passed through', function(){
+							textAngularManager.updateStyles({});
 							$rootScope.$digest();
 							expect(element.find('.ta-toolbar button.active').length).toBe(1);
 						});

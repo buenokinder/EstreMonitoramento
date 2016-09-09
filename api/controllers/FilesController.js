@@ -15,7 +15,7 @@ module.exports = {
    
 
     //var filename = uploadedFiles[0].fd.replace("/var/estre/EstreMonitoramento/assets/images/","");
-   //var filename = uploadedFiles[0].fd.replace("/Users/vinicius/Documents/GitHub/EstreMonitoramento/assets/images/","");
+   var filename = uploadedFiles[0].fd.replace("/Users/carlosbueno/Documents/Git/EstreMonitoramento/assets/images/","");
 
 
 

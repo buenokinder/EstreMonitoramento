@@ -147,24 +147,24 @@ module.exports = {
             item.norte = marcosSuperficiais[i].norte;
             item.leste = marcosSuperficiais[i].leste;
             item.cota = marcosSuperficiais[i].cota;
-            item.deslocamentoHorizontalParcial = null;
-            item.deslocamentoHorizontalTotal = null;
-            item.velocidadeHorizontal = null;
-            item.velocidadeVertical = null;
-            item.criterioAlerta = null;
-            item.deslocamentoVerticalParcial = null;
-            item.deslocamentoVerticalTotal = null;
-            item.sentidoDeslocamentoDirerencaNorte = null;
-            item.sentidoDeslocamentoDirerencaEste = null;
-            item.sentidoDeslocamentoNorteSul = null;
-            item.sentidoDeslocamentoLesteOeste = null;
-            item.sentido = null;
-            item.nomeTopografo = null;
-            item.nomeAuxiliar = null;
-            item.criterioAlertaHorizontalMetodologia1 = null;
-            item.criterioAlertaVerticalMetodologia1 = null;
-            item.vetorDeslocamentoSeno = null;
-            item.vetorDeslocamentoAngulo = null;
+            item.deslocamentoHorizontalParcial = 0;
+            item.deslocamentoHorizontalTotal = 0;
+            item.velocidadeHorizontal = 0;
+            item.velocidadeVertical = 0;
+            item.criterioAlerta = 0;
+            item.deslocamentoVerticalParcial = 0;
+            item.deslocamentoVerticalTotal = 0;
+            item.sentidoDeslocamentoDirerencaNorte = 0;
+            item.sentidoDeslocamentoDirerencaEste = 0;
+            item.sentidoDeslocamentoNorteSul = 0;
+            item.sentidoDeslocamentoLesteOeste = 0;
+            item.sentido = 0;
+            item.nomeTopografo = 0;
+            item.nomeAuxiliar = 0;
+            item.criterioAlertaHorizontalMetodologia1 = 0;
+            item.criterioAlertaVerticalMetodologia1 = 0;
+            item.vetorDeslocamentoSeno = 0;
+            item.vetorDeslocamentoAngulo = 0;
 
             item.aterro = { id: marcosSuperficiais[i].aterro.id, nome: marcosSuperficiais[i].aterro.nome };
 
@@ -380,6 +380,10 @@ module.exports = {
    
         if (req.param('ms') != undefined) {
             filtro.id = req.param('ms').split(',');
+        }
+
+        if (req.param('marcoSuperficial') != undefined) {
+            filtro.nome = req.param('marcoSuperficial');
         }
 
         if (req.param('aterro') != undefined) {
