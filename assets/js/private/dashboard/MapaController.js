@@ -40,6 +40,7 @@ app.controller('MapaController', ['$scope','$http','$sce', function($scope,$http
    return $http.get('/Mapa?where={"aterro": "' + id  + '"}').success(function(data) {
     $scope.mapas = data;
   });
+   console.log('mapa', mapas);
  };
  $scope.addNewMapa = function(){
   $('#modal5').openModal();
@@ -118,7 +119,7 @@ $scope.getSrc = function() {
   var dataFinal  =  bits[2]+ '-' +bits[1]+ '-'+ bits[0];
   if($scope.mapa != null){
     var testes = $scope.mapa.mapaFile.slice(-40);
-  console.log('estudando', testes)
+  
     var url = "/mapas?id=" + testes + "&aterro=" + $scope.aterro.id + "&data="+  dataFinal +"&tipo=" + $scope.medicaoTipo.name;
     console.log(url);
     return $sce.trustAsResourceUrl(url);
