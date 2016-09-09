@@ -29,7 +29,9 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         habilitado: false,
         imagemFatorSeguranca:''
     };
-
+    $scope.monitoramentos = function () {
+        document.location = '/#/MonitoramentoAterros';
+    }
     $scope.preview = {
         mapaHorizontal: '',
         mapaVertical: '',

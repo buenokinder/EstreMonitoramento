@@ -59,8 +59,8 @@ app.controller('MonitoramentoAterroController', ['$scope', '$http', '$location',
         lastShowedIndex: -1
     };
 
-    $scope.DEZ_MINUTOS = 1000 * 10;//600000;
-    $scope.DOIS_MINUTOS = 1000 * 30;//600000;
+    $scope.DEZ_MINUTOS = 1000 * 30;//600000;
+    $scope.DOIS_MINUTOS = 1000 * 60;//600000;
 
     $scope.setMapas = function () {
         $(".mapv").each(function (i, o) {
