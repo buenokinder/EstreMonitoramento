@@ -78,16 +78,9 @@ $scope.array = "";
               
                       angular.forEach($scope.data, function(value, key) {
                       
-                           if(key>0)
-                           {
-                               console.log(value.data.getDay());
-                               console.log(value.deslocamentoHorizontalTotal);
-                                if(key==1)
-                                    $scope.deslocamentoVertical.push( [ Date.UTC(1970, 9, key+1),parseFloat(value.deslocamentoHorizontalTotal)]);
-                                else
-                                    $scope.deslocamentoVertical.push( [ Date.UTC(1970, 9, key+1),parseFloat(value.deslocamentoHorizontalTotal)]);
-                                }
-                               console.log($scope.deslocamentoVertical);
+                     
+                        $scope.deslocamentoVertical.push( [ Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7))-1, value.data.substring(8, 10)),parseFloat(value.deslocamentoHorizontalTotal)]);
+                     
                                 
                         
                         //if(key==0)
