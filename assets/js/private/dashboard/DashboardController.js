@@ -111,7 +111,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     }
 
     $scope.init = function () {
-        $http.get('/aterro/dashboardConfig').success(function (aterros, status) {
+        $http.get('/aterrodashboard/listall').success(function (aterros, status) {
             $scope.aterros = aterros;
         });
 
@@ -286,8 +286,6 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         $scope.preview.setImageFatorSeguranca(canvas.toDataURL());
         resetDrag();
     }
-
-
 
     $(".dropify").on('dropify.fileReady', function (e, ipreviewable, imgData, file) {
         canvas = document.getElementById("canvas");

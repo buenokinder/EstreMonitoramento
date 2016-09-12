@@ -45,7 +45,7 @@ module.exports.routes = {
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
     'GET /visualizacao': 'PageController.visualizacao',
-    'GET /monitoramentoaterros': 'AterroDashboardController.visualizacao'
+    'GET /monitoramentoaterros': 'AterroDashboardController.monitoramento'
 
     //'GET /MonitoramentoAterros'
     //'POST /MedicaoMarcoSuperficialDetalhes': 'MedicaoMarcoSuperficialController.medicao'

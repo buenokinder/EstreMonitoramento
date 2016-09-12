@@ -21,7 +21,7 @@ app.controller('MonitoramentoAterroController', ['$scope', '$http', '$location',
         $http.get('/setup').success(function (response, status) {
         });
 
-        $http.get('Aterro/dashboard')
+        $http.get('aterrodashboard/list')
           .success(function (response) {
               $scope.dashboard.itens = response;
               $scope.refresh();
@@ -33,7 +33,7 @@ app.controller('MonitoramentoAterroController', ['$scope', '$http', '$location',
           });
 
         $interval(function () {
-            $http.get('Aterro/dashboard')
+            $http.get('aterrodashboard/list')
                       .success(function (response) {
                           $scope.dashboard.itens = response;
             });
