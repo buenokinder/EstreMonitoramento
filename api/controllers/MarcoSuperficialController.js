@@ -161,10 +161,8 @@ module.exports = {
             item.nomeAuxiliar = '';
             item.criterioAlertaHorizontalMetodologia1 = 0;
             item.criterioAlertaVerticalMetodologia1 = 0;
-            item.criterioAceitavelVelocidadeHorizontal = 0;
-            item.criterioAceitavelVelocidadeVertical = 0;
-            item.criterioRegularVelocidadeHorizontal = 0;
-            item.criterioRegularVelocidadeVertical = 0;
+            item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
+            item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 
             item.vetorDeslocamentoSeno = 0;
             item.vetorDeslocamentoAngulo = 0;
@@ -200,10 +198,8 @@ module.exports = {
                 item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
 
-                item.criterioAceitavelVelocidadeHorizontal = detalhe.monitoramento.criterioAceitavelVelocidadeHorizontal
-                item.criterioAceitavelVelocidadeVertical = detalhe.monitoramento.criterioAceitavelVelocidadeVertical;
-                item.criterioRegularVelocidadeHorizontal = detalhe.monitoramento.criterioRegularVelocidadeHorizontal;
-                item.criterioRegularVelocidadeVertical = detalhe.monitoramento.criterioRegularVelocidadeVertical;
+                item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
+                item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 
                 item.vetorDeslocamentoSeno = detalhe.monitoramento.vetorDeslocamentoSeno;
                 item.vetorDeslocamentoAngulo = detalhe.monitoramento.vetorDeslocamentoAngulo;
@@ -233,10 +229,8 @@ module.exports = {
                 item.leste = marcosSuperficiais[i].leste;
                 item.criterioAlertaHorizontalMetodologia1 = "";
                 item.criterioAlertaVerticalMetodologia1 = "";
-                item.criterioAceitavelVelocidadeHorizontal = 0;
-                item.criterioAceitavelVelocidadeVertical = 0;
-                item.criterioRegularVelocidadeHorizontal = 0;
-                item.criterioRegularVelocidadeVertical = 0;
+                item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
+                item.criterioRegularVelocidade = this._alertaRegular.velocidade;
                 result.push(item);
             }
 
@@ -247,13 +241,8 @@ module.exports = {
                 item.leste = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].leste;
                 item.criterioAlertaHorizontalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
-
-
-                item.criterioAceitavelVelocidadeHorizontal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAceitavelVelocidadeHorizontal
-                item.criterioAceitavelVelocidadeVertical = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAceitavelVelocidadeVertical;
-                item.criterioRegularVelocidadeHorizontal = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioRegularVelocidadeHorizontal;
-                item.criterioRegularVelocidadeVertical = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioRegularVelocidadeVertical;
-
+                item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
+                item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 
                 result.push(item);
             }
