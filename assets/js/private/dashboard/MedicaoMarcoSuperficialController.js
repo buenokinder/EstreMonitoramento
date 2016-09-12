@@ -393,7 +393,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
                         }
                     });
 
-                    $scope.monitoramentos.pesquisarResumo(ms, data, function () {
+                    $scope.monitoramentos.pesquisarResumo(ms, data.data, function () {
                         $scope.verResumos = true;
                     });
                 }
