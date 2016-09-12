@@ -1,126 +1,85 @@
-<form action="#">
-<div class="section"   ng-init="loadAterros()" >
- <div class="row section">
-  <div class="divider"></div>
+<div class="col s12 m12 l6">
+  <div class="card-panel ng-scope" ng-init="loadAterros()">
+    <h4 class="header2">Mapa</h4>
+    <div class="row" ng-hide="nopacess" aria-hidden="false">
+      <form class="col s12 ng-pristine ng-valid">
+        <div class="row">
+          <div class="input-field col m3">
+            <label ng-class="inputClass" for="nome">Data Medição</label>
+            <input type="text" id="datainicial" class="ng-pristine ng-untouched ng-valid ng-empty date datetimepicker" ng-model="querydapesquisa.dataInicial" aria-invalid="false">
+          </div>
+          <div class="input-field col m3">
+            <label class='active' for='Atero'>Aterro</label>                     
+            <select class='browser-default active' id='Aterro' ng-change="selecionarAterro(aterro)" required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'></select>
+          </div>          
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <h4 class="header2">Detalhes do Aterro</h4>
+            <div class='row' ng-show="aterro.nome">
+              <div class="input-field col s2">
+                <h6><b>Aterro</b>: {{aterro.nome}}</h6>
+              </div>
 
-   
-      <div class="col s12 m12 l12">
-        
-                                <div class="map-card">
-                                    <div class="card">
-<div class="row">
-                            <div class='input-field col  s2 m2 l2'> 
-                            
+              <div class="input-field col s2">
+                <h6><b>Endereço</b>: {{aterro.endereco}}</h6>
+              </div>
 
+              <div class="input-field col s2">
+                <h6><b>Telefone</b>: {{aterro.telefone}}</h6>
+              </div>  
 
-      <input name="group1" type="radio" value="horizontal"   ng-model="medicaoTipo.name" id="test1" />
-      <label for="test1">Horizontal</label>
- 
-      <input name="group1" type="radio" value="vertical" ng-model="medicaoTipo.name" id="test2" />
-      <label for="test2">Vertical</label>
-<br>
-   
- <br>
-                            </div><div>
-                                  <div class="form-group col m2" id="sign-up-form"><label ng-class="inputClass" for="nome">Data Medição</label><input type="text" id="datainicial" class="form-control ng-pristine ng-untouched ng-valid ng-empty date datetimepicker" ng-model="querydapesquisa.dataInicial" aria-invalid="false"></div>
-                                 
-                            </div>
-                                           
-                     
-         <div class='input-field col  s2 m2 l2'> 
+              <div class="input-field col s6">
+                <h6><b>Cidade</b>: {{aterro.cidade}}</h6>
+              </div>
 
-                           <label class='active' for='Atero'>Aterro</label>                     
-                                    <select class='browser-default active' id='Aterro' ng-change="selecionarAterro(aterro)" required ng-model='aterro' ng-options='x as x.nome for x in aterros track by x.id'>
-	                        </select>
-                        </div>
-                      <a  href="" ng-click="open()" class="btn-floating btn-small waves-effect waves-light"><i class="mdi-action-search"></i></a>
-	    </div>
-                                        <div class="card-image waves-effect waves-block waves-light" >
-                                                  
-               
-               
-                <table class='striped'><thead>
-                  <tr>
-                  <th style='width: 30px;'><input type='checkbox' value='true' data-bind='checked: selectAll' />Data</th>
-                  <th ng-repeat='field in fields' class='text-center' id='Sistema.Id' style='cursor:pointer'>{{field.value | asDate |date:&quot;dd/MM/yyyy&quot; }}</th><th  ng-show='exibir(strupdate)'>Ações</th>
-                  </tr>
-                </thead>
-          
-          
-                <tbody>
-                  <tr ng-repeat='mapa in mapas' ng-click='ViewItem(datum)' style='cursor:pointer'><td><input type='checkbox' /></td><td ng-repeat='field in fields' >
-                    <th>{{mapa.dataCriacao  | asDate |date:&quot;dd/MM/yyyy&quot; }}</th>
-                    <th>
-                    <a ng-click='selecionarMapa(mapa)' ><i class='mdi-action-search' aria-hidden='true'></i></a>
-                    </th>
+              <div class="input-field col s6">
+                <h6><b>Observação</b>:<h6>
+                <p>{{aterro.observacao}}</p>
+              </div>                                        
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s8">
+            <h4 class="header2">Histórico de Mapas</h4>
+            <table class='striped'>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Usuário<th>
+                  <th>Ações</th>
                 </tr>
-                </tbody>
-                </table>
-                                        </div>
-                                        <div class="card-content">  
-                                          
-                                                       
-                                            <!--<a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right" ng-click="mapaLista()" ng-show="aterro.nome">
-                                                <i class="mdi-action-subject"></i>
-                                            </a>-->
-                                            
-                                            <a class="btn-floating  btn-move-up waves-effect waves-light darken-2 right"  ng-click="addNewMapa()"  ng-show="aterro.nome">
-                                            <i class="mdi-content-add"></i>
-                                            </a>     
-                                            
-                                            
-                                             <div class='row'>
-
-         <h4 class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Detalhes do Aterro</a>
-                                            </h4>
-              <div class='row' ng-show="aterro.nome">
-                <div class="input-field col s6">
-                        <h6>Aterro - {{aterro.nome}}</h6>
-                      </div>
-                    
-                      <div class="input-field col s6">
-                        <h6>Endereço - {{aterro.endereco}}</h6>
-                      </div>
-                     
-                   
-           
-      
-                <div class="input-field col s6">
-                        <h6>Telefone {{aterro.telefone}}</h6>
-                      </div>
-                         <div class="input-field col s6">
-                     
-      </div>
-       </div>
-                                        </div>
-                                     
-                                    </div>
-                                </div>
-                                
-                            </div>
-
-
-
-        
-            
-         <input type="hidden" name="_csrf" value="<%= _csrf %>" class="ng-scope">
-
+              </thead>
+              <tbody>
+                <tr ng-repeat='mapa in mapas'>                   
+                  <td>{{mapa.dataCriacao  | asDate |date:&quot;dd/MM/yyyy&quot; }}</td>
+                  <td>{{mapa.usuarioCriador.name}}</td>
+                  <td></td>
+                  <td><a ng-click='selecionarMapa(mapa)' ><i class='mdi-action-search' aria-hidden='true'></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">&nbsp;
+        </div>
+        <div class="row "  aria-hidden="false">
+          <div class="input-field left" ng-show="aterro.nome" ><br>       
+            <a ng-click="addNewMapa()" class="btn-floating btn-large waves-effect waves-light" >
+              <i class="mdi-content-add"></i>
+            </a>
+          </div>
+          <div class="input-field  right">             
+            <input name="group1" type="radio" value="horizontal"   ng-model="medicaoTipo.name" id="test1" />
+            <label for="test1" style="padding-left: 25px;">Horizontal</label>
+            <input name="group1" type="radio" value="vertical" ng-model="medicaoTipo.name" id="test2" />
+            <label for="test2" style="padding-left: 25px;">Vertical</label><br><br>
+            <a  href="" ng-click="open()" class="btn btn-small waves-effect waves-light">Visualizar Mapa</a>                     
+          </div>
+        </div>
+      </form>
     </div>
- <!--</form>-->
-<script>
-  $(document).ready(function() {
-      $('.dropdown-button').dropdown({
-      inDuration: 300,
-      outDuration: 225,
-      constrain_width: false, // Does not change width of dropdown to that of the activator
-      hover: true, // Activate on hover
-      gutter: 0, // Spacing from edge
-      belowOrigin: false, // Displays dropdown below the button
-      alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    }
-  );
-  });
-
-</script>
-
-
+  </div> 
+  <input type="hidden" name="_csrf" value="<%= _csrf %>" class="ng-scope">
+</div>

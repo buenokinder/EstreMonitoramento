@@ -7,25 +7,25 @@
 
 module.exports = {
 
-	showHomePage: function (req, res) {
+    showHomePage: function (req, res) {
 
-    console.log(req.session.me);
-    if (req.session.me) {
+        console.log(req.session.me);
+        if (req.session.me) {
 
-      return res.view('dashboard', {
-        me:  req.session.me
-         
-      });
+            return res.view('dashboard', {
+                me: req.session.me
 
+            });
+
+        }
+
+
+        return res.view('index');
+
+    }, mapa: function (req, res) {
+        return res.view('mapa');
+    }, visualizacao: function (req, res) {
+        return res.view('visualizacao');
     }
-
-
-    return res.view('index');
-    
-  },mapa: function (req, res) {
-    return res.view('mapa');
-  }, visualizacao: function (req, res) {
-    return res.view('visualizacao');
-  }
 
 };

@@ -7,11 +7,11 @@
 <div class="section">
 
     <div class="row">
-        <div class="col s6 m6">
+        <div class="col s12 m12">
             <div class="card-panel ng-scope">
                 <h4 class="header2">Configuração</h4>
                 <div class="row" ng-hide="nopacess" aria-hidden="false">
-                    <form class="col s12 ng-valid ng-valid-br-phone-number ng-dirty ng-valid-parse" ng-submit="save()" id="sign-up-form">
+                    <form class="col s12 ng-valid ng-valid-br-phone-number ng-dirty ng-valid-parse" id="sign-up-form">
                         <div class="row">
                             <div class="input-field col s4 m4">
                                 <label class=" active" for="aterro">Aterro</label>
@@ -21,9 +21,9 @@
 
                         <div class="row">
                             <div class="input-field col s4 m4">
-                                <input type="text" ng-model="data.fatorseguranca" ui-number-mask="1" class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-br-phone-number" aria-invalid="false" id="fatorseguranca">
+                                <input type="text" ng-model="data.fatorSeguranca" ui-number-mask="1" class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-br-phone-number" aria-invalid="false" id="fatorseguranca" required>
                                 <label ng-class="inputClass" for="fatorseguranca ">Fator de Segurança</label>
-                                <a ng-click="showConfigFatorSeguranca()" class="right  dropdown-menu cyan-text" title="Configurar Fator de Segurança">
+                                <a ng-click="showConfigFatorSeguranca()" class="right dropdown-menu cyan-text" title="Configurar Fator de Segurança">
                                     <i class="mdi-action-settings"></i>
                                 </a>
                             </div>
@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="collection-item dismissable">
                                 <div class="input-field col s8 m8">
-                                    <input type="checkbox" ng-model="data.exibirmapahorizontal" id="exibirmapahorizontal" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <input type="checkbox" ng-model="data.exibirMapaHorizontal" id="exibirmapahorizontal" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
                                     <label for="exibirmapahorizontal">Exibir Mapa Horizontal</label>
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                         <div class="row">
                             <div class="collection-item dismissable">
                                 <div class="input-field col s8 m8">
-                                    <input type="checkbox" ng-model="data.exibirmapavertical" id="exibirmapavertical" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <input type="checkbox" ng-model="data.exibirMapaVertical" id="exibirmapavertical" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
                                     <label for="exibirmapavertical">Exibir Mapa Vertical</label>
                                 </div>
                             </div>
@@ -50,54 +50,92 @@
                         <div class="row">
                             <div class="collection-item dismissable">
                                 <div class="input-field col s8 m8">
-                                    <input type="checkbox" ng-model="data.exibirlegendacriterios" id="exibirlegendacriterios" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <input type="checkbox" ng-model="data.exibirLegenda" id="exibirlegendacriterios" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
                                     <label for="exibirlegendacriterios">Exibir Legenda de critérios</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="collection-item dismissable">
+                                <div class="input-field col s8 m8">
+                                    <input type="checkbox" ng-model="data.exibirFatorSeguranca" id="exibirfatorseguranca" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <label for="exibirfatorseguranca">Exibir Fator de Segurança</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="collection-item dismissable">
+                                <div class="input-field col s8 m8">
+                                    <input type="checkbox" ng-model="data.habilitado" id="habilitado" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-empty" aria-invalid="false">
+                                    <label for="habilitado">Habilitado</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row" aria-hidden="false">
                             <div class="input-field col s12 m12">
-                                <button type="submit" class="btn cyan waves-effect waves-light right" aria-hidden="false">
+                                <button type="submit" class="btn cyan waves-effect waves-light right" aria-hidden="false" ng-click="save()">
                                     <span ng-show="!loading" aria-hidden="false">Submeter</span>
                                     <span class="overlord-loading-spinner fa fa-spinner ng-hide" ng-show="loading" aria-hidden="true">
                                     </span>
                                     <span ng-show="loading" aria-hidden="true" class="ng-hide">Aguarde...</span>
                                 </button>
+
+                                <button type="button" class="btn cyan waves-effect waves-light right" aria-hidden="false" ng-click="monitoramentos()" style="margin-right:20px">
+                                    <span aria-hidden="false">Monitorar</span>
+                                </button>
                             </div>
                         </div>
+
+
                     </form>
                 </div>
             </div>
         </div>
+        
+        <div id="modalView" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <div class="col s12 m12">
+                    <div class="card-panel ng-scope">
+                        <h4 class="header2">Configuração Fator Segurança</h4>
 
-        <div class="col s6 m6" ng-show="configFatorSeguranca">
-            
-            <div class="card-panel ng-scope">
-                <h4 class="header2">Configuração Fator Segurança</h4>
+                        <div class="row" ng-hide="nopacess" aria-hidden="false">
+                            <div id="dropify-container">
+                                <input type="file" class="dropify" data-height="300" on-read-file="showFile($fileContent)" />
+                            </div>
 
-                <div class="row" ng-hide="nopacess" aria-hidden="false">
-                    <h4>1. Selecione uma imagem</h4>
-                    <input type="file" class="dropify" data-height="300" on-read-file="showFile($fileContent)" />
-                    <canvas id="canvas" width=300 height=300 style="display:none"></canvas>
+                            <div class="row preview" style="display:none">
+                                <div class="input-field col s12 m12">
+                                    <canvas id="canvas" width="625" height="315"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="row preview" style="display:none;margin-top:10px">
+                                <div class="input-field col s3 m3">
+                                    <button id="removeimg" type="submit" class="btn cyan waves-effect waves-light right" aria-hidden="false" ng-click="removeImage()">
+                                        <span aria-hidden="false" class="">Remover</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" ng-hide="nopacess" aria-hidden="false" style="margin-top:20px">
+                            <p class="header2">Clique, segure e arraste o fator de segurança abaixo sobre a imagem acima</p>
+
+                            <span id="sfatorseguranca">{{data.fatorSeguranca}}</span>
+                            <img id="imgfatorseguranca" src="" title="Clique segure e arraste sobre a imagem acima." class="draggable">
+                        </div>
+                    </div>
                 </div>
-
-                <div class="row" ng-hide="nopacess" aria-hidden="false">
-                    <h4>2. Clique, segure e arraste o fator de segurança abaixo sobre a imagem selecionada</h4>
-
-                    <span style="display:none" id="sfatorseguranca">{{data.fatorseguranca}}</span>
-                    <img id="imgfatorseguranca" src="" title="Clique segure e arraste sobre a imagem abaixo.">
-                </div>
-
-                <div class="row" ng-hide="nopacess" aria-hidden="false">
-                    <h4>3. Visualizar Resultado</h4>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <div class="row" ng--show="{{dashboard.current.config.exibirmapahorizontal}} && {{dashboard.current.config.exibirmapavertical}}">
+    <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
+    <div class="row" id="doismapas" style="display:none">
         <div class="col s6 m6 l6 parallax-container">
             <div class="row">
                 <p style="text-align:center">
@@ -105,7 +143,7 @@
                 </p>
             </div>
 
-            <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%"></iframe>
+            <iframe src="{{preview.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
         </div>
 
         <div class="col s6 m6 l6 parallax-container">
@@ -116,11 +154,12 @@
                 </p>
             </div>
 
-            <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%"></iframe>
+            <iframe src="{{preview.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
         </div>
     </div>
 
-    <div class="row" ng--show="{{dashboard.current.config.exibirmapahorizontal}} && !{{dashboard.current.config.exibirmapavertical}}">
+    <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && !{{data.exibirMapaVertical}}">-->
+    <div class="row" id="mapahorizontal" style="display:none">
         <div class="col s12 m12 l6 parallax-container">
             <div class="row">
                 <p style="text-align:center">
@@ -128,12 +167,13 @@
                 </p>
             </div>
 
-            <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%"></iframe>
+            <iframe src="{{preview.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
         </div>
 
     </div>
 
-    <div class="row" ng--show="!{{dashboard.current.config.exibirmapahorizontal}} && {{dashboard.current.config.exibirmapavertical}}">
+    <!--<div class="row" ng-show="!{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
+    <div class="row" id="mapavertical" style="display:none">
         <div class="col s12 m12 l6 parallax-container">
             <div class="row">
                 <p style="text-align:center">
@@ -141,12 +181,13 @@
                 </p>
             </div>
 
-            <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%"></iframe>
+            <iframe src="{{preview.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
         </div>
 
     </div>
 
-    <div class="row" ng-show="{{dashboard.current.config.exibirlegenda}}" style="margin-top: 35px;">
+    <!--<div class="row" ng-show="{{data.exibirLegenda}}" style="margin-top: 35px;">-->
+    <div class="row" id="legenda" style="margin-top: 35px;display:none">
         <table>
             <tr>
                 <td style="background-color:green"></td>
@@ -163,9 +204,14 @@
         </table>
     </div>
 
-    <div class="row" ng-show="{{dashboard.current.config.exibirfatorseguranca}}">
+    <!--<div class="row" ng-show="{{data.exibirFatorSeguranca}}">-->
+    <div class="row" id="fator" style="display:none;margin-top:20px">
         <div class="col s12 m12 l6">
             FATOR SEGURAN&Ccedil;A
+
+            <div class="row">
+                <img id="preview" />
+            </div>
         </div>
     </div>
 
