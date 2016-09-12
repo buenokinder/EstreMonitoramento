@@ -17,6 +17,10 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
     $scope.aterro = getParameterByName('aterro');
 
     String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
+
+  
+    $scope.download= "";
+
     $scope.init = function () {
         $http.get("/Template/" + $scope.id).then(function (results) {
             $scope.data = results.data;
@@ -32,7 +36,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                         var parametro = tipo.split('\'')[1];
 
 
-                        $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\'></tabela>  ');
+                        $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
                     }
                     if (tipo.indexOf('grafico(') !== -1) {
                         var parametro = tipo.split('\'')[1];
@@ -41,17 +45,23 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                         var parametro2 = tipo.split('\'')[3];
                         console.log(parametro);
                         if (parametro == 'marcohorizontal') {
-                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
                         } else {
-                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
                         }
 
                         console.log($scope.corpo);
                     }
                 }
             }
+
+
             respostas.forEach(myFunction);
-            $element.replaceWith($compile($scope.corpo)($scope));
+        
+            $scope.corpo= $compile($scope.corpo)($scope);
+            //$element.replaceWith($scope.download);
+
+            
 
         });
     };
@@ -60,6 +70,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
     return {
         restrict: 'E',
         scope: {
+            aterro: '@',
             tipado: '@',
             inicio: '@',
             fim: '@'
@@ -151,6 +162,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
     return {
         restrict: 'E',
         scope: {
+            aterro: '@',
             tipado: '@',
             inicio: '@',
             fim: '@'
@@ -183,8 +195,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
                 });
                 $scope.categorias = [$scope.array];
-                var html = "<div style='width: 70%; '><div id='" + $scope.tipado + "' style='min-width: 310px;max-width: 550px ; height: 400px; margin: 0 auto'></div></div>";
-                $element.replaceWith($compile(html)($scope));
+               
 
                 $('#' + $scope.getContentHorizontal()).highcharts({
                     title: {
@@ -240,6 +251,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
     return {
         restrict: 'AE',
         scope: {
+            aterro: '@',
             id: '=',
             tipo: '@',
             filter: '='
@@ -247,7 +259,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
         templateUrl: 'views/reports/tabela.html',
         link: function ($scope, $element, attrs) {
             $scope.fatorsegurancaMes = ({});
-
+              $scope.aterroNome;
+            $scope.marcosuperficialdeslocamento  = ({});
 
             if ($scope.tipo == 'fatorsegurancames') {
                 $http.get("/FatorSeguranca/").then(function (results) {
@@ -261,9 +274,24 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                 });
             }
 
+            if ($scope.tipo == 'acompanhamentomarcosuperficialdeslocamento' || $scope.tipo == 'acompanhamentomarcosuperficial') {
+                $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
+                    $scope.marcosuperficialdeslocamento = results.data;
+                    if( $scope.marcosuperficialdeslocamento.length > 0)
+                        $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
+                });
+            }
+
+            //  if ($scope.tipo == 'acompanhamentomarcosuperficial') {
+            //     $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
+            //         $scope.marcosuperficialdeslocamento = results.data;
+            //         if( $scope.marcosuperficialdeslocamento.length > 0)
+            //             $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
+            //     });
+            // }
+
+
             $scope.init = function () {
-
-
                 if ($scope.tipo == 'fatorsegurancames') {
                     $http.get("/FatorSeguranca/").then(function (results) {
                         $scope.fatorsegurancaMes = results.data;
@@ -272,4 +300,32 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             }
         }
     }
-}]);
+}]).directive('ckEditor', function() {
+  return {
+    require: '?ngModel',
+    link: function(scope, elm, attr, ngModel) {
+        CKEDITOR.config.allowedContent = true;
+      var ck = CKEDITOR.replace(elm[0]);
+
+      if (!ngModel) return;
+
+      ck.on('instanceReady', function() {
+        ck.setData(ngModel.$viewValue);
+      });
+
+      function updateModel() {
+          scope.$apply(function() {
+              ngModel.$setViewValue(ck.getData());
+          });
+      }
+
+      ck.on('change', updateModel);
+      ck.on('key', updateModel);
+      ck.on('dataReady', updateModel);
+
+      ngModel.$render = function(value) {
+        ck.setData(ngModel.$viewValue);
+      };
+    }
+  };
+});;

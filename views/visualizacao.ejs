@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="/styles/app.css">
   <script src="/js/public/modernizr.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
-
+<script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
+<script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
   <style >
 @media screen {
     header.onlyprint, footer.onlyprint{
@@ -159,13 +160,13 @@ th.black {
 
 @page {
     size: A4;
-		    font-family: Times, Serif;
-    font-size: 11pt;
+    font-family: Times, Serif;
+    font-size: 10pt;
     text-align: justify;
     margin-top: 2cm;
     margin-bottom: 2cm;
-    margin-inside: 3.5cm;
-    margin-outside: 2.5cm;
+    margin-inside: 1.5cm;
+    margin-outside: 1.5cm;
 }
 @page :left {
   margin-left: 3cm;
@@ -211,16 +212,27 @@ h1 {
 
 	<body ng-controller="ViewTemplateController">
 
-		<div ng-init='init()' >
-			<div ng-bind-html="corpo">
+     <textarea ck-editor="" ng-model="corpo" class="form-control" id="body-editor" value="{{corpo}}">{{corpo}}</textarea>
+
+
+    <graficohorizontal></graficohorizontal>
+    
+		<!--<div ng-init='init()' >
+			<div id="docCorpo" ng-bind-html="corpo">
 									
 			</div>
  
 			
-		</div>
+		</div>-->
+
+            
 
 
 	</body>
+    <script>
+
+  
+    </script>
 	    <script src="/js/jquery-1.11.2.min.js"></script>
 	<script src="/js/dependencies/angular.min.js"></script>		
 		<script src="/js/dependencies/angular-sanitize.min.js"></script>
