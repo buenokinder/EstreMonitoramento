@@ -2,7 +2,7 @@
 <html ng-app="VisualizacaoApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>VisualizaÃ§Ã£o</title>
+    <title>Visualização</title>
     <link rel="stylesheet" href="/styles/prism.css">
     <link rel="stylesheet" href="/styles/normalize.css">
     <link rel="stylesheet" href="/styles/foundation.min.css">
@@ -69,7 +69,7 @@
             }
 
             .header.print:after {
-                content: "Este artigo foi escrito pela designer Dani Guerrato e retirado do site Tableless.";
+                content: "";
             }
 
             h1 {
@@ -106,13 +106,13 @@
             }
 
 
-            table {
+            /*table {
                 background: #fff;
                 margin-bottom: 1.25rem;
                 border: 1px solid #ddd;
                 table-layout: fixed;
                 width: 100%;
-            }
+            }*/
 
 
             table tr:nth-of-type(even) {
@@ -126,14 +126,10 @@
                 -webkit-print-color-adjust: exact;
             }
 
-            table > tr.base {
+            tr.base {
                 text-align: center;
                 font-color: black !important;
                 -webkit-print-color-adjust: exact;
-                font-size: 8pt !important;
-                font-family: arial !important;
-                font-style: normal !important;
-                font-weight: normal !important;
                 background-color: #f5f5f5 !important;
             }
 
@@ -142,9 +138,21 @@
                 text-align: center;
                 font-color: white !important;
                 -webkit-print-color-adjust: exact;
-                font-size: 9pt;
+                font-size: 7pt!important;
                 font-family: arial;
+                font-weight:normal!important;
             }
+
+            th {
+                font-size: 7pt!important;
+                font-weight:normal!important;
+            }
+
+            table tr td {
+                font-size: 7pt!important;
+                font-weight:normal!important;
+            }
+
 
             thead.gray {
                 background-color: #f5f5f5 !important;
@@ -170,10 +178,6 @@
                 font-color: white !important;
             }
 
-
-
-
-
             th.red {
                 background-color: red !important;
                 text-align: center;
@@ -189,10 +193,7 @@
             }
 
 
-            th {
-                font-weight: normal!important;
-                font-size: 8px;
-            }
+          
 
             @page {
                 size: A4;
