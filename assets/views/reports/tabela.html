@@ -87,7 +87,9 @@
 <div style="width: 250px;" ng-show="(tipo=='fatorseguranca')">
 <table>
 	<thead>
-		<th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA POR TEMPO</th>
+        <tr>
+            <th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA POR TEMPO</th>
+        </tr>
 		<tr>
 			<th style="text-align: center;" rowspan="2">Mês/2015</th>
 
@@ -115,12 +117,15 @@
 <div  style="width: 650px;" ng-show="(tipo=='kaiamoto')">
 <table>
 	<thead class="gray">
-		<th colspan="4" style="text-align: center;">CRITÉRIO DE ALERTA DEFINIDOS POR KAIMOTO (2008)</th>
-        
+        <tr>
+            <th colspan="4" style="text-align: center;">CRITÉRIO DE ALERTA DEFINIDOS POR KAIMOTO (2008)</th>
+        </tr>
 		
 	</thead>
 	<tbody>
-        	<th colspan="4" style="text-align: center;">DESLOCAMENTO HORIZONTAL (mm/dia)</th>
+        <tr>
+            <th colspan="4" style="text-align: center;">DESLOCAMENTO HORIZONTAL (mm/dia)</th>
+        </tr>
 		<tr >
 			<th class="green" style="text-align: center;">Condição Mínima (1)
 			</th>
@@ -141,8 +146,10 @@
             <th style="text-align: center;">x > 50
 			</th>
 		</tr>	
-        	<th class="gray" colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
+
 	<tr>
+        <th class="gray" colspan="4" style="text-align: center;">RECALQUE (mm/dia)</th>
+
 			<th class="green"  style="background-color: green;text-align: center;">Condição Mínima (1)
 			</th>
 		    <th class="yellow"  style="background-color: yellow;text-align: center;">Atenção (2)

@@ -161,6 +161,11 @@ module.exports = {
             item.nomeAuxiliar = '';
             item.criterioAlertaHorizontalMetodologia1 = 0;
             item.criterioAlertaVerticalMetodologia1 = 0;
+            item.criterioAceitavelVelocidadeHorizontal = 0;
+            item.criterioAceitavelVelocidadeVertical = 0;
+            item.criterioRegularVelocidadeHorizontal = 0;
+            item.criterioRegularVelocidadeVertical = 0;
+
             item.vetorDeslocamentoSeno = 0;
             item.vetorDeslocamentoAngulo = 0;
 
@@ -228,6 +233,10 @@ module.exports = {
                 item.leste = marcosSuperficiais[i].leste;
                 item.criterioAlertaHorizontalMetodologia1 = "";
                 item.criterioAlertaVerticalMetodologia1 = "";
+                item.criterioAceitavelVelocidadeHorizontal = 0;
+                item.criterioAceitavelVelocidadeVertical = 0;
+                item.criterioRegularVelocidadeHorizontal = 0;
+                item.criterioRegularVelocidadeVertical = 0;
                 result.push(item);
             }
 
