@@ -13,7 +13,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     $scope.link = "";
     $scope.loading = false;
     $scope.aterros = ([]);
-    
+
     var canvas = null;
     var ctx = null;
     var $fatorseguranca = null;
@@ -27,7 +27,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         exibirLegenda: false,
         exibirFatorSeguranca: false,
         habilitado: false,
-        imagemFatorSeguranca:''
+        imagemFatorSeguranca: ''
     };
     $scope.monitoramentos = function () {
         document.location = '/MonitoramentoAterros';
@@ -36,50 +36,68 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         mapaHorizontal: '',
         mapaVertical: '',
 
-        setImageFatorSeguranca:function (img) {
+        setImageFatorSeguranca: function (img) {
             $("#preview").prop("src", img);
             $scope.data.imagemFatorSeguranca = img;
         }
     };
-    
+
     $scope.save = function () {
 
-        var params = {
-            owner: $scope.data.aterro.id,
-            exibirmapahorizontal: $scope.data.exibirMapaHorizontal,
-            exibirmapavertical: $scope.data.exibirMapaVertical,
-            exibirlegenda: $scope.data.exibirLegenda,
-            fatorseguranca: $scope.data.fatorSeguranca,
-            exibirfatorseguranca: $scope.data.exibirFatorSeguranca,
-            habilitado: $scope.data.habilitado,
-            imagemfatorseguranca: $scope.data.imagemFatorSeguranca
-        };
+        swal({
+            title: "",
+            text: "Você tem certeza que deseja inserir a configuração ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
 
-        $http.get('/AterroDashBoard/?owner=' + params.owner).success(function (response, status) {
-            var verbo = 'POST';
-            var id = '';
-            if (null != response && response.length != 0) {
-                verbo = 'PUT';
-                params.id = response[0].id;
-                id = params.id;
-            }
+                    var params = {
+                        owner: $scope.data.aterro.id,
+                        exibirmapahorizontal: $scope.data.exibirMapaHorizontal,
+                        exibirmapavertical: $scope.data.exibirMapaVertical,
+                        exibirlegenda: $scope.data.exibirLegenda,
+                        fatorseguranca: $scope.data.fatorSeguranca,
+                        exibirfatorseguranca: $scope.data.exibirFatorSeguranca,
+                        habilitado: $scope.data.habilitado,
+                        imagemfatorseguranca: $scope.data.imagemFatorSeguranca
+                    };
 
-            $http({
-                method: verbo,
-                url: '/AterroDashBoard/' + id,
-                data: params
-            }).then(function onSuccess(sailsResponse) {
-                swal("Configuração Inserida!", "Seu registro foi inserido com sucesso.", "success");
-                Materialize.toast('Registro inserido com sucesso!', 4000);
-            })
-            .catch(function onError(sailsResponse) {
-                swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
-                Materialize.toast('Registro não inserido!', 4000);
-            })
-        }).error(function (err, status) {
-            swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
-            Materialize.toast('Registro não inserido!', 4000);
-        });;
+                    $http.get('/AterroDashBoard/?owner=' + params.owner).success(function (response, status) {
+                        var verbo = 'POST';
+                        var id = '';
+                        if (null != response && response.length != 0) {
+                            verbo = 'PUT';
+                            params.id = response[0].id;
+                            id = params.id;
+                        }
+
+                        $http({
+                            method: verbo,
+                            url: '/AterroDashBoard/' + id,
+                            data: params
+                        }).then(function onSuccess(sailsResponse) {
+                            swal("Configuração Inserida!", "Seu registro foi inserido com sucesso.", "success");
+                            Materialize.toast('Registro inserido com sucesso!', 4000);
+                        })
+                        .catch(function onError(sailsResponse) {
+                            swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
+                            Materialize.toast('Registro não inserido!', 4000);
+                        })
+                    }).error(function (err, status) {
+                        swal("Erro!", "Ocorreu uma falha ao salvar a configuração :(", "error");
+                        Materialize.toast('Registro não inserido!', 4000);
+                    });
+                }
+                else {
+                    swal("Cancelado", "Seu registro não foi inserido :(", "error");
+                }
+            });
     };
 
     $scope.showMapas = function () {
@@ -130,7 +148,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         });
 
         $scope.$watch("data.exibirLegenda", function () {
-            
+
             if ($scope.data.exibirLegenda) {
                 $("#legenda").show();
             } else {
@@ -152,7 +170,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
             }
         });
     };
-    
+
     $scope.setMapas = function () {
         $(".mapv").each(function (i, o) {
             $(this).prop("src", $scope.preview.mapaVertical);
@@ -201,7 +219,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
             $scope.setMapas();
         }
 
-       // $scope.$apply();
+        // $scope.$apply();
 
     };
 
@@ -225,19 +243,19 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         html2canvas($("#sfatorseguranca"), {
             onrendered: function (canvas) {
 
-               // var width = $("#sfatorseguranca").css("width").replace("px", "");
-               // var height = $("#sfatorseguranca").css("height").replace("px", "");
-               // var extraCanvas = document.createElement("canvas");
-               // extraCanvas.setAttribute('width', width);
-               // extraCanvas.setAttribute('height', height);
-               // var ctx = extraCanvas.getContext('2d');
-               // ctx.fillRect(0, 0, width, height);
-               // ctx.fillStyle = "rgba(0, 0, 200, 0)";
-               // ctx.fill();
-               // ctx.strokeStyle = 'rgba(255,255,255, 1)';
-               // ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
-               // var screenshot = extraCanvas.toDataURL();
-               // $("#imgfatorseguranca").attr("src", screenshot);
+                // var width = $("#sfatorseguranca").css("width").replace("px", "");
+                // var height = $("#sfatorseguranca").css("height").replace("px", "");
+                // var extraCanvas = document.createElement("canvas");
+                // extraCanvas.setAttribute('width', width);
+                // extraCanvas.setAttribute('height', height);
+                // var ctx = extraCanvas.getContext('2d');
+                // ctx.fillRect(0, 0, width, height);
+                // ctx.fillStyle = "rgba(0, 0, 200, 0)";
+                // ctx.fill();
+                // ctx.strokeStyle = 'rgba(255,255,255, 1)';
+                // ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
+                // var screenshot = extraCanvas.toDataURL();
+                // $("#imgfatorseguranca").attr("src", screenshot);
                 ////var screenshot = canvas.toDataURL("image/png");
 
                 var screenshot = canvas.toDataURL();
@@ -280,7 +298,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         var element = ui.draggable;
         var data = element.data("url");
         var x = parseInt(ui.offset.left - offsetX);
-        var y = parseInt(ui.offset.top - offsetY);  
+        var y = parseInt(ui.offset.top - offsetY);
         ctx.drawImage(element.data("image"), x - 1, y);
 
         $scope.preview.setImageFatorSeguranca(canvas.toDataURL());
@@ -299,19 +317,19 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         background.onload = function () {
             var maxWidth = canvas.width;
             var maxHeight = canvas.height;
-            var ratio = 0;  
-            var width = background.width;    
-            var height = background.height;  
+            var ratio = 0;
+            var width = background.width;
+            var height = background.height;
 
             if (width > maxWidth) {
                 ratio = maxWidth / width;   // ratio scaling
-                background.width =  maxWidth; 
-                background.height = height * ratio;  
+                background.width = maxWidth;
+                background.height = height * ratio;
             }
 
             if (height > maxHeight) {
                 ratio = maxHeight / height; // ratio scaling
-                background.height = maxHeight;   
+                background.height = maxHeight;
                 background.width = width * ratio;
             }
 

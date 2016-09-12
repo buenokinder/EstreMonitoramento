@@ -23,9 +23,6 @@ module.exports = {
         return 0;
     },
 
-    _totalDatasResult: 0,
-    _totalDataConfigResult: 0,
-
     _mustAdd: function (aterro) {
 
         if (aterro.dashboard.length == 0) {
@@ -39,13 +36,13 @@ module.exports = {
         return true;
     },
 
-    _dashboards: [],
-    _previews: [],
+  
 
     list: function (req, res) {
         var _that = this;
-        _that._dashboards = [];
-        _that._totalDatasResult = 0;
+
+        var _dashboards = [];
+        var _totalDatasResult = 0;
 
         Aterro.find({})
             .populate("mapa")
@@ -89,24 +86,24 @@ module.exports = {
                     imagemfatorseguranca: dash.imagemfatorseguranca
                 };
 
-                _that._dashboards.push(item);
+                _dashboards.push(item);
             }
 
             var execute = new Promise(function (resolve, reject) {
-                var totalItens = _that._dashboards.length;
-                for (var i = 0; i < _that._dashboards.length; i++) {
+                var totalItens = _dashboards.length;
+                for (var i = 0; i < _dashboards.length; i++) {
 
                     var getLastDataMedicao = function (dashBoardIndex) {
-                        var aterroId = _that._dashboards[dashBoardIndex].aterro.id;
+                        var aterroId = _dashboards[dashBoardIndex].aterro.id;
 
                         MedicaoMarcoSuperficial.findOne({ aterro: aterroId }).sort("data DESC").exec(function (err, medicao) {
-                            _that._totalDatasResult += 1;
+                            _totalDatasResult += 1;
 
                             var data = (medicao) ? new Date(medicao.data) : new Date();
-                            _that._dashboards[dashBoardIndex].aterro.dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
+                            _dashboards[dashBoardIndex].aterro.dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
 
-                            if (_that._totalDatasResult == totalItens) {
-                                return resolve(_that._dashboards);
+                            if (_totalDatasResult == totalItens) {
+                                return resolve(_dashboards);
                             }
                         });
                     };
@@ -124,8 +121,8 @@ module.exports = {
 
     listall: function (req, res) {
         var _that = this;
-        _that._previews = [];
-        _that._totalDataConfigResult = 0;
+        var _previews = [];
+        var _totalDataConfigResult = 0;
 
         Aterro.find({})
             .populate("mapa")
@@ -170,24 +167,24 @@ module.exports = {
                     item.habilitado = dash.habilitado;
                 }
 
-                _that._previews.push(item);
+                _previews.push(item);
             }
 
             var execute = new Promise(function (resolve, reject) {
-                var totalItens = _that._previews.length;
-                for (var i = 0; i < _that._previews.length; i++) {
+                var totalItens = _previews.length;
+                for (var i = 0; i < _previews.length; i++) {
 
                     var getLastDataMedicao = function (dashBoardIndex) {
-                        var aterroId = _that._previews[dashBoardIndex].id;
+                        var aterroId = _previews[dashBoardIndex].id;
 
                         MedicaoMarcoSuperficial.findOne({ aterro: aterroId }).sort("data DESC").exec(function (err, medicao) {
-                            _that._totalDataConfigResult += 1;
+                            _totalDataConfigResult += 1;
 
                             var data = (medicao) ? new Date(medicao.data) : new Date();
-                            _that._previews[dashBoardIndex].dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
+                            _previews[dashBoardIndex].dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
 
-                            if (_that._totalDataConfigResult == totalItens) {
-                                return resolve(_that._previews);
+                            if (_totalDataConfigResult == totalItens) {
+                                return resolve(_previews);
                             }
                         });
                     };
