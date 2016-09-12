@@ -1,262 +1,267 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html ng-app="VisualizacaoApp">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<title>Visualização</title>
-		 <link rel="stylesheet" href="/styles/prism.css">
-  <link rel="stylesheet" href="/styles/normalize.css">
-  <link rel="stylesheet" href="/styles/foundation.min.css">
-  <link rel="stylesheet" href="/styles/font-awesome.min.css">
-  <link rel="stylesheet" href="/styles/app.css">
-  <script src="/js/public/modernizr.js"></script>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
-<script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Visualização</title>
+    <link rel="stylesheet" href="/styles/prism.css">
+    <link rel="stylesheet" href="/styles/normalize.css">
+    <link rel="stylesheet" href="/styles/foundation.min.css">
+    <link rel="stylesheet" href="/styles/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/app.css">
+    <script src="/js/public/modernizr.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
 
-  <style >
-@media screen {
-    header.onlyprint, footer.onlyprint{
-        display: none; /* Hide from screen */
-    }
-}
-	@media print {
+    <style>
+        @media screen {
+            header.onlyprint, footer.onlyprint {
+                display: none; /* Hide from screen */
+            }
+        }
 
-		* { 
-        background: transparent !important; 
-        color: #000 !important; 
-        text-shadow: none !important; 
-        filter:none !important; 
-        -ms-filter: none !important; 
-    } 
+        @media print {
 
-header.onlyprint {
-        position: fixed; /* Display only on print page (each) */
-        top: 0; /* Because it's header */
-    }
-    footer.onlyprint {
-        position: fixed;
-        bottom: 0; /* Because it's footer */
-    }
+            * {
+                background: transparent !important;
+                color: #000 !important;
+                text-shadow: none !important;
+                filter: none !important;
+                -ms-filter: none !important;
+            }
 
-		  .no-print, nav, footer, video, audio, object, embed { 
-        display:none; 
-    }
+            header.onlyprint {
+                position: fixed; /* Display only on print page (each) */
+                top: 0; /* Because it's header */
+            }
 
-    .print {
-        display: block;
-    }
+            footer.onlyprint {
+                position: fixed;
+                bottom: 0; /* Because it's footer */
+            }
 
+            .no-print, nav, footer, video, audio, object, embed {
+                display: none;
+            }
 
-		 img {
-        max-width: 100%;
-    }
-
-    aside {
-        display:block;
-        page-break-before: always;
-    }
-
-		.page-break { 
-        page-break-before: always; 
-    }
-    
-    /*Estilos da Demo*/
-    .header.print h1{
-        width: 100%;
-        margin-bottom: 0.5cm;
-        font-size: 18pt;
-    }
-
-    .header.print:after {
-        content: "Este artigo foi escrito pela designer Dani Guerrato e retirado do site Tableless.";
-    }
-
-   h1 {
-      color: #000;
-      background: none;
-   }
-
-	 thead {display: table-header-group;}
-
-   nav, aside {
-      display: none;
-   }
-h1::before {
-	@top-right {
-        content: "Pagina " counter(chapter) ": ";
-        
-    }
-    
-}
-   body, article {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-   }
-
-h1 {
-    page-break-before: right;
-    prince-page-group: start;
-    string-set: chapter content();
-    counter-increment: chapter;
-    counter-reset: section;
-}
+            .print {
+                display: block;
+            }
 
 
-	table {
-    background: #fff;
-    margin-bottom: 1.25rem;
-    border: 1px solid #ddd;
-    table-layout: fixed;
-    width: 100%;
-}
-   
+            img {
+                max-width: 100%;
+            }
 
-table tr:nth-of-type(even) {
-    background: #f9f9f9;
-}
+            aside {
+                display: block;
+                page-break-before: always;
+            }
 
-th.green {
-	background-color: green!important;text-align: center;
-font-color: white!important;
-    -webkit-print-color-adjust: exact; 
-}
+            .page-break {
+                page-break-before: always;
+            }
 
-table tr.base {
-	text-align: center;
-    font-color: black!important;
-    -webkit-print-color-adjust: exact; 
-    font-size: 8pt!important;
-    font-family: arial!important;
-    font-style: normal!important;
-    background-color: #f5f5f5!important;
-    
-}
+            /*Estilos da Demo*/
+            .header.print h1 {
+                width: 100%;
+                margin-bottom: 0.5cm;
+                font-size: 18pt;
+            }
 
-th.lightgreen {
-	background-color: #9ACD32!important;text-align: center;
-font-color: white!important;
-    -webkit-print-color-adjust: exact; 
-    font-size: 9pt;
-    font-family: arial;
-}
-thead.gray {
-	background-color: #f5f5f5!important;
-    -webkit-print-color-adjust: exact; 
-}
+            .header.print:after {
+                content: "Este artigo foi escrito pela designer Dani Guerrato e retirado do site Tableless.";
+            }
 
-tr.gray {
-	background-color: #f5f5f5!important;
-    -webkit-print-color-adjust: exact; 
-}
+            h1 {
+                color: #000;
+                background: none;
+            }
 
-th.yellow {
-	background-color: yellow!important;text-align: center;
-    -webkit-print-color-adjust: exact; 
-		font-color: white!important;
-}
+            thead {
+                display: table-header-group;
+            }
 
-th.orange {
-	background-color: orange!important;text-align: center;
-    -webkit-print-color-adjust: exact; 
-		font-color: white!important;
-}
-  
+            nav, aside {
+                display: none;
+            }
+
+            h1::before {
+                @top-right {
+                    content: "Pagina " counter(chapter) ": ";
+                }
+            }
+
+            body, article {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            h1 {
+                page-break-before: right;
+                prince-page-group: start;
+                string-set: chapter content();
+                counter-increment: chapter;
+                counter-reset: section;
+            }
 
 
-  
-
-th.red {
-	background-color: red!important;text-align: center;
-    -webkit-print-color-adjust: exact; 
-		font-color: white!important;
-}
-
-th.black {
-	background-color: black!important;text-align: center;
-    -webkit-print-color-adjust: exact; 
-        color: white!important;
-}
+            table {
+                background: #fff;
+                margin-bottom: 1.25rem;
+                border: 1px solid #ddd;
+                table-layout: fixed;
+                width: 100%;
+            }
 
 
+            table tr:nth-of-type(even) {
+                background: #f9f9f9;
+            }
 
-@page {
-    size: A4;
-    font-family: Times, Serif;
-    font-size: 10pt;
-    text-align: justify;
-    margin-top: 2cm;
-    margin-bottom: 2cm;
-    margin-inside: 1.5cm;
-    margin-outside: 1.5cm;
-}
-@page :left {
-  margin-left: 1cm;
-}
+            th.green {
+                background-color: green !important;
+                text-align: center;
+                font-color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-@page :right {
-  margin-left: 1cm;
-}
+            table > tr.base {
+                text-align: center;
+                font-color: black !important;
+                -webkit-print-color-adjust: exact;
+                font-size: 8pt !important;
+                font-family: arial !important;
+                font-style: normal !important;
+                font-weight: normal !important;
+                background-color: #f5f5f5 !important;
+            }
 
+            th.lightgreen {
+                background-color: #9ACD32 !important;
+                text-align: center;
+                font-color: white !important;
+                -webkit-print-color-adjust: exact;
+                font-size: 9pt;
+                font-family: arial;
+            }
 
-@page :first {
+            thead.gray {
+                background-color: #f5f5f5 !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-}
+            tr.gray {
+                background-color: #f5f5f5 !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-@page :blank {
-  @top-center { content: "This page is intentionally left blank." }
-}
+            th.yellow {
+                background-color: yellow !important;
+                text-align: center;
+                -webkit-print-color-adjust: exact;
+                font-color: white !important;
+            }
 
-h1 {
-  page-break-before: always;
-}
-
-
-@page {
-	
-	@top-center {
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 2em;
-    content: '';
-  }}
-}
-
-}
+            th.orange {
+                background-color: orange !important;
+                text-align: center;
+                -webkit-print-color-adjust: exact;
+                font-color: white !important;
+            }
 
 
 
 
 
-</style>
-	</head>
+            th.red {
+                background-color: red !important;
+                text-align: center;
+                -webkit-print-color-adjust: exact;
+                font-color: white !important;
+            }
+
+            th.black {
+                background-color: black !important;
+                text-align: center;
+                -webkit-print-color-adjust: exact;
+                color: white !important;
+            }
 
 
-	<body ng-controller="ViewTemplateController">
 
- 
-    
-		<div ng-init='init()' >
-			<div id="docCorpo" ng-bind-html="corpo">
-									
-			</div>
- 
-			
-		</div>
+            @page {
+                size: A4;
+                font-family: Times, Serif;
+                font-size: 10pt;
+                text-align: justify;
+                margin-top: 2cm;
+                margin-bottom: 2cm;
+                margin-inside: 1.5cm;
+                margin-outside: 1.5cm;
+            }
 
-            
+            @page :left {
+                margin-left: 1cm;
+            }
+
+            @page :right {
+                margin-left: 1cm;
+            }
 
 
-	</body>
-    <script>
+            @page :first {
+            }
 
-  
-    </script>
-	    <script src="/js/jquery-1.11.2.min.js"></script>
-	<script src="/js/dependencies/angular.min.js"></script>		
-		<script src="/js/dependencies/angular-sanitize.min.js"></script>
-    	<script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
-        
-		<script src="/js/private/dashboard/highcharts.js"></script>
-		<script src="/js/private/dashboard/highcharts-exporting.js"></script>
-		<script src="/js/private/dashboard/ViewRelatorioController.js"></script>
+            @page :blank {
+                @top-center {
+                    content: "This page is intentionally left blank.";
+                }
+            }
+
+            h1 {
+                page-break-before: always;
+            }
+
+
+            @page {
+
+                @top-center {
+                    font-family: sans-serif;
+                    font-weight: bold;
+                    font-size: 2em;
+                    content: '';
+                }
+            }
+        }
+    </style>
+</head>
+
+
+<body ng-controller="ViewTemplateController">
+
+
+
+    <div ng-init='init()'>
+        <div id="docCorpo" ng-bind-html="corpo">
+
+        </div>
+
+
+    </div>
+
+
+
+
+</body>
+
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/dependencies/angular.min.js"></script>
+<script src="/js/dependencies/angular-sanitize.min.js"></script>
+<script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
+
+<script src="/js/private/dashboard/highcharts.js"></script>
+<script src="/js/private/dashboard/highcharts-exporting.js"></script>
+<script src="/js/private/dashboard/ViewRelatorioController.js"></script>
+
 </html>

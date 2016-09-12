@@ -157,8 +157,8 @@ module.exports = {
             item.sentidoDeslocamentoNorteSul = 0;
             item.sentidoDeslocamentoLesteOeste = 0;
             item.sentido = 0;
-            item.nomeTopografo = 0;
-            item.nomeAuxiliar = 0;
+            item.nomeTopografo = '';
+            item.nomeAuxiliar = '';
             item.criterioAlertaHorizontalMetodologia1 = 0;
             item.criterioAlertaVerticalMetodologia1 = 0;
             item.vetorDeslocamentoSeno = 0;
@@ -194,14 +194,14 @@ module.exports = {
                 item.sentido = detalhe.monitoramento.sentido;
                 item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
+
+                item.criterioAceitavelVelocidadeHorizontal = detalhe.monitoramento.criterioAceitavelVelocidadeHorizontal
+                item.criterioAceitavelVelocidadeVertical = detalhe.monitoramento.criterioAceitavelVelocidadeVertical;
+                item.criterioRegularVelocidadeHorizontal = detalhe.monitoramento.criterioRegularVelocidadeHorizontal;
+                item.criterioRegularVelocidadeVertical = detalhe.monitoramento.criterioRegularVelocidadeVertical;
+
                 item.vetorDeslocamentoSeno = detalhe.monitoramento.vetorDeslocamentoSeno;
                 item.vetorDeslocamentoAngulo = detalhe.monitoramento.vetorDeslocamentoAngulo;
-
-                var notificacao = ([]);
-
-                //if(detalhe.owner.notificacoes.length>0){
-                //    notificacao = detalhe.owner.notificacoes[0];
-                //}
 
                 item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacao: detalhe.owner.notificacoes };
 
