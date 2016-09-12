@@ -131,20 +131,22 @@ blockquote, q {
 				<label  ng-class='inputClass'>Nome</label>
 			</div>
 			<div class='input-field col s12'>
-				<input type='text' ng-model="data.data" ui-date-mask></input>
-				<label  ng-class='inputClass'>Data</label>
+				<input type='text' ng-model="data.dataInicio" ui-date-mask></input>
+				<label  ng-class='inputClass'>Data Inicio</label>
 			</div>			
-			<div class='input-field col s12'>
-				<input type='text' ng-model="data.descricao"></input>
-				<label  ng-class='inputClass'>Descrição</label>
-			</div>			
+				<div class='input-field col s12'>
+				<input type='text' ng-model="data.dataFim" ui-date-mask></input>
+				<label  ng-class='inputClass'>Data Final</label>
+			</div>	
+			
 		</div>
 		<div class='row'>
 			<div class='collection-item dismissable'>
 				<div class='input-field col s12'>
 					<label >Corpo</label><br><br>
-					<text-angular  ng-model='data.corpo'></text-angular>
+					<text-angular  ng-model="data.corpo"></text-angular>
 				</div>
+	
 			</div>
 		</div>
 		<div class='row'>&nbsp;</div>
@@ -162,3 +164,5 @@ blockquote, q {
 		<input type='hidden' name='_csrf' value='<%= _csrf %>' />
 	</form>
 </div>
+
+ 

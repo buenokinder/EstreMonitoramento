@@ -9,6 +9,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 	$scope.init();
 $scope.save = function() {
 	console.log('data editado' ,$scope.data)
+	
 	// $scope.sennitForm.loading = true;
 	swal({   title: "",   
 	    text: "Você tem certeza que deseja alterar este registro?",   

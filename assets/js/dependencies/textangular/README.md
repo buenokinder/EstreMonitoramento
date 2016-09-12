@@ -4,19 +4,19 @@ textAngular v1.5.0
 [![Build Status](https://travis-ci.org/fraywing/textAngular.png?branch=master)](https://travis-ci.org/fraywing/textAngular) [![Coverage Status](https://coveralls.io/repos/fraywing/textAngular/badge.png)](https://coveralls.io/r/fraywing/textAngular)
 
 
-Demo is available at: http://www.textangular.com (Or editable [Plunkr Demo](http://plnkr.co/edit/kKPfk0LCXWrMpZ1gkblb?p=preview))
+Demo is available at: http://www.textangular.com (Or editable [Plunkr Demo](http://plnkr.co/edit/hz3x2f?p=preview))
 
 #### Upgrading From 1.2.2 or earlier
 
 To upgrade from version 1.2.2 or earlier you need to follow these steps:
 
 1. The styling for textAngular is now in the `dist/textAngular.css` file, you will need to include this or a copy of it with your own modifications.
-2. The rangy library is now required, you will need both the `rangy-core` and `rangy-saveselection` modules, alternatively you can include the compressed version (`textAngular-rangy.min.js`) in the dist folder
+2. The rangy library is now required, you will need both the `rangy-core` and `rangy-selectionsaverestore` modules, alternatively you can include the compressed version (`textAngular-rangy.min.js`) in the dist folder
 
 ## Requirements
 
 1. `AngularJS` ≥ `1.3.x`
-2. `Rangy` ≥ `1.3.x`, Both rangy-core and rangy-saveselection are required. (There is a minified combination of these two included in the dist folder)
+2. `Rangy` ≥ `1.3.x`, Both rangy-core and rangy-selectionsaverestore are required. (There is a minified combination of these two included in the dist folder)
 3. `Font-Awesome` ≥ `4.x` for the default icons on the toolbar
 1. `Bootstrap` ≥ `3.x` for the default styles (Can use `bootstrap-css-only`, you must add this to your bower or include this manually)
 5. NOTE: please check the requirements for earlier releases, if these are an issue.
@@ -50,7 +50,7 @@ Install using commonjs (eg componentjs, Webpack, Browserify):
 ```
 angular.module('myModule', [require('angular-sanitize'), require('textAngular')]);
 ```
-Optionally, install textAngular-santize.min.js by requiring it BEFORE requring textAngular:
+Optionally, install textAngular-sanitize.min.js by requiring it BEFORE requring textAngular:
 ```
 require('textangular/dist/textAngular-sanitize.min');
 angular.module('myModule', [require('textAngular')]);
@@ -66,15 +66,16 @@ loaders: [
 
 Include script tags similar to the following:
 ```html
-<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.3.0/textAngular-sanitize.min.js'></script>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.3.0/textAngular.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.0/textAngular-rangy.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.0/textAngular-sanitize.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.0/textAngular.min.js'></script>
 ```
 
 **Via jsDelivr:**
 
 Include script tag similar to the following: (For details on how this works see: [https://github.com/jsdelivr/jsdelivr#load-multiple-files-with-single-http-request](https://github.com/jsdelivr/jsdelivr#load-multiple-files-with-single-http-request))
 ```html
-<script src='http://cdn.jsdelivr.net/g/angular.textangular@1.3.0(textAngular-sanitize.min.js+textAngular.min.js)'></script>
+<script src='http://cdn.jsdelivr.net/g/angular.textangular@1.5.0(textAngular-rangy.min.js+textAngular-sanitize.min.js+textAngular.min.js)'></script>
 ```
 
 **Via Github**
@@ -89,7 +90,7 @@ Download the code from [https://github.com/fraywing/textAngular/releases/latest]
 
 ### Usage
 
-1. Include (`rangy-core.js` and `rangy-saveselection.js`) or `textAngular-rangy.min.js` in your project using script tags
+1. Include (`rangy-core.js` and `rangy-selectionsaverestore.js`) or `textAngular-rangy.min.js` in your project using script tags
 2. Include `textAngular-sanitize.js` or `textAngular-sanitize.min.js` in your project using script tags
 3. Include (`textAngularSetup.js` and `textAngular.js`) or `textAngular.min.js` (textAngularSetup.js is included inside textAngular.min.js)
 4. Add a dependency to `textAngular` in your app module, for example: ```angular.module('myModule', ['textAngular'])```.
@@ -114,7 +115,7 @@ For Additional options see the [github Wiki](https://github.com/fraywing/textAng
 textAngular uses ```execCommand``` for the rich-text functionality.
 That being said, its still a fairly experimental browser feature-set, and may not behave the same in all browsers - see http://tifftiff.de/contenteditable/compliance_test.html for a full compliance list.
 It has been tested to work on Chrome, Safari, Opera, Firefox and Internet Explorer 8+.
-If you find something, please let me know - throw me a message, or submit a issue request!
+If you find something, please let me know - throw me a message, or submit an issue request!
 
 ### FAQ
 

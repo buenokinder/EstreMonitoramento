@@ -1,213 +1,331 @@
 
-angular.module('VisualizacaoApp', ['ngSanitize' ]).controller('ViewTemplateController', ['$scope', '$http', '$element','$compile', function($scope, $http, $element, $compile) {
-		
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateController', ['$scope', '$http', '$element', '$compile', function ($scope, $http, $element, $compile) {
 
-        $scope.data = ([]);
-		$scope.corpo = "";
-		$scope.id = getParameterByName('id');
-        $scope.aterro = getParameterByName('aterro');
-		
-        String.prototype.replaceAll = function(s,r){return this.split(s).join(r)}
-		$scope.init = function() {			
-			$http.get("/Template/"+ $scope.id).then(function (results) {                                
-				$scope.data  = results.data;
-				$scope.corpo = results.data.corpo; 
-				var respostas = $scope.corpo.split('{{');
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 
-                function myFunction(item, index) {
-                    if(index != 0){
-                        var tipo = item.split('}}')[0];
-                        if(tipo.indexOf('tabela(') !== -1){
-                            var parametro = tipo.split('\'')[1];
-                            console.log(parametro);
-                   
-				     	    $scope.corpo  =    $scope.corpo.replaceAll('{{'+ item.split('}}')[0] +'}}', '<tabela tipo=\''+parametro+'\'></tabela>  ');
+    $scope.data = ([]);
+    $scope.corpo = "";
+    $scope.id = getParameterByName('id');
+    $scope.aterro = getParameterByName('aterro');
+
+    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
+
+  
+    $scope.download= "";
+
+    $scope.init = function () {
+        $http.get("/Template/" + $scope.id).then(function (results) {
+            $scope.data = results.data;
+
+
+            $scope.corpo = results.data.corpo;
+            var respostas = $scope.corpo.split('{{');
+
+            function myFunction(item, index) {
+                if (index != 0) {
+                    var tipo = item.split('}}')[0];
+                    if (tipo.indexOf('tabela(') !== -1) {
+                        var parametro = tipo.split('\'')[1];
+
+
+                        $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
+                    }
+                    if (tipo.indexOf('grafico(') !== -1) {
+                        var parametro = tipo.split('\'')[1];
+
+
+                        var parametro2 = tipo.split('\'')[3];
+                        console.log(parametro);
+                        if (parametro == 'marcohorizontal') {
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
+                        } else {
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
                         }
-                        if(tipo.indexOf('grafico(') !== -1){
-                            var parametro = tipo.split('\'')[1];
-                            console.log(parametro);
-                            $scope.corpo  =    $scope.corpo.replaceAll('{{'+ item.split('}}')[0] +'}}', '<grafico tipo=\''+parametro+'\'></grafico>  ');
-                        }
+
+                        console.log($scope.corpo);
                     }
                 }
-                respostas.forEach(myFunction);
-                $element.replaceWith($compile($scope.corpo )($scope));
-             
-			});
-		};
-		$scope.init();
-	}]).directive('grafico', [ '$compile', '$http', function ($compile, $http) {
-        return {
-            restrict: 'E',
-            scope: {
-                id: '=',
-                tipo: '@',
-                filter: '='
-            },
+            }
+
+
+            respostas.forEach(myFunction);
+        
+            $scope.corpo= $compile($scope.corpo)($scope);
+            //$element.replaceWith($scope.download);
+
             
-            templateUrl: 'views/reports/grafico.html',
-            link: function ($scope, $element, attrs) {
-                $scope.data = ([]);
-                if($scope.tipo == 'marcovertical'){
-		            $http.get("/MarcoSuperficial/monitoramentos/").then(function (results) {                                
-				        $scope.data  = results.data;
-                        console.log($scope.data[2]);
-                        //respostas.forEach(myFunction);
-                    });
-                };
 
-                $('#container').highcharts({
-        chart: {
-            zoomType: 'xy'
+        });
+    };
+    $scope.init();
+}]).directive('graficohorizontal', ['$compile', '$http', function ($compile, $http) {
+    return {
+        restrict: 'E',
+        scope: {
+            aterro: '@',
+            tipado: '@',
+            inicio: '@',
+            fim: '@'
         },
-        title: {
-            text: 'Fator de Segurança e Pluviometria'
-        },
-        xAxis: [{
-            categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            crosshair: true
-        }],
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            title: {
-                text: 'Fator de Segurança',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
+        templateUrl: 'views/reports/grafico.html',
+ 
+        link: function ($scope, $element, attrs) {
+            $scope.data = ([]);
+            $scope.velocidadeHorizontal = [];
+            $scope.deslocamentoHorizontalParcial = [];
+
+
+            $scope.getContentHorizontal = function () {
+                return $scope.tipado + "horizontal";
             }
-        }, { // Secondary yAxis
-            title: {
-                text: 'Pliviometria',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value} mm',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: true
-        }],
-        tooltip: {
-            shared: true
-        },
-        legend: {
-          
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-        },
-        series: [{
-            name: 'Pluviometria',
-            type: 'column',
-        
-            yAxis: 1,
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-            tooltip: {
-                valueSuffix: ' mm'
-            }
+            $scope.deslocamentoHorizontal = [];
 
-        }, {
-            name: 'Fator Segurança',
+            $scope.array = "";
 
-                color: 'red',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-            tooltip: {
-                valueSuffix: '°C'
-            }
-        }]
-    });
 
-        $('#container').highcharts({
-        title: {
-            text: 'MSD 01 - Vertical',
-            x: -20 //center
-        },
-        
-        xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        yAxis: {
-            title: {
-                text: 'Deslocamentos (cm)'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
-        },
-        tooltip: {
-            valueSuffix: '°C'
-        },
-       
-        series: [{
-            name: 'DESLOCAMENTO VERTICAL TOTAL',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-        }, {
-            name: 'DESLOCAMENTO VERTICAL PARCIAL',
-            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-        }, {
-            name: 'CRITERIO DE ALERTA 2',
-            data: [1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25]
-        }, {
-            name: 'CRITERIO DE ALERTA 3',
-            data: [3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25, 3.25]
-        },  {
-            name: 'VELOCIDADE VERTICAL',
-            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-        }]
-    });   
+            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
+                $scope.data = results.data;
+
+
+                angular.forEach($scope.data, function (value, key) {
+
+
+                    $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
+                    $scope.deslocamentoHorizontalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalParcial)]);
+                    $scope.velocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
+
+
+
+
+
+                });
+                $scope.categorias = [$scope.array];
+                $('#' + $scope.getContentHorizontal()).highcharts({
+                    title: {
+                        text: $scope.tipado + ' - Horizontal',
+                        x: -20 //center
+                    },
+
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: { // don't display the dummy year
+                            month: '%e. %b',
+                            year: '%b'
+                        },
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Deslocamentos (cm)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '°C'
+                    },
+
+                    series: [{
+                        name: 'DESLOCAMENTO HORIZONTAL TOTAL',
+                        data: $scope.deslocamentoHorizontal
+
+                    }, {
+                            name: 'DESLOCAMENTO HORIZONTAL PARCIAL',
+                            data: $scope.deslocamentoHorizontalParcial
+
+                        }, {
+                            name: 'VELOCIDADE HORIZONTAL',
+                            data: $scope.velocidadeHorizontal
+
+                        }]
+                });
+            });
+
+
+
         }
-    }}]).directive('tabela', [ '$compile', '$http', function ($compile, $http) {
-        return {
-            restrict: 'E',
-            scope: {
-                id: '=',
-                tipo: '@',
-                filter: '='
-            },
-            templateUrl: 'views/reports/tabela.html',
-            link: function ($scope, $element, attrs) {
+    }
+}]).directive('graficovertical', ['$compile', '$http', function ($compile, $http) {
+    return {
+        restrict: 'E',
+        scope: {
+            aterro: '@',
+            tipado: '@',
+            inicio: '@',
+            fim: '@'
+        },
+
+          templateUrl: 'views/reports/grafico.html',
+        link: function ($scope, $element, attrs) {
+            $scope.data = ([]);
+
+
+            $scope.getContentHorizontal = function () {
+                return $scope.tipado + "vertical";
+            }
+
+            $scope.velocidadeVertical = [];
+            $scope.deslocamentoVerticalParcial = [];
+            $scope.deslocamentoVertical = [];
+            $scope.array = "";
+
+
+            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
+                $scope.data = results.data;
+
+
+                angular.forEach($scope.data, function (value, key) {
+
+                    $scope.deslocamentoVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalTotal)]);
+                    $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
+                    $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
+
+                });
+                $scope.categorias = [$scope.array];
+               
+
+                $('#' + $scope.getContentHorizontal()).highcharts({
+                    title: {
+                        text: $scope.tipado + ' - Vertical',
+                        x: -20 //center
+                    },
+
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: { // don't display the dummy year
+                            month: '%e. %b',
+                            year: '%b'
+                        },
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Deslocamentos (cm)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '°C'
+                    },
+
+                    series: [{
+                        name: 'DESLOCAMENTO VERTICAL TOTAL',
+                        data: $scope.deslocamentoVertical
+
+                    }, {
+                            name: 'DESLOCAMENTO VERTICAL PARCIAL',
+                            data: $scope.deslocamentoVerticalParcial
+
+                        }, {
+                            name: 'VELOCIDADE VERTICAL',
+                            data: $scope.velocidadeVertical
+
+                        }]
+                });
+            });
+
+
+
+        }
+    }
+}]).directive('tabela', ['$compile', '$http', function ($compile, $http) {
+    return {
+        restrict: 'AE',
+        scope: {
+            aterro: '@',
+            id: '=',
+            tipo: '@',
+            filter: '='
+        },
+        templateUrl: 'views/reports/tabela.html',
+        link: function ($scope, $element, attrs) {
             $scope.fatorsegurancaMes = ({});
+              $scope.aterroNome;
+            $scope.marcosuperficialdeslocamento  = ({});
 
-             
- if($scope.tipo == 'fatorsegurancames'){
-                    $http.get("/FatorSeguranca/").then(function (results) {   
-                        $scope.fatorsegurancaMes = results.data;
-                    });
-                }
+            if ($scope.tipo == 'fatorsegurancames') {
+                $http.get("/FatorSeguranca/").then(function (results) {
+                    $scope.fatorsegurancaMes = results.data;
+                });
+            }
 
-                 if($scope.tipo == 'fatorseguranca'){
-                    $http.get("/FatorSeguranca/").then(function (results) {   
-                        $scope.fatorsegurancaMes = results.data;
-                    });
-                }
-              
-            $scope.init = function(){
-                console.log('foi');
-                if($scope.tipo == 'fatorsegurancames'){
-                    $http.get("/FatorSeguranca/").then(function (results) {   
+            if ($scope.tipo == 'fatorseguranca') {
+                $http.get("/FatorSeguranca/").then(function (results) {
+                    $scope.fatorsegurancaMes = results.data;
+                });
+            }
+
+            if ($scope.tipo == 'acompanhamentomarcosuperficialdeslocamento' || $scope.tipo == 'acompanhamentomarcosuperficial') {
+                $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
+                    $scope.marcosuperficialdeslocamento = results.data;
+                    if( $scope.marcosuperficialdeslocamento.length > 0)
+                        $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
+                });
+            }
+
+            //  if ($scope.tipo == 'acompanhamentomarcosuperficial') {
+            //     $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
+            //         $scope.marcosuperficialdeslocamento = results.data;
+            //         if( $scope.marcosuperficialdeslocamento.length > 0)
+            //             $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
+            //     });
+            // }
+
+
+            $scope.init = function () {
+                if ($scope.tipo == 'fatorsegurancames') {
+                    $http.get("/FatorSeguranca/").then(function (results) {
                         $scope.fatorsegurancaMes = results.data;
                     });
                 }
             }
         }
-    }}]);
+    }
+}]).directive('ckEditor', function() {
+  return {
+    require: '?ngModel',
+    link: function(scope, elm, attr, ngModel) {
+        CKEDITOR.config.allowedContent = true;
+      var ck = CKEDITOR.replace(elm[0]);
+
+      if (!ngModel) return;
+
+      ck.on('instanceReady', function() {
+        ck.setData(ngModel.$viewValue);
+      });
+
+      function updateModel() {
+          scope.$apply(function() {
+              ngModel.$setViewValue(ck.getData());
+          });
+      }
+
+      ck.on('change', updateModel);
+      ck.on('key', updateModel);
+      ck.on('dataReady', updateModel);
+
+      ngModel.$render = function(value) {
+        ck.setData(ngModel.$viewValue);
+      };
+    }
+  };
+});;

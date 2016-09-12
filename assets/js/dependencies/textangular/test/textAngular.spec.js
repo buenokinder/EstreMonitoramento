@@ -56,6 +56,25 @@ describe('textAngular', function(){
 				expect(jQuery('input[type=hidden][name=test]', element).length).toBe(1);
 			});
 		});
+		describe('Gets the proper stripped text', function () {
+			it('measure time', function () {
+				var t0 = performance.now();
+				var stripped = stripHtmlToText('<div class="AppContainer" style="width: 1280px;color: rgb(0, 0, 0);"><div id="c_base" class="c_base"><div id="c_content" class="c_main"><div id="pageContent"><div id="pageInbox" class="v-Page"><div id="inboxControl0f"><div class="containsYSizerBar" style="height: 849px;width: 1280px;"><div class="ContentRight WithRightRail FullView"><div class="ContentRightInner t_mbgc t_qtc t_urtc" style="color: rgb(68, 68, 68);background-color: rgb(255, 255, 255);"><div id="inboxControl0fv-ReadMessageContainer" class="v-ReadMessageContainer slideOnResize"><div class="c-ReadMessage" style="height: 818.03125px;width: 895px;"><div class="rmMessages ClearBoth" id="ReadMessageScrollableSection"><div id="readMessagePartControl1604f" class="c-ReadMessagePart ReadMsgContainer HasLayout ClearBoth HideShadows FullPart NoHistory Read RmIc"><div class="c-ReadMessagePartBody"><div class="readMsgBody"><div id="bodyreadMessagePartBodyControl1609f" class="ExternalClass MsgBodyContainer"><p><u><b>Lorem ipsum</b></u></p><p><b>Lorem ipsum</b></p></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>');
+				var t1 = performance.now();
+				var duration = (t1 - t0).toFixed(4);
+				//console.log('Took', (t1 - t0).toFixed(4), 'milliseconds to do something!');
+				expect(duration < 0.001);
+				expect(stripped).toBe('Lorem ipsumLorem ipsum');
+				stripped = stripHtmlToText(' \n &#8203;&#8203; &#8203; ');
+				expect(stripped).toBe('');
+			});
+		});
+		describe('Gets the proper DOM', function () {
+			it('from Html', function () {
+				var dom = getDomFromHtml('<div><p></p></div>');
+				expect(dom.innerHTML).toBe('<div><p></p></div>');
+			});
+		});
 	});
 
 	describe('Add classes via attributes', function(){
@@ -1261,4 +1280,19 @@ describe('textAngular', function(){
 			expect($rootScope.html).toBe('<p><b>Changed Content</b></p>');
 		}));
 	});
+
+	describe('textAngularVersion directive', function(){
+		beforeEach(inject(function(_textAngularManager_){
+			textAngularManager = _textAngularManager_;
+		}));
+		it('functions', inject(function($window, _$rootScope_, $compile, $document, $timeout){
+			$rootScope = _$rootScope_;
+			var version = textAngularManager.getVersion();
+			element = $compile('<div text-angular-version></div>')($rootScope);
+			$rootScope.$digest();
+			var html = element[0].outerHTML;
+			expect(html).toBe('<div text-angular-version="" class="ng-scope">'+version+'</div>');
+		}));
+	});
+
 });
