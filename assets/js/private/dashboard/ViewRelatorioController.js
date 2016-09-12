@@ -124,29 +124,35 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                         x: -20 //center
                     },
 
-                    xAxis: {
-                        type: 'datetime',
-                        dateTimeLabelFormats: { // don't display the dummy year
-                            month: '%e. %b',
-                            year: '%b'
-                        },
-                        title: {
-                            text: 'Date'
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Deslocamentos (cm)'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
-                    tooltip: {
-                        valueSuffix: '°C'
-                    },
+                     yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: 'Deslocamentos (cm)',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: 'Velocidade (cm/dia)',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }],
+                  
 
                     series: [{
                         name: 'DESLOCAMENTO HORIZONTAL TOTAL',
@@ -158,7 +164,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
                         }, {
                             name: 'VELOCIDADE HORIZONTAL',
-                            data: $scope.velocidadeHorizontal
+                            data: $scope.velocidadeHorizontal,
+                            yAxis: 1
 
                         }]
                 });
@@ -203,9 +210,9 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
                     
-                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeVertical)]);
+                    //$scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeVertical)]);
                     
-                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeVertical)]);
+                    //$scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeVertical)]);
 
                 });
                 $scope.categorias = [$scope.array];
@@ -227,16 +234,34 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                             text: 'Date'
                         }
                     },
-                    yAxis: {
-                        title: {
-                            text: 'Deslocamentos (cm)'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
+                    yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: 'Deslocamentos (cm)',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: 'Velocidade (cm/dia)',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }],
                     tooltip: {
                         valueSuffix: '°C'
                     },
