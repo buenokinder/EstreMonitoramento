@@ -253,6 +253,14 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                             name: 'VELOCIDADE VERTICAL',
                             data: $scope.velocidadeVertical
 
+                        }, {
+                            name: 'CRITÉRIO DE ALERTA 2',
+                            data: $scope.criterioRegularVelocidadeVertical
+
+                        }, {
+                            name: 'CRITÉRIO DE ALERTA 2',
+                            data:  $scope.criterioAceitavelVelocidadeVertical
+
                         }]
                 });
             });
