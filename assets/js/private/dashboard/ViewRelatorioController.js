@@ -33,16 +33,16 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                 if (index != 0) {
                     var tipo = item.split('}}')[0];
                     if (tipo.indexOf('tabela(') !== -1) {
-                        var parametro = tipo.split('\'')[1];
+                        var parametro = tipo.split('&#39;')[1];
 
 
                         $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
                     }
                     if (tipo.indexOf('grafico(') !== -1) {
-                        var parametro = tipo.split('\'')[1];
+                        var parametro = tipo.split('&#39;')[1];
 
 
-                        var parametro2 = tipo.split('\'')[3];
+                        var parametro2 = tipo.split('&#39;')[3];
                         console.log(parametro);
                         if (parametro == 'marcohorizontal') {
                             $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
@@ -58,8 +58,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
             respostas.forEach(myFunction);
         
-            $scope.corpo= $compile($scope.corpo)($scope);
-            //$element.replaceWith($scope.download);
+        $scope.corpo= $compile($scope.corpo)($scope);
+           $element.replaceWith($scope.corpo);
 
             
 
@@ -256,8 +256,20 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             tipo: '@',
             filter: '='
         },
+        
         templateUrl: 'views/reports/tabela.html',
+      
+
         link: function ($scope, $element, attrs) {
+            console.log($scope.tipo);
+
+
+
+            //$element.html(template);
+          //  $compile($element.contents())($scope);
+
+
+            //$element.replaceWith($scope.tipo);
             $scope.fatorsegurancaMes = ({});
               $scope.aterroNome;
             $scope.marcosuperficialdeslocamento  = ({});
@@ -300,8 +312,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             }
         }
     }
-}]).directive('ckEditor', function() {
-  return {
+}]).directive('ckEditor',['$compile', '$http', function ($compile, $http) {
+    return {
     require: '?ngModel',
     link: function(scope, elm, attr, ngModel) {
         CKEDITOR.config.allowedContent = true;
@@ -310,7 +322,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
       if (!ngModel) return;
 
       ck.on('instanceReady', function() {
-        ck.setData(ngModel.$viewValue);
+          console.log($compile(ngModel.$viewValue)(scope));
+        ck.setData($compile(ngModel.$viewValue)(scope));
       });
 
       function updateModel() {
@@ -324,8 +337,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
       ck.on('dataReady', updateModel);
 
       ngModel.$render = function(value) {
-        ck.setData(ngModel.$viewValue);
+        ck.setData($compile(ngModel.$viewValue)(scope));
       };
     }
   };
-});;
+}]);;

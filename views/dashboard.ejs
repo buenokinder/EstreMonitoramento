@@ -27,6 +27,9 @@
     <link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
 
     <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+    <script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
+    
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
         window.SAILS_LOCALS = { _id: "<%= me.id %>" , _perfil: "<%= me.perfil %>" , _aterro: "<%= typeof me.aterros==undefined ||me.aterros==null || me.aterros.length == 0 ?"":me.aterros[0].id %>"};

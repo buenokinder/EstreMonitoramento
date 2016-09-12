@@ -144,7 +144,9 @@ blockquote, q {
 			<div class='collection-item dismissable'>
 				<div class='input-field col s12'>
 					<label >Corpo</label><br><br>
-					<text-angular  ng-model="data.corpo"></text-angular>
+
+					     <textarea ck-editor="" ng-model="data.corpo" class="form-control" id="body-editor" value="{{data.corpo}}">{{data.corpo}}</textarea>
+
 				</div>
 	
 			</div>

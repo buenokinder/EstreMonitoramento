@@ -228,7 +228,7 @@
 <div style="width: 650px;" ng-show="(tipo=='criteriosalertamacico')">
 <table  width=300 height=100>
 	<thead>
-		<th colspan="4"  style="text-align: center;">CRITÉRIOS DE AÇÃO EM FUNÇÃO DA SATURAÇÃO DO MACIÇO - {{ aterro }}</th>
+		<th colspan="4" class="lightgreen" style="text-align: center;">CRITÉRIOS DE AÇÃO EM FUNÇÃO DA SATURAÇÃO DO MACIÇO - {{ aterro }}</th>
 		<tr>
 			<th style="text-align: center;">
                 Níveis de alerta
@@ -290,7 +290,7 @@
 <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficialdeslocamento')">
 <table  width=300 height=100>
 	<thead>
-		<th colspan="15"  style="text-align: center;background-color: green;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome }}</th>
+		<th colspan="15"   class="lightgreen"  style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase }}</th>
 		<tr>
 			<th style="text-align: center;" rowspan="3">
                Marco
@@ -421,8 +421,8 @@
 <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficial')">
 <table  width=300 height=100>
 	<thead>
-		<th colspan="11"  style="text-align: center;background-color: green;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome}}</th>
-		<tr>
+		<th colspan="11"  class="lightgreen"   style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase}}</th>
+		<tr class="base">
 			<th style="text-align: center;" rowspan="3">
                Marco
             </th>
@@ -432,7 +432,7 @@
              <th style="text-align: center;" colspan="2">Velocidade</th>
                 
 		</tr>
-        		<tr>
+        		<tr  class="base">
 			<th style="text-align: center;" colspan="2">
                Horizontal
             </th>
@@ -442,7 +442,7 @@
            
 		</tr>
         		</tr>
-        		<tr>
+        		<tr  class="base">
 			<th style="text-align: center;">
                Norte (m)
             </th>
