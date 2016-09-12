@@ -1,215 +1,204 @@
+﻿
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Estre</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/js/private/dashboard/isteven-multi-select.css">
+    <link rel="stylesheet" href="elements.css">
+    <link rel="stylesheet" href="/styles/materialize.css">
+    <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link rel="stylesheet" href="/styles/style-horizontal.css">
+    <link href="/styles/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
 
-	<meta name="Description" content="" />
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" href="page.css">
-	<link rel="stylesheet" href="elements.css">
+    <link rel="stylesheet" href="/styles/bootstrap-material-datetimepicker.css" />
+    <link href="/styles/fonts.googleapi.com.roboto.css" rel='stylesheet' type='text/css'>
+    <link href="/styles/fonts.googleapi.com.material.icons.css" rel="stylesheet">
+
+    <link href="/js/dependencies/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="/js/dependencies/sweetalert/dist/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+    <link href="/js/private/dashboard/css/dropify.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
+
+
+    <style>
+        table tr td {
+            font-size: 11px;
+        }
+
+        h2 {
+            font-size: 3.56rem;
+            line-height: 0%;
+            margin: 0.78rem 0 1.424rem 0;
+        }
+    </style>
 
 </head>
-<style>
-#tip {
-    background-color:white;
-    border:0px solid blue;
-    position:absolute;
-    left:-200px;
-    top:100px;
-}
-</style>
-<body class="theme2">
-<div >
-	<svg version="1.1" id="home-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-		 y="0px" width="14px" height="19px" viewBox="0 0 14 16">
-	<g>
-		<polygon points="13,7 13,6 12,6 12,5 11,5 11,4 10,4 10,3 9,3 9,2 8,2 8,1 6,1 6,2 5,2 5,3 4,3 4,4 3,4 3,5 2,5 
-			2,6 1,6 1,7 0,7 0,9 2,9 2,14 6,14 6,10 8,10 8,14 12,14 12,9 14,9 14,7"/>
-	</g>
-	</svg>
-	<svg version="1.1" id="zoom-in-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-		 y="0px" width="14px" height="21px" viewBox="0 0 14 14">
-	<g>
-		<polygon points="13,5 9,5 9,1 5,1 5,5 1,5 1,9 5,9 5,13 9,13 9,9 13,9"/>
-	</g>
-	</svg>
-	<svg version="1.1" id="zoom-out-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-		 y="0px" width="14px" height="16px" viewBox="0 -1 14 10">
-	<g>
-		<polygon points="1,1 13,1 13,5 1,5 1,1" />
-	</g>
-    
-	</svg>
-<svg version="1.1" id="info-icon2"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="13px" height="18px"
-	 viewBox="-510 390 13 18" xml:space="preserve">
-<circle fill="#30D4EF" cx="-503.4" cy="392.8" r="2.7"/>
-<rect x="-508" y="405" fill="#30D4EF" width="10" height="3"/>
-<rect x="-507" y="398" fill="#30D4EF" width="6" height="3"/>
-<rect x="-505" y="400" fill="#30D4EF" width="4" height="6"/>
-</svg>
 
-</div>
+<body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="MonitoramentoAterroController">
+    <div>
+        <div id="loader-wrapper">
+            <div id="loader"></div>
+            <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+        </div>
 
-<div id="coordinate-info" class="colored-text selectable"></div>
+        <div id="main">
+            <div class="wrapper">
+                <section id="content">
+
+                    <div class="container">
+
+                        <div class="section">
+
+                            <div class="row">
+                                <div class="col s12 m12">
+                                    <h2 id="nomeaterro" class="ng-binding" style="text-align:center">{{dashboard.current.aterro.nome}}</h2>
+                                </div>
+                            </div>
+
+                            <div class="row" id="doismapas" style="display:none">
+                                <div class="col s6 m6 l6 parallax-container">
+                                    <div class="row">
+                                        <p style="text-align:center">
+                                            Horizontal
+                                        </p>
+                                    </div>
+
+                                    <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+                                </div>
+
+                                <div class="col s6 m6 l6 parallax-container">
+
+                                    <div class="row">
+                                        <p style="text-align:center">
+                                            Vertical
+                                        </p>
+                                    </div>
+
+                                    <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+                                </div>
+                            </div>
+
+                            <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && !{{data.exibirMapaVertical}}">-->
+                            <div class="row" id="mapahorizontal" style="display:none">
+                                <div class="col s12 m12 parallax-container">
+                                    <div class="row">
+                                        <p style="text-align:center">
+                                            Horizontal
+                                        </p>
+                                    </div>
+
+                                    <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+                                </div>
+
+                            </div>
+
+                            <!--<div class="row" ng-show="!{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
+                            <div class="row" id="mapavertical" style="display:none">
+                                <div class="col s12 m12 parallax-container">
+                                    <div class="row">
+                                        <p style="text-align:center">
+                                            Vertical
+                                        </p>
+                                    </div>
+
+                                    <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+                                </div>
+
+                            </div>
+
+                            <!--<div class="row" ng-show="{{data.exibirLegenda}}" style="margin-top: 35px;">-->
+                            <div class="row" id="legenda" style="margin-top: 35px;display:none">
+                                <table>
+                                    <tr>
+                                        <td style="background-color:green"></td>
+                                        <td>Velocidade menor do que 0,25</td>
+                                        <td style="background-color:yellow"></td>
+                                        <td>Velocidade menor do que 1</td>
+                                        <td style="background-color:orange"></td>
+                                        <td>Velocidade menor do que 4</td>
+                                        <td style="background-color:red"></td>
+                                        <td>Velocidade menor do que 14</td>
+                                        <td style="background-color:black"></td>
+                                        <td>Velocidade maior do que 14</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!--<div class="row" ng-show="{{dashboard.config.exibirfatorseguranca}}">-->
+                            <div class="row" id="fator" style="display:none;margin-top:20px">
+                                <div class="col s12 m12 l6">
+                                    FATOR SEGURAN&Ccedil;A
+
+                                    <div class="row">
+                                        <img id="preview" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/angular.min.js"></script>
+    <script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
+    <script src="/js/dependencies/angular-input-masks/releases/angular-input-masks-dependencies.js"></script>
+    <script src="/js/dependencies/angular-input-masks/releases/angular-input-masks.js"></script>
+    <script src="/js/dependencies/angular-br-filters/release/angular-br-filters.js"></script>
+    <script src="/js/dependencies/angular-material.min.js"></script>
+    <script src="/js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="/js/dependencies/materialize.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/isteven-multi-select.js"></script>
+    <script src="/js/dependencies/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="/js/sparkline/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="/js/sparkline/sparkline-script.js"></script>
+    <script type="text/javascript" src="/js/dependencies/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/js/plugins.js"></script>
+    <script src="/js/dependencies/custom-script.js"></script>
+    <link rel='stylesheet' href='/js/dependencies/font-awesome/css/font-awesome.css'>
+
+    <link rel='stylesheet' href='/js/dependencies/textangular/dist/textAngular.css'>
+    <script src='/js/dependencies/textangular/dist/textAngular-rangy.min.js'></script>
+    <script src='/js/dependencies/textangular/dist/textAngular-sanitize.min.js'></script>
+    <script src='/js/dependencies/textangular/dist/textAngular.min.js'></script>
+    <script src="/js/dependencies/angular-animate.min.js"></script>
+    <script src="/js/dependencies/angular-aria.min.js"></script>
+    <script src="/js/dependencies/angular-cookies.min.js"></script>
+    <script src="/js/dependencies/angular-file-upload.min.js"></script>
+    <script src="/js/dependencies/angular-loader.min.js"></script>
+    <script src="/js/dependencies/angular-message-format.min.js"></script>
+    <script src="/js/dependencies/angular-messages.min.js"></script>
+    <script src="/js/dependencies/angular-resource.min.js"></script>
+    <script src="/js/dependencies/angular-route.min.js"></script>
+    <script src="/js/private/dashboard/angular-leaflet-directive.min.js"></script>
+    <script src="/js/private/dashboard/angular-xeditable/js/xeditable.js"></script>
+    <script src="/js/private/dashboard/ui-bootstrap-tpls.min.js"></script>
+    <script src="/js/private/dashboard/angular-upload.min.js"></script>
+
+    <script src="/js/private/dashboard/App.js"></script>
+    <script src="/js/private/dashboard/MonitoramentoAterroController.js"></script>
+
+    <script src="/js/private/dashboard/Route.js"></script>
 
 
-
-<div id="mshp-not-supported" class="main-area">
-	<div class="info-box">
-	<h3>Unfortunately, mapshaper can't run in <span class="unsupported-browser">this web browser</span></h3>
-	<div>For best results, try <a href="https://www.google.com/chrome/browser/desktop/">Google Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>.</div>
-	</div>
-</div>
-
-<div id="layer-control" class="main-area popup-dialog">
-	<div class="info-box">
-		<div id="layer-menu">
-			<h3>Layers</h3>
-			<div class="layer-list"></div>
-			<div><div id="add-file-btn" class="dialog-btn btn">Add a file</div></div>
-		</div>
-	</div>
-</div>
-
-<div id="export-options" class="main-area popup-dialog">
-	<div class="info-box">
-		<h3>Export menu</h3>
-		<div style="height:3px"></div>
-		<div id=export-layers>
-			<h4>Layers</h4>
-			<div id="export-layer-list" class="option-menu"></div>
-		</div>
-		<h4>File format</h4>
-		<div id="export-formats" class="option-menu">
-		</div>
-
-		<div class="option-menu"><input type="text" class="advanced-options" placeholder="command line options" /><div class="tip-button">?<div class="tip-anchor">
-		<div class="tip">Enter options from the command line
-interface. Examples: "bbox" "no-quantization"
-"precision=0.001"</div></div></div></div>
-		<div class="cancel-btn btn dialog-btn">Cancel</div>
-		<div id="save-btn" class="btn dialog-btn">Export</div>
-	</div>
-</div>
-
-<div id="simplify-options" class="main-area popup-dialog">
-	<div class="info-box">
-		<h3>Simplification menu</h3>
-		<div class="option-menu">
-			<div><label for="import-retain-opt"><input type="checkbox" class="checkbox" id="import-retain-opt"/>prevent shape removal</label>
-							<div class="tip-button">?<div class="tip-anchor">
-			<div class="tip">Prevent small polygon features from
-disappearing at high simplification. Keeps
-the largest ring of multi-ring features.
-</div></div></div></div>
-			<div id="planar-opt-wrapper"><label for="planar-opt"><input type="checkbox" class="checkbox" id="planar-opt"/>use planar geometry</label>
-							<div class="tip-button">?<div class="tip-anchor">
-			<div class="tip">Interpret x, y values as Cartesian coordinates
-on a plane, rather than longitude, latitude
-coordinates on a sphere.
-</div></div></div></div>
-		</div>
-
-			<h4>Method</h4>
-			<div class="option-menu">
-
-			<div><label><input type="radio" name="method" value="dp" class="radio">Douglas-Peucker</label><div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Simplified lines remain within a set
-distance of original lines. Good for
-thinning dense points, but spikes
-tend to form at high simplification.</div></div></div>
-			</div>			
-
-			<div><label><input type="radio" name="method" value="visvalingam" class="radio">Visvalingam / effective area</label><div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Lines are simplified by iteratively
-removing the point that forms
-the least-area triangle with two
-adjacent points.</div></div></div>
-			</div>
-
-			<div><label><input type="radio" name="method" value="weighted_visvalingam" class="radio">Visvalingam / weighted area</label><div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Points located at the vertex
-of more acute angles are
-preferentially removed, for
-a smoother appearance.</div></div></div></div>
+    <script type="text/javascript" src="/js/private/dashboard/material.min.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/js/private/dashboard/bootstrap-material-datetimepicker.js"></script>
 
 
-		</div> <!-- option menu -->
-
-		<div>
-			<div class="cancel-btn btn dialog-btn">Cancel</div>
-			<div class="submit-btn btn dialog-btn">Apply</div>
-		</div>
-	</div> <!-- .info-box -->
-</div> <!-- #simplify-options -->
-
-<div id="import-options" class="main-area popup-dialog" >
-	<div class="info-box">
-		<div id="import-intro">
-			<h3>Edit a file</h3>
-<p>Drag and drop or  <span class="inline-btn btn" id="file-selection-btn"><span class="label-text">select</span></span> one or more files
-to import. Shapefile, GeoJSON, TopoJSON
-and Zip files are supported.
-</p>
-		</div>
-		<h4>Import options</h4>
-		<div class="option-menu">
-
-			<div><label for="repair-intersections-opt"><input type="checkbox" checked class="checkbox" id="repair-intersections-opt"/>detect line intersections</label>
-			<div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Detect line intersections, including
-self-intersections, to help identify
-topological errors in a dataset.</div></div></div></div>
-
-			<div><label for="snap-points-opt"><input type="checkbox" class="checkbox" id="snap-points-opt" />snap vertices</label>
-			<div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Fix topology errors by snapping
-together points with nearly identical
-coordinates. This option does not
-apply to TopoJSON files.</div></div></div></div>
-<div style="height:5px"></div>
-<div><input type="text" class="advanced-options" placeholder="command line options" /><div class="tip-button">?<div class="tip-anchor">
-<div class="tip">Enter options from the command line
-interface. Examples: "no-topology"
-"encoding=big5"</div></div></div></div>
-
-		</div>
-
-		<div id="dropped-file-list">
-			<h3>Files</h3>
-			<div class="file-list"></div>
-		</div>
-
-		<div id="import-buttons" class="hidden">
-			<div class="cancel-btn btn dialog-btn">Cancel</div>
-			<div class="add-btn btn dialog-btn">Add file</div>
-			<div class="submit-btn btn dialog-btn">Import</div>
-		</div>
-
-	</div> <!-- .info-box -->
-</div> <!-- import-options -->
-
-<!-- TODO: remove #mshp-main-page without causing the map to jitter when resized -->
-<div id="mshp-main-page">
-	<div id="console" class="main-area">
-		<div id="console-window"><div id="console-buffer" class="selectable"></div></div>
-	</div>
-	<div id="mshp-main-map" class="main-area">
-		<div id="intersection-display">
-			 <div id="intersection-count" style="display:none;">0 line intersections</div>
-			<div id="repair-btn" class="text-btn colored-text">Repair</div>
-		</div>
-		<div id="map-layers">
-			<canvas id="tip" width=100 height=25></canvas>
-		</div>
-	
-	</div>
-</div>
-<script src="zip.js" type="text/javascript"></script>
-<script src="mapshaper.js" type="text/javascript"></script>
-<script src="manifest.js" type="text/javascript"></script>
-<script src="mapshaper-gui.js" type="text/javascript"></script>
 </body>
 </html>

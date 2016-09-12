@@ -30,7 +30,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         imagemFatorSeguranca:''
     };
     $scope.monitoramentos = function () {
-        document.location = '/#/MonitoramentoAterros';
+        document.location = '/MonitoramentoAterros';
     }
     $scope.preview = {
         mapaHorizontal: '',
@@ -178,6 +178,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     $scope.refresh = function () {
         $scope.reset();
         $scope.setMapas();
+        $scope.removeImage();
 
         var aterro = $scope.data.aterro;
         if (null == aterro) {
@@ -208,7 +209,9 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         $("#dropify-container").show();
         $(".preview").hide();
         $(".dropify").trigger($.Event("dropify.clear"), [this]);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
     };
 
     $scope.showConfigFatorSeguranca = function () {
@@ -216,11 +219,28 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
         $('#modalView').openModal();
 
         $("#sfatorseguranca").html($scope.data.fatorSeguranca);
+        //$("#sfatorseguranca").css("width", $("#sfatorseguranca").textWidth($scope.data.fatorSeguranca));
         $("#sfatorseguranca").show();
 
         html2canvas($("#sfatorseguranca"), {
             onrendered: function (canvas) {
-                var screenshot = canvas.toDataURL("image/png");
+
+               // var width = $("#sfatorseguranca").css("width").replace("px", "");
+               // var height = $("#sfatorseguranca").css("height").replace("px", "");
+               // var extraCanvas = document.createElement("canvas");
+               // extraCanvas.setAttribute('width', width);
+               // extraCanvas.setAttribute('height', height);
+               // var ctx = extraCanvas.getContext('2d');
+               // ctx.fillRect(0, 0, width, height);
+               // ctx.fillStyle = "rgba(0, 0, 200, 0)";
+               // ctx.fill();
+               // ctx.strokeStyle = 'rgba(255,255,255, 1)';
+               // ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
+               // var screenshot = extraCanvas.toDataURL();
+               // $("#imgfatorseguranca").attr("src", screenshot);
+                ////var screenshot = canvas.toDataURL("image/png");
+
+                var screenshot = canvas.toDataURL();
                 $("#imgfatorseguranca").attr("src", screenshot);
                 $("#sfatorseguranca").hide();
                 resetDrag();

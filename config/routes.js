@@ -44,7 +44,9 @@ module.exports.routes = {
      'GET /marcosuperficial/count': 'MarcoSuperficialController.searchcount',
     'POST /file/upload': 'FilesController.upload',
     'GET /mapas': 'PageController.mapa',
-    'GET /visualizacao': 'PageController.visualizacao'
+    'GET /visualizacao': 'PageController.visualizacao',
+    'GET /monitoramentoaterros': 'AterroDashboardController.visualizacao'
+
     //'GET /MonitoramentoAterros'
     //'POST /MedicaoMarcoSuperficialDetalhes': 'MedicaoMarcoSuperficialController.medicao'
   /***************************************************************************

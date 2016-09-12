@@ -7,7 +7,13 @@
 
 module.exports = {
 
+    visualizacao: function (req, res) {
+        if (!req.session.me) {
+            return res.view('index');
+        }
 
+        return res.view('monitoramento');
+    },
 
     search: function (req, res) {
         var filtro = {};
