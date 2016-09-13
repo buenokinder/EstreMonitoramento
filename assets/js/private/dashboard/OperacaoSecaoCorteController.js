@@ -61,6 +61,13 @@ app.controller('OperacaoSecaoCorteController', ['$scope', '$http', '$filter', fu
         });
     };
 
+    $scope.changeSecaoCorte = function(data) {
+        var req = '/SecaoCorte/search?aterro='+data;
+        $http.get(req).success(function(results) {            
+            $scope.lsecaoCortes = angular.fromJson(results);
+        });
+    };
+
     $scope.loadSecaoCorte = function () {
         if($scope.usuario._aterro) {
             return $http.get('/SecaoCorte/search?aterro='+$scope.usuario._aterro).success(function (data) {

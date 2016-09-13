@@ -29,14 +29,13 @@
                     <table class="table table-bordered table-hover table-condensed">
                         <tr style="font-weight: bold">
                             <td style="width:15%">Data Medição</td>
-
+                            <td style="width:15%">Aterro</td>
                             <td style="width:15%">Seção de Corte</td>
                             <td style="width:15%">Altura</td>
                             <td style="width:15%">Comprimento</td>
                             <td style="width:15%">Tipo Estaca</td>
                             <td style="width:15%">Data Criação</td>
                             <td style="width:15%">Criado por</td>
-                            <td style="width:15%">Aterro</td>
 
                             <td style="width:15%" ng-show="hasFullPermission">Ações</td>
                         </tr>
@@ -49,6 +48,16 @@
                                 </span>
                             </td>
 
+                            <td ng-if="usuario._perfil !== 'Administrador'">
+                                <span editable-text="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
+                                    {{ showAterro(operacaoSecaoCorte) }}
+                                </span>
+                            </td>                            
+                            <td ng-if="usuario._perfil == 'Administrador'">
+                                <span editable-select="operacaoSecaoCorte.aterro" e-ng-change="changeSecaoCorte($data)" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
+                                    {{ showAterro(operacaoSecaoCorte) }}
+                                </span>
+                            </td>
 
                             <td>
                                 <span editable-select="operacaoSecaoCorte.secaoCorte" e-name="secaoCorte" onshow="loadSecaoCorte()" e-form="rowform" e-ng-options="g.id as g.nome for g in lsecaoCortes | filter: {habilitado: true}">
@@ -78,16 +87,6 @@
                             <td>
                                 <span editable-text="operacaoSecaoCorte.usuario" e-name="usuario" e-form="rowform" edit-disabled="true">
                                     {{ showUsuario(operacaoSecaoCorte) }}
-                                </span>
-                            </td>
-                            <td ng-if="usuario._perfil !== 'Administrador'">
-                                <span editable-text="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
-                                    {{ showAterro(operacaoSecaoCorte) }}
-                                </span>
-                            </td>                            
-                            <td ng-if="usuario._perfil == 'Administrador'">
-                                <span editable-select="operacaoSecaoCorte.aterro" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
-                                    {{ showAterro(operacaoSecaoCorte) }}
                                 </span>
                             </td>
 
