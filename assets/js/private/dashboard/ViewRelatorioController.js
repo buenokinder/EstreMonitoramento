@@ -167,6 +167,16 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                             data: $scope.velocidadeHorizontal,
                             yAxis: 1
 
+                        }, {
+                            name: 'CRITÉRIO DE ALERTA 2',
+                            data: $scope.criterioAceitavelVelocidadeHorizontal,
+                            yAxis: 1
+
+                        }, {
+                            name: 'CRITÉRIO DE ALERTA 3',
+                            data: $scope.criterioRegularVelocidadeHorizontal,
+                            yAxis: 1
+
                         }]
                 });
             });
@@ -198,7 +208,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             $scope.deslocamentoVerticalParcial = [];
             $scope.deslocamentoVertical = [];
             $scope.array = "";
-
+             $scope.criterioAceitavelVelocidadeVertical= [];
+$scope.criterioRegularVelocidadeVertical= [];
 
             $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
@@ -210,9 +221,9 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
                     
-                    //$scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeVertical)]);
+                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeVertical)]);
                     
-                    //$scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeVertical)]);
+                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeVertical)]);
 
                 });
                 $scope.categorias = [$scope.array];
