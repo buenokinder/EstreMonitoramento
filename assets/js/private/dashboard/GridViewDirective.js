@@ -824,16 +824,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             var interval = setInterval(function () {
                 if ($scope.totalRequests == $scope.totalResponses) {
 
-
-
                     $element.replaceWith($compile(HtmlFormBody)($scope));
 
                     $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
                     $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
                     $scope.verificaBotaoSubmit();
                     clearInterval(interval);
-
-
 
                     for (var key in $scope.fields) {
                         if ($scope.fields[key].fieldtowatch) {
@@ -856,16 +852,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             watchField(key);
                         }
                     }
-
-
-
-
-
                 }
             }, 0);
-            
-
-
         },
         controller: function ($scope, $element, $http, $location, $routeParams, $parse, $filter) {
             $scope.me = window.SAILS_LOCALS;
