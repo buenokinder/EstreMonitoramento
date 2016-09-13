@@ -703,6 +703,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         $scope.getCombo($scope.fields[key], key, function (key) {
                             var valueToShow = "";
                             var htmlElement = "";
+                            var dep = $scope.fields[key].dependencia;                            
+
+                            if(dep != undefined) {                                
+                                $scope.olharDepencencia($scope.fields[key]);
+                            }
 
                             if (undefined != $scope.fields[key].default) {
                                 var jsonDefaultValue = angular.fromJson($scope.fields[key].default);
@@ -888,6 +893,16 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     }
                 }
             };
+
+            $scope.olharDepencencia = function(field) {                     
+                var dependencia = 'data.'+field.dependencia;           
+                $scope.$watch(dependencia, function(newValue, oldValue) {                    
+                    if(newValue != undefined) {
+                        field.pai = newValue.id;
+                        $scope.getCombo(field);
+                    }
+                });
+            }
 
             $scope.userInProfiles = function (profiles) {
                 var perfil = $filter('filter')(profiles, { perfil: $scope.me._perfil });
