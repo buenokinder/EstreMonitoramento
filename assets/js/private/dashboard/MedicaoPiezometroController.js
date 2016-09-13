@@ -126,7 +126,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
     $scope.getClass = function (criterio) {
         var name = criterio.toLowerCase();
-        var className = name.replace('ã', 'a').replace('á', 'a').replace('ã', 'a');
+        var className = name.replace('ã', 'a').replace('á', 'a').replace('ã', 'a').replace('ç', 'c');
         return className;
     }
 

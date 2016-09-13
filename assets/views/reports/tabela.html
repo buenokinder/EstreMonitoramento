@@ -1,3 +1,26 @@
+<style>
+    .aceitavel {
+        background: rgb(146, 208, 80);
+    }
+
+    .regular {
+        background: rgb(255, 255, 0);
+    }
+
+    .atencao {
+        background: rgb(255, 158, 0);
+    }
+
+    .intervencao {
+        background: rgb(255, 0, 0);
+    }
+
+    .paralisacao {
+        background: rgb(0, 0, 0);
+        color: white;
+    }
+</style>
+
 <div ng-init="init()">
 
     <div style="width: 350px;" ng-show="(tipo=='marcosuperficialdeslocamento')">
@@ -326,7 +349,7 @@
         <table width=300 height=100>
             <thead>
                 <tr>
-                    <th colspan="15" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase }}</th>
+                    <th colspan="13" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase }}</th>
                 </tr>
 
                 <tr>
@@ -338,7 +361,7 @@
                     <th style="text-align: center;" colspan="4">Deslocamentos</th>
                     <th style="text-align: center;" colspan="2">Velocidade</th>
                     <th style="text-align: center;" rowspan="2" colspan="2">Critério de Alerta Metodologia 1</th>
-                    <th style="text-align: center;" rowspan="2" colspan="2">Critério de Alerta Metodologia 2</th>
+                    <!--<th style="text-align: center;" rowspan="2" colspan="2">Critério de Alerta Metodologia 2</th>-->
                 </tr>
                 <tr>
                     <th style="text-align: center;" colspan="2">
@@ -359,12 +382,76 @@
                     <th style="text-align: center;">Total (cm)</th>
                     <th style="text-align: center;">Parcial (cm)</th>
                     <th style="text-align: center;">Total (cm)</th>
+                    <th style="text-align: center;">(cm/dia)</th>
+                    <th style="text-align: center;">(cm/dia)</th>
                     <th style="text-align: center;">Horizontal</th>
                     <th style="text-align: center;">Vertical</th>
+                    <!--<th style="text-align: center;">Horizontal</th>
+                    <th style="text-align: center;">Vertical</th>-->
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr ng-repeat="marco in marcosuperficialdeslocamento">
+                    <td style="">
+                        <b>{{marco.marcoSuperficial}}</b>
+                    </td>
+                    <td style="text-align: center;">{{marco.data | date:'dd/MM/yyyy'}}</td>
+                    <td style="text-align: center;">{{marco.norte}}</td>
+                    <td style="text-align: center;">{{marco.leste}}</td>
+                    <td style="text-align: center;">{{marco.cota}}</td>
+                    <td style="text-align: center;">{{marco.deslocamentoHorizontalParcial}}</td>
+                    <td style="text-align: center;">{{marco.deslocamentoHorizontalTotal}}</td>
+                    <td style="text-align: center;">{{marco.deslocamentoVerticalParcial}}</td>
+                    <td style="text-align: center;">{{marco.deslocamentoVerticalTotal}}</td>
+                    <td style="text-align: center;">{{marco.velocidadeHorizontal}}</td>
+                    <td style="text-align: center;">{{marco.velocidadeVertical}}</td>
+                    <td style="text-align: center;" class="{{getClass(marco.criterioAlertaHorizontalMetodologia1)}}">{{marco.criterioAlertaHorizontalMetodologia1}}</td>
+                    <td style="text-align: center;" class="{{getClass(marco.criterioAlertaVerticalMetodologia1)}}">{{marco.criterioAlertaVerticalMetodologia1}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficial')">
+        <table width=300 height=100>
+            <thead>
+                <tr class="lightgreen">
+                    <th colspan="11" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase}}</th>
+                </tr>
+                <tr>
+                    <th style="text-align: center;" rowspan="3">
+                        Marco
+                    </th>
+                    <th style="text-align: center;" rowspan="3">Data</th>
+                    <th style="text-align: center;" rowspan="2" colspan="3">Coordenadas</th>
+                    <th style="text-align: center;" colspan="4">Deslocamentos</th>
+                    <th style="text-align: center;" colspan="2">Velocidade</th>
+
+                </tr>
+                <tr>
+                    <th style="text-align: center;" colspan="2">
+                        Horizontal
+                    </th>
+                    <th style="text-align: center;" colspan="2">Vertical</th>
                     <th style="text-align: center;">Horizontal</th>
                     <th style="text-align: center;">Vertical</th>
-                    <th style="text-align: center;">Horizontal</th>
-                    <th style="text-align: center;">Vertical</th>
+
+                </tr>
+                <tr>
+                    <th style="text-align: center;">
+                        Norte (m)
+                    </th>
+                    <th style="text-align: center;">Este (m)</th>
+                    <th style="text-align: center;">Cota (m)</th>
+                    <th style="text-align: center;">Parcial (cm)</th>
+                    <th style="text-align: center;">Total (cm)</th>
+                    <th style="text-align: center;">Parcial (cm)</th>
+                    <th style="text-align: center;">Total (cm)</th>
+                    <th style="text-align: center;">(cm/dia)</th>
+                    <th style="text-align: center;">(cm/dia)</th>
+
 
                 </tr>
             </thead>
@@ -383,77 +470,6 @@
                     <td style="text-align: center;">{{marco.deslocamentoVerticalTotal}}</td>
                     <td style="text-align: center;">{{marco.velocidadeHorizontal}}</td>
                     <td style="text-align: center;">{{marco.velocidadeVertical}}</td>
-                    <td style="text-align: center;background-color: orange;">ALERTA</td>
-                    <td style="text-align: center;background-color: yellow;">ATENÇÃO</td>
-                    <td style="text-align: center;background-color: GREEN;">COND MIN</td>
-                    <td style="text-align: center;background-color: green;">COND MIN</td>
-                </tr>
-
-            </tbody>
-        </table>
-    </div>
-
-
-
-
-
-
-    <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficial')">
-        <table width=300 height=100>
-            <thead>
-                <tr>
-                    <th colspan="11" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase}}</th>
-                </tr>
-                <tr class="base">
-                    <th style="text-align: center;" rowspan="3">
-                        Marco
-                    </th>
-                    <th style="text-align: center;" rowspan="3">Data</th>
-                    <th style="text-align: center;" rowspan="2" colspan="3">Coordenadas</th>
-                    <th style="text-align: center;" colspan="4">Deslocamentos</th>
-                    <th style="text-align: center;" colspan="2">Velocidade</th>
-
-                </tr>
-                <tr class="base">
-                    <th style="text-align: center;" colspan="2">
-                        Horizontal
-                    </th>
-                    <th style="text-align: center;" colspan="2">Vertical</th>
-                    <th style="text-align: center;">Horizontal</th>
-                    <th style="text-align: center;">Vertical</th>
-
-                </tr>
-                <tr class="base">
-                    <th style="text-align: center;">
-                        Norte (m)
-                    </th>
-                    <th style="text-align: center;">Este (m)</th>
-                    <th style="text-align: center;">Cota (m)</th>
-                    <th style="text-align: center;">Parcial (cm)</th>
-                    <th style="text-align: center;">Total (cm)</th>
-                    <th style="text-align: center;">Parcial (cm)</th>
-                    <th style="text-align: center;">Total (cm)</th>
-                    <th style="text-align: center;">(cm/dia)</th>
-                    <th style="text-align: center;">(cm/dia)</th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="marco in marcosuperficialdeslocamento">
-                    <th style="">
-                        <b>{{marco.marcoSuperficial}}</b>
-                    </th>
-                    <th style="text-align: center;">{{marco.data | date:'dd/MM/yyyy'}}</th>
-                    <th style="text-align: center;">{{marco.norte}}</th>
-                    <th style="text-align: center;">{{marco.leste}}</th>
-                    <th style="text-align: center;">{{marco.cota}}</th>
-                    <th style="text-align: center;">{{marco.deslocamentoHorizontalParcial}}</th>
-                    <th style="text-align: center;">{{marco.deslocamentoHorizontalTotal}}</th>
-                    <th style="text-align: center;">{{marco.deslocamentoVerticalParcial}}</th>
-                    <th style="text-align: center;">{{marco.deslocamentoVerticalTotal}}</th>
-                    <th style="text-align: center;">{{marco.velocidadeHorizontal}}</th>
-                    <th style="text-align: center;">{{marco.velocidadeVertical}}</th>
 
                 </tr>
 

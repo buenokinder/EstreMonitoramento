@@ -190,7 +190,7 @@ module.exports = {
                             _totalDataConfigResult += 1;
 
                             var data = (medicao) ? new Date(medicao.data) : new Date();
-                            _previews[dashBoardIndex].dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
+                            _previews[dashBoardIndex].dataultimamedicao = data.getFullYear() + "-" + (data.getMonth()+1) + "-" + data.getDate();
 
                             if (_totalDataConfigResult == totalItens) {
                                 return resolve(_previews);

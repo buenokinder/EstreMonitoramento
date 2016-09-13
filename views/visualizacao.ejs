@@ -106,13 +106,13 @@
             }
 
 
-            /*table {
+            table {
                 background: #fff;
                 margin-bottom: 1.25rem;
                 border: 1px solid #ddd;
                 table-layout: fixed;
                 width: 100%;
-            }*/
+            }
 
 
             table tr:nth-of-type(even) {
@@ -123,6 +123,11 @@
                 background-color: green !important;
                 text-align: center;
                 font-color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            tr.lightgreen {
+                background-color: #9ACD32 !important;
                 -webkit-print-color-adjust: exact;
             }
 
@@ -138,19 +143,19 @@
                 text-align: center;
                 font-color: white !important;
                 -webkit-print-color-adjust: exact;
-                font-size: 7pt!important;
+                font-size: 7pt !important;
                 font-family: arial;
-                font-weight:normal!important;
+                font-weight: normal !important;
             }
 
             th {
-                font-size: 7pt!important;
-                font-weight:normal!important;
+                font-size: 8pt !important;
+                font-weight: normal !important;
             }
 
             table tr td {
-                font-size: 7pt!important;
-                font-weight:normal!important;
+                font-size: 7pt !important;
+                font-weight: normal !important;
             }
 
 
@@ -191,9 +196,6 @@
                 -webkit-print-color-adjust: exact;
                 color: white !important;
             }
-
-
-          
 
             @page {
                 size: A4;
@@ -245,28 +247,21 @@
 
 <body ng-controller="ViewTemplateController">
 
-
-
     <div ng-init='init()'>
         <div id="docCorpo" ng-bind-html="corpo">
 
         </div>
-
-
     </div>
 
+    <script src="/js/jquery-1.11.2.min.js"></script>
+    <script src="/js/dependencies/angular.min.js"></script>
+    <script src="/js/dependencies/angular-sanitize.min.js"></script>
+    <script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
 
-
-
+    <script src="/js/private/dashboard/highcharts.js"></script>
+    <script src="/js/private/dashboard/highcharts-exporting.js"></script>
+    <script src="/js/private/dashboard/ViewRelatorioController.js"></script>
 </body>
 
-<script src="/js/jquery-1.11.2.min.js"></script>
-<script src="/js/dependencies/angular.min.js"></script>
-<script src="/js/dependencies/angular-sanitize.min.js"></script>
-<script src="/js/dependencies/angular-i18n/angular-locale_pt-br.js"></script>
-
-<script src="/js/private/dashboard/highcharts.js"></script>
-<script src="/js/private/dashboard/highcharts-exporting.js"></script>
-<script src="/js/private/dashboard/ViewRelatorioController.js"></script>
 
 </html>

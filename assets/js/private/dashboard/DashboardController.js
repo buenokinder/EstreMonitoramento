@@ -362,6 +362,10 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
                 $scope.pathname = "Alerta";
                 $scope.pai = "Dados Mestre";
                 break;
+            case '/SecaoFatorSeguranca':
+                $scope.pathname = "Seção de Fator de Segurança";
+                $scope.pai = "Dados Mestre";
+                break;
             case '/Aterro':
                 $scope.pathname = "Aterro";
                 $scope.pai = "Dados Mestre";
@@ -390,9 +394,30 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
                 $scope.pathname = "Usuário";
                 $scope.pai = "Administração";
                 break;
+            case '/Bombeamento':
+                $scope.pathname = "Bombeamento";
+                $scope.pai = "Área de Trabalho";
+                break;
+            case '/MedicaoMarcoSuperficial':
+                $scope.pathname = "Marco Superficial";
+                $scope.pai = "Área de Trabalho";
+                break;
+            case '/Mapa':
+                $scope.pathname = "Mapa";
+                $scope.pai = "Área de Trabalho";
+                break;
+            case '/FatorSeguranca':
+                $scope.pathname = "Fator de Segurança";
+                $scope.pai = "Área de Trabalho";
+                break;
+            case '/PocosVisita':
+                $scope.pathname = "Poços de Visita";
+                $scope.pai = "Área de Trabalho";
+                break;
             default:
-                $scope.pai = undefined;
                 $scope.pathname = undefined;
+                $scope.pai = undefined;
+                break;
         }
     };
 

@@ -56,8 +56,6 @@ module.exports = {
 
         var execute = new Promise(function (resolve, reject) {
 
-
-
             var _monitoramentosnotificacao = function () {
 
                 var piezometro = Piezometro.find({}).
@@ -92,6 +90,7 @@ module.exports = {
                             var medicao = piezometro.medicoes[j];
                             medicao.owner = { id: piezometro.id, nome: piezometro.nome };
                             medicao.saliencia = parseFloat(medicao.saliencia);
+                            medicao.salienciaInicial = parseFloat(piezometro.salienciaInicial);
                             medicao.celulaPiezometrica = parseFloat(piezometro.celulaPiezometrica);
                             medicao.salienciaInicialEstimada = parseFloat(medicao.saliencia) - parseFloat(piezometro.salienciaInicial);
                             medicao.profundidadeMediaCamaraCargaInicial = parseFloat(piezometro.profundidadeMediaCamaraCargaInicial);
@@ -285,11 +284,9 @@ module.exports = {
 
                         medicao.owner = { id: piezometro.id, nome: piezometro.nome };
                         medicao.saliencia = parseFloat(medicao.saliencia);
+                        medicao.salienciaInicial = parseFloat(piezometro.salienciaInicial);
                         medicao.celulaPiezometrica = parseFloat(piezometro.celulaPiezometrica);
-                        //medicao.salienciaInicialEstimada = (medicao.saliencia - 1);
-
                         medicao.salienciaInicialEstimada = parseFloat(medicao.saliencia) - parseFloat(piezometro.salienciaInicial);
-
                         medicao.profundidadeMediaCamaraCargaInicial = parseFloat(piezometro.profundidadeMediaCamaraCargaInicial);
                         medicao.profundidadeTotalInicial = parseFloat(piezometro.profundidadeTotalInicial);
                         medicao.profundidadeDescontandoCortes = 0;
@@ -389,6 +386,7 @@ module.exports = {
 
 
                         medicao.saliencia = medicao.saliencia.toFixed(2);
+                        medicao.salienciaInicial = medicao.salienciaInicial.toFixed(2);
                         medicao.celulaPiezometrica = medicao.celulaPiezometrica.toFixed(2);
                         medicao.salienciaInicialEstimada = medicao.salienciaInicialEstimada.toFixed(2);
                         medicao.profundidadeMediaCamaraCargaInicial = medicao.profundidadeMediaCamaraCargaInicial.toFixed(2);

@@ -159,8 +159,8 @@ module.exports = {
             item.sentido = 0;
             item.nomeTopografo = '';
             item.nomeAuxiliar = '';
-            item.criterioAlertaHorizontalMetodologia1 = 0;
-            item.criterioAlertaVerticalMetodologia1 = 0;
+            item.criterioAlertaHorizontalMetodologia1 = '';
+            item.criterioAlertaVerticalMetodologia1 = '';
             item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
             item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 

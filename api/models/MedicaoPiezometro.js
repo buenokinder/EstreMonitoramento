@@ -40,13 +40,11 @@ module.exports = {
         },
 
         pressaoGasKpa: {
-            type: 'float',
-            required: true
+            type: 'float'
         },
 
         pressaoGasMca: {
-            type: 'float',
-            required: true
+            type: 'float'
         },
         aterro: {
             model: 'Aterro'

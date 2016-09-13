@@ -570,11 +570,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             if ($scope.nocard)
                 HtmlFormBody = " <div  ng-init='init()' ><h4 class='header2'>" + $scope.label + "</h4><div class='row'><form class='col s12'  ng-submit='save()' id='sign-up-form' >";
 
-
             if ($scope.strupdate == 'false')
                 HtmlFormBody += "";
             else
                 HtmlFormBody += "";
+
             for (var key in $scope.fields) {
 
                 var canEdit = true;
@@ -608,13 +608,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     continue;
                 }
 
-                //if (!canEdit) continue;
-
                 switch ($scope.fields[key].type) {
 
                     case 'table-add-remove':
 
-                        //'tableadd': { 'model': 'usuarios' , 'text': 'name', 'valuesource': 'id' }
                         if ($scope.fields[key].tableadd) {
                             HtmlFormBody += "<div class='form-group' >";
                             HtmlFormBody += "<label for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
@@ -768,10 +765,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                     case 'number':
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "   type='number' ng-model='data." + $scope.fields[key].name + "' " + $scope.fields[key].uiMask + "></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
-
                         break;
                     case 'password':
                         HtmlFormBody += "<div class='row'><div class='input-field col s12'><input  " + readonly + "  type='password' maxlength='" + $scope.fields[key].maxlength + "' ng-model='data." + $scope.fields[key].name + "'></input><label  ng-class='inputClass'   for='" + $scope.fields[key].name + " '>" + $scope.fields[key].value + "</label></div></div>";
+                        
                         break;
 
                     case 'email':
@@ -783,6 +780,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         break;
                 }
 
+                if ($scope.data[$scope.fields[key].name] == undefined) {
+                    $scope.data[$scope.fields[key].name] = "";
+                }
             }
 
             //nopview
@@ -818,12 +818,44 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
             var interval = setInterval(function () {
                 if ($scope.totalRequests == $scope.totalResponses) {
+
+
+
                     $element.replaceWith($compile(HtmlFormBody)($scope));
 
                     $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY', time: false });
                     $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
                     $scope.verificaBotaoSubmit();
                     clearInterval(interval);
+
+
+
+                    for (var key in $scope.fields) {
+                        if ($scope.fields[key].fieldtowatch) {
+                            var watchField = function (key) {
+
+                                $("input[ng-model='data." + $scope.fields[key].fieldtowatch + "']").on("change paste keyup", function () {
+                                    $scope.data[$scope.fields[key].name] = eval($scope.fields[key].formulaonfieldwatchedchange);
+
+                                    if ($scope.fields[key].uiMask) {
+                                        $("input[ng-model='data." + $scope.fields[key].name + "']").val(eval($scope.fields[key].formulaonfieldwatchedchange).replace(".", ","));
+                                    } else {
+                                        $("input[ng-model='data." + $scope.fields[key].name + "']").val(eval($scope.fields[key].formulaonfieldwatchedchange));
+                                    }
+                                });
+
+                                //scope.$watch("'data." + $scope.fields[key].fieldtowatch + "'", function () {
+                                //    $scope.data[$scope.fields[key].name] = eval($scope.fields[key].formula);
+                                //});
+                            }
+                            watchField(key);
+                        }
+                    }
+
+
+
+
+
                 }
             }, 0);
             
@@ -1157,7 +1189,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     if (typeof $scope.data[fields[key].name] == "string") {
                         $scope.data[fields[key].name] = { id: $scope.data[fields[key].name], name: $scope.data[fields[key].name] };
                     }
+
                 }
+
+
 
                 
 

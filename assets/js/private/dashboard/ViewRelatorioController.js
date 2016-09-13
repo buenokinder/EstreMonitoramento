@@ -357,6 +357,12 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                     });
                 }
             }
+
+            $scope.getClass = function (criterio) {
+                var name = criterio.toLowerCase();
+                var className = name.replace('ã', 'a').replace('á', 'a').replace('ã', 'a').replace('ç', 'c');
+                return className;
+            }
         }
     }
 }]).directive('ckEditor',['$compile', '$http', function ($compile, $http) {
