@@ -31,6 +31,8 @@ app.controller('MapaController', ['$scope', '$http', '$sce', function ($scope, $
 
 
     $scope.open = function () {
+
+
         // window.open('http://localhost:1337' + $scope.getSrc(), '_blank');
         window.open($scope.getSrc(), '_blank');
     }
