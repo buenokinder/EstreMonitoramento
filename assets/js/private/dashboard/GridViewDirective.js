@@ -1672,7 +1672,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
                     }
 
-                    if (undefined == params['aterro']) {
+                    if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
                         params['aterro'] = $scope.me._aterro;
                     }
 
