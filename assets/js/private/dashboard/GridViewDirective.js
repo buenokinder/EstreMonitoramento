@@ -705,7 +705,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                             var htmlElement = "";
                             var dep = $scope.fields[key].dependencia;                            
 
-                            if(dep != undefined) {                                
+                            if(dep != undefined) {
+                                console.log('teste', dep);                             
                                 $scope.olharDepencencia($scope.fields[key]);
                             }
 
@@ -883,8 +884,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             };
 
             $scope.olharDepencencia = function(field) {                     
-                var dependencia = 'data.'+field.dependencia;           
-                $scope.$watch(dependencia, function(newValue, oldValue) {                    
+                var dependencia = 'data.'+field.dependencia;
+                console.log('dep', dependencia);  
+                $scope.$watch(dependencia, function(newValue, oldValue) {
+                    console.log('new', newValue)               
                     if(newValue != undefined) {
                         field.pai = newValue.id;
                         $scope.getCombo(field);
@@ -1061,7 +1064,14 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 }
                 else {
                     $scope.comboFields.push(field);
-                    var url = "/" + field.api + "/search/";
+                    var url;
+                    
+                    if(field.pai && field.dependencia) {
+                        url = "/" + field.api + "/search?"+field.dependencia+"="+field.pai;
+                    }
+                    else {
+                        url= "/" + field.api + "/search/";
+                    }
 
                     $http.get(url).then(function (results) {
                         $scope[field.model] = results.data;
