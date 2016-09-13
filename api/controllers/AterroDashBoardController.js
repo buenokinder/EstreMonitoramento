@@ -39,6 +39,10 @@ module.exports = {
   
 
     list: function (req, res) {
+        if (!req.session.me) {
+            return res.view('index');
+        }
+
         var _that = this;
 
         var _dashboards = [];
@@ -70,7 +74,7 @@ module.exports = {
                     cidade: aterro.cidade,
                     endereco: aterro.endereco,
                     telefone: aterro.telefone,
-                    dataultimamedicao: 1,
+                    dataultimamedicao: new Date(),
                     mapaFile: aterro.mapa.length > 0 ? aterro.mapa[0].mapaFile : ''
                 };
 
@@ -100,7 +104,7 @@ module.exports = {
                             _totalDatasResult += 1;
 
                             var data = (medicao) ? new Date(medicao.data) : new Date();
-                            _dashboards[dashBoardIndex].aterro.dataultimamedicao = data.getFullYear() + "-" + data.getMonth() + "-" + data.getDate();
+                            _dashboards[dashBoardIndex].aterro.dataultimamedicao = data.getFullYear() + "-" + (data.getMonth()+1) + "-" + data.getDate();
 
                             if (_totalDatasResult == totalItens) {
                                 return resolve(_dashboards);
@@ -120,6 +124,11 @@ module.exports = {
     },
 
     listall: function (req, res) {
+
+        if (!req.session.me) {
+            return res.view('index');
+        }
+
         var _that = this;
         var _previews = [];
         var _totalDataConfigResult = 0;
@@ -201,6 +210,11 @@ module.exports = {
     },
 
     search: function (req, res) {
+
+        if (!req.session.me) {
+            return res.view('index');
+        }
+
         var filtro = {};
 
         for (key in req.allParams()) {
@@ -220,6 +234,11 @@ module.exports = {
     },
 
     searchCount: function (req, res) {
+
+        if (!req.session.me) {
+            return res.view('index');
+        }
+
         var filtro = {};
 
         for (key in req.allParams()) {

@@ -713,7 +713,8 @@ module.exports = {
                             f.limit = req.param('limitMedicoes');
                         }
 
-                        MedicaoMarcoSuperficialDetalhes.find(f).populate("owner").exec(function (err, detalhes) {
+                        MedicaoMarcoSuperficialDetalhes.find(f).populate("owner").sort(sort).exec(function (err, detalhes) {
+
                             var possuiDetalhes = null != detalhes && undefined != detalhes && detalhes.length;
                             var marcoSuperficialId = possuiDetalhes ? detalhes[0].marcoSuperficial : '';
 
@@ -732,6 +733,9 @@ module.exports = {
                                 return resolve(_that._summarizeMonitoramento(_marcosSuperficiais));
                             }
                         });
+
+
+
                     }
 
                 });
