@@ -2,7 +2,7 @@
 <html ng-app="VisualizacaoApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>Visualização</title>
+    <title>Visualizaï¿½ï¿½o</title>
     <link rel="stylesheet" href="/styles/prism.css">
     <link rel="stylesheet" href="/styles/normalize.css">
     <link rel="stylesheet" href="/styles/foundation.min.css">
@@ -28,12 +28,19 @@
                 filter: none !important;
                 -ms-filter: none !important;
             }
+            
+           
 
             header.onlyprint {
                 position: fixed; /* Display only on print page (each) */
-                top: 0; /* Because it's header */
+                top: -10; /* Because it's header */
+                float: right;
             }
 
+            header img.logo {
+                float: right;
+
+            }
             footer.onlyprint {
                 position: fixed;
                 bottom: 0; /* Because it's footer */
@@ -91,10 +98,18 @@
                 }
             }
 
+      
+
             body, article {
                 width: 100%;
                 margin: 0;
                 padding: 0;
+            }
+            
+            body {
+                display: block;
+                page: main;
+                counter-reset: page 1
             }
 
             h1 {
@@ -104,6 +119,8 @@
                 counter-increment: chapter;
                 counter-reset: section;
             }
+
+            
 
 
             table {
@@ -226,21 +243,20 @@
                 }
             }
 
+
             h1 {
                 page-break-before: always;
             }
 
 
-            @page {
-
-                @top-center {
-                    font-family: sans-serif;
-                    font-weight: bold;
-                    font-size: 2em;
-                    content: '';
-                }
+          @page {
+    counter-increment: page;
+    counter-reset: page 1;
+    @top-right {
+                content: "Page " counter(page) " of " counter(pages);
             }
         }
+    }
     </style>
 </head>
 

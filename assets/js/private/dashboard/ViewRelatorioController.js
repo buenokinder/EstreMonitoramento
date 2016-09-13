@@ -21,12 +21,13 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
   
     $scope.download= "";
 
+
     $scope.init = function () {
         $http.get("/Template/" + $scope.id).then(function (results) {
             $scope.data = results.data;
 
-
-            $scope.corpo = results.data.corpo;
+            $scope.corpo += "<header class='onlyprint'><img src='/images/logo_pdf.png' class='logo'  ></header>";
+            $scope.corpo += results.data.corpo;
             var respostas = $scope.corpo.split('{{');
 
             function myFunction(item, index) {
@@ -50,7 +51,6 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                             $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
                         }
 
-                        console.log($scope.corpo);
                     }
                 }
             }
@@ -58,14 +58,14 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
             respostas.forEach(myFunction);
         
-        $scope.corpo= $compile($scope.corpo)($scope);
-           $element.replaceWith($scope.corpo);
+   
+           $element.replaceWith($compile($scope.corpo)($scope));
 
             
 
         });
     };
-    $scope.init();
+
 }]).directive('graficohorizontal', ['$compile', '$http', function ($compile, $http) {
     return {
         restrict: 'E',
