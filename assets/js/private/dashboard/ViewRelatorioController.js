@@ -108,15 +108,18 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
 
 
-                $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeHorizontal)]);
+                $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
 
-                $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeHorizontal)]);
+                $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
                
  
  
 
 
                 });
+
+                 console.log($scope.criterioRegularVelocidadeHorizontal);
+
                 $scope.categorias = [$scope.array];
                 $('#' + $scope.getContentHorizontal()).highcharts({
                     title: {
@@ -169,11 +172,15 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
                         }, {
                             name: 'CRITÉRIO DE ALERTA 2',
+                            color: 'red',
+        dashStyle: 'ShortDash',
                             data: $scope.criterioAceitavelVelocidadeHorizontal,
                             yAxis: 1
 
                         }, {
                             name: 'CRITÉRIO DE ALERTA 3',
+                            color: 'red',
+        dashStyle: 'ShortDash',
                             data: $scope.criterioRegularVelocidadeHorizontal,
                             yAxis: 1
 
@@ -221,10 +228,12 @@ $scope.criterioRegularVelocidadeVertical= [];
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
                     
-                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidadeVertical)]);
                     
-                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidadeVertical)]);
+                $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
 
+                $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
+               
+ 
                 });
                 $scope.categorias = [$scope.array];
                
@@ -291,12 +300,17 @@ $scope.criterioRegularVelocidadeVertical= [];
 
                         }, {
                             name: 'CRITÉRIO DE ALERTA 2',
-                            data: $scope.criterioRegularVelocidadeVertical
+                            data: $scope.criterioRegularVelocidadeVertical,
+                            color: 'red',
+                            dashStyle: 'ShortDash',
+                            yAxis: 1
 
                         }, {
-                            name: 'CRITÉRIO DE ALERTA 2',
-                            data:  $scope.criterioAceitavelVelocidadeVertical
-
+                            name: 'CRITÉRIO DE ALERTA 3',
+                            data:  $scope.criterioAceitavelVelocidadeVertical,
+                            color: 'red',
+                            dashStyle: 'ShortDash',
+                            yAxis: 1
                         }]
                 });
             });
