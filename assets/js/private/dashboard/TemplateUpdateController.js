@@ -1,11 +1,74 @@
-app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope', '$http', function($location, $routeParams, $scope, $http){
+app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope', '$http', '$compile', function($location, $routeParams, $scope, $http, $compile){
 	
 	$scope.init = function() {
 		$scope.inputClass = "active";
     $http.get("/Template/"+ $routeParams.id).then(function (results) {                                
-      $scope.data  = results.data;                           
+      $scope.data  = angular.fromJson (results.data);
+	     $scope.corpo = $scope.data.corpo;                        
     });
 	};
+$scope.corpo = "";
+    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
+	$scope.verPagina = function(){
+		$scope.corpo = $scope.data.corpo;
+		var respostas = $scope.corpo.split('{{');
+           function myFunction(item, index) {
+                if (index != 0) {
+                    var tipo = item.split('}}')[0];
+                    if (tipo.indexOf('tabela(') !== -1) {
+                        var parametro = tipo.split('&#39;')[1];
+
+
+                        $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
+                    }
+                    if (tipo.indexOf('grafico(') !== -1) {
+                        var parametro = tipo.split('&#39;')[1];
+
+
+                        var parametro2 = tipo.split('&#39;')[3];
+                     
+                        if (parametro == 'marcohorizontal') {
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
+                        } else {
+                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
+                        }
+
+                    }
+                }
+            }
+
+
+            respostas.forEach(myFunction);
+
+    };
+
+	// $scope.getData() = function(){
+	// 	 function myFunction(item, index) {
+    //             if (index != 0) {
+    //                 var tipo = item.split('}}')[0];
+    //                 if (tipo.indexOf('tabela(') !== -1) {
+    //                     var parametro = tipo.split('&#39;')[1];
+
+
+    //                     $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
+    //                 }
+    //                 if (tipo.indexOf('grafico(') !== -1) {
+    //                     var parametro = tipo.split('&#39;')[1];
+
+
+    //                     var parametro2 = tipo.split('&#39;')[3];
+    //                     console.log(parametro);
+    //                     if (parametro == 'marcohorizontal') {
+    //                         $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
+    //                     } else {
+    //                         $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
+    //                     }
+
+    //                 }
+    //             }
+    //         }
+    //         respostas.forEach(myFunction);
+	// }
 	$scope.init();
 $scope.save = function() {
 	console.log('data editado' ,$scope.data)
