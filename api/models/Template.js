@@ -21,13 +21,13 @@ module.exports = {
             type: 'string',
             required: true
         },
-        corpo: {
-            type: 'longtext',
-            required: true
-        },
         usuario: {
             model: 'Usuario'
-        }
+        },
+         paginas: {
+            collection: 'Pagina',
+            via: 'template'
+        },
     }
 };
 
