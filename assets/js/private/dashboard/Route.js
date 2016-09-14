@@ -25,6 +25,9 @@ app.config(['$routeProvider',  function ($routeProvider, $locationProvider) {
 		}).when("/Template/:id", {		
 		  templateUrl: "/views/relatorios/editTemplate.html",
 		  controller: "TemplateUpdateController"
+		}).when("/TemplatePaginas/:id", {		
+		  templateUrl: "/views/relatorios/report.html",
+		  controller: "TemplateUpdateController"
 		}).when("/Template/visualizacao/:id", {		
 		  templateUrl: "/views/relatorios/viewTemplate.html",
 		  controller: "TemplateUpdateController"

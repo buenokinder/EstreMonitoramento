@@ -42,6 +42,7 @@ app.directive('ckEditor', function() {
     require: '?ngModel',
     link: function(scope, elm, attr, ngModel) {
         CKEDITOR.config.allowedContent = true;
+        CKEDITOR.config.height = '600px';
       var ck = CKEDITOR.replace(elm[0]);
 
       if (!ngModel) return;
