@@ -4,7 +4,7 @@ module.exports.crontab = {
         var jobs = [];
         jobs.push({ interval: '*/1 * * * *', method: 'alertasMarcoSuperficial' });
         jobs.push({ interval: '*/1 * * * *', method: 'alertasPiezometro' });
-        jobs.push({ interval: '0 0 4 1 1/1 ? *', method: 'alertasPluviometria' }); //Todo dia 1 de cada mês às 04h:00.
+        jobs.push({ interval: '0 0 12 14 1/1 ? *', method: 'alertasPluviometria' }); //Todo dia 14 de cada mês às 12h:00.
 
         return jobs;
     },
