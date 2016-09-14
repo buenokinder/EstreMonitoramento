@@ -68,7 +68,7 @@
             }
         }
 
-        return true;
+        return false;
     },
 
     _getEmail: function (tipo, usuarios) {
@@ -189,6 +189,8 @@
             url: _that._urlBase + 'MedicaoMarcoSuperficialNotificacao/' + medicao.notificacao.id
         };
 
+        console.log("Atualizando o status da notificação relacionada à medição:", body);
+
         request(options, function (err, res, notificacao) {
             if (err) {
                 _that._logError(err);
@@ -232,14 +234,15 @@
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
             {
-                to: emails[i],
+                to: emails,
                 subject: "(Geotecnia) Notificação de Nível de Alerta"
             },
             function (err) {
                 if (err) {
                     console.log("err", err);
                 } else {
-                    medicao.emailgerenteadmin = true;
+                    medicao.notificacao.emailgerenteadmin = true;
+
                     _that._updateNoticacao(medicao);
                 }
 
@@ -255,7 +258,6 @@
         emails.push(this._getEmailGerente(usuarios));
         var _that = this;
         var body = this._getEmailBody(medicao.detalhes);
-
         if (body == "") return;
 
 
@@ -274,7 +276,7 @@
                 if (err) {
                     console.log("err", err);
                 } else {
-                    medicao.emailgerenteadmindiretor = true;
+                    medicao.notificacao.emailgerenteadmindiretor = true;
                     _that._updateNoticacao(medicao);
                 }
             }
@@ -285,6 +287,7 @@
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
 
+        
         sails.hooks.email.send(
             "alertadiretormedicaomarcosuperficial",
             {
@@ -300,7 +303,7 @@
                 if (err) {
                     console.log("err", err);
                 } else {
-                    medicao.emaildiretor = true;
+                    medicao.notificacao.emaildiretor = true;
                     _that._updateNoticacao(medicao);
                 }
             }
@@ -332,6 +335,7 @@
 
     _inspectMonitoramentos: function (context, monitoramentos) {
         var dataBase = new Date();
+        
 
         for (var i = 0; i < monitoramentos.length; i++) {
             for (var j = 0; j < monitoramentos[i].medicoes.length; j++) {
@@ -342,19 +346,16 @@
                     continue;
                 }
 
-
                 //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
                 if (context._existsNotificacao(medicao) == false) {
                     //context._notificacoes[medicao.id] = "";
                     context._notificacoes[medicao.id] = { data: new Date(), emailgerenteadmin: false, emailgerenteadmindiretor: false, emaildiretor: false };
-                    var item = { usuariosAterro: monitoramentos[i].aterro.usuariosAterro, medicao: medicao, body: body };
+
+                    var item = { usuariosAterro: monitoramentos[i].usuariosAterro, medicao: medicao };
 
                     context._createNoticacao(item, function (err, ret) {
                         if (err) return;
 
-                        ///*************************
-                        //AO CRIAR A NOTIFICAÇÃO JÁ FAZER OS 3 PASSOS A SEGUIR, ASSIM ELIMINA O CALLBACK.
-                        ///*************************
                         if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
                             context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
                             context._setEmailEnviado(ret.medicao, "GA");
@@ -364,7 +365,7 @@
                     continue;
                 }
 
-                //Existe notificações > Sim > O Status está como pendente > Não > Fim;
+                //Existem notificações > Sim > O Status está como pendente > Não > Fim;
                 if (medicao.notificacao.status == 'Finalizada') {
                     continue;
                 }
@@ -411,7 +412,7 @@
     },
 
     run: function () {
-        //this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
+        this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
     }
 }
 

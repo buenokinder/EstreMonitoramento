@@ -67,6 +67,6 @@
     },
 
     run: function () {
-   //     this._listAterros(this._inspectAterros, this._logError);
+        this._listAterros(this._inspectAterros, this._logError);
     }
 }
