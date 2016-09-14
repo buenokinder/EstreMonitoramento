@@ -14,6 +14,7 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     $scope.loading = false;
     $scope.aterros = ([]);
 
+  
     var canvas = null;
     var ctx = null;
     var $fatorseguranca = null;

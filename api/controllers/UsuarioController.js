@@ -11,28 +11,24 @@ var Gravatar = require('machinepack-gravatar');
 
 module.exports = {
 
-    _totalRequests: 0,
-    _totalResponses: 0,
-    _ret: { errors: [], sucess: [] },
-
-    _findOrCreateAlerta: function (alerta) {
+    _findOrCreateAlerta: function (alerta, callback) {
         var _that = this;
 
         Alerta.findOne({
             nivel: alerta.nivel
         }).exec(function (err, alertaRet) {
-            _that._totalResponses += 1;
 
             if (err) {
-                _that._ret.errors.push(err);
+                callback(err);
             }
             else {
                 if (!alertaRet) {
+                    
                     Alerta.create(alerta).exec(function (err, alertas) {
                         if (err) {
-                            _that._ret.errors.push(err);
+                            callback(err);
                         } else {
-                            _that._ret.sucess.push(alertas);
+                            callback(err, alertas);
                         }
                     });
                 }
@@ -45,33 +41,41 @@ module.exports = {
         var _that = this;
 
         var execute = new Promise(function (resolve, reject) {
-
             var niveis = {
-                "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal" },
-                "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal" },
-                "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias" },
-                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária" },
-                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária" }
+                "Aceitável": { nivel: "Aceitável", criterios: "Estável", velocidade: "0.25", periodicidade: "Semanal", next:"Regular" },
+                "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal", next: "Atenção" },
+                "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias", next: "Intervenção" },
+                "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária", next: "Paralisação" },
+                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária", next: null }
             };
 
-            for (var nivel in niveis) {
-                _that._totalRequests += 1;
-                _that._findOrCreateAlerta(niveis[nivel]);
-            }
+            var config = function (nivel){
+                var callback = function (err, sucess) {
+                    if (err) {
+                        return res.negotiate(err);
+                    }
+                    if (niveis[nivel].next == null) {
+                        return resolve("Alertas Criados");
+                    }
+                    config(niveis[nivel].next);
+                };
 
-            var itv = setInterval(function () {
-                if (_that._totalRequests == _that._totalResponses) {
-                    return resolve(_that._ret);
-                    clearInterval(itv);
+                var alerta = {
+                    nivel: niveis[nivel].nivel,
+                    criterios: niveis[nivel].criterios,
+                    velocidade: niveis[nivel].velocidade,
+                    periodicidade: niveis[nivel].periodicidade
                 }
-            }, 10);
 
+                _that._findOrCreateAlerta(alerta, callback);
+            };
+
+            config("Aceitável");
         });
 
         execute.then(function (results) {
             res.json(results);
         });
-
     },
 
     login: function (req, res) {
@@ -165,6 +169,15 @@ module.exports = {
             // Wipe out the session (log out)
             req.session.destroy(function (err) {
                 setTimeout(function () {
+                    
+                    //sails.sockets.emit({}, 'logout', { });
+
+                    //if (req.isSocket) {//Não envia a mensagem para a aba que solicitou o logout.
+                    //    sails.sockets.broadcast('message', 'logout', { message: 'Sessão finalizada.' }, req);
+                    //}
+                    //sails.sockets.broadcast('message', 'logout', { message: 'Sessão finalizada.' }, req);
+                    //sails.sockets.broadcast('artsAndEntertainment', { greeting: 'Sessão finalizada' });
+
                     return res.redirect('/#/login');
                 }, 1000);
             });

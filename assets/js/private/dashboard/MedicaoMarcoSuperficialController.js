@@ -240,6 +240,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', 'sennitC
 
                         if ($scope.usuario._perfil != 'Administrador') {
                             params['aterro'] = $scope.usuario._aterro;
+                        } else {
+                            params['aterro'] = $scope.inserted.aterro;
                         }
 
                         $http({
