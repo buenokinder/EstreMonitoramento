@@ -409,7 +409,6 @@
     },
 
     run: function () {
-        console.log("module.exports.appconfig.url", sails.config.appconfig.url);
         this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
     }
 }

@@ -189,6 +189,37 @@ module.exports = {
         });
     },
 
+    update: function (req, res) {
+
+        if (_.isUndefined(req.param('password'))) {
+            return res.badRequest('Senha não informada!');
+        }
+
+        Passwords.encryptPassword({
+            password: req.param('password'),
+            difficulty: 10
+        }).exec({
+            error: function (err) {
+                return res.serverError(err);
+            },
+            success: function (encryptedPassword) {
+
+                Usuario.update({
+                    id: req.param('id')
+                }, {
+                    encryptedPassword: encryptedPassword,
+                    email: req.param('email'),
+                    habilitado: req.param('habilitado'),
+                    perfil: req.param('perfil')
+                }).exec(function (err, updatedUser) {
+                    if (err) {
+                        return res.negotiate(err);
+                    }
+                    return res.json(updatedUser);
+                });
+            }
+        });
+    },
     changePassword: function (req, res) {
 
         if (_.isUndefined(req.param('password'))) {
