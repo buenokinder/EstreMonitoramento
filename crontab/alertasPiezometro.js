@@ -39,7 +39,7 @@
         }
     },
 
-    _urlBase: 'http://localhost:1337/',
+    _urlBase: sails.config.appconfig.url,
     _notificacoes: {},
     _alertas: ['Atenção', 'Intervenção', 'Paralisação'],
     _emailsEnviados: {},
@@ -272,8 +272,6 @@
                 }
             }
         );
-
-
     },
 
     _sendEmailDiretor: function (usuarios, medicao, observacoes) {
@@ -372,7 +370,7 @@
                 //}
 
                 var notificacaoFoiCriadaNessaInteracao = context._notificacoes[medicao.id].data > dataBase;
-                console.log("notificacaoFoiCriadaNessaInteracao", notificacaoFoiCriadaNessaInteracao);
+
                 if (notificacaoFoiCriadaNessaInteracao) {
                     continue;
                 }
@@ -397,8 +395,6 @@
                         }
                     }
                     else {
-                        console.log("diferencaDatas", diferencaDatas);
-
                         //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
                         if (diferencaDatas >= 1) {
                             if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {

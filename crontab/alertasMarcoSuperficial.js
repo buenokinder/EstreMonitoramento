@@ -45,8 +45,7 @@
     //     - Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
     //     - Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
     //     - Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
-
-    _urlBase: 'http://localhost:1337/',
+    _urlBase: sails.config.appconfig.url,
     _notificacoes: {},
     _alertas: ['Atenção', 'Intervenção', 'Paralisação'],
     _emailsEnviados: {},
@@ -248,8 +247,6 @@
 
             }
         );
-
-
     },
 
     _sendEmailGerenteAdministradorDiretor: function (usuarios, medicao) {
@@ -412,6 +409,7 @@
     },
 
     run: function () {
+        console.log("module.exports.appconfig.url", sails.config.appconfig.url);
         this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
     }
 }

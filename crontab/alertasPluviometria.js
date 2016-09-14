@@ -1,6 +1,6 @@
 ﻿module.exports = {
 
-    _urlBase: 'http://localhost:1337/',
+    _urlBase: sails.config.appconfig.url,
    
     _getEmail: function (tipo, usuarios) {
         var emails = [];
