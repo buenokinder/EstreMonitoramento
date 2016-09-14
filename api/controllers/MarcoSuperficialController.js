@@ -434,6 +434,10 @@ module.exports = {
             dataInicial.setSeconds(59);
         }
 
+        if (req.param('aterro') != undefined) {
+            filtro.aterro = req.param('aterro').split(',');
+        }
+
         filtro.data = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;

@@ -102,11 +102,28 @@
                                 </span>
                             </td>
 
+                            <!--<td>
+                                <span e-name="aterro" e-form="rowform">
+                                    {{ operacaoPluviometria.aterro.nome || '' }}
+                                </span>
+                            </td>-->
+
                             <td>
                                 <span e-name="aterro" e-form="rowform">
                                     {{ operacaoPluviometria.aterro.nome || '' }}
                                 </span>
                             </td>
+
+                            <!--<td ng-if="me._perfil !== 'Administrador'">
+                                <span e-name="aterro" e-form="rowform">
+                                    {{ operacaoPluviometria.aterro.nome || '' }}
+                                </span>
+                            </td>-->
+                            <!--<td ng-if="me._perfil === 'Administrador'">
+                                <span editable-select="operacaoPluviometria.aterro" e-ng-change="changeAterro($data, $index)" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
+                                    {{ showAterro(operacaoPluviometria) }}
+                                </span>
+                            </td>-->
 
                             <td style="text-align:center;">
                                 <span editable-number="operacaoPluviometria.pluviometria" e-name="pluviometria" e-form="rowform">
@@ -120,7 +137,7 @@
                                 </span>
                             </td>
 
-                            <td style="text-align:center;" style="white-space: nowrap">
+                            <td style="text-align:center;white-space: nowrap">
                                 <form editable-form name="rowform" onbeforesave="savePluviometria(rowform,$index, $data, operacaoPluviometria.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == operacaoPluviometria">
                                     <button type="submit" ng-disabled="rowform.$waiting" style="border:none; background: none !important;">
                                         <i class="mdi-navigation-check estre-darkgreen-icon small  icon-demo" aria-hidden="true"></i>

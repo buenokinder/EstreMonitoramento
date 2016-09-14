@@ -85,6 +85,8 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
             for (var i = 0; i < $scope.usuarios.length; i++) {
                 if ($scope.usuarios[i].id == $scope.me._id) {
                     $scope.usuario = $scope.usuarios[i];
+                    console.log("$scope.usuario", $scope.usuario);
+                    break;
                 }
             }
         });
@@ -206,12 +208,34 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         });
     };
 
-    $scope.showAterro = function (aterro) {
-        if (aterro.aterro && $scope.aterros.length) {
-            var selected = $filter('filter')($scope.aterros, { id: aterro.aterro.id });
-            return selected.length ? selected[0].nome : 'Not set';
-        } else {
-            return aterro.nome || 'Not set';
+    //$scope.showAterro = function (data) {
+    //    if (aterro.aterro && $scope.aterros.length) {
+    //        var selected = $filter('filter')($scope.aterros, { id: aterro.aterro.id });
+    //        return selected.length ? selected[0].nome : 'Not set';
+    //    } else {
+    //        return aterro.nome || 'Not set';
+    //    }
+    //};
+
+    $scope.showAterro = function (data) {
+        var selected = [];
+
+        if (data.aterro.id) {
+            selected = $filter('filter')($scope.aterros, { id: data.aterro.id });
+            return selected.length ? selected[0].nome : 'Não selecionado';
+        }
+
+        if (data.aterro) {
+            selected = $filter('filter')($scope.aterros, { id: data.aterro.id });
+            return selected.length ? selected[0].nome : 'Não selecionado';
+        }
+    };
+
+    $scope.changeAterro = function (aterro, index) {
+
+        if (aterro) {
+            selected = $filter('filter')($scope.aterros, { id: aterro });
+            $scope.operacaoPluviometrias[index].aterro = selected.length > 0 ? selected[0] : $scope.aterro;
         }
     };
 
@@ -224,7 +248,6 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         }
     };
 
-
     $scope.checkName = function (data, id) {
         if (id === 2 && data !== 'awesome') {
             return "Username 2 should be `awesome`";
@@ -235,9 +258,9 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
 
         angular.extend(data, { id: id });
         angular.extend(data, { usuario: $scope.usuario.id });
-        angular.extend(data, { aterro: $scope.aterro });
-
-        var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
+        console.log("data", data);
+        //var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
+        var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: data.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
         if (undefined == id) {
 
             swal({
@@ -350,7 +373,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         $scope.inserted = {
             dataMedicao: null,
             aterro: $scope.aterro,
-            usuario: $scope.usuario.id,
+            usuario: $scope.usuario,
             pluviometria: null,
             vazao: null
         };
