@@ -123,7 +123,7 @@ blockquote, q {
 <div class='row'>
 	<div  class='col s6'>
 <div class='card-panel' ng-init='init()' >
-<h4 class='header2'>Formulário de Template - Editando Página {{editPageId}}</h4>
+<h4 class='header2'>Formulário de Template - Editando Página {{paginas[editPageId].nome }}</h4>
 <div class='row'>
     <div  class='col s12' >
 	<form ng-submit='save()' id='sign-up-form'>
@@ -171,7 +171,7 @@ blockquote, q {
 
 
     <button ng-click="novaPagina()" class="btn cyan waves-effect waves-light right">Nova Página</button>
-
+   <button ng-click="savePage()" class="btn cyan waves-effect waves-light right">Gravar</button>
     <button ng-click="verPagina()" class="btn cyan waves-effect waves-light right">Preview</button>
     </div>
 
@@ -186,13 +186,28 @@ blockquote, q {
 	<div  class='col s12'  style="overflow: auto; height: 850px;" >
 		
 <div class="reportEstre">
-    <page size="A4" ng-click="editarPagina(pagina,$index)" ng-repeat="pagina in paginas">
+	<div ng-repeat="pagina in paginas">
+		 <p>
+                               
+<i class="material-icons dp48" ng-click="deletePagina(pagina)" >delete</i>
+                                <span class="editable-wrap editable-text ng-scope">
+                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                        <input type="text" name="nomeTopografo" ng-model="pagina.nome" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+
+                                       
+                                    </div>
+                                </span>
+                            </p>
+
+    <page size="A4" ng-click="editarPagina(pagina,$index)" >
+		
        <div>
             <img  style="float: right;" src="/images/logo_pdf.png" />
         </div>
             <div style="position: relative;
     top: 135px;" compile="preparaConteudo(pagina.conteudo)"></div>
  </page>
+ 	</div>
 
     <!--<div class="page" ng-repeat="pagina in paginas">
         <div ng-click="editarPagina(pagina,$index)" class="subpage">
