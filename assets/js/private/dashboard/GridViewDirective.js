@@ -1162,7 +1162,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                         $("input[name=" + $scope.fields[field].name + "]").val(dt);
                     }
 
-                    if ($scope.fields[field].type == "datetimepicker") {
+                    if ($scope.fields[field].type == "datetimepicker" && undefined != $scope.data[$scope.fields[field].name]) {
                         var dt = getDateTimeString($scope.data[$scope.fields[field].name]);
                         $scope.data[$scope.fields[field].name] = dt;
                         $("input[name=" + $scope.fields[field].name + "]").val(dt);
