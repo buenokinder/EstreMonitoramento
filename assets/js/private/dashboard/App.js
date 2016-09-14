@@ -375,35 +375,6 @@ $scope.criterioRegularVelocidadeVertical= [];
             }
         }
     }
-}]).directive('ckEditor',['$compile', '$http', function ($compile, $http) {
-    return {
-    require: '?ngModel',
-    link: function(scope, elm, attr, ngModel) {
-        CKEDITOR.config.allowedContent = true;
-      var ck = CKEDITOR.replace(elm[0]);
-
-      if (!ngModel) return;
-
-      ck.on('instanceReady', function() {
-        
-        ck.setData($compile(ngModel.$viewValue)(scope));
-      });
-
-      function updateModel() {
-          scope.$apply(function() {
-              ngModel.$setViewValue(ck.getData());
-          });
-      }
-
-      ck.on('change', updateModel);
-      ck.on('key', updateModel);
-      ck.on('dataReady', updateModel);
-
-      ngModel.$render = function(value) {
-        ck.setData($compile(ngModel.$viewValue)(scope));
-      };
-    }
-  };
 }]).directive('compile', ['$compile', function ($compile) {
       return function(scope, element, attrs) {
           scope.$watch(
@@ -412,6 +383,7 @@ $scope.criterioRegularVelocidadeVertical= [];
               return scope.$eval(attrs.compile);
             },
             function(value) {
+                
               // when the 'compile' expression changes
               // assign it into the current DOM
               element.html(value);
