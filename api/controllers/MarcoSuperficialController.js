@@ -292,6 +292,10 @@ module.exports = {
 
     _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes, _marcoSuperficiaisNotificacao) {
         for (var i = 0; i < detalhes.length; i++) {
+            var registroOrfao = (detalhes[i].owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
+
+            if (registroOrfao) continue;
+
             var exists = _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] != undefined;
 
             if (!exists) {
@@ -450,6 +454,10 @@ module.exports = {
         }
 
         for (var j = 0; j < marcoSuperficial.medicaoMarcoSuperficialDetalhes.length; j++) {
+            var registroOrfao = (marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
+
+            if (registroOrfao) continue;
+
             var first = (j == 0);
 
             var monitoramento = {
@@ -462,10 +470,6 @@ module.exports = {
 
             var medicaoAtual = marcoSuperficial.medicaoMarcoSuperficialDetalhes[j];
             var medicaoAnterior = first ? marcoSuperficial : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1];
-
-            if (medicaoAtual.owner == undefined) {
-                console.log("medicaoAtual sem owner:", medicaoAtual);
-            }
 
             medicaoAtual.data = medicaoAtual.owner.data;
             medicaoAnterior.data = first ? marcoSuperficial.data : marcoSuperficial.medicaoMarcoSuperficialDetalhes[j - 1].owner.data;
