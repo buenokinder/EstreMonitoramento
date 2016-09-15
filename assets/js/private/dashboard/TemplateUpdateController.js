@@ -6,7 +6,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			$scope.data = angular.fromJson(results.data);
 			$scope.paginas = angular.fromJson(results.data.paginas);
 			$scope.corpo = $scope.data.corpo;
-			  $('.modal-trigger').leanModal();
+			$('.modal-trigger').leanModal();
 		});
 	};
 
@@ -29,31 +29,31 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
 	};
 	$scope.deletePagina = function (pagina) {
-		 swal({
-                    title: "Você tem certeza que deseja excluir?",
-                    text: "Não será mais possivel recuperar esse Registro!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Sim",
-                    cancelButtonText: "Cancelar",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            swal("Deletado!", "Seu registro foi excluido.", "success");
-                            $http.delete('/Pagina/' + pagina.id)
-                            .then(function (project) {
-                                var index = $scope.paginas.indexOf(pagina);
-                                $scope.paginas.splice(index, 1);
-                               
-                            });
-                        } else {
-                            swal("Cancelado", "Seu registro está seguro :)", "error");
-                        }
-                    }
-                );
+		swal({
+			title: "Você tem certeza que deseja excluir?",
+			text: "Não será mais possivel recuperar esse Registro!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Sim",
+			cancelButtonText: "Cancelar",
+			closeOnConfirm: false,
+			closeOnCancel: false
+		},
+			function (isConfirm) {
+				if (isConfirm) {
+					swal("Deletado!", "Seu registro foi excluido.", "success");
+					$http.delete('/Pagina/' + pagina.id)
+						.then(function (project) {
+							var index = $scope.paginas.indexOf(pagina);
+							$scope.paginas.splice(index, 1);
+
+						});
+				} else {
+					swal("Cancelado", "Seu registro está seguro :)", "error");
+				}
+			}
+		);
 	}
 	$scope.savePage = function () {
 		swal({
@@ -75,10 +75,10 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 							url: '/Pagina/' + value.id,
 							data: value
 						}).then(function onSuccess(sailsResponse) {
-							
+
 							swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
 							Materialize.toast('Registro alterado com sucesso!', 4000);
-							
+
 						})
 							.catch(function onError(sailsResponse) {
 
@@ -139,11 +139,23 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 	$scope.componenteNome = "";
 	$scope.componenteTipo = "";
 	$scope.componenteGrafico = "";
+	$scope.componenteTabela = "";
 	$scope.componenteValor = "";
 
-$scope.preparaConteudo = function (value) {
-	
-}
+	$scope.addComponente = function (value) {
+		console.log('teste');
+
+		console.log($scope.componenteTipo);
+		if ($scope.componenteTipo == 'tabela') {
+			console.log($scope.componenteTipo);
+			$scope.selectedPage += "<tabela tipo='" + $scope.componenteTabela + "'  aterro='" + $scope.data.aterro.id + "'  inicio='" + $scope.data.dataInicial + "'  fim='" + $scope.data.dataFim + "'><p style='color: red;' >" + $scope.componenteNome + "</p></tabela>"
+		} else {
+			$scope.selectedPage += "<graficohorizontal  tipado='" + $scope.componenteValor + "' aterro='" + $scope.data.aterro.id + "'  inicio='" + $scope.data.dataInicial + "'  fim='" + $scope.data.dataFim + "'  ><p style='color: red;' >" + $scope.componenteNome + "</p></graficohorizontal>";
+
+		}
+		console.log($scope.selectedPage);
+		$(".lean-overlay").hide();
+	}
 	$scope.preparaConteudo = function (value) {
 
 		var respostas = value.split('{{');
