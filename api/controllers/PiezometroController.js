@@ -326,7 +326,7 @@ module.exports = {
                             first = false;
 
                             medicao.profundidadeMediaCamaradeCargaDescontandoCortes =
-								medicao.prolongamentoCorte == "-" ?
+								medicao.prolongamentoCorte == "-" || medicao.prolongamentoCorte == 0 ?
 									parseFloat(medicao.profundidadeMediaCamaraCargaInicial) :
 									parseFloat(medicao.profundidadeMediaCamaraCargaInicial) + parseFloat(medicao.prolongamentoCorte);
                         } else {
