@@ -528,9 +528,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 },
                     function (isConfirm) {
                         if (isConfirm) {
-                            swal("Deletado!", "Seu registro foi excluido.", "success");
+                            
                             $http.delete('/' + $scope.listaname + '/' + item.id)
                             .then(function (project) {
+                                swal("Deletado!", "Seu registro foi excluido.", "success");
+
+                                sennitCommunicationService.prepForBroadcast(item, "delete");
+
                                 var index = $scope.data.indexOf(item);
                                 $scope.data.splice(index, 1);
                                 $scope.refreshPage();

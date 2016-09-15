@@ -131,7 +131,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     };
 
     $scope.getMarcoSuperficial = function (medicaoMarcoSuperficialDetalhes, callback) {
-        $http.get('/MarcoSuperficial/?nome=' + medicaoMarcoSuperficialDetalhes.nome + '&aterro=' + medicaoMarcoSuperficialDetalhes.aterro).success(function (response, status) {
+        $http.get('/MarcoSuperficial/?nome=' + medicaoMarcoSuperficialDetalhes.nome + '&aterro=' + medicaoMarcoSuperficialDetalhes.aterro.id).success(function (response, status) {
 
             if (null == response || response.length == 0) {
                 var marcosuperficial = {};
@@ -402,6 +402,15 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                 $scope.inputClass = "active";
                 $scope.verResumos = false;
                 $scope.verMedicoes = true;
+                break;
+
+            case 'delete':
+                var data = $scope.data;
+
+                $scope.deleteAllDetalhes({ id: data.id }, function () {
+                }, function () {
+                    swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição :(", "error");
+                });
                 break;
 
             case 'save':
