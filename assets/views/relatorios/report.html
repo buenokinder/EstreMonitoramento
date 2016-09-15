@@ -6,10 +6,13 @@
     <div class="nav-wrapper  light-green">
       <a href="#" class="brand-logo"> Editando - {{paginas[editPageId].nome }}</a>
       <ul class="right hide-on-med-and-down">
+
+          
         <li><a ng-href=""><i class="material-icons"   ng-click="novaPagina()">note_add</i></a></li>
         <li><a  ng-href=""><i class="material-icons"   ng-click="savePage()">done</i></a></li>
         <li><a  ng-href=""><i class="material-icons"  ng-click="verPagina()">refresh</i></a></li>
-        
+          <li><a ng-href=""><i class="material-icons"   ng-click="imprimir()">print</i></a></li>
+           <li><a class="modal-trigger" href="#modal1" ><i class="material-icons"   ng-click="imprimir()">assessment</i></a></li>
       </ul>
     </div>
   </nav>
@@ -89,6 +92,57 @@
 </div>
 </div>
 </div>
+
+ <!-- Modal Structure -->
+  <div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Adicinar Componente</h4>
+     <div class="row">
+                        <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Label</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched datetimepicker" id="dataInicial" name="componenteNome" ng-model="monitoramentos.dataInicial" aria-invalid="false">
+                        </div>
+
+                      
+
+
+                        <div class="form-group col m3" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Componente</label>
+                            <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required" id="ordenacao" required="" ng-model="monitoramentos.ordenacao" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Grafico" value="grafico">Grafico</option>
+                                <option label="Tabela" value="tabela">Tabela</option>
+                            </select>
+                        </div>
+                          <div class="form-group col m3" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Componente</label>
+                            <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required" id="ordenacao" required="" ng-model="monitoramentos.ordenacao" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Grafico" value="grafico">Boskov</option>
+                                <option label="Tabela" value="tabela">Tabela</option>
+                            </select>
+                            <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required" id="ordenacao" required="" ng-model="monitoramentos.ordenacao" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Marco Horizontal" value="marcohorizontal">Marco Horizontal</option>
+                                <option label="Marco Vertical" value="marcovertical">Marco Vertical</option>
+                            </select>
+                        </div>
+
+
+                          <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Parametro</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched datetimepicker" id="dataFinal" name="monitoramentos.dataFinal" ng-model="monitoramentos.dataFinal" aria-invalid="false">
+                        </div>
+     </div>
+
+    </div>
+    <div class="modal-footer">
+      <a ng-href="" ng-click="addComponente()" class="modal-action modal-close waves-effect waves-green btn-flat ">Addcionar</a>
+    </div>
+  </div>
 <style>
 
   all: initial;

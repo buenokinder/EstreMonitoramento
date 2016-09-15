@@ -6,6 +6,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			$scope.data = angular.fromJson(results.data);
 			$scope.paginas = angular.fromJson(results.data.paginas);
 			$scope.corpo = $scope.data.corpo;
+			  $('.modal-trigger').leanModal();
 		});
 	};
 
@@ -135,6 +136,14 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
     String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
 
+	$scope.componenteNome = "";
+	$scope.componenteTipo = "";
+	$scope.componenteGrafico = "";
+	$scope.componenteValor = "";
+
+$scope.preparaConteudo = function (value) {
+	
+}
 	$scope.preparaConteudo = function (value) {
 
 		var respostas = value.split('{{');

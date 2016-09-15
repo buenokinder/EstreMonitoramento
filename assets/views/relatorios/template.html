@@ -3,7 +3,7 @@
   <div class="divider"></div>
     <div class="row">
       <div class="col s12 m12">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'dataInicial' , 'value': 'Data Inicial', 'uiFilter': 'date'}, {'name': 'dataFim' , 'value': 'Data Final', 'uiFilter': 'date'}  ]" listaname="Template"  label="Lista de Template"  autopage="true" adicionar="" add="false"  update='false' strupdate="false" strdelete="false" view="Template" relatorio="true" pagesize="5"></grid-view>
+      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'dataInicial' , 'value': 'Data Inicial', 'uiFilter': 'date'}, {'name': 'dataFim' , 'value': 'Data Final', 'uiFilter': 'date'} , {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome', 'defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}] } ]" listaname="Template"  label="Lista de Template"  autopage="true" adicionar="" add="false"  update='false' strupdate="false" strdelete="false" view="Template" relatorio="true" pagesize="5"></grid-view>
       </div>
     </div>
   </div>
