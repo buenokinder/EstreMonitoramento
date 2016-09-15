@@ -48,7 +48,13 @@ module.exports = {
         var _dashboards = [];
         var _totalDatasResult = 0;
 
-        Aterro.find({})
+        var filtro = {};
+        if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+            filtro.id = req.session.me.aterro.id;
+        }
+
+
+        Aterro.find(filtro)
             .populate("mapa")
             .populate("dashboard")
         .exec(function (err, aterros) {
@@ -133,7 +139,12 @@ module.exports = {
         var _previews = [];
         var _totalDataConfigResult = 0;
 
-        Aterro.find({})
+        var filtro = {};
+        if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+            filtro.id = req.session.me.aterro.id;
+        }
+
+        Aterro.find(filtro)
             .populate("mapa")
             .populate("dashboard")
         .exec(function (err, aterros) {
