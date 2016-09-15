@@ -53,7 +53,6 @@ module.exports = {
             filtro.id = req.session.me.aterro.id;
         }
 
-
         Aterro.find(filtro)
             .populate("mapa")
             .populate("dashboard")
