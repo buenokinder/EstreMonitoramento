@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/styles/app.css">
     <script src="/js/public/modernizr.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
-    <script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
+
 
     <style>
         @media screen {
@@ -261,13 +261,48 @@
 </head>
 
 
-<body ng-controller="ViewTemplateController">
+<body ng-controller="ViewTemplateController" ng-init="init()">
 
-    <div ng-init='init()'>
-        <div id="docCorpo" ng-bind-html="corpo">
+    
 
+	<div ng-repeat="pagina in paginas">
+    <page size="A4"   >
+		
+       <div     style="margin-bottom: 37px; margin-left: 492px; width: 750px;">
+            <img   src="/images/logo_pdf.png" />
         </div>
-    </div>
+            <div  style="position: relative;
+    top: 135px;" compile="pagina.conteudo"></div>
+ </page>
+ 	
+  </div>
+<style>
+
+    
+page[size="A4"] {
+  
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  margin-left: 10px;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+@media print {
+  body, page[size="A4"] {
+    margin: 0;
+    box-shadow: 0;
+  }
+}   
+   
+</style>
+
+
+
+
+ 
 
     <script src="/js/jquery-1.11.2.min.js"></script>
     <script src="/js/dependencies/angular.min.js"></script>

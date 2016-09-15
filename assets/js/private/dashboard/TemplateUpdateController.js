@@ -12,7 +12,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
 
 	$scope.corpo = "";
-
+	$scope.id = $routeParams.id;
 	$scope.paginas = ([]);
 	$scope.selectedPage = "";
 	$scope.editPageId = 0;
