@@ -10,6 +10,10 @@
   .fixed table tr {
       border-bottom: 1px solid;      
   }  
+
+  th {
+      text-align:center;
+  }
 </style>
 
 <div class="section">
@@ -21,14 +25,21 @@
                     <h4 class="header2">Monitoramentos</h4>
                     <div class="row">
 
+                        <div class="form-group col m1" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Aterro</label>
+                            <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" ng-change="changeAterro()" id="aterro" required="" ng-model="monitoramentos.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true"></select>
+                        </div>
+
                         <div class="form-group col m3" id="sign-up-form">
                             <label class='active' for='piezometro'>Piezômetro</label>
-                            <div isteven-multi-select input-model='monitoramentos.piezometros' item-label='icon perfil name' button-label='icon name'
+                            <div isteven-multi-select input-model='monitoramentos.piezometrosAterro' item-label='icon perfil name' button-label='icon name'
                                  tick-property='teste' output-model='monitoramentos.piezometrosSearch'>
                             </div>
 
                         </div>
+                    </div>
 
+                    <div class="row">
                         <div class="form-group col m2" id="sign-up-form">
                             <label ng-class="inputClass" for="nome" class="">Data Inicial</label>
                             <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched datetimepicker" id="dataInicial" name="monitoramentos.dataInicial" ng-model="monitoramentos.dataInicial" aria-invalid="false">
@@ -78,42 +89,38 @@
                                 <thead>
                                     <tr>
                                         <th rowspan="3">DATA</th>
-                                        <th rowspan="3" style="text-align:center">Saliência Inicial</th>
-                                        <th rowspan="3" style="text-align:center">Saliência</th>
-                                        <th rowspan="3" style="text-align:center">Saliência Excedente </th>
+                                        <th rowspan="3">Saliência</th>
                                         <th rowspan="3">Profundidade total - ATUAL</th>
                                         <th rowspan="3">Prof. média câmara de carga - ATUAL</th>
                                         <th rowspan="3">Prolongamento/corte</th>
                                         <th colspan="4">Medições de nível de chorume</th>
                                         <th rowspan="3">ru</th>
                                         <th rowspan="3">CRITÉRIO DE ALERTA ru</th>
-                                        <th colspan="4" style="text-align:center">PRESSÃO</th>
+                                        <th colspan="4">PRESSÃO</th>
                                     </tr>
 
                                     <tr>                                        
-                                        <th colspan="2" style="text-align:center"> Com pressão (Rg.Fechado)</th>
-                                        <th colspan="2" style="text-align:center">Sem Pressão(Rg.Aberto)</th>
-                                        <th rowspan="2" style="text-align:center">Chorume(mca)</th>
-                                        <th colspan="3" style="text-align:center">Gás</th>
+                                        <th colspan="2"> Com pressão (Rg.Fechado)</th>
+                                        <th colspan="2">Sem Pressão(Rg.Aberto)</th>
+                                        <th rowspan="2">Chorume(mca)</th>
+                                        <th colspan="3">Gás</th>
                                     </tr>
 
                                     <tr>
-                                        <th style="text-align:center">Nível medido (m)</th>
-                                        <th style="text-align:center">Nível efetivo (m)</th>
-                                        <th style="text-align:center">Nível medido (m)</th>
-                                        <th style="text-align:center">Nível efetivo (m)</th>                                        
-                                        <th style="text-align:center">Pio(mca)</th>
-                                        <th style="text-align:center">Manômetro(mca)</th>
-                                        <th style="text-align:center">Manômetro(kPa)</th>
+                                        <th>Nível medido (m)</th>
+                                        <th>Nível efetivo (m)</th>
+                                        <th>Nível medido (m)</th>
+                                        <th>Nível efetivo (m)</th>                                        
+                                        <th>Pio(mca)</th>
+                                        <th>Manômetro(mca)</th>
+                                        <th>Manômetro(kPa)</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
                                         <td style="text-align:center">{{monitoramento.dataMedicao | date:'dd/MM/yyyy HH:mm'}}</td>
-                                        <td style="text-align:center">{{monitoramento.salienciaInicial}}</td>
                                         <td style="text-align:center">{{monitoramento.saliencia}}</td>
-                                        <td style="text-align:center">{{monitoramento.salienciaInicialEstimada}}</td>
                                         <td style="text-align:center">{{monitoramento.profundidadeTotalAtual}}</td>
                                         <td style="text-align:center">{{monitoramento.profundidadeMediaCamaradeCarga}}</td>
                                         <td style="text-align:center">{{monitoramento.prolongamentoCorte}}</td>

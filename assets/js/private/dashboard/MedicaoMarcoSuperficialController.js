@@ -14,7 +14,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     $scope.monitoramentos = {
         dataInicial: '',
         dataFinal: '',
-        aterro: {},
+        aterro: undefined,
         marcosSuperficiais: ([]),
         marcosSuperficiaisAterro: ([]),
         marcosSuperficiaisSearch: ([]),
@@ -59,9 +59,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             query += "&ms=" + marcosSuperficiais;
             query += "&aterro=" + ((typeof aterro === "object")?aterro.id:aterro);
 
-            if (typeof $scope.monitoramentos.aterro != "object") {
-                query += "&aterro=" + $scope.monitoramentos.aterro;
-            }
+            //if (typeof $scope.monitoramentos.aterro != "object") {
+            //    query += "&aterro=" + $scope.monitoramentos.aterro;
+            //}
 
             $http.get('/MarcoSuperficial/monitoramentos/' + query).success(function (response, status) {
                 $scope.monitoramentos.resumo = response;

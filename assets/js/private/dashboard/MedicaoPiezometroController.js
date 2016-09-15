@@ -1,5 +1,5 @@
 
-app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', 'sennitCommunicationService', function ($scope, $interval, $http, sennitCommunicationService) {
+app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '$filter', 'sennitCommunicationService', function ($scope, $interval, $http, $filter, sennitCommunicationService) {
     $scope.data = [];
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
@@ -11,9 +11,11 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
     $scope.monitoramentos = {
         dataInicial: '',
         dataFinal: '',
+        aterro: undefined,
         piezometro: ([]),
         piezometros: ([]),
         piezometrosSearch: ([]),
+        piezometrosAterro: ([]),
         monitoramentos: ([]),
         pesquisa: null,
         ordenacao: 'asc',
@@ -43,7 +45,7 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
             $http.get('/Piezometro').success(function (response, status) {
                 var piezometros = [];
                 for (var i = 0; i < response.length; i++) {
-                    piezometros.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false });
+                    piezometros.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.piezometros = piezometros;
             });
@@ -59,6 +61,10 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
             query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
+
+            if ($scope.monitoramentos.aterro) {
+                query += "&aterro=" + $scope.monitoramentos.aterro;
+            }
 
             if (null != $scope.monitoramentos.piezometrosSearch && undefined != $scope.monitoramentos.piezometrosSearch && $scope.monitoramentos.piezometrosSearch.length > 0) {
                 var pzs = "";
@@ -82,6 +88,13 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
     };
 
     $scope.monitoramentos.init();
+
+
+    $scope.changeAterro = function () {
+        if ($scope.monitoramentos.aterro) {
+            $scope.monitoramentos.piezometrosAterro = $filter('filter')($scope.monitoramentos.piezometros, { aterro: { id: $scope.monitoramentos.aterro } });
+        }
+    };
 
 
     $scope.addMedicao = function () {

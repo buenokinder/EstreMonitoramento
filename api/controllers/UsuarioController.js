@@ -149,24 +149,14 @@ module.exports = {
         });
     },
 
-    /**
-     * Log out of Activity Overlord.
-     * (wipes `me` from the sesion)
-     */
     logout: function (req, res) {
-        // Look up the user record from the database which is
-        // referenced by the id in the user session (req.session.me)
         Usuario.findOne({ id: req.session.me.id }, function foundUser(err, user) {
             if (err) return res.negotiate(err);
 
-            // If session refers to a user who no longer exists, still allow logout.
             if (!user) {
-                sails.log.verbose('Session refers to a user who no longer exists.');
-                //return res.backToHomePage();
                 return res.redirect('/#/login');
             }
 
-            // Wipe out the session (log out)
             req.session.destroy(function (err) {
                 setTimeout(function () {
                     
@@ -181,8 +171,6 @@ module.exports = {
                     return res.redirect('/#/login');
                 }, 1000);
             });
-
-            // Either send a 200 OK or redirect to the home page
 
         });
     },

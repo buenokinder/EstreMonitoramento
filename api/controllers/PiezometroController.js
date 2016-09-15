@@ -58,7 +58,12 @@ module.exports = {
 
             var _monitoramentosnotificacao = function () {
 
-                var piezometro = Piezometro.find({}).
+                var filtro = {};
+                if (req.param('aterro') != undefined) {
+                    filtro.aterro = req.param('aterro').split(',');
+                }
+
+                var piezometro = Piezometro.find(filtro).
                                     populate('aterro').
                                     populate('medicoes');
 
@@ -254,6 +259,10 @@ module.exports = {
 
             if (req.param('pz') != undefined) {
                 filtro.id = req.param('pz').split(',');
+            }
+
+            if (req.param('aterro') != undefined) {
+                filtro.aterro = req.param('aterro').split(',');
             }
 
             var piezometro = Piezometro.find(filtro).
