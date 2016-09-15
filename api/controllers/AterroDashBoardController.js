@@ -36,8 +36,6 @@ module.exports = {
         return true;
     },
 
-  
-
     list: function (req, res) {
         if (!req.session.me) {
             return res.view('index');
