@@ -38,6 +38,46 @@
             line-height: 0%;
             margin: 0.78rem 0 1.424rem 0;
         }
+
+        @media only screen and (min-width: 993px) {
+            #content {
+                margin-top: 15px;
+            }
+        }
+
+        iframe {
+            border: none;
+            width: 90%;
+            height: 85%;
+        }
+
+        #legenda {
+            margin-top: 5px;
+            display: none;
+        }
+
+        #fator img {
+            display: block;
+            margin: auto;
+        }
+
+        #fator p {
+            text-align: center;
+        }
+
+        #nomeaterro{
+            color: #fff;
+        }
+
+        .aterro
+        {
+            background-color:#9acd32
+        }
+
+        h2{
+            margin: 13px 3px 14px 2px;
+            font-size:25px;
+        }
     </style>
 
 </head>
@@ -57,25 +97,24 @@
                     <div class="container">
 
                         <div class="section">
-
-                            <div class="row">
+                            <div class="row aterro">
                                 <div class="col s12 m12">
                                     <h2 id="nomeaterro" class="ng-binding" style="text-align:center">{{dashboard.current.aterro.nome}}</h2>
                                 </div>
                             </div>
 
                             <div class="row" id="doismapas" style="display:none">
-                                <div class="col s6 m6 l6 parallax-container">
+                                <div class="col s6 m6 l6 iframe-container-monitoramento">
                                     <div class="row">
                                         <p style="text-align:center">
                                             Horizontal
                                         </p>
                                     </div>
 
-                                    <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+                                    <iframe src="{{dashboard.current.mapaHorizontal}}" class="maph"></iframe>
                                 </div>
 
-                                <div class="col s6 m6 l6 parallax-container">
+                                <div class="col s6 m6 l6 iframe-container-monitoramento">
 
                                     <div class="row">
                                         <p style="text-align:center">
@@ -83,60 +122,61 @@
                                         </p>
                                     </div>
 
-                                    <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+                                    <iframe src="{{dashboard.current.mapaVertical}}" class="mapv"></iframe>
                                 </div>
                             </div>
 
-                            <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && !{{data.exibirMapaVertical}}">-->
+
                             <div class="row" id="mapahorizontal" style="display:none">
-                                <div class="col s12 m12 parallax-container">
+                                <div class="col s12 m12 iframe-container-monitoramento">
                                     <div class="row">
                                         <p style="text-align:center">
                                             Horizontal
                                         </p>
                                     </div>
 
-                                    <iframe src="{{dashboard.current.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+                                    <iframe src="{{dashboard.current.mapaHorizontal}}" class="maph"></iframe>
                                 </div>
 
                             </div>
 
-                            <!--<div class="row" ng-show="!{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
                             <div class="row" id="mapavertical" style="display:none">
-                                <div class="col s12 m12 parallax-container">
+                                <div class="col s12 m12 iframe-container-monitoramento">
                                     <div class="row">
                                         <p style="text-align:center">
                                             Vertical
                                         </p>
                                     </div>
 
-                                    <iframe src="{{dashboard.current.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+                                    <iframe src="{{dashboard.current.mapaVertical}}" class="mapv"></iframe>
                                 </div>
-
                             </div>
 
-                            <!--<div class="row" ng-show="{{data.exibirLegenda}}" style="margin-top: 35px;">-->
-                            <div class="row" id="legenda" style="margin-top: 35px;display:none">
+                            <div class="row" id="legenda">
                                 <table>
-                                    <tr>
-                                        <td style="background-color:green"></td>
-                                        <td>Velocidade menor do que 0,25</td>
-                                        <td style="background-color:yellow"></td>
-                                        <td>Velocidade menor do que 1</td>
-                                        <td style="background-color:orange"></td>
-                                        <td>Velocidade menor do que 4</td>
-                                        <td style="background-color:red"></td>
-                                        <td>Velocidade menor do que 14</td>
-                                        <td style="background-color:black"></td>
-                                        <td>Velocidade maior do que 14</td>
-                                    </tr>
+
+                                    <tbody>
+                                        <tr class="alerta-caption">
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr class="alerta-description">
+                                            <td>Velocidade menor do que 0,25</td>
+                                            <td>Velocidade menor do que 1</td>
+                                            <td>Velocidade menor do que 4</td>
+                                            <td>Velocidade menor do que 14</td>
+                                            <td>Velocidade maior do que 14</td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
 
-                            <!--<div class="row" ng-show="{{dashboard.config.exibirfatorseguranca}}">-->
-                            <div class="row" id="fator" style="display:none;margin-top:20px">
+                            <div class="row" id="fator" style="display:none;">
                                 <div class="col s12 m12 l12">
-                                    FATOR SEGURAN&Ccedil;A
+                                    <p>FATOR SEGURAN&Ccedil;A</p>
 
                                     <div class="row">
                                         <img id="preview" />
@@ -145,7 +185,6 @@
                             </div>
 
                         </div>
-
                     </div>
                 </section>
 

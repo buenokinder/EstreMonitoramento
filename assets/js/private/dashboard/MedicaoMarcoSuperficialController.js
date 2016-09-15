@@ -170,7 +170,15 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
                     medicaoMarcoSuperficialDetalhes['marcoSuperficial'] = marcoSuperficial;
                     medicaoMarcoSuperficialDetalhes['usuario'] = $scope.usuario._id;
-                    medicaoMarcoSuperficialDetalhes['aterro'] = $scope.usuario._aterro;
+
+                    if (undefined == medicaoMarcoSuperficialDetalhes['aterro']) {
+                        if (undefined == $scope.usuario._aterro) {
+                            swal("Erro", "Não foi possível associar o aterro à medição :(", "error");
+                            return;
+                        }
+
+                        medicaoMarcoSuperficialDetalhes['aterro'] = $scope.usuario._aterro;
+                    }
 
                     if (criouMarcoSuperficial == false) { //O detalhe somente será criado caso o marcoSuperficial não exista
                         $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function (data, status) {

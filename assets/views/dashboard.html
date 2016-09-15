@@ -2,6 +2,31 @@
     table tr td {
         font-size: 11px;
     }
+
+    iframe {
+        border: none;
+        width: 70%;
+        height: 70%;
+    }
+
+    .row.preview .input-field {
+        float: left;
+        margin-left: 9px;
+    }
+
+    #fator img {
+        display: block;
+        margin: auto;
+    }
+
+    #fator p {
+        text-align:center;
+    }
+
+    .aterro
+    {
+        background-color:#9acd32
+    }
 </style>
 
 <div class="section">
@@ -14,7 +39,7 @@
                     <form class="col s12 ng-valid ng-valid-br-phone-number ng-dirty ng-valid-parse" id="sign-up-form">
                         <div class="row">
                             <div class="input-field col s4 m4">
-                                <label class=" active" for="aterro">Aterro</label>
+                                <label class="active" for="aterro">Aterro</label>
                                 <select class="browser-default active ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" id="aterro" required="" ng-model="data.aterro" ng-options="x as x.nome for x in aterros track by x.id" aria-invalid="false"></select>
                             </div>
                         </div>
@@ -95,9 +120,9 @@
                 </div>
             </div>
         </div>
-        
-        <div id="modalView" class="modal modal-fixed-footer">
-            <div class="modal-content">
+
+        <div id="modalView" class="modal modal-fixed-footer col s12 m12">
+            <div class="modal-content col s12 m12">
                 <div class="col s12 m12">
                     <div class="card-panel ng-scope">
                         <h4 class="header2">Configuração Fator Segurança</h4>
@@ -109,12 +134,12 @@
 
                             <div class="row preview" style="display:none">
                                 <div class="input-field col s12 m12">
-                                    <canvas id="canvas" width="625" height="315"></canvas>
+                                    <canvas id="canvas" width="1465" height="200"></canvas>
                                 </div>
                             </div>
 
                             <div class="row preview" style="display:none;margin-top:10px">
-                                <div class="input-field col s3 m3">
+                                <div class="input-field">
                                     <button id="removeimg" type="submit" class="btn cyan waves-effect waves-light right" aria-hidden="false" ng-click="removeImage()">
                                         <span aria-hidden="false" class="">Remover</span>
                                     </button>
@@ -133,20 +158,19 @@
             </div>
         </div>
     </div>
-
-    <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
     <div class="row" id="doismapas" style="display:none">
-        <div class="col s6 m6 l6 parallax-container">
+       
+        <div class="col s6 m6 l6 iframe-container">
             <div class="row">
                 <p style="text-align:center">
                     Horizontal
                 </p>
             </div>
 
-            <iframe src="{{preview.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+            <iframe src="{{preview.mapaHorizontal}}" class="maph"></iframe>
         </div>
 
-        <div class="col s6 m6 l6 parallax-container">
+        <div class="col s6 m6 l6 iframe-container">
 
             <div class="row">
                 <p style="text-align:center">
@@ -154,65 +178,68 @@
                 </p>
             </div>
 
-            <iframe src="{{preview.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+            <iframe src="{{preview.mapaVertical}}" class="mapv"></iframe>
         </div>
     </div>
 
-    <!--<div class="row" ng-show="{{data.exibirMapaHorizontal}} && !{{data.exibirMapaVertical}}">-->
     <div class="row" id="mapahorizontal" style="display:none">
-        <div class="col s12 m12 parallax-container">
+        <div class="col s12 m12 iframe-container">
             <div class="row">
                 <p style="text-align:center">
                     Horizontal
                 </p>
             </div>
 
-            <iframe src="{{preview.mapaHorizontal}}" style="border:none;width:100%;height:100%" class="maph"></iframe>
+            <iframe src="{{preview.mapaHorizontal}}" class="maph"></iframe>
         </div>
 
     </div>
 
-    <!--<div class="row" ng-show="!{{data.exibirMapaHorizontal}} && {{data.exibirMapaVertical}}">-->
     <div class="row" id="mapavertical" style="display:none">
-        <div class="col s12 m12 parallax-container">
+        <div class="col s12 m12 iframe-container">
             <div class="row">
                 <p style="text-align:center">
                     Vertical
                 </p>
             </div>
 
-            <iframe src="{{preview.mapaVertical}}" style="border:none;width:100%;height:100%" class="mapv"></iframe>
+            <iframe src="{{preview.mapaVertical}}" class="mapv"></iframe>
         </div>
 
     </div>
 
-    <!--<div class="row" ng-show="{{data.exibirLegenda}}" style="margin-top: 35px;">-->
-    <div class="row" id="legenda" style="margin-top: 35px;display:none">
+    <div class="row" id="legenda">
         <table>
-            <tr>
-                <td style="background-color:green"></td>
-                <td>Velocidade menor do que 0,25</td>
-                <td style="background-color:yellow"></td>
-                <td>Velocidade menor do que 1</td>
-                <td style="background-color:orange"></td>
-                <td>Velocidade menor do que 4</td>
-                <td style="background-color:red"></td>
-                <td>Velocidade menor do que 14</td>
-                <td style="background-color:black"></td>
-                <td>Velocidade maior do que 14</td>
-            </tr>
+            <tbody>
+                <tr class="alerta-caption">
+                    <th></th>
+                    </
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr class="alerta-description">
+                    <td>Velocidade menor do que 0,25</td>
+                    <td>Velocidade menor do que 1</td>
+                    <td>Velocidade menor do que 4</td>
+                    <td>Velocidade menor do que 14</td>
+                    <td>Velocidade maior do que 14</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
-    <!--<div class="row" ng-show="{{data.exibirFatorSeguranca}}">-->
     <div class="row" id="fator" style="display:none;margin-top:20px">
         <div class="col s12 m12 l12">
-            FATOR SEGURAN&Ccedil;A
+            <p>FATOR SEGURAN&Ccedil;A</p>
 
             <div class="row">
-                <img id="preview" />
+                <div class="row">
+                    <img id="preview" />
+                </div>
             </div>
         </div>
-    </div>
 
+    </div>
 </div>

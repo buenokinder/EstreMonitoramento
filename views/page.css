@@ -25,7 +25,7 @@ html, body {
 
 body {
 	overflow: hidden;
-	background-color: #fff;
+	background-color: #f9f9f9;
 	font: 14px/1.4 'Source Sans Pro', Helvetica, sans-serif;
 	color: #444;
 	user-select: none;
@@ -293,7 +293,7 @@ div.error-box > div {
 .info-box {
 	text-align: left;
 	margin-top: 12px;
-	background-color: #fff;
+	background-color: #f9f9f9;
 	padding: 10px 14px 8px 14px;
 	vertical-align: top;
 	display: inline-block;
@@ -631,7 +631,7 @@ body.simplify #layer-control-btn {
 }
 
 #mshp-main-map {
-	background-color: #fff;
+	background-color: #f9f9f9;
 }
 
 #map-layers.hover {
@@ -728,7 +728,7 @@ body.simplify #layer-control-btn {
 #simplify-control .track {   	
   	border-radius: 2px;
 	width: 340px;
-	background-color: #fff;
+	background-color: #f9f9f9;
 	height: 2px;
 }
 
@@ -753,5 +753,5 @@ body.simplify #layer-control-btn {
 }
 
 #simplify-control .clicktext:focus {
-	background: #fff;
+	background: #f9f9f9;
 }
