@@ -131,7 +131,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     };
 
     $scope.getMarcoSuperficial = function (medicaoMarcoSuperficialDetalhes, callback) {
-        $http.get('/MarcoSuperficial/?nome=' + medicaoMarcoSuperficialDetalhes.nome).success(function (response, status) {
+        $http.get('/MarcoSuperficial/?nome=' + medicaoMarcoSuperficialDetalhes.nome + '&aterro=' + medicaoMarcoSuperficialDetalhes.aterro).success(function (response, status) {
 
             if (null == response || response.length == 0) {
                 var marcosuperficial = {};
