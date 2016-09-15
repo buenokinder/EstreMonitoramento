@@ -457,13 +457,14 @@ module.exports = {
         var graus = function (angulo) {
             return angulo * (180 / Math.PI);
         }
+        var first = true;
 
         for (var j = 0; j < marcoSuperficial.medicaoMarcoSuperficialDetalhes.length; j++) {
             var registroOrfao = (marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
 
             if (registroOrfao) continue;
 
-            var first = (j == 0);
+          //  var first = (j == 0);
 
             var monitoramento = {
                 deslocamentoHorizontalParcial: [],
@@ -555,6 +556,9 @@ module.exports = {
             }
 
             marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].monitoramento = monitoramento;
+
+            if (first)
+                first = false;
         }
 
         return marcoSuperficial;
