@@ -18,52 +18,27 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
     String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
 
-  
-    $scope.download= "";
+
+    $scope.download = "";
+
 
 
     $scope.init = function () {
+        $scope.inputClass = "active";
         $http.get("/Template/" + $scope.id).then(function (results) {
-            $scope.data = results.data;
-
-            $scope.corpo += "<header class='onlyprint'><img src='/images/logo_pdf.png' class='logo'  ></header>";
-            $scope.corpo += results.data.corpo;
-            var respostas = $scope.corpo.split('{{');
-
-            function myFunction(item, index) {
-                if (index != 0) {
-                    var tipo = item.split('}}')[0];
-                    if (tipo.indexOf('tabela(') !== -1) {
-                        var parametro = tipo.split('&#39;')[1];
-
-
-                        $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
-                    }
-                    if (tipo.indexOf('grafico(') !== -1) {
-                        var parametro = tipo.split('&#39;')[1];
-
-
-                        var parametro2 = tipo.split('&#39;')[3];
-                        console.log(parametro);
-                        if (parametro == 'marcohorizontal') {
-                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
-                        } else {
-                            $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
-                        }
-
-                    }
-                }
-            }
-
-
-            respostas.forEach(myFunction);
-        
-   
-           $element.replaceWith($compile($scope.corpo)($scope));
-
+            $scope.data = angular.fromJson(results.data);
+            $scope.paginas = angular.fromJson(results.data.paginas);
+            $scope.corpo = $scope.data.corpo;
             
-
         });
+
+
+
+        $scope.corpo = "";
+
+        $scope.paginas = ([]);
+
+
     };
 
 }]).directive('graficohorizontal', ['$compile', '$http', function ($compile, $http) {
@@ -76,7 +51,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             fim: '@'
         },
         templateUrl: 'views/reports/grafico.html',
- 
+
         link: function ($scope, $element, attrs) {
             $scope.data = ([]);
             $scope.velocidadeHorizontal = [];
@@ -89,10 +64,10 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             $scope.deslocamentoHorizontal = [];
 
             $scope.array = "";
-            $scope.criterioAceitavelVelocidadeHorizontal =  [];
-            $scope.criterioAceitavelVelocidadeVertical =  [];
-            $scope.criterioRegularVelocidadeHorizontal =  [];
-            $scope.criterioRegularVelocidadeVertical =  [];
+            $scope.criterioAceitavelVelocidadeHorizontal = [];
+            $scope.criterioAceitavelVelocidadeVertical = [];
+            $scope.criterioRegularVelocidadeHorizontal = [];
+            $scope.criterioRegularVelocidadeVertical = [];
 
 
             $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
@@ -102,23 +77,23 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                 angular.forEach($scope.data, function (value, key) {
 
 
-                $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
-                $scope.deslocamentoHorizontalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalParcial)]);
-                $scope.velocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
+                    $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
+                    $scope.deslocamentoHorizontalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalParcial)]);
+                    $scope.velocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
 
 
 
-                $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
+                    $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
 
-                $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
-               
- 
- 
+                    $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
+
+
+
 
 
                 });
 
-                 console.log($scope.criterioRegularVelocidadeHorizontal);
+                console.log($scope.criterioRegularVelocidadeHorizontal);
 
                 $scope.categorias = [$scope.array];
                 $('#' + $scope.getContentHorizontal()).highcharts({
@@ -127,35 +102,35 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                         x: -20 //center
                     },
 
-                     yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            title: {
-                text: 'Deslocamentos (cm)',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            }
-        }, { // Secondary yAxis
-            title: {
-                text: 'Velocidade (cm/dia)',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: true
-        }],
-                  
+                    yAxis: [{ // Primary yAxis
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'Deslocamentos (cm)',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        }
+                    }, { // Secondary yAxis
+                            title: {
+                                text: 'Velocidade (cm/dia)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value}',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true
+                        }],
+
 
                     series: [{
                         name: 'DESLOCAMENTO HORIZONTAL TOTAL',
@@ -173,14 +148,14 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
                         }, {
                             name: 'CRITÉRIO DE ALERTA 2',
                             color: 'red',
-        dashStyle: 'ShortDash',
+                            dashStyle: 'ShortDash',
                             data: $scope.criterioAceitavelVelocidadeHorizontal,
                             yAxis: 1
 
                         }, {
                             name: 'CRITÉRIO DE ALERTA 3',
                             color: 'red',
-        dashStyle: 'ShortDash',
+                            dashStyle: 'ShortDash',
                             data: $scope.criterioRegularVelocidadeHorizontal,
                             yAxis: 1
 
@@ -202,7 +177,7 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             fim: '@'
         },
 
-          templateUrl: 'views/reports/grafico.html',
+        templateUrl: 'views/reports/grafico.html',
         link: function ($scope, $element, attrs) {
             $scope.data = ([]);
 
@@ -215,8 +190,8 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             $scope.deslocamentoVerticalParcial = [];
             $scope.deslocamentoVertical = [];
             $scope.array = "";
-             $scope.criterioAceitavelVelocidadeVertical= [];
-$scope.criterioRegularVelocidadeVertical= [];
+            $scope.criterioAceitavelVelocidadeVertical = [];
+            $scope.criterioRegularVelocidadeVertical = [];
 
             $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
@@ -227,16 +202,16 @@ $scope.criterioRegularVelocidadeVertical= [];
                     $scope.deslocamentoVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalTotal)]);
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
-                    
-                    
-                $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
 
-                $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
-               
- 
+
+                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
+
+                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
+
+
                 });
                 $scope.categorias = [$scope.array];
-               
+
 
                 $('#' + $scope.getContentHorizontal()).highcharts({
                     title: {
@@ -255,33 +230,33 @@ $scope.criterioRegularVelocidadeVertical= [];
                         }
                     },
                     yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            title: {
-                text: 'Deslocamentos (cm)',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            }
-        }, { // Secondary yAxis
-            title: {
-                text: 'Velocidade (cm/dia)',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: true
-        }],
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'Deslocamentos (cm)',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        }
+                    }, { // Secondary yAxis
+                            title: {
+                                text: 'Velocidade (cm/dia)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value}',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true
+                        }],
                     tooltip: {
                         valueSuffix: '°C'
                     },
@@ -307,7 +282,7 @@ $scope.criterioRegularVelocidadeVertical= [];
 
                         }, {
                             name: 'CRITÉRIO DE ALERTA 3',
-                            data:  $scope.criterioAceitavelVelocidadeVertical,
+                            data: $scope.criterioAceitavelVelocidadeVertical,
                             color: 'red',
                             dashStyle: 'ShortDash',
                             yAxis: 1
@@ -328,9 +303,9 @@ $scope.criterioRegularVelocidadeVertical= [];
             tipo: '@',
             filter: '='
         },
-        
+
         templateUrl: 'views/reports/tabela.html',
-      
+
 
         link: function ($scope, $element, attrs) {
             console.log($scope.tipo);
@@ -338,13 +313,13 @@ $scope.criterioRegularVelocidadeVertical= [];
 
 
             //$element.html(template);
-          //  $compile($element.contents())($scope);
+            //  $compile($element.contents())($scope);
 
 
             //$element.replaceWith($scope.tipo);
             $scope.fatorsegurancaMes = ({});
-              $scope.aterroNome;
-            $scope.marcosuperficialdeslocamento  = ({});
+            $scope.aterroNome;
+            $scope.marcosuperficialdeslocamento = ({});
 
             if ($scope.tipo == 'fatorsegurancames') {
                 $http.get("/FatorSeguranca/").then(function (results) {
@@ -361,8 +336,8 @@ $scope.criterioRegularVelocidadeVertical= [];
             if ($scope.tipo == 'acompanhamentomarcosuperficialdeslocamento' || $scope.tipo == 'acompanhamentomarcosuperficial') {
                 $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
                     $scope.marcosuperficialdeslocamento = results.data;
-                    if( $scope.marcosuperficialdeslocamento.length > 0)
-                        $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
+                    if ($scope.marcosuperficialdeslocamento.length > 0)
+                        $scope.aterroNome = $scope.marcosuperficialdeslocamento[0].aterro.nome;
                 });
             }
 
@@ -390,33 +365,26 @@ $scope.criterioRegularVelocidadeVertical= [];
             }
         }
     }
-}]).directive('ckEditor',['$compile', '$http', function ($compile, $http) {
-    return {
-    require: '?ngModel',
-    link: function(scope, elm, attr, ngModel) {
-        CKEDITOR.config.allowedContent = true;
-      var ck = CKEDITOR.replace(elm[0]);
+}]).directive('compile', ['$compile', function ($compile) {
+      return function(scope, element, attrs) {
+          scope.$watch(
+            function(scope) {
+               // watch the 'compile' expression for changes
+              return scope.$eval(attrs.compile);
+            },
+            function(value) {
+                
+              // when the 'compile' expression changes
+              // assign it into the current DOM
+              element.html(value);
 
-      if (!ngModel) return;
-
-      ck.on('instanceReady', function() {
-          console.log($compile(ngModel.$viewValue)(scope));
-        ck.setData($compile(ngModel.$viewValue)(scope));
-      });
-
-      function updateModel() {
-          scope.$apply(function() {
-              ngModel.$setViewValue(ck.getData());
-          });
-      }
-
-      ck.on('change', updateModel);
-      ck.on('key', updateModel);
-      ck.on('dataReady', updateModel);
-
-      ngModel.$render = function(value) {
-        ck.setData($compile(ngModel.$viewValue)(scope));
-      };
-    }
-  };
-}]);;
+              // compile the new DOM and link it to the current
+              // scope.
+              // NOTE: we only compile .childNodes so that
+              // we don't get into infinite loop compiling ourselves
+              $compile(element.contents())(scope);
+            }
+        );
+    };
+}]);
+;
