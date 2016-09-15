@@ -5,3 +5,5 @@ views/signup.ejs
 config/bootstrap.js
 EstreMonitoramento.sln
 EstreMonitoramento.v12.suo
+
+assets/views/relatorios/report.html

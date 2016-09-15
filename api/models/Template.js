@@ -28,6 +28,9 @@ module.exports = {
             collection: 'Pagina',
             via: 'template'
         },
+        aterro: {
+            model: 'Aterro'
+        }
     }
 };
 
