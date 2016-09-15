@@ -173,7 +173,12 @@ module.exports = {
             result.push(item);
 
             for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
+
                 var detalhe = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
+                var registroOrfao = (detalhe.owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
+
+                if (registroOrfao) continue;
+
                 var item = {};
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
                 item.norte = detalhe.norte;
