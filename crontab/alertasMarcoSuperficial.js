@@ -202,6 +202,8 @@
 
     _getEmailBody: function (detalhes) {
 
+        console.log("detalhes", detalhes);
+
         var body = "";
 
         for (var i = 0; i < detalhes.length; i++) {

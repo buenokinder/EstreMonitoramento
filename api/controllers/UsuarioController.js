@@ -150,6 +150,11 @@ module.exports = {
     },
 
     logout: function (req, res) {
+
+        if (undefined == req.session || undefined == req.session.me) {
+            return res.redirect('/#/login');
+        }
+
         Usuario.findOne({ id: req.session.me.id }, function foundUser(err, user) {
             if (err) return res.negotiate(err);
 
