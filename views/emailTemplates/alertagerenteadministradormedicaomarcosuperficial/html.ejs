@@ -1,4 +1,42 @@
-<p>Na medição de Marco Superficial do dia <%=data%> houve alertas para as seguintes medições:</p>
-<p><%- medicoes %></p>
-<p>Acesse o sistema pelo link abaixo e insira as observações sobre o ocorrido.</p>
-<%=link%>
+<html>
+
+<body>
+
+    <table style="width:100%" border="0">
+        <thead>
+            <tr>
+                <th style="background-color:#858484"></th>
+
+                <th style="background-color:#9acd32"></th>
+
+                <th style="background-color:#c5c1c1"></th>
+
+                <th style="background-color:#dddddd"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td colspan="4">
+                    <img src=<%=logo %> />
+                </td>
+            <tr>
+        </tbody>
+
+    </table>
+
+    <div>
+        <p>Na medição de Marco Superficial do dia <%=data%> houve alertas para as seguintes medições:</p>
+        <p><%- medicoes %></p>
+        <p>Acesse o sistema pelo link abaixo e insira as observações sobre o ocorrido.</p>
+        <%=link%>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

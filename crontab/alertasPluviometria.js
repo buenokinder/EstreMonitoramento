@@ -34,6 +34,7 @@
             "alertapluviometria",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
             },
             {
                 to: emails,

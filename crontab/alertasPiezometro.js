@@ -220,6 +220,7 @@
             "alertagerenteadministradormedicaopiezometro",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -253,6 +254,7 @@
             "alertagerenteadministradordiretormedicaopiezometro",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -282,6 +284,7 @@
             "alertadiretormedicaopiezometro",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 observacoes: observacoes,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },

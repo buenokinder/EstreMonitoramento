@@ -249,6 +249,7 @@
             "alertagerenteadministradormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -282,6 +283,7 @@
             "alertagerenteadministradordiretormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -309,6 +311,7 @@
             "alertadiretormedicaomarcosuperficial",
             {
                 link: _that._urlBase,
+                logo: _that._urlBase + "/images/logo_estre_xs.png",
                 observacoes: medicao.obsGestor,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
