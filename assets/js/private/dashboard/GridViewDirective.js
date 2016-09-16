@@ -294,7 +294,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 params[$scope.fields[field].name] = data[$scope.fields[field].name];
                             }
 
-                            if (undefined == params['aterro']) {
+                            if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
                                 params['aterro'] = $scope.me._aterro;
                             }
 
@@ -1289,9 +1289,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             }
                                         }
 
-                                        if (undefined == params['aterro']) {
-                                            params['aterro'] = $scope.me._aterro;
+                                        if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
+                                            params['aterro']= $scope.me._aterro;
                                         }
+
 
                                         $(".datepicker").each(function (i, el) {
                                             var value = $(this).val().split("/");
@@ -1358,7 +1359,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                         }
                                     }
 
-                                    if (undefined == params['aterro']) {
+                                    if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
                                         params['aterro'] = $scope.me._aterro;
                                     }
 

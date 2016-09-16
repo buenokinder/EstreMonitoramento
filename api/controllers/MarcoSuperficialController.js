@@ -10,54 +10,86 @@ var Promise = require('bluebird');
 
 module.exports = {
     _alertas: ([]),
-    _aterros: ([]),
     _alertaAceitavel: {},
     _alertaRegular: {},
-
     _rearrange: function (marcoSuperficiais) {
 
         var ret = [];
-        var _extractOwners = function (medicoes) {
+        var detalhes = [];
+
+        var _extractOwners = function () {
 
             var owners = {};
-            for (var j = 0; j < medicoes.length; j++) {
-                if (owners[medicoes[j].owner.id] == undefined) {
-                    var owner = medicoes[j].owner;
-                    owners[medicoes[j].owner.id] = owner;
+            for (var i = 0; i < marcoSuperficiais.length; i++) {
+                var medicoes = marcoSuperficiais[i].medicoes;
+
+                for (var j = 0; j < medicoes.length; j++) {
+                    if (owners[medicoes[j].owner.id] == undefined) {
+                        var owner = medicoes[j].owner;
+                        owners[medicoes[j].owner.id] = owner;
+                        var usuariosAterro = [];
+
+                        for (var k = 0; k < marcoSuperficiais[i].usuariosAterro.length; k++) {
+                            var usuario = {
+                                name: marcoSuperficiais[i].usuariosAterro[k].name,
+                                email: marcoSuperficiais[i].usuariosAterro[k].email,
+                                perfil: marcoSuperficiais[i].usuariosAterro[k].perfil
+                            };
+                            usuariosAterro.push(usuario);
+                        }
+
+                        owners[medicoes[j].owner.id].usuariosAterro = usuariosAterro;
+                        
+                    }
                 }
             }
 
             return owners;
         };
+        var _extractDetalhes = function () {
+            var ret = [];
+            for (var i = 0; i < marcoSuperficiais.length; i++) {
+                var medicoes = marcoSuperficiais[i].medicoes;
 
-        for (var i = 0; i < marcoSuperficiais.length; i++) {
+                for (var j = 0; j < medicoes.length; j++) {
+                    var medicao = medicoes[j];
 
-            var ms = { marcoSuperficial: marcoSuperficiais[i].marcoSuperficial, usuariosAterro: [], medicoes: [] };
-            var owners = _extractOwners(marcoSuperficiais[i].medicoes);
-
-            for (var item in owners) {
-                var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: [] };
-
-                for (var j = 0; j < marcoSuperficiais[i].medicoes.length; j++) {
-
-                    if (marcoSuperficiais[i].medicoes[j].owner.id == owners[item].id) {
-                        var detalhe = { id: marcoSuperficiais[i].medicoes[j].id, nome: marcoSuperficiais[i].medicoes[j].nome, data: marcoSuperficiais[i].medicoes[j].data, criterioAlertaHorizontalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaHorizontalMetodologia1, criterioAlertaVerticalMetodologia1: marcoSuperficiais[i].medicoes[j].criterioAlertaVerticalMetodologia1 };
-                        medicao.detalhes.push(detalhe);
-                    }
+                    ret.push({
+                        id: medicao.id,
+                        nome: medicao.nome,
+                        data: medicao.data,
+                        criterioAlertaHorizontalMetodologia1: medicao.criterioAlertaHorizontalMetodologia1,
+                        criterioAlertaVerticalMetodologia1: medicao.criterioAlertaVerticalMetodologia1,
+                        owner: medicao.owner.id
+                    });
                 }
-                ms.medicoes.push(medicao);
             }
+            return ret;
+        };
 
-            for (var j = 0; j < marcoSuperficiais[i].usuariosAterro.length; j++) {
-                var usuario = { name: marcoSuperficiais[i].usuariosAterro[j].name, email: marcoSuperficiais[i].usuariosAterro[j].email, perfil: marcoSuperficiais[i].usuariosAterro[j].perfil };
-                ms.usuariosAterro.push(usuario);
+        var owners = _extractOwners();
+        var detalhes = _extractDetalhes();
+
+        for (var item in owners) {
+            var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: [] };
+
+            for (var i = 0; i < detalhes.length; i++) {
+
+                if (detalhes[i].owner == owners[item].id) {
+                    var detalhe = {
+                        id: detalhes[i].id,
+                        nome: detalhes[i].nome,
+                        data: detalhes[i].data,
+                        criterioAlertaHorizontalMetodologia1: detalhes[i].criterioAlertaHorizontalMetodologia1,
+                        criterioAlertaVerticalMetodologia1: detalhes[i].criterioAlertaVerticalMetodologia1
+                    };
+                    medicao.detalhes.push(detalhe);
+                }
             }
-
-            ret.push(ms);
+            ret.push({ usuariosAterro: owners[item].usuariosAterro, medicoes: medicao });
         }
 
         return ret;
-
     },
 
     _summarizeMonitoramentoNotificacao: function (_marcoSuperficiaisNotificacao) {
@@ -82,9 +114,9 @@ module.exports = {
 
             var first = true;
 
-            marcoSuperficial.medicoes.sort(this.sortDateAsc);
-            var ms = { marcoSuperficial: marcoSuperficial.nome, usuariosAterro: marcoSuperficial.usuariosaterro, medicoes: [] };
-
+            marcoSuperficial.medicoes.sort(sortDateAsc);
+            // var ms = { marcoSuperficial: marcoSuperficial.nome, usuariosAterro: marcoSuperficial.usuariosaterro, medicoes: [] };
+            var ms = { usuariosAterro: marcoSuperficial.usuariosaterro, medicoes: [] };
 
             for (var i = 0; i < marcoSuperficial.medicoes.length; i++) {
                 var medicaoAtual = marcoSuperficial.medicoes[i];
@@ -97,18 +129,19 @@ module.exports = {
                 var dataAnterior = Math.floor(medicaoAnterior.data.getTime() / (3600 * 24 * 1000));
                 var diferencaDatas = dataAtual - dataAnterior;
 
-                var deslocamentoVerticalParcial = parseFloat((medicaoAtual.cota - medicaoAnterior.cota) * 100).toFixed(4);
-                var deslocamentoHorizontalParcial = parseFloat(Math.sqrt(deltaParcialNorte + deltaParcialEste) * 100).toFixed(4);
-                var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(deslocamentoHorizontalParcial / diferencaDatas).toFixed(4));
-                var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(deslocamentoVerticalParcial / diferencaDatas)).toFixed(4));
-
+                var deslocamentoVerticalParcial = parseFloat((parseFloat(medicaoAtual.cota) - parseFloat(medicaoAnterior.cota)) * 100).toFixed(4);
+                var deslocamentoHorizontalParcial = parseFloat(Math.sqrt(parseFloat(deltaParcialNorte) + parseFloat(deltaParcialEste)) * 100).toFixed(4);
+                var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(parseFloat(deslocamentoHorizontalParcial) / parseFloat(diferencaDatas).toFixed(4)));
+                var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(parseFloat(deslocamentoVerticalParcial) / parseFloat(diferencaDatas))).toFixed(4));
 
                 for (k = 0; k < this._alertas.length; k++) {
-                    if (velocidadeHorizontal > this._alertas[k].velocidade)
+                    if (parseFloat(velocidadeHorizontal) > parseFloat(this._alertas[k].velocidade)) {
                         marcoSuperficial.medicoes[i].criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
+                    }
 
-                    if (velocidadeHorizontal > this._alertas[k].velocidade)
+                    if (parseFloat(velocidadeVertical) > parseFloat(this._alertas[k].velocidade)) {
                         marcoSuperficial.medicoes[i].criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+                    }
                 }
 
                 if (first) {
@@ -295,24 +328,29 @@ module.exports = {
         return owners;
     },
 
-    _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes, _marcoSuperficiaisNotificacao) {
+    _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes, _marcoSuperficiaisNotificacao, aterros) {
         for (var i = 0; i < detalhes.length; i++) {
             var registroOrfao = (detalhes[i].owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
-
             if (registroOrfao) continue;
 
-            var exists = _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] != undefined;
+            //  var exists = _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] != undefined;
+
+            //var key = detalhes[i].owner.id;
+            var key = detalhes[i].marcoSuperficial.id;
+
+            var exists = _marcoSuperficiaisNotificacao[key] != undefined;
+
 
             if (!exists) {
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] = {};
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].nome = detalhes[i].marcoSuperficial.nome;
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].leste = detalhes[i].marcoSuperficial.leste;
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].norte = detalhes[i].marcoSuperficial.norte;
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].cota = detalhes[i].marcoSuperficial.cota;
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].aterro = detalhes[i].marcoSuperficial.aterro;
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].data = new Date(detalhes[i].marcoSuperficial.dataInstalacao);
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].usuariosaterro = this._extractUsuariosAterro(detalhes[i].aterro);
-                _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes = [];
+                _marcoSuperficiaisNotificacao[key] = {};
+                _marcoSuperficiaisNotificacao[key].nome = detalhes[i].marcoSuperficial.nome;
+                _marcoSuperficiaisNotificacao[key].leste = detalhes[i].marcoSuperficial.leste;
+                _marcoSuperficiaisNotificacao[key].norte = detalhes[i].marcoSuperficial.norte;
+                _marcoSuperficiaisNotificacao[key].cota = detalhes[i].marcoSuperficial.cota;
+                _marcoSuperficiaisNotificacao[key].aterro = detalhes[i].marcoSuperficial.aterro;
+                _marcoSuperficiaisNotificacao[key].data = new Date(detalhes[i].marcoSuperficial.dataInstalacao);
+                _marcoSuperficiaisNotificacao[key].usuariosaterro = this._extractUsuariosAterro(aterros, detalhes[i].aterro);
+                _marcoSuperficiaisNotificacao[key].medicoes = [];
             }
 
             var medicao = {
@@ -342,7 +380,9 @@ module.exports = {
                 criterioAlertaVerticalMetodologia1: 'Aceitável',
                 owner: medicao
             };
-            _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes.push(detalhe);
+            _marcoSuperficiaisNotificacao[key].medicoes.push(detalhe);
+
+            //_marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id].medicoes.push(detalhe);
         }
 
         return _marcoSuperficiaisNotificacao;
@@ -531,12 +571,15 @@ module.exports = {
 
             for (k = 0; k < this._alertas.length; k++) {
 
-                if (monitoramento.velocidadeHorizontal > this._alertas[k].velocidade)
+                if (parseFloat(monitoramento.velocidadeHorizontal) > parseFloat(this._alertas[k].velocidade)) {
                     monitoramento.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
+                }
 
-                if (monitoramento.velocidadeVertical > this._alertas[k].velocidade)
+                if (parseFloat(monitoramento.velocidadeVertical) > parseFloat(this._alertas[k].velocidade)) {
                     monitoramento.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
+                }
             }
+
 
             monitoramento.criterioAceitavelVelocidadeHorizontal = monitoramento.velocidadeHorizontal / this._alertaAceitavel.velocidade;
             monitoramento.criterioAceitavelVelocidadeVertical = monitoramento.velocidadeVertical / this._alertaAceitavel.velocidade;
@@ -581,12 +624,12 @@ module.exports = {
         return ret;
     },
 
-    _extractUsuariosAterro: function (aterro) {
+    _extractUsuariosAterro: function (aterros, aterro) {
         var ret = [];
 
-        for (var i = 0; i < this._aterros.length; i++) {
-            if (this._aterros[i].id == aterro.id) {
-                ret = this._aterros[i].usuarios;
+        for (var i = 0; i < aterros.length; i++) {
+            if (aterros[i].id == aterro.id) {
+                ret = aterros[i].usuarios;
                 break;
             }
         }
@@ -596,19 +639,18 @@ module.exports = {
 
     monitoramentosNotificacao: function (req, res) {
         var _that = this;
+        var _aterros = ([]);
 
         var execute = new Promise(function (resolve, reject) {
             var _totalMarcosSuperficias = 0;
             var _marcoSuperficiaisNotificacao = ([]);
-            _that._alertas = ([]);
-            _that._aterros = ([]);
 
             Aterro.find({}).populate("usuarios").exec(function (err, aterros) {
                 if (err) {
                     return resolve(err);
                 }
 
-                _that._aterros = aterros;
+                _aterros = aterros;
 
                 var _monitoramentosNotificacao = function () {
                     var executeMedicoes = new Promise(function (resolveMedicoes, rejectMedicoes) {
@@ -634,7 +676,8 @@ module.exports = {
                                         if (err) {
                                             return resolve(err);
                                         }
-                                        _marcoSuperficiaisNotificacao = _that._joinMedicoesDetalhesNotificacoes(detalhes, medicoes[index].notificacoes, _marcoSuperficiaisNotificacao);
+
+                                        _marcoSuperficiaisNotificacao = _that._joinMedicoesDetalhesNotificacoes(detalhes, medicoes[index].notificacoes, _marcoSuperficiaisNotificacao, _aterros);
                                         totalDetalhesCarregados += 1;
 
                                         if (totalDetalhesCarregados == medicoes.length) {

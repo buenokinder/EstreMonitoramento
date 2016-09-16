@@ -51,14 +51,14 @@
     _emailsEnviados: {},
     _mustSendNotificacao: function (medicao) {
 
-        if (medicao.notificacao.status == "Finalizada") {
+        if (medicao.notificacao && medicao.notificacao.status != undefined && medicao.notificacao.status == "Finalizada") {
             return false;
         }
 
         //if (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0) {
         //    return false;
         //}
-
+  
         for (var i = 0; i < medicao.detalhes.length; i++) {
             var detalhe = medicao.detalhes[i];
             var mustSend = (this._alertas.indexOf(detalhe.criterioAlertaHorizontalMetodologia1) >= 0) || (this._alertas.indexOf(detalhe.criterioAlertaVerticalMetodologia1) >= 0);
@@ -168,7 +168,6 @@
         })
     },
 
-
     _updateNoticacao: function (medicao) {
         var _that = this;
         var request = require('request');
@@ -200,9 +199,28 @@
         })
     },
 
-    _getEmailBody: function (detalhes) {
+    _formatHtml: function (text) {
+        var style = "";
 
-        console.log("detalhes", detalhes);
+        switch (text) {
+            case "Atenção":
+                style = "background-color:#ff9e00;color:#000";
+                break;
+
+            case "Intervenção":
+                style = "background-color:#ff0000;color:#000";
+                break;
+
+            case "Paralisação":
+                style = "background-color:#000;color:#fff";
+                break;
+        }
+
+        return "<span style="+style+">"+text+"</span>";
+
+    },
+
+    _getEmailBody: function (detalhes) {
 
         var body = "";
 
@@ -211,7 +229,7 @@
             var mustSend = (this._alertas.indexOf(detalhes[i].criterioAlertaHorizontalMetodologia1) >= 0) || (this._alertas.indexOf(detalhes[i].criterioAlertaVerticalMetodologia1) >= 0);
 
             if (mustSend) {
-                body += detalhes[i].nome + " - Alerta Horizontal: " + detalhes[i].criterioAlertaHorizontalMetodologia1 + " - Alerta Vertical: " + detalhes[i].criterioAlertaVerticalMetodologia1 + "\n\r";
+                body += "<b>" + detalhes[i].nome + "</b> - Alerta Horizontal: " + this._formatHtml(detalhes[i].criterioAlertaHorizontalMetodologia1) + " - Alerta Vertical: " + this._formatHtml(detalhes[i].criterioAlertaVerticalMetodologia1) + " <br>";
             }
         }
 
@@ -286,7 +304,7 @@
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
 
-        
+
         sails.hooks.email.send(
             "alertadiretormedicaomarcosuperficial",
             {
@@ -334,75 +352,76 @@
 
     _inspectMonitoramentos: function (context, monitoramentos) {
         var dataBase = new Date();
-        
 
         for (var i = 0; i < monitoramentos.length; i++) {
-            for (var j = 0; j < monitoramentos[i].medicoes.length; j++) {
 
-                var medicao = monitoramentos[i].medicoes[j];
+            var medicao = monitoramentos[i].medicoes;
 
-                if (!context._mustSendNotificacao(medicao)) {
-                    continue;
-                }
+            if (!context._mustSendNotificacao(medicao)) {
+                continue;
+            }
 
-                //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
-                if (context._existsNotificacao(medicao) == false) {
-                    //context._notificacoes[medicao.id] = "";
-                    context._notificacoes[medicao.id] = { data: new Date(), emailgerenteadmin: false, emailgerenteadmindiretor: false, emaildiretor: false };
+            //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
+            if (context._existsNotificacao(medicao) == false) {
+                //context._notificacoes[medicao.id] = "";
+                context._notificacoes[medicao.id] = { data: new Date(), emailgerenteadmin: false, emailgerenteadmindiretor: false, emaildiretor: false };
 
-                    var item = { usuariosAterro: monitoramentos[i].usuariosAterro, medicao: medicao };
+                var item = { usuariosAterro: monitoramentos[i].usuariosAterro, medicao: medicao };
 
-                    context._createNoticacao(item, function (err, ret) {
-                        if (err) return;
+                context._createNoticacao(item, function (err, ret) {
+                    if (err) return;
 
-                        if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
-                            context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
-                            context._setEmailEnviado(ret.medicao, "GA");
-                        }
-                    });
+                    if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
+                        context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
+                        context._setEmailEnviado(ret.medicao, "GA");
+                    }
+                });
 
-                    continue;
-                }
+                continue;
+            } 
 
-                //Existem notificações > Sim > O Status está como pendente > Não > Fim;
-                if (medicao.notificacao.status == 'Finalizada') {
-                    continue;
-                }
+            ////Existem notificações > Sim > O Status está como pendente > Não > Fim;
+            //if (medicao.notificacao.status == 'Finalizada') {
+            //    continue;
+            //}
+
+
+            if (context._notificacoes[medicao.id] && context._notificacoes[medicao.id] != "") {
 
                 var notificacaoFoiCriadaNessaInteracao = context._notificacoes[medicao.id].data > dataBase;
                 if (notificacaoFoiCriadaNessaInteracao) {
                     continue;
                 }
 
-                if (context._notificacoes[medicao.id] && context._notificacoes[medicao.id] != "") {
-                    medicao.notificacao = context._notificacoes[medicao.id];
-                }
 
-                if (medicao.notificacao && medicao.notificacao.status) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
-                    var hoje = Math.floor((new Date()).getTime() / (3600 * 24 * 1000));
-                    var dataMedicao = Math.floor(new Date(medicao.notificacao.data).getTime() / (3600 * 24 * 1000));
-                    var diferencaDatas = hoje - dataMedicao;
-                    var preencheuObs = (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0);
+                medicao.notificacao = context._notificacoes[medicao.id];
+            }
 
-                    //Existe notificações > Sim > O Status está como pendente > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
-                    if (preencheuObs) {
+            if (medicao.notificacao && medicao.notificacao.status) {//Pode ser que o request de criação de notificação ainda não tenha retornado.
+                var hoje = Math.floor((new Date()).getTime() / (3600 * 24 * 1000));
+                var dataMedicao = Math.floor(new Date(medicao.notificacao.data).getTime() / (3600 * 24 * 1000));
+                var diferencaDatas = hoje - dataMedicao;
+                var preencheuObs = (undefined != medicao.obsGestor && null != medicao.obsGestor && medicao.obsGestor.length > 0);
 
-                        if (context._sentEmailToday(medicao, "D") == false && medicao.notificacao.emaildiretor == false) {
-                            context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao);
-                            context._closeNoticacao(medicao);
-                            context._setEmailEnviado(medicao, "D");
-                        }
-                    } else {
-                        //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
-                        if (diferencaDatas >= 1) {
-                            if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {
-                                context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].usuariosAterro, medicao);
-                                context._setEmailEnviado(medicao, "GAD");
-                            }
-                        } //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
+                //Existe notificações > Sim > O Status está como pendente > Sim > Gerente preencheu a observação > Sim > Notifica o Diretor sobre o preenchimento
+                if (preencheuObs) {
+
+                    if (context._sentEmailToday(medicao, "D") == false && medicao.notificacao.emaildiretor == false) {
+                        context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao);
+                        context._closeNoticacao(medicao);
+                        context._setEmailEnviado(medicao, "D");
                     }
+                } else {
+                    //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
+                    if (diferencaDatas >= 1) {
+                        if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {
+                            context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].usuariosAterro, medicao);
+                            context._setEmailEnviado(medicao, "GAD");
+                        }
+                    } //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;
                 }
             }
+
         }
     },
 

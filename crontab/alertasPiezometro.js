@@ -132,8 +132,6 @@
             url: _that._urlBase + 'MedicaoPiezometroNotificacao/'
         };
 
-        console.log("options", options);
-
         request(options, function (err, res, notificacao) {
 
             if (err) {
@@ -275,7 +273,6 @@
     },
 
     _sendEmailDiretor: function (usuarios, medicao, observacoes) {
-        console.log("_sendEmailGerenteAdministradorDiretor", medicao);
 
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
@@ -326,7 +323,26 @@
         var key = medicao.id + "|" + this.Utils._getDateString(new Date()) + "|" + tipo;
         this._emailsEnviados[key] = true;
     },
+    _formatHtml: function (text) {
+        var style = "";
 
+        switch (text) {
+            case "Atenção":
+                style = "background-color:#ff9e00;color:#000";
+                break;
+
+            case "Intervenção":
+                style = "background-color:#ff0000;color:#000";
+                break;
+
+            case "Paralisação":
+                style = "background-color:#000;color:#fff";
+                break;
+        }
+
+        return "<span style=" + style + ">" + text + "</span>";
+
+    },
     _inspectMonitoramentos: function (context, monitoramentos) {
         var dataBase = new Date();
 
@@ -340,7 +356,7 @@
                     continue;
                 }
                 
-                var body = monitoramentos[i].nome + " - " + medicao.criterioAlertaRu;
+                var body = monitoramentos[i].nome + " - " + context._formatHtml(medicao.criterioAlertaRu);
 
                 //Existe notificações > Não > Cria uma notificação, gravando a medição e a data de hoje;
                 if (context._existsNotificacao(medicao) == false) {

@@ -483,6 +483,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     });
 
     $scope.uploadDetalhes = function () {
+        $scope.medicoes = ([]);
+        $scope.content = null;
+        $(".dropify").trigger($.Event("dropify.silentClear"), [this]);
+
         $('.dropify').dropify({
             messages: {
                 default: 'Arraste seu Arquivo',
@@ -492,6 +496,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     };
 
     $scope.addNewMapa = function () {
+      
+
         $('#modalMedicaoUpload').openModal();
     };
 
