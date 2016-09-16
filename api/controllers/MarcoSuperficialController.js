@@ -163,7 +163,7 @@ module.exports = {
         return this._rearrange(result);
     },
 
-    _summarizeMonitoramento: function (marcosSuperficiais) {
+    _summarizeMonitoramento: function (marcosSuperficiais, owner) {
 
         var result = [];
 
@@ -171,39 +171,43 @@ module.exports = {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
             var item = {};
+            var exibirMarcosSuperficiais = (owner == undefined);
 
-            item.id = marcosSuperficiais[i].id;
-            item.marcoSuperficial = marcosSuperficiais[i].nome;
-            item.data = marcosSuperficiais[i].data;
-            item.norte = marcosSuperficiais[i].norte;
-            item.leste = marcosSuperficiais[i].leste;
-            item.cota = marcosSuperficiais[i].cota;
-            item.deslocamentoHorizontalParcial = 0;
-            item.deslocamentoHorizontalTotal = 0;
-            item.velocidadeHorizontal = 0;
-            item.velocidadeVertical = 0;
-            item.criterioAlerta = 0;
-            item.deslocamentoVerticalParcial = 0;
-            item.deslocamentoVerticalTotal = 0;
-            item.sentidoDeslocamentoDirerencaNorte = 0;
-            item.sentidoDeslocamentoDirerencaEste = 0;
-            item.sentidoDeslocamentoNorteSul = 0;
-            item.sentidoDeslocamentoLesteOeste = 0;
-            item.sentido = 0;
-            item.nomeTopografo = '';
-            item.nomeAuxiliar = '';
-            item.criterioAlertaHorizontalMetodologia1 = '';
-            item.criterioAlertaVerticalMetodologia1 = '';
-            item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
-            item.criterioRegularVelocidade = this._alertaRegular.velocidade;
+            if (exibirMarcosSuperficiais) {
 
-            item.vetorDeslocamentoSeno = 0;
-            item.vetorDeslocamentoAngulo = 0;
+                item.id = marcosSuperficiais[i].id;
+                item.marcoSuperficial = marcosSuperficiais[i].nome;
+                item.data = marcosSuperficiais[i].data;
+                item.norte = marcosSuperficiais[i].norte;
+                item.leste = marcosSuperficiais[i].leste;
+                item.cota = marcosSuperficiais[i].cota;
+                item.deslocamentoHorizontalParcial = 0;
+                item.deslocamentoHorizontalTotal = 0;
+                item.velocidadeHorizontal = 0;
+                item.velocidadeVertical = 0;
+                item.criterioAlerta = 0;
+                item.deslocamentoVerticalParcial = 0;
+                item.deslocamentoVerticalTotal = 0;
+                item.sentidoDeslocamentoDirerencaNorte = 0;
+                item.sentidoDeslocamentoDirerencaEste = 0;
+                item.sentidoDeslocamentoNorteSul = 0;
+                item.sentidoDeslocamentoLesteOeste = 0;
+                item.sentido = 0;
+                item.nomeTopografo = '';
+                item.nomeAuxiliar = '';
+                item.criterioAlertaHorizontalMetodologia1 = '';
+                item.criterioAlertaVerticalMetodologia1 = '';
+                item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
+                item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 
-            item.aterro = { id: marcosSuperficiais[i].aterro.id, nome: marcosSuperficiais[i].aterro.nome };
+                item.vetorDeslocamentoSeno = 0;
+                item.vetorDeslocamentoAngulo = 0;
 
+                item.aterro = { id: marcosSuperficiais[i].aterro.id, nome: marcosSuperficiais[i].aterro.nome };
 
-            result.push(item);
+                result.push(item);
+
+            }
 
             for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
 
@@ -211,6 +215,8 @@ module.exports = {
                 var registroOrfao = (detalhe.owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
 
                 if (registroOrfao) continue;
+
+                if (owner && detalhe.owner.id != owner) continue;
 
                 var item = {};
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
@@ -452,6 +458,14 @@ module.exports = {
 
         var filtro = {};
 
+        if (req.param('aterro') != undefined) {
+            filtro.aterro = req.param('aterro').split(',');
+        }
+
+        //if (req.param('owner') != undefined) {
+        //    filtro.owner = req.param('owner');
+        //}
+
         var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
         var dataFinal = new Date();
 
@@ -483,10 +497,6 @@ module.exports = {
             dataInicial.setSeconds(59);
         }
 
-        if (req.param('aterro') != undefined) {
-            filtro.aterro = req.param('aterro').split(',');
-        }
-
         filtro.data = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;
@@ -511,7 +521,8 @@ module.exports = {
                 deslocamentoHorizontalTotal: ([]),
                 velocidadeHorizontal: ([]),
                 velocidadeVertical: ([]),
-                criterioAlerta: Math.pow(2, 2)
+                criterioAlerta: Math.pow(2, 2),
+                owner: marcoSuperficial.medicaoMarcoSuperficialDetalhes[j].owner.id
             };
 
             var medicaoAtual = marcoSuperficial.medicaoMarcoSuperficialDetalhes[j];
@@ -579,7 +590,6 @@ module.exports = {
                     monitoramento.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
                 }
             }
-
 
             monitoramento.criterioAceitavelVelocidadeHorizontal = monitoramento.velocidadeHorizontal / this._alertaAceitavel.velocidade;
             monitoramento.criterioAceitavelVelocidadeVertical = monitoramento.velocidadeVertical / this._alertaAceitavel.velocidade;
@@ -794,7 +804,7 @@ module.exports = {
                                     return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais));
                                 }
 
-                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais));
+                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais, req.param('owner')));
                             }
                         });
 
