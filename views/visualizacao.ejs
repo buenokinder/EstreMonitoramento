@@ -28,8 +28,8 @@
                 filter: none !important;
                 -ms-filter: none !important;
             }
-            
-           
+
+
 
             header.onlyprint {
                 position: fixed; /* Display only on print page (each) */
@@ -39,8 +39,8 @@
 
             header img.logo {
                 float: right;
-
             }
+
             footer.onlyprint {
                 position: fixed;
                 bottom: 0; /* Because it's footer */
@@ -98,18 +98,18 @@
                 }
             }
 
-      
+
 
             body, article {
                 width: 100%;
                 margin: 0;
                 padding: 0;
             }
-            
+
             body {
                 display: block;
                 page: main;
-                counter-reset: page 1
+                counter-reset: page 1;
             }
 
             h1 {
@@ -120,7 +120,7 @@
                 counter-reset: section;
             }
 
-            
+
 
 
             table {
@@ -132,9 +132,9 @@
             }
 
 
-            table tr:nth-of-type(even) {
-                background: #f9f9f9;
-            }
+                table tr:nth-of-type(even) {
+                    background: #f9f9f9;
+                }
 
             th.green {
                 background-color: green !important;
@@ -249,60 +249,188 @@
             }
 
 
-          @page {
-    counter-increment: page;
-    counter-reset: page 1;
-    @top-right {
-                content: "Page " counter(page) " of " counter(pages);
+            @page {
+                counter-increment: page;
+                counter-reset: page 1;
+
+                @top-right {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
             }
         }
-    }
     </style>
 </head>
 
 
 <body ng-controller="ViewTemplateController" ng-init="init()">
 
-    
-
-	<div ng-repeat="pagina in paginas">
-    <page size="A4"   >
-		
-       <div     style="margin-bottom: 37px; margin-left: 492px; width: 750px;">
-            <img   src="/images/logo_pdf.png" />
-        </div>
-            <div  style="position: relative;
-    top: 135px;" compile="pagina.conteudo"></div>
- </page>
- 	
-  </div>
-<style>
-
-    
-page[size="A4"] {
-  
-  background: white;
-  width: 21cm;
-  height: 29.7cm;
-  display: block;
-  margin: 0 auto;
-  margin-left: 10px;
-  margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-}
-@media print {
-  body, page[size="A4"] {
-    margin: 0;
-    box-shadow: 0;
-  }
-}   
-   
-</style>
 
 
+    <div ng-repeat="pagina in paginas">
+        <page size="A4">
+            <div class="header-estre">
+                <img src="/images/logo_pdf.png" />
+            </div>
+
+            <div class="content-estre" compile="pagina.conteudo"></div>
+        </page>
+
+    </div>
+    <style>
+        page[size="A4"] {
+            background: white;
+            width: 21cm;
+            height: 29.7cm;
+            display: block;
+            margin: 0 auto;
+            margin-left: 10px;
+            margin-bottom: 0.5cm;
+            box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+        }
+
+        .header-estre {
+            margin-bottom: 38px;
+            width: 787px;
+        }
+
+        .header-estre img {
+            border: 0;
+            float: right;
+        }
+
+        .content-estre {
+            position: relative;
+            top: 135px;
+            margin-left: 15px;
+        }
+
+        table {
+            background: #fff;
+            margin-bottom: 1.25rem;
+            border: 1px solid #ddd;
+            table-layout: fixed;
+            width: 70%;
+            margin-left: 15%;
+            margin-right: 15%;
+        }
+
+        table tr:nth-of-type(even) {
+            background: #f9f9f9;
+        }
+
+        th.estregreen {
+            background-color: green !important;
+            text-align: center;
+            font-color: white !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        tr.lightgreen {
+            background-color: #9ACD32 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        tr.base {
+            text-align: center;
+            font-color: black !important;
+            -webkit-print-color-adjust: exact;
+            background-color: #f5f5f5 !important;
+        }
+
+        th.lightgreen {
+            background-color: #9ACD32 !important;
+            text-align: center;
+            font-color: white !important;
+            -webkit-print-color-adjust: exact;
+            font-size: 7pt !important;
+            font-family: arial;
+            font-weight: normal !important;
+        }
+
+        th {
+            font-size: 8pt !important;
+            font-weight: normal !important;
+        }
+
+        table tr td {
+            font-size: 7pt !important;
+            font-weight: normal !important;
+        }
+
+        thead.estregray {
+            background-color: #f5f5f5 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        tr.estregray {
+            background-color: #f5f5f5 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        th.estreyellow {
+            background-color: yellow !important;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+            font-color: white !important;
+        }
+
+        th.estreorange {
+            background-color: orange !important;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+            font-color: white !important;
+        }
+
+        th.estrered {
+            background-color: red !important;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+            font-color: white !important;
+        }
+
+        th.estreblack {
+            background-color: black !important;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+            color: white !important;
+        }
 
 
- 
+        @media print {
+            page[size="A4"] {
+                /*margin: 0;
+                box-shadow: 0;*/
+                background: white;
+                width: 21cm;
+                height: 29.7cm;
+                display: block;
+                margin: 0 auto;
+                margin-left: 10px;
+                margin-bottom: 0.5cm;
+                box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+            }
+
+            .header-estre {
+                margin-bottom: 38px;
+                margin-top:1px;
+                width: 787px;
+            }
+
+            .header-estre img {
+                border: 0;
+                float: right;
+            }
+
+            .content-estre {
+                position: relative;
+                top: 135px;
+                margin-left: 15px;
+            }
+
+        }
+
+
+    </style>
 
     <script src="/js/jquery-1.11.2.min.js"></script>
     <script src="/js/dependencies/angular.min.js"></script>
