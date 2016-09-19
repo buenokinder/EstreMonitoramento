@@ -1,10 +1,12 @@
 <div class="section">
-  <div class="row section">
-  <div class="divider"></div>
-    <div class="row">
-      <div class="col s12 m12">
-      	<grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'dataInicial' , 'value': 'Data Inicial', 'uiFilter': 'date'}, {'name': 'dataFim' , 'value': 'Data Final', 'uiFilter': 'date'} , {'name': 'aterro' , 'value': 'Aterro', 'type': 'combobox', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome', 'defaultkey':'id','defaultvalue':'nome','default':[{ 'me': '_aterro'}], 'updateperfil':[{ 'perfil': 'Administrador'},{ 'perfil': 'Diretor'}] } ]" listaname="Template"  label="Lista de Template"  autopage="true" adicionar="" add="false"  update='false' strupdate="false" strdelete="false" view="Template" relatorio="true" pagesize="5"></grid-view>
-      </div>
+    <div class="row section">
+        <div class="divider">
+
+        </div>
+        <div class="row">
+            <div class="col s12 m12">
+                <grid-view fields="[{'name': 'nome' , 'value': 'Nome', 'filter': 'true'},{'name': 'dataInicio' , 'value': 'Data Inicial', 'type': 'date'}, {'name': 'dataFim' , 'value': 'Data Final', 'type': 'date'} , {'name': 'aterro' , 'value': 'Aterro', 'sub':'nome', 'type': 'combobox', 'combo':'true', 'text': 'aterro', 'api': 'Aterro', 'model': 'aterros',  'fieldid': 'id', 'fieldname': 'nome'} ]" listaname="Template" label="Lista de Template" autopage="true" adicionar="" add="false" update='false' strupdate="false" strdelete="false" view="Template" relatorio="true" pagesize="5" editinline="false" calculate="false" updateperfil="[{'perfil':'Gerente'}, {'perfil':'Administrador'}, {'perfil':'Diretor'}]" deleteperfil="[{'perfil':'Administrador'}, {'perfil':'Diretor'}]"></grid-view>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

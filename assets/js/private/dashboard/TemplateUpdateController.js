@@ -1,16 +1,28 @@
 app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope', '$http', '$compile', function ($location, $routeParams, $scope, $http, $compile) {
 
+    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
+
     $scope.init = function () {
         $scope.inputClass = "active";
         $http.get("/Template/" + $routeParams.id).then(function (results) {
             $scope.data = angular.fromJson(results.data);
+
+            if ($scope.data.dataInicio != "" && $scope.data.dataInicio != undefined) {
+                $scope.data.dataInicio = getDate($scope.data.dataInicio);
+            }
+
+            if ($scope.data.dataFim != "" && $scope.data.dataFim != undefined) {
+                $scope.data.dataFim = getDate($scope.data.dataFim);
+            }
+
             $scope.paginas = angular.fromJson(results.data.paginas);
             $scope.corpo = $scope.data.corpo;
             $('.modal-trigger').leanModal();
+            $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
+            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+
         });
     };
-
-    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
 
     $scope.corpo = "";
     $scope.id = $routeParams.id;
@@ -73,23 +85,45 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			function (isConfirm) {
 			    if (isConfirm) {
 
+			        var totalRequests = 0;
+			        var totalResponses = 0;
+			        var hasError = false;
+
+			        var finalizePost = function (hasError) {
+			            
+			            if (hasError == true) {
+			                swal("Registro Alterado!", "Seu registro foi alterado, porém ocorreram erros ao alterar as páginas do relatório.", "success");
+			                Materialize.toast('Registro alterado, porém ocorreram erros ao alterar as páginas do relatório!', 4000);
+			            } else {
+			                swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+			                Materialize.toast('Registro alterado com sucesso!', 4000);
+			            }
+			        };
+
 			        angular.forEach($scope.paginas, function (value, key) {
+			            totalRequests += 1;
+
 			            $http({
 			                method: 'PUT',
 			                url: '/Pagina/' + value.id,
 			                data: value
 			            }).then(function onSuccess(sailsResponse) {
-
-			                swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
-			                Materialize.toast('Registro alterado com sucesso!', 4000);
+			                totalResponses += 1;
+			                if (totalResponses == totalRequests) {
+			                    finalizePost(hasError);
+			                }
 
 			            })
-							.catch(function onError(sailsResponse) {
-
-							})
-							.finally(function eitherWay() {
-							    $scope.sennitForm.loading = false;
-							})
+						.catch(function onError(sailsResponse) {
+						    totalResponses += 1;
+						    hasError = true;
+						    if (totalResponses == totalRequests) {
+						        finalizePost(hasError);
+						    }
+						})
+						.finally(function eitherWay() {
+							$scope.sennitForm.loading = false;
+						})
 
 			        });
 
@@ -171,17 +205,11 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
                 }
                 if (tipo.indexOf('grafico(') !== -1) {
-                    console.log('entrou 1');
                     var parametro = tipo.split('&#39;')[1];
-
-
                     var parametro2 = tipo.split('&#39;')[3];
-                    console.log('entrou 2');
                     if (parametro == 'marcohorizontal') {
-                        console.log('entrou 3');
                         value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
                     } else {
-                        console.log('entrou 4');
                         value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
                     }
 
@@ -213,10 +241,17 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			function (isConfirm) {
 			    if (isConfirm) {
 
+			        var params = $scope.data;
+
+			        $(".datepicker").each(function (i, el) {
+			            var value = $(this).val().split("/");
+			            params[$(this).prop("name")] = new Date(value[2], parseInt(value[1]) - 1, value[0]);
+			        });
+
 			        $http({
 			            method: 'PUT',
-			            url: '/Template' + '/' + $scope.data.id,
-			            data: $scope.data
+			            url: '/Template' + '/' + params.id,
+			            data: params
 			        }).then(function onSuccess(sailsResponse) {
 			            $scope.inputClass = null;
 			            //sennitCommunicationService.prepForBroadcastDataList($scope.data);

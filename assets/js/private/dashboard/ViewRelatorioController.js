@@ -15,13 +15,9 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
     $scope.corpo = "";
     $scope.id = getParameterByName('id');
     $scope.aterro = getParameterByName('aterro');
-
-    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
-
-
     $scope.download = "";
 
-
+    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
 
     $scope.init = function () {
         $scope.inputClass = "active";
@@ -29,16 +25,10 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
             $scope.data = angular.fromJson(results.data);
             $scope.paginas = angular.fromJson(results.data.paginas);
             $scope.corpo = $scope.data.corpo;
-            
         });
 
-
-
         $scope.corpo = "";
-
         $scope.paginas = ([]);
-
-
     };
 
 }]).directive('graficohorizontal', ['$compile', '$http', function ($compile, $http) {
@@ -75,22 +65,11 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
 
                 angular.forEach($scope.data, function (value, key) {
-
-
                     $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
                     $scope.deslocamentoHorizontalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalParcial)]);
                     $scope.velocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
-
-
-
                     $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
-
                     $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
-
-
-
-
-
                 });
 
                 console.log($scope.criterioRegularVelocidadeHorizontal);

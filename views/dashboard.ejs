@@ -658,6 +658,11 @@
         };
 
         function getDate(value){
+
+            if(undefined == value || ''==value){
+                return '';
+            }
+
             var data=null;
 
             if(value.toString().indexOf("/")>=0){
@@ -678,7 +683,12 @@
             return retorno;
         }
 
-		function getDateQuery(value){
+        function getDateQuery(value){
+
+            if(undefined == value || ''==value){
+                return '';
+            }
+
             var data=null;
 
             if(value.toString().indexOf("/")>=0){
@@ -699,7 +709,12 @@
             return retorno;
         }
 
-		function getDateTimeString(value){
+        function getDateTimeString(value){
+
+            if(undefined == value || ''==value){
+                return '';
+            }
+
             var data = getDateTime(value);
             var ano = data.getFullYear();
             var mes = data.getMonth() + 1;
@@ -721,7 +736,12 @@
             return retorno;
         }
 
-		function getDateTimeStringQuery(value){
+        function getDateTimeStringQuery(value){
+
+            if(undefined == value || ''==value){
+                return '';
+            }
+
             var data = getDateTime(value);
             var ano = data.getFullYear();
             var mes = data.getMonth() + 1;
@@ -743,7 +763,12 @@
             return retorno;
         }
 
-		function getDateTime(value){
+        function getDateTime(value){
+
+            if(undefined == value || ''==value){
+                return '';
+            }
+
             var data=null;
 
             if(value.toString().indexOf("/")>=0){

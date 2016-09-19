@@ -11,11 +11,11 @@ module.exports = {
         dataInicio: {
             type: 'date',
             required: true,
-            defaultsTo: new Date(0)
+            defaultsTo: new Date()
         }, dataFim: {
             type: 'date',
             required: true,
-            defaultsTo: new Date(0)
+            defaultsTo: new Date()
         },
         nome: {
             type: 'string',
@@ -24,7 +24,7 @@ module.exports = {
         usuario: {
             model: 'Usuario'
         },
-         paginas: {
+        paginas: {
             collection: 'Pagina',
             via: 'template'
         },

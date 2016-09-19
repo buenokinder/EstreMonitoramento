@@ -177,9 +177,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     HtmlFormBody += "<a ng-show='deleteDisabled()'  ng-click='delete(datum)' aria-hidden='true'><i class='mdi-action-delete estre-darkgreen-icon  small icon-demo'></i></a>";
                 }
                 HtmlFormBody += "</td>";
-                
 
-                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a><a ng-show='exibir(relatorio)' href='#/TemplatePaginas/{{datum.id}}' ng-click='select(datum)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+                HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(relatorio)' style='text-align:center;'>";
+                HtmlFormBody += "   <a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true' title='editar'></i></a>";
+                HtmlFormBody += "   <a href='#/TemplatePaginas/{{datum.id}}' ng-click='select(datum)' ng-show='exibir(relatorio)'><i class='mdi-action-print  estre-darkgreen-icon small  icon-demo' aria-hidden='true' title='Visualizar impressão'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                HtmlFormBody += "   <a href='javascript:void(0)' ng-click='clonar(datum)' ng-show='exibir(relatorio)'><i class='mdi-content-content-copy  estre-darkgreen-icon small  icon-demo' aria-hidden='true' title='Fazer uma cópia'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
                 HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
@@ -193,7 +196,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<a ng-click='modalViewmodal()' class='btn-floating btn-large waves-effect waves-light btn btn-default'><i class='mdi-content-add'></i></a>";
 
             }
-                //HtmlFormBody += "<button ng-click='modalViewmodal()' class='btn btn-large ' aria-hidden='false'>Adicionar</button>"
 
             $element.replaceWith($compile(HtmlFormBody)($scope));
 
@@ -267,6 +269,152 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
             $scope.modalViewmodal = function () {
                 $('#modalView').openModal();
             }
+
+            $scope.deveClonarSubLista = function (itens) {
+
+                var ret = false;
+
+                for (var i = 0; i < itens.length; i++) {
+                    if (itens[i][$scope.listaname.toLowerCase()] != 'undefined') {
+                        delete itens[i][$scope.listaname.toLowerCase()];
+                        ret = true;
+                    }
+                }
+
+                return ret;
+            };
+
+            $scope.removerRelecaoSubLista = function (itens) {
+
+                var itensCopy = itens;
+
+                for (var i = 0; i < itens.length; i++) {
+                    if (itens[i][$scope.listaname.toLowerCase()] != 'undefined') {
+                        delete itensCopy[i]['id'];
+                        delete itensCopy[i]['createdAt'];
+                        delete itensCopy[i]['updatedAt'];
+                        delete itensCopy[i][$scope.listaname.toLowerCase()];
+                    }
+                }
+
+                return itensCopy;
+            };
+
+            $scope.clonar = function (data) {
+                var itensDependentes = ([]);
+                var endPointListaDependente = "";
+
+                for (var fieldName in data) {
+
+                    if (Object.prototype.toString.call(data[fieldName]) === '[object Array]') {
+                        var itens = data[fieldName];
+                        var deveClonarSubLista = $scope.deveClonarSubLista(itens);
+                        if (deveClonarSubLista) {
+                            itensDependentes = $scope.removerRelecaoSubLista(itens);
+                            endPointListaDependente = fieldName.substr(0, fieldName.length - 1);
+                        }
+                    }
+                }
+
+                swal({
+                    title: "",
+                    text: "Você tem certeza que deseja copiar este registro?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sim",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+
+                            if ($scope.parentkey !== undefined) {
+                                var item = ([]);
+                                eval(" item={'" + $scope.parentkey + "':'" + $scope.$parent.data.id + "'};");
+                                angular.extend(data, item);
+                            }
+
+                            var params = {};
+                            for (var field in $scope.fields) {
+                                if ($scope.fields[field].name == 'id') continue;
+                                params[$scope.fields[field].name] = data[$scope.fields[field].name];
+                            }
+
+                            $http({
+                                method: 'POST',
+                                url: '/' + $scope.listaname,
+                                data: params
+                            }).then(function onSuccess(sailsResponse) {
+
+                                var finalizePost = function (hasError) {
+                                    $scope.inputClass = null;
+                                    $scope.inputClass = "disabled";
+
+                                    if (hasError == true) {
+                                        swal("Registro Copiado!", "Seu registro foi copiado, porém ocorreram erros ao copiar as páginas do relatório.", "success");
+                                        Materialize.toast('Registro copiado, porém ocorreram erros ao copiar as páginas do relatório!', 4000);
+                                    } else {
+                                        swal("Registro Copiado!", "Seu registro foi copiado com sucesso.", "success");
+                                        Materialize.toast('Registro copiado com sucesso!', 4000);
+                                    }
+
+                                    sennitCommunicationService.prepForBroadcastDataList(sailsResponse, "save");
+                                    sennitCommunicationService.prepForBroadcast(sailsResponse, "save");
+                                };
+
+                                if (itensDependentes.length > 0) {
+                                    var paramsSubLista = ([]);
+                                    var totalRequests = 0;
+                                    var totalResponses = 0;
+                                    var hasError = false;
+                                    for (var i = 0; i < itensDependentes.length;i++) {
+                                        var itemSubLista = itensDependentes[i];
+                                        itemSubLista[$scope.listaname.toLowerCase()] = sailsResponse.data.id;
+                                        totalRequests += 1;
+                                        $http({
+                                            method: 'POST',
+                                            url: '/' + endPointListaDependente,
+                                            data: itemSubLista
+                                        }).then(function (sailsResponseSubLista) {
+                                            totalResponses += 1;
+                                            if (totalResponses == totalRequests) {
+                                                finalizePost(hasError);
+                                            }
+                                            
+                                            return true;
+                                        }).catch(function onError(sailsResponse) {
+                                            totalResponses += 1;
+                                            hasError = true;
+                                            if (totalResponses == totalRequests) {
+                                                finalizePost(hasError);
+                                            }
+                                        })
+                                        .finally(function eitherWay() {
+                                            $scope.sennitForm.loading = false;
+                                        })
+                                    }
+                                } else {
+                                    finalizePost();
+                                }
+
+                                return true;
+                            })
+                            .catch(function onError(sailsResponse) {
+                                swal("Erro", "Seu registro não foi copiado :(", "error");
+                                return false;
+                            })
+                            .finally(function eitherWay() {
+                                $scope.sennitForm.loading = false;
+                            })
+                        } else {
+                            swal("Cancelado", "Seu registro não foi copiado :(", "error");
+                            return false;
+                        }
+                    }
+                );
+
+            };
 
             $scope.save = function (data) {
 
@@ -372,7 +520,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 return ($scope.strdelete != 'false')
             };
 
-            $scope.verifica = function (valor, nome, type, filtro) {
+            $scope.verifica = function (valor, nome, type, filtro, field) {
                 if (valor == null) return;
                 if (valor.hasOwnProperty(nome)) {
 
