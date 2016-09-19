@@ -81,7 +81,7 @@
     </div>
     <div id="modal1" class="modal modal-fixed-footer">
         <div class="modal-content">
-            <h4>Adicinar Componente</h4>
+            <h4>Adicionar Componente</h4>
             <div class="row">
                 <div class="form-group col m2" id="sign-up-form">
                     <label ng-class="inputClass" for="nome" class="">Label</label>
@@ -180,18 +180,7 @@
         box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     }
 
-    @media print {
-        body,
-        page[size="A4"] {
-            margin: 0;
-            box-shadow: 0;
-        }
-    }
 
-    @page {
-        size: A4;
-        margin: 0;
-    }
 
     table {
         background: #fff;
@@ -203,9 +192,9 @@
         margin-right: 15%;
     }
 
-    table tr:nth-of-type(even) {
-        background: #f9f9f9;
-    }
+        table tr:nth-of-type(even) {
+            background: #f9f9f9;
+        }
 
     th.estregreen {
         background-color: green !important;
@@ -285,21 +274,26 @@
     }
 
     @media print {
-        html,
-        body {
-            width: 210mm;
-            height: 297mm;
+        
+        /*page[size="A4"] {
+            margin: 0;
+            box-shadow: 0;
+        }*/
+        
+        page {
+            size: A4;
+            margin: 0;
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-left: 10px;
+            margin-bottom: 0.5cm;
+            box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
         }
 
-        .page {
-            margin: 0;
-            border: initial;
-            border-radius: initial;
-            width: initial;
-            min-height: initial;
-            box-shadow: initial;
-            background: initial;
-            page-break-after: always;
+        html, body, page{
+            width: 21cm;
+            height: 29.7cm;
         }
     }
 </style>

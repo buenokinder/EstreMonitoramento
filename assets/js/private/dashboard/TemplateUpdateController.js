@@ -10,16 +10,20 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         });
     };
 
+    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
 
     $scope.corpo = "";
     $scope.id = $routeParams.id;
     $scope.paginas = ([]);
     $scope.selectedPage = "";
     $scope.editPageId = 0;
-
+    $scope.componenteNome = "";
+    $scope.componenteTipo = "";
+    $scope.componenteGrafico = "";
+    $scope.componenteTabela = "";
+    $scope.componenteValor = "";
 
     $scope.editarPagina = function (pagina, index) {
-        console.log(index);
         $scope.editPageId = index;
 
         $scope.selectedPage = pagina.conteudo;
@@ -118,29 +122,13 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         }
         $http.post('/Pagina', model).then(
 			function (result) {
-			    console.log('retorno');
-			    console.log(result);
 			    $scope.paginas.push(result.data);
 			}, function (error) {
 			    swal("Erro", "Erro ao incluir página", "error");
 
 			});
-
-
-        console.log($scope.paginas);
-
     }
 
-
-
-
-    String.prototype.replaceAll = function (s, r) { return this.split(s).join(r) }
-
-    $scope.componenteNome = "";
-    $scope.componenteTipo = "";
-    $scope.componenteGrafico = "";
-    $scope.componenteTabela = "";
-    $scope.componenteValor = "";
 
     $scope.addComponente = function (value) {
 
@@ -203,50 +191,14 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
 
         respostas.forEach(myFunction);
-        console.log(value);
         return value;
     }
     $scope.verPagina = function () {
-        console.log('teste');
-        console.log($scope.selectedPage);
-
-
         $scope.paginas[$scope.editPageId].conteudo = $scope.selectedPage;
-        console.log($scope.paginas);
-
     };
 
-    // $scope.getData() = function(){
-    // 	 function myFunction(item, index) {
-    //             if (index != 0) {
-    //                 var tipo = item.split('}}')[0];
-    //                 if (tipo.indexOf('tabela(') !== -1) {
-    //                     var parametro = tipo.split('&#39;')[1];
-
-
-    //                     $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro  + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
-    //                 }
-    //                 if (tipo.indexOf('grafico(') !== -1) {
-    //                     var parametro = tipo.split('&#39;')[1];
-
-
-    //                     var parametro2 = tipo.split('&#39;')[3];
-    //                     console.log(parametro);
-    //                     if (parametro == 'marcohorizontal') {
-    //                         $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
-    //                     } else {
-    //                         $scope.corpo = $scope.corpo.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro  + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
-    //                     }
-
-    //                 }
-    //             }
-    //         }
-    //         respostas.forEach(myFunction);
-    // }
     $scope.init();
     $scope.save = function () {
-        console.log('data editado', $scope.data)
-
         // $scope.sennitForm.loading = true;
         swal({
             title: "",
