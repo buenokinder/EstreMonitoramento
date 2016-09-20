@@ -48,10 +48,13 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 if ($scope.fields[key].combo == 'true') {
                     $scope.habilitaBotao = true;
                     $scope.getCombo($scope.fields[key]);
-                    HtmlFormBody += "<div class='form-group col m2' id='sign-up-form'>";
+                    var className = $scope.fields[key].name == 'aterro' ? 'form-group col m6 l6 s6':'form-group col m2 l2 s2';
+
+                    HtmlFormBody += "<div class='" + className + "' id='sign-up-form'>";
                     HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                     HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'><option value='Todos'></option></select>";
                     HtmlFormBody += "</div>";
+
                 }
             }
 

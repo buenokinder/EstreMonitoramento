@@ -13,7 +13,6 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
     $scope.link = "";
     $scope.loading = false;
     $scope.aterros = ([]);
-
   
     var canvas = null;
     var ctx = null;
@@ -274,7 +273,11 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
 
     $scope.perfil = window.SAILS_LOCALS._perfil;
     $scope.goto = function (path) {
-        $location.path(path);
+        if (path == "/MonitoramentoAterros") {
+            $scope.monitoramentos();
+        } else {
+            $location.path(path);
+        }
         $scope.alteraStatusBreadcrumbs(path);
     };
 
@@ -355,6 +358,8 @@ app.controller('DashboardController', ['$scope', '$http', '$location', '$rootSco
                 $scope.pathname = "Pluviometria e Vazão";
                 $scope.pai = "Área de Trabalho";
                 break;
+
+            case "/MonitoramentoAterros":
             case "/Dashboard":
                 $scope.pathname = "Dashboard";
                 $scope.pai = undefined;

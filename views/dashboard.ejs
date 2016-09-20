@@ -133,7 +133,14 @@
                                 </a>
                             </li>
 
+                            <li ng-show="(perfil == 'Operacional' || perfil == 'Gerente')">
+                                <a href="" ng-click="goto('/MonitoramentoAterros')" class="cyan-text">
+                                    <i class="mdi-action-dashboard"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
                         </ul>
+
                         <ul id="ul-horizontal-nav" class="right hide-on-med-and-down">
                             <li>
                                 <a class="right  dropdown-menu cyan-text" href="#/" data-activates="Usersdropdown">
@@ -679,7 +686,7 @@
                 return value;
             }
 
-            var retorno = dia + "/" + mes + "/" + ano;
+            var retorno = dia + "/" + padLeftZero(mes) + "/" + ano;
             return retorno;
         }
 
@@ -728,7 +735,7 @@
 
 			var retorno = "";
 			if(parseInt(hora)==0 && parseInt(minuto)==0){
-				retorno = dia + "/" + mes + "/" + ano;
+			    retorno = dia + "/" + padLeftZero(mes) + "/" + ano;
 			}else{
 				retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
 			}

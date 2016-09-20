@@ -1,5 +1,3 @@
-
-
 var app = angular.module('DashboardModule', ['xeditable', 'ui.bootstrap',
     	'ngRoute', 'ngMaterial', 'lr.upload',
     	'ngResource', 'leaflet-directive', 'isteven-multi-select', 'ui.utils.masks', 'idf.br-filters', 'textAngular'
@@ -97,7 +95,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.criterioRegularVelocidadeVertical = [];
 
 
-            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
+            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
 
 
@@ -218,7 +216,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.criterioAceitavelVelocidadeVertical = [];
             $scope.criterioRegularVelocidadeVertical = [];
 
-            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42&marcoSuperficial=" + $scope.tipado).then(function (results) {
+            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni="+getDateQuery($scope.inicio)+"&dtFim="+getDateQuery($scope.fim)+"&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
 
 
@@ -324,8 +322,8 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
         restrict: 'AE',
         scope: {
             aterro: '@',
-            datainicial: '@',
-            datafinal: '@',
+            inicio: '@',
+            fim: '@',
             id: '=',
             tipo: '@',
             filter: '='
@@ -353,7 +351,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             }
 
             if ($scope.tipo == 'acompanhamentomarcosuperficialdeslocamento' || $scope.tipo == 'acompanhamentomarcosuperficial') {
-                $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
+                $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni="+getDateQuery($scope.inicio)+"&dtFim="+getDateQuery($scope.fim)).then(function (results) {
                     $scope.marcosuperficialdeslocamento = results.data;
                     if ($scope.marcosuperficialdeslocamento.length > 0)
                         $scope.aterroNome = $scope.marcosuperficialdeslocamento[0].aterro.nome;

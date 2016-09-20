@@ -71,6 +71,23 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			}
 		);
     }
+
+    function finalizePost (hasError, redirect) {
+        if (hasError == true) {
+            swal("Registro Alterado!", "Seu registro foi alterado, porém ocorreram erros ao alterar as páginas do relatório.", "success");
+            Materialize.toast('Registro alterado, porém ocorreram erros ao alterar as páginas do relatório!', 4000);
+        } else {
+            swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+            Materialize.toast('Registro alterado com sucesso!', 4000);
+        }
+
+        if (redirect==true) {
+            location.assign("#/Template");
+        }
+    };
+
+
+
     $scope.savePage = function () {
         swal({
             title: "",
@@ -88,17 +105,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			        var totalRequests = 0;
 			        var totalResponses = 0;
 			        var hasError = false;
-
-			        var finalizePost = function (hasError) {
-			            
-			            if (hasError == true) {
-			                swal("Registro Alterado!", "Seu registro foi alterado, porém ocorreram erros ao alterar as páginas do relatório.", "success");
-			                Materialize.toast('Registro alterado, porém ocorreram erros ao alterar as páginas do relatório!', 4000);
-			            } else {
-			                swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
-			                Materialize.toast('Registro alterado com sucesso!', 4000);
-			            }
-			        };
 
 			        angular.forEach($scope.paginas, function (value, key) {
 			            totalRequests += 1;
@@ -180,14 +186,14 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
         if ($scope.componenteTipo == 'tabela') {
             if ($scope.componenteTabela == "") {
-                swal("Erro", "Para prosseguir é necessário que selecione a tabela.", "error");
+                swal("Erro", "Para prosseguir é necessário que selecione a tabela.", "error"); 
                 $(".lean-overlay").hide();
                 return;
             }
-            $scope.selectedPage += "<tabela tipo='" + $scope.componenteTabela + "'  aterro='" + $scope.data.aterro.id + "'  inicio='" + $scope.data.dataInicial + "'  fim='" + $scope.data.dataFim + "'><p style='color: red;' >" + $scope.componenteNome + "</p></tabela>"
+            $scope.selectedPage += "<tabela tipo='" + $scope.componenteTabela + "'  aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'><p style='color: red;' >" + $scope.componenteNome + "</p></tabela>"
         } else {
 
-            $scope.selectedPage += "<graficohorizontal  tipado='" + $scope.componenteValor + "' aterro='" + $scope.data.aterro.id + "'  inicio='" + $scope.data.dataInicial + "'  fim='" + $scope.data.dataFim + "'  ><p style='color: red;' >" + $scope.componenteNome + "</p></graficohorizontal>";
+            $scope.selectedPage += "<graficohorizontal  tipado='" + $scope.componenteValor + "' aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'  ><p style='color: red;' >" + $scope.componenteNome + "</p></graficohorizontal>";
         }
         $(".lean-overlay").hide();
     };
@@ -202,21 +208,19 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     var parametro = tipo.split('&#39;')[1];
 
 
-                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro + '\'   inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\' ></tabela>  ');
+                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro + '\'   inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\' ></tabela>  ');
                 }
                 if (tipo.indexOf('grafico(') !== -1) {
                     var parametro = tipo.split('&#39;')[1];
                     var parametro2 = tipo.split('&#39;')[3];
                     if (parametro == 'marcohorizontal') {
-                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficohorizontal>  ');
+                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficohorizontal>  ');
                     } else {
-                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + $scope.data.dataInicial + '\' fim=\'' + $scope.data.dataFim + '\'  ></graficovertical>  ');
+                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficovertical>  ');
                     }
-
                 }
             }
         }
-
 
         respostas.forEach(myFunction);
         return value;
@@ -226,6 +230,45 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
     };
 
     $scope.init();
+
+    $scope.atualizarPaginasParametrizadasComDatas = function () {
+
+        var totalRequests = 0;
+        var totalResponses = 0;
+        var hasError = false;
+
+        $scope.paginasAux = $scope.data.paginas;
+
+        for (var i = 0; i < $scope.paginasAux.length; i++) {
+            var conteudo = $scope.paginasAux[i].conteudo;
+            var indexOfInicio = conteudo.indexOf("inicio=");
+            if (indexOfInicio < 0) continue;
+            var indexOfFim = conteudo.indexOf("fim=");
+            conteudo = conteudo.substr(0, indexOfInicio) + 'inicio="' + getDate($scope.data.dataInicio) + '" ' + conteudo.substr(indexOfInicio + 20);
+            $scope.paginasAux[i].conteudo = conteudo.substr(0, indexOfFim) + 'fim="' + getDate($scope.data.dataFim) + '" ' + conteudo.substr(indexOfFim + 17);
+
+            $http({
+                method: 'PUT',
+                url: '/Pagina/' + $scope.paginasAux[i].id,
+                data: $scope.paginasAux[i]
+            }).then(function onSuccess(sailsResponse) {
+                totalResponses += 1;
+                if (totalResponses == totalRequests) {
+                    finalizePost(hasError, true);
+                }
+            }).catch(function onError(sailsResponse) {
+                totalResponses += 1;
+                hasError = true;
+                if (totalResponses == totalRequests) {
+                    finalizePost(hasError, true);
+                }
+            })
+            .finally(function eitherWay() {
+                $scope.sennitForm.loading = false;
+            })
+
+        }
+    }
     $scope.save = function () {
         // $scope.sennitForm.loading = true;
         swal({
@@ -254,19 +297,20 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			            data: params
 			        }).then(function onSuccess(sailsResponse) {
 			            $scope.inputClass = null;
-			            //sennitCommunicationService.prepForBroadcastDataList($scope.data);
 			            $scope.data = ([]);
 			            $scope.inputClass = "disabled";
-			            swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
-			            Materialize.toast('Registro alterado com sucesso!', 4000);
-			            location.assign("#/Template");
+			            if ($scope.data.paginas == undefined || $scope.data.paginas.length == 0) {
+			                finalizePost(hasError, true);
+			            } else {
+			                $scope.atualizarPaginasParametrizadasComDatas();
+			            }
 			        })
-						.catch(function onError(sailsResponse) {
+					.catch(function onError(sailsResponse) {
 
-						})
-						.finally(function eitherWay() {
-						    // $scope.sennitForm.loading = false;
-						})
+					})
+					.finally(function eitherWay() {
+						// $scope.sennitForm.loading = false;
+					})
 			    } else {
 			        swal("Cancelado", "Seu registro não foi alterado :(", "error");
 			    }
