@@ -247,6 +247,9 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             conteudo = conteudo.substr(0, indexOfInicio) + 'inicio="' + getDate($scope.data.dataInicio) + '" ' + conteudo.substr(indexOfInicio + 20);
             $scope.paginasAux[i].conteudo = conteudo.substr(0, indexOfFim) + 'fim="' + getDate($scope.data.dataFim) + '" ' + conteudo.substr(indexOfFim + 17);
 
+
+            totalRequests += 1;
+
             $http({
                 method: 'PUT',
                 url: '/Pagina/' + $scope.paginasAux[i].id,
@@ -296,14 +299,16 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 			            url: '/Template' + '/' + params.id,
 			            data: params
 			        }).then(function onSuccess(sailsResponse) {
-			            $scope.inputClass = null;
-			            $scope.data = ([]);
-			            $scope.inputClass = "disabled";
+			           
 			            if ($scope.data.paginas == undefined || $scope.data.paginas.length == 0) {
 			                finalizePost(hasError, true);
 			            } else {
 			                $scope.atualizarPaginasParametrizadasComDatas();
 			            }
+
+			            $scope.inputClass = null;
+			            $scope.data = ([]);
+			            $scope.inputClass = "disabled";
 			        })
 					.catch(function onError(sailsResponse) {
 

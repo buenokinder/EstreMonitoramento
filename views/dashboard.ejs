@@ -686,7 +686,7 @@
                 return value;
             }
 
-            var retorno = dia + "/" + padLeftZero(mes) + "/" + ano;
+            var retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano;
             return retorno;
         }
 
@@ -735,7 +735,7 @@
 
 			var retorno = "";
 			if(parseInt(hora)==0 && parseInt(minuto)==0){
-			    retorno = dia + "/" + padLeftZero(mes) + "/" + ano;
+			    retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano;
 			}else{
 				retorno = padLeftZero(dia) + "/" + padLeftZero(mes) + "/" + ano + " " + padLeftZero(hora) + ":" + padLeftZero(minuto);
 			}
