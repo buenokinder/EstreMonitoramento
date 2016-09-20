@@ -153,7 +153,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     };
 
     $scope.getMarcoSuperficial = function (medicaoMarcoSuperficialDetalhes, callback) {
-        $http.get('/MarcoSuperficial/?nome=' + medicaoMarcoSuperficialDetalhes.nome + '&aterro=' + medicaoMarcoSuperficialDetalhes.aterro.id).success(function (response, status) {
+        $http.get('/MarcoSuperficial/searchbyname/?nome=' + medicaoMarcoSuperficialDetalhes.nome + '&aterro=' + medicaoMarcoSuperficialDetalhes.aterro.id).success(function (response, status) {
 
             if (null == response || response.length == 0) {
                 var marcosuperficial = {};
@@ -175,7 +175,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             callback(null, err);
         });
     };
-
+    
     $scope.saveMedicaoMarcoSuperficialDetalhes = function (medicaoMarcoSuperficialDetalhes) {
 
         //medicaoMarcoSuperficialDetalhes.owner = $scope.data;

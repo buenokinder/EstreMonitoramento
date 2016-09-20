@@ -24,7 +24,7 @@
 <div ng-init="init()">
 
     <div style="width: 100%;" ng-show="(tipo=='marcosuperficialdeslocamento')">
-        <table>
+        <table class="table-large">
             <thead>
 
                 <tr>
@@ -54,7 +54,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='fatorsegurancasecao')">
-        <table>
+        <table class="table-medium">
             <thead>
 
                 <tr>
@@ -89,7 +89,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='fatorsegurancames')">
-        <table>
+        <table class="table-medium">
             <thead>
 
                 <tr>
@@ -113,7 +113,7 @@
         </table>
     </div>
     <div style="width: 100%;" ng-show="(tipo=='fatorseguranca')">
-        <table>
+        <table class="table-medium">
             <thead>
                 <tr>
                     <th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA POR TEMPO</th>
@@ -145,7 +145,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='kaiamoto')">
-        <table>
+        <table class="table-medium">
             <thead class="gray">
                 <tr>
                     <th colspan="4" style="text-align: center;">CRITÉRIO DE ALERTA DEFINIDOS POR KAIMOTO (2008)</th>
@@ -220,7 +220,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='boskov')">
-        <table width=300 height=100>
+        <table  class="table-medium" width=300 height=100>
             <thead class="estregray">
                 <tr>
                     <th colspan="4" style="text-align: center;">CRITÉRIOS DE ALTERTA DEFINIDOS POR BOSCOV (2008)</th>
@@ -280,7 +280,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='criteriosalertamacico')">
-        <table width=300 height=100>
+        <table  class="table-medium" width=300 height=100>
             <thead>
                 <tr>
                     <th colspan="4" class="lightgreen" style="text-align: center;">CRITÉRIOS DE AÇÃO EM FUNÇÃO DA SATURAÇÃO DO MACIÇO - {{ aterro }}</th>
@@ -341,7 +341,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficialdeslocamento')">
-        <table width=300 height=100>
+        <table class="table-large" width=300 height=100>
             <thead>
                 <tr>
                     <th colspan="13" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase }}</th>
@@ -410,7 +410,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='acompanhamentomarcosuperficial')">
-        <table width=300 height=100>
+        <table class="table-large" width=300 height=100>
             <thead>
                 <tr class="lightgreen">
                     <th colspan="11" class="lightgreen" style="text-align: center;">MONITORAMENTO GEOTÉCNICO DO {{ aterroNome  | uppercase}}</th>
@@ -473,7 +473,7 @@
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='fatorsegurancanbr')">
-        <table>
+        <table class="table-medium">
             <thead>
                 <tr>
                     <th colspan="4" style="text-align: center;">FATOR DE SEGURANÇA</th>
