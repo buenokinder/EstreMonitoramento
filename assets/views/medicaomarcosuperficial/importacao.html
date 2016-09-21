@@ -1,0 +1,127 @@
+<style>
+    #marco-resumo table, #marco-resumo td, #marco-resumo tr, #marco-resumo th {
+        font-size: 10px;
+        border: solid 1px;
+    }
+
+    th {
+        text-align: center;
+    }
+</style>
+<div class="section">
+    <div class="row section">
+        <div class="divider"></div>
+        <div class="row">
+
+
+            <div class="col s6 m6 l6">
+                <form editable-form="" name="editableForm" class="ng-pristine ng-scope ng-invalid ng-invalid-date">
+                    <p>
+                        <b>Data/Hora: </b>
+                        <span class="editable-wrap editable-text ng-scope">
+                            <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                <input type="text" name="data" ng-model="inserted.data" class="datetimepicker editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+                                <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                            </div>
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Topógrafo: </b>
+                        <span class="editable-wrap editable-text ng-scope">
+                            <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                <input type="text" name="nomeTopografo" ng-model="inserted.nomeTopografo" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+                                <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                            </div>
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Auxiliar: </b>
+                        <span class="editable-wrap editable-text ng-scope">
+                            <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                <input type="text" name="nomeAuxiliar" ng-model="inserted.nomeAuxiliar" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+
+                                <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                            </div>
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Temperatura: </b>
+                        <span class="editable-wrap editable-text ng-scope">
+                            <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                <input type="text" name="temperatura" ng-model="inserted.temperatura" ui-number-mask='1' class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+                                <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
+                            </div>
+                        </span>
+                    </p>
+                    <p ng-show="perfil=='Administrador'">
+                        <b>Aterro: </b>
+                        <div class="form-group" id="sign-up-form">
+                            <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="aterro" required="" ng-model="inserted.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true"></select>
+                        </div>
+                    </p>
+
+                    <div class="buttons">
+                        <button type="button" class="btn btn-default ng-hide">Adicionar</button>
+
+                        <span class="">
+                            <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="addMedicao()">Salvar</button>
+
+                            <button type="button" class="btn btn-default" onclick="fecharModal('modalView')">Cancelar</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col s6 m6 l6">
+
+                <div ng-controller="MedicaoMarcoSuperficialController" class="container">
+                    <div class="card-panel ng-scope">
+
+                        <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
+
+                        <div>
+                            <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
+                                       view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador' }, { 'perfil': 'Diretor' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
+                            </grid-view>
+                        </div>
+
+                        <div id="modalUpload" class="modal modal-fixed-footer">
+
+                            <div class="modal-content">
+                                <input type="file" class="dropify" data-height="300" on-read-file="showContent($fileContent)" />
+                                <div ng-if="content">
+                                    <h2>Marcos processado no arquivo:</h2>
+
+                                    <table class='striped'>
+                                        <thead>
+                                            <tr>
+                                                <th class='text-center ng-binding ng-scope'>Marco Superficial</th>
+                                                <th class='text-center ng-binding ng-scope'>Norte</th>
+                                                <th class='text-center ng-binding ng-scope'>Leste</th>
+                                                <th class='text-center ng-binding ng-scope'>Cota</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr ng-repeat='medicao in medicoes'>
+                                                <td class="ng-scope">{{medicao.nome}}</td>
+                                                <td class="ng-scope">{{medicao.norte}}</td>
+                                                <td class="ng-scope">{{medicao.leste}}</td>
+                                                <td class="ng-scope">{{medicao.cota}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

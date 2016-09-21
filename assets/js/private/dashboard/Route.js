@@ -84,6 +84,10 @@ app.config(['$routeProvider', function ($routeProvider, $locationProvider) {
         controller: 'MedicaoMarcoSuperficialController'
     });
 
+    $routeProvider.when("/ImportacaoMarcoSuperficial", {
+        templateUrl: "/views/medicaomarcosuperficial/importacao.html",
+        controller: 'MarcoSuperficialImportacaoController'
+    });
 
     $routeProvider.when("/MedicaoPiezometro", {
         templateUrl: "/views/medicaopiezometro/index.html",
