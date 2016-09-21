@@ -64,10 +64,12 @@ module.exports = {
             via: 'owner'
         },
         owner: {
-            model: 'Aterro'
+            model: 'Aterro',
+            required: true
         },
         aterro: {
-            model: 'Aterro'
+            model: 'Aterro',
+            required: true
         },
         usuario: {
             model: 'Usuario'

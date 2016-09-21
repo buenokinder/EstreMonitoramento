@@ -47,7 +47,8 @@ module.exports = {
             type: 'float'
         },
         aterro: {
-            model: 'Aterro'
+            model: 'Aterro',
+            required: true
         },
         usuario: {
             model: 'Usuario'
