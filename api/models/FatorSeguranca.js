@@ -8,33 +8,34 @@
 
 module.exports = {
 
-  attributes: {
-    saturacao: {
-      type: 'json',
-      required: true
-    },
-    mes: {
-        type: 'string',
-        enum: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-    },
-    ano: {
-      type: 'string'
-    },
-    valorRu: {
-      type: 'float'
-    },
-    valorLp: {
-      type: 'float'
-    },
-    secao: {
-      model: 'secaoFatorSeguranca'
-    },
-    aterro: {
-      model:'Aterro'
-    },
-    usuario: {
-        model: 'Usuario'
+    attributes: {
+        saturacao: {
+            type: 'json',
+            required: true
+        },
+        mes: {
+            type: 'string',
+            enum: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+        },
+        ano: {
+            type: 'string'
+        },
+        valorRu: {
+            type: 'float'
+        },
+        valorLp: {
+            type: 'float'
+        },
+        secao: {
+            model: 'secaoFatorSeguranca'
+        },
+        aterro: {
+            model: 'Aterro',
+            required: true
+        },
+        usuario: {
+            model: 'Usuario'
+        }
     }
-  }
 };
 

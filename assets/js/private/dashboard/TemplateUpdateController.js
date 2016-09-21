@@ -190,10 +190,10 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                 $(".lean-overlay").hide();
                 return;
             }
-            $scope.selectedPage += "<tabela tipo='" + $scope.componenteTabela + "'  aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'><p style='color: red;' >" + $scope.componenteNome + "</p></tabela>"
+            $scope.selectedPage += "<tabela tipo='" + $scope.componenteTabela + "'  aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'><p style='color: red;' >" + $scope.componenteNome + "</p></tabela><br />"
         } else {
 
-            $scope.selectedPage += "<graficohorizontal  tipado='" + $scope.componenteValor + "' aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'  ><p style='color: red;' >" + $scope.componenteNome + "</p></graficohorizontal>";
+            $scope.selectedPage += "<graficohorizontal  tipado='" + $scope.componenteValor + "' aterro='" + $scope.data.aterro.id + "'  inicio='" + getDate($scope.data.dataInicio) + "'  fim='" + getDate($scope.data.dataFim) + "'  ><p style='color: red;' >" + $scope.componenteNome + "</p></graficohorizontal><br />";
         }
         $(".lean-overlay").hide();
     };

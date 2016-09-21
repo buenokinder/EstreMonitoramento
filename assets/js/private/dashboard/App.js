@@ -41,6 +41,7 @@ app.directive('ckEditor', function () {
         link: function (scope, elm, attr, ngModel) {
             CKEDITOR.config.allowedContent = true;
             CKEDITOR.config.height = '600px';
+
             var ck = CKEDITOR.replace(elm[0]);
 
             if (!ngModel) return;
@@ -97,25 +98,12 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
 
             $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
-
-
                 angular.forEach($scope.data, function (value, key) {
-
-
                     $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
                     $scope.deslocamentoHorizontalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalParcial)]);
                     $scope.velocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
-
-
-
                     $scope.criterioAceitavelVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
-
                     $scope.criterioRegularVelocidadeHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
-
-
-
-
-
                 });
 
                 $scope.categorias = [$scope.array];
@@ -221,17 +209,11 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
 
 
                 angular.forEach($scope.data, function (value, key) {
-
                     $scope.deslocamentoVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalTotal)]);
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
-
-
                     $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
-
                     $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
-
-
                 });
                 $scope.categorias = [$scope.array];
 
@@ -330,13 +312,12 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
         },
 
         templateUrl: 'views/reports/tabela.html',
-
-
         link: function ($scope, $element, attrs) {
 
             $scope.fatorsegurancaMes = ({});
             $scope.aterroNome;
             $scope.marcosuperficialdeslocamento = ({});
+            //var date = new Date($scope.inicio);
 
             if ($scope.tipo == 'fatorsegurancames') {
                 $http.get("/FatorSeguranca/").then(function (results) {
@@ -358,15 +339,6 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                 });
             }
 
-            //  if ($scope.tipo == 'acompanhamentomarcosuperficial') {
-            //     $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=2016-08-10%2018:42&dtFim=2016-09-30%2018:42").then(function (results) {
-            //         $scope.marcosuperficialdeslocamento = results.data;
-            //         if( $scope.marcosuperficialdeslocamento.length > 0)
-            //             $scope.aterroNome =    $scope.marcosuperficialdeslocamento[0].aterro.nome;
-            //     });
-            // }
-
-
             $scope.init = function () {
                 if ($scope.tipo == 'fatorsegurancames') {
                     $http.get("/FatorSeguranca/").then(function (results) {
@@ -387,19 +359,10 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
     return function (scope, element, attrs) {
         scope.$watch(
           function (scope) {
-              // watch the 'compile' expression for changes
               return scope.$eval(attrs.compile);
           },
           function (value) {
-
-              // when the 'compile' expression changes
-              // assign it into the current DOM
               element.html(value);
-
-              // compile the new DOM and link it to the current
-              // scope.
-              // NOTE: we only compile .childNodes so that
-              // we don't get into infinite loop compiling ourselves
               $compile(element.contents())(scope);
           }
       );

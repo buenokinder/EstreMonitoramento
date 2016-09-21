@@ -287,9 +287,6 @@ angular.module('VisualizacaoApp', ['ngSanitize']).controller('ViewTemplateContro
 
 
         link: function ($scope, $element, attrs) {
-            console.log($scope.tipo);
-
-
 
             //$element.html(template);
             //  $compile($element.contents())($scope);

@@ -336,16 +336,15 @@ module.exports = {
 
     _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes, _marcoSuperficiaisNotificacao, aterros) {
         for (var i = 0; i < detalhes.length; i++) {
-            var registroOrfao = (detalhes[i].owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
+            var registroOrfao = (detalhes[i].owner == undefined || detalhes[i].aterro == undefined); //TODO: Ao remover a medicao remover os detalhes.
             if (registroOrfao) continue;
 
             //  var exists = _marcoSuperficiaisNotificacao[detalhes[i].marcoSuperficial.id] != undefined;
-
             //var key = detalhes[i].owner.id;
+
             var key = detalhes[i].marcoSuperficial.id;
 
             var exists = _marcoSuperficiaisNotificacao[key] != undefined;
-
 
             if (!exists) {
                 _marcoSuperficiaisNotificacao[key] = {};

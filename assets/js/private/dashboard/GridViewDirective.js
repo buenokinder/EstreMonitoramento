@@ -48,7 +48,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 if ($scope.fields[key].combo == 'true') {
                     $scope.habilitaBotao = true;
                     $scope.getCombo($scope.fields[key]);
-                    var className = $scope.fields[key].name == 'aterro' ? 'form-group col m6 l6 s6':'form-group col m2 l2 s2';
+                    var className = $scope.fields[key].name == 'aterro' ? 'form-group col m4 l4 s4':'form-group col m2 l2 s2';
 
                     HtmlFormBody += "<div class='" + className + "' id='sign-up-form'>";
                     HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
