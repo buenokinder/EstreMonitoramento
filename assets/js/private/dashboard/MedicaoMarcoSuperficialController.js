@@ -1,5 +1,7 @@
 app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter', 'sennitCommunicationService', function ($scope, $http, $filter, sennitCommunicationService) {
     $scope.data = [];
+    var deferred = $.Deferred();
+
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.verResumos = false;
@@ -7,22 +9,133 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     $scope.refreshChilds = false;
     $scope.me = window.SAILS_LOCALS;
     $scope.perfil = '';
-    //$scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
-    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: null};
+    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
 
     if ($scope.usuario._aterro != undefined && $scope.usuario._aterro != '') {
         $scope.inserted.aterro = $scope.usuario._aterro;
     }
 
     $scope.aterros = ([]);
+    $scope.monitoramentos = {
+        dataInicial: '',
+        dataFinal: '',
+        aterro: undefined,
+        marcosSuperficiais: ([]),
+        marcosSuperficiaisAterro: ([]),
+        marcosSuperficiaisSearch: ([]),
+        monitoramentos: ([]),
+        pesquisa: null,
+        ordenacao: 'dataInstalacao ASC',
+
+        init: function () {
+
+            $scope.perfil = $scope.me._perfil;
+
+            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' }).on('change', function (e, date) {
+                $scope.inserted.data = getDateTimeString(date);
+            });
+            var dtIni = (new Date(new Date().setDate(new Date().getDate() - 30)));
+            var dtFim = new Date();
+
+            $scope.monitoramentos.dataInicial = getDateTimeString(dtIni);
+            $scope.monitoramentos.dataFinal = getDateTimeString(dtFim);
+            $http.get('/Aterro').success(function (response, status) {
+                $scope.aterros = response;
+            });
+
+            $http.get('/MarcoSuperficial').success(function (response, status) {
+                var marcosSuperficiais = [];
+                for (var i = 0; i < response.length; i++) {
+                    marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
+                }
+                $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
+            });
+
+            $("#btMonitoramentos").on("click", function (e) {
+                e.preventDefault();
+                document.location = "#/MonitoramentoMarcoSuperficial"
+            });
+        },
+
+        pesquisarResumo: function (owner, marcosSuperficiais, aterro, data, callback) {
+            var query = "?order=" + $scope.monitoramentos.ordenacao;
+
+            query += "&data=" + getDateQuery(data);
+            query += "&owner=" + owner;
+            query += "&ms=" + marcosSuperficiais;
+            query += "&aterro=" + ((typeof aterro === "object") ? aterro.id : aterro);
+
+            $http.get('/MarcoSuperficial/monitoramentos/' + query).success(function (response, status) {
+                $scope.monitoramentos.resumo = response;
+
+                callback();
+            });
+        },
+
+        pesquisar: function () {
+            var query = "?order=" + $scope.monitoramentos.ordenacao;
+            query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
+            query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
+
+            //console.log("$scope.monitoramentos.aterro", $scope.monitoramentos.aterro);
+            if ($scope.monitoramentos.aterro  && typeof $scope.monitoramentos.aterro != "object") {
+                query += "&aterro=" + $scope.monitoramentos.aterro;
+            }
+
+            if (null != $scope.monitoramentos.marcosSuperficiaisSearch && undefined != $scope.monitoramentos.marcosSuperficiaisSearch && $scope.monitoramentos.marcosSuperficiaisSearch.length > 0) {
+                var ms = "";
+                angular.forEach($scope.monitoramentos.marcosSuperficiaisSearch, function (value, key) {
+                    ms += ((ms == "" ? "" : ",") + value.id);
+                });
+                query += "&ms=" + ms;
+            }
+
+            $http.get('/MarcoSuperficial/monitoramentos/' + query).success(function (response, status) {
+
+                var ret = [];
+                for (var i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    if (item.medicaoMarcoSuperficial == undefined) {
+                        item.deslocamentoHorizontalParcial = undefined;
+                        item.deslocamentoHorizontalTotal = undefined;
+                        item.velocidadeHorizontal = undefined;
+                        item.velocidadeVertical = undefined;
+                        item.deslocamentoVerticalParcial = undefined;
+                        item.deslocamentoVerticalTotal = undefined;
+                        item.sentidoDeslocamentoDirerencaNorte = undefined;
+                        item.sentidoDeslocamentoDirerencaEste = undefined;
+                        item.sentidoDeslocamentoNorteSul = undefined;
+                        item.sentidoDeslocamentoLesteOeste = undefined;
+                        item.sentido = undefined;
+                        item.vetorDeslocamentoSeno = undefined;
+                        item.vetorDeslocamentoAngulo = undefined;
+                    }
+
+                    ret.push(item);
+                }
+
+        
+                $scope.monitoramentos.pesquisa = ret;
+                setInterval(function () {
+                    var $fixedColumn = $('#fixed');
+                    var $pesquisa = $('#pesquisa');
+                    $fixedColumn.find('tbody tr').each(function (i, elem) {
+                        $(this).height($pesquisa.find('tbody  tr:eq(' + i + ')').height());
+                    });
+                }, 0);
+            });
+        }
+    };
 
     $scope.monitoramentos.init();
 
     $scope.changeAterro = function () {
         if ($scope.monitoramentos.aterro) {
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
+
         }
     };
+
 
     $scope.removeFile = function () {
         $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
@@ -223,11 +336,155 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
         );
     };
 
+    $scope.getCssClass = function (alerta) {
+        if (null == alerta || undefined == alerta || '' == alerta.trim()) return;
+
+        return (alerta.replace("ç", "c").replace("ã", "a").replace("á", "a")).toLowerCase();
+    }
+
+    $scope.saveObsOperacional = function () {
+        swal({
+            title: "",
+            text: "Você tem certeza que deseja inserir a observação ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: 'PUT',
+                            url: '/MedicaoMarcoSuperficial/' + $scope.data.id,
+                            data: { 'obsOperacional': $scope.data.obsOperacional }
+                        }).then(function onSuccess(sailsResponse) {
+                            $scope.inputClass = null;
+                            $scope.inputClass = "disabled";
+                            fecharModal("modalUpload");
+                            swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
+                            Materialize.toast('Registro alterado com sucesso!', 4000);
+                        })
+                        .catch(function onError(sailsResponse) {
+
+                        })
+                        .finally(function eitherWay() {
+                            $scope.sennitForm.loading = false;
+                        })
+                    } else {
+                        swal("Cancelado", "Seu registro não foi alterado :(", "error");
+                    }
+                }
+        );
+    };
+
+    $scope.mustSendEmail = function () {
+        return $scope.me._perfil == "Gerente";
+    };
+
     $scope.getAterro = function (id, callback) {
         $http.get('/Aterro/' + id).success(function (data) {
             callback(data);
         });
     };
+
+    getEmailAdministrador = function (usuarios) {
+        var emails = [];
+
+        for (var i = 0; i < usuarios.length; i++) {
+            var usuario = usuarios[i];
+            if (usuario.perfil == "Administrador") {
+                emails.push(usuario.email);
+            }
+        }
+        return emails;
+    }
+
+    $scope.sendEmail = function () {
+
+        $scope.getAterro($scope.me._aterro, function (aterro) {
+            var emails = getEmailAdministrador(aterro.usuarios);
+
+            if (emails.length > 0) {
+                $http({
+                    method: 'POST',
+                    url: '/email/sendmarcosuperficial',
+                    data: { emails: emails, data: $scope.data.data }
+                }).then(function onSuccess(sailsResponse) {
+                });
+            }
+        });
+    },
+
+    $scope.$on('handleBroadcast', function (e, type) {
+
+        if (sennitCommunicationService.data) {
+            $scope.data = sennitCommunicationService.data;
+        }
+
+        switch (sennitCommunicationService.type) {
+            case 'select':
+                $scope.medicoes = ([]);
+                $scope.inputClass = "active";
+                $scope.verResumos = false;
+                $scope.verMedicoes = true;
+                break;
+
+            case 'delete':
+                var data = $scope.data;
+
+                $scope.deleteAllDetalhes({ id: data.id }, function () {
+                }, function () {
+                    swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição :(", "error");
+                });
+                break;
+
+            case 'save':
+                //ENVIAR EMAIL.
+                if ($scope.mustSendEmail()) {
+                    $scope.sendEmail();
+                }
+                break;
+
+            default:
+                $scope.verMedicoes = false;
+                $scope.monitoramentos.resumo = ([]);
+
+                var data = $scope.data;
+
+                var pesquisarResumo = function (medicaoId, itens) {
+                    var ms = "";
+                    var mss = [];
+
+                    angular.forEach(itens, function (value, key) {
+                        var marcoSuperficialId = typeof value.marcoSuperficial === "object" ? value.marcoSuperficial.id : value.marcoSuperficial;
+
+                        if (mss.indexOf(marcoSuperficialId) < 0) {
+                            ms += ((ms == "" ? "" : ",") + marcoSuperficialId);
+                            mss.push(marcoSuperficialId);
+                        }
+                    });
+
+                    $scope.monitoramentos.pesquisarResumo(medicaoId, ms, data.aterro, data.data, function () {
+                        $scope.verResumos = true;
+                    });
+                };
+
+                if (undefined != data.medicaoMarcoSuperficialDetalhes && data.medicaoMarcoSuperficialDetalhes.length > 0) {
+                    pesquisarResumo(data.id, data.medicaoMarcoSuperficialDetalhes);
+                }
+                else {
+                    $http.get('/MedicaoMarcoSuperficialDetalhes/?owner=' + data.id).success(function (itens, status) {
+                        pesquisarResumo(data.id, itens);
+                    }).error(function (data, status) {
+                        swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+                    });
+                }
+                break;
+        }
+    });
+
 
     $(".dropify").on('dropify.afterClear', function (e) {
         $scope.removeFile();
@@ -247,6 +504,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     };
 
     $scope.addNewMapa = function () {
+
+
         $('#modalMedicaoUpload').openModal();
     };
 

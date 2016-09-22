@@ -1,7 +1,5 @@
 app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$filter', 'sennitCommunicationService', function ($scope, $http, $filter, sennitCommunicationService) {
     $scope.data = [];
-    var deferred = $.Deferred();
-
     $scope.medicoes = ([]);
     $scope.verMedicoes = false;
     $scope.verResumos = false;
@@ -12,54 +10,9 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
 
     //$scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
 
-    $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
+    $scope.inserted = { data: null, nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '10', obsGestor: '', usuario: $scope.usuario._id, aterro: null };
 
     $scope.aterros = ([]);
-    $scope.monitoramentos = {
-        dataInicial: '',
-        dataFinal: '',
-        aterro: undefined,
-        marcosSuperficiais: ([]),
-        marcosSuperficiaisAterro: ([]),
-        marcosSuperficiaisSearch: ([]),
-        monitoramentos: ([]),
-        pesquisa: null,
-        ordenacao: 'dataInstalacao ASC',
-
-        init: function () {
-
-            $scope.perfil = $scope.me._perfil;
-
-            $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' }).on('change', function (e, date) {
-                $scope.inserted.data = getDateTimeString(date);
-            });
-            var dtIni = (new Date(new Date().setDate(new Date().getDate() - 30)));
-            var dtFim = new Date();
-
-            $scope.monitoramentos.dataInicial = getDateTimeString(dtIni);
-            $scope.monitoramentos.dataFinal = getDateTimeString(dtFim);
-            $http.get('/Aterro').success(function (response, status) {
-                $scope.aterros = response;
-            });
-
-            $http.get('/MarcoSuperficial').success(function (response, status) {
-                var marcosSuperficiais = [];
-                for (var i = 0; i < response.length; i++) {
-                    marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
-                }
-                $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
-            });
-
-        }
-    };
-
-    $scope.monitoramentos.init();
-
-    $scope.changeAterro = function () {
-        if ($scope.monitoramentos.aterro) {
-            $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
-        }
-    };
 
     $scope.removeFile = function () {
         $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
@@ -154,6 +107,7 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
 
         return ret;
     }
+
     $scope.showContent = function ($fileContent) {
 
         var extractMedicaoMarcoSuperficialDetalhes = function (ret, err) {
@@ -191,6 +145,69 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
 
         $scope.deleteAllDetalhes({ id: $scope.data.id }, extractMedicaoMarcoSuperficialDetalhes, erro);
     };
+
+
+    $scope.insertMedicao = function (medicao) {
+        $scope.medicoes.push(medicao);
+    }
+
+    $scope.indexOfMedicao = function (medicao) {
+
+        for (var i = 0; i < $scope.medicoes.length; i++) {
+            if ($scope.medicoes[i].data == medicao.data) {
+                return i;
+            }
+        }
+        return - 1;
+    }
+
+    //{
+    //    "_id" : ObjectId("57dbf4ad31a35c2c33880b51"),
+    //    "data" : ISODate("2016-09-16T13:29:00.000Z"),
+    //    "nomeTopografo" : "AUXI",
+    //    "nomeAuxiliar" : "LIAR",
+    //    "temperatura" : "12.3",
+    //    "obsGestor" : "",
+    //    "usuario" : ObjectId("57d338ed57217d781ad908e9"),
+    //    "aterro" : ObjectId("57d6aef78c2bc5f427871941"),
+    //    "createdAt" : ISODate("2016-09-16T13:33:33.439Z"),
+    //    "updatedAt" : ISODate("2016-09-16T13:33:33.439Z")
+    //}
+    //getDateTime
+    $scope.showContent = function ($fileContent) {
+
+        var extractMedicaoMarcoSuperficialDetalhes = function () {
+            $scope.medicoes = ([]);
+            var linhas = $fileContent.split('\n');
+
+            for (var i = 0; i < linhas.length; i++) {
+                var linha = linhas[i];
+                var colunas = linha.split(';');
+
+                if (colunas.length < 4) continue;
+
+                //var medicao = { 'nome': colunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]) };
+
+                var medicaoMarcoSuperficialDetalhes = { owner: $scope.data, 'nome': medicaocolunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]), 'aterro': $scope.data.aterro };
+
+                $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
+            }
+
+            //ENVIAR EMAIL.
+            if ($scope.mustSendEmail()) {
+                $scope.sendEmail();
+            }
+            $scope.content = $fileContent;
+        };
+
+        var erro = function (err) {
+            swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
+        };
+
+        extractMedicaoMarcoSuperficialDetalhes();
+    };
+
+
 
     $scope.deleteAllDetalhes = function (data, callback) {
         $http.post('/MedicaoMarcoSuperficialDetalhes/deleteall', data).success(function (response) {
