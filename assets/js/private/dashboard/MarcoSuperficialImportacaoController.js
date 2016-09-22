@@ -1,6 +1,7 @@
 app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$filter', 'sennitCommunicationService', function ($scope, $http, $filter, sennitCommunicationService) {
     $scope.data = [];
     $scope.medicoes = ([]);
+    $scope.medicoesProcessadas = ([]);
     $scope.verMedicoes = false;
     $scope.verResumos = false;
     $scope.usuario = window.SAILS_LOCALS;
@@ -13,6 +14,10 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
     $scope.inserted = { data: null, nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '10', obsGestor: '', usuario: $scope.usuario._id, aterro: null };
 
     $scope.aterros = ([]);
+
+    $http.get('/Aterro').success(function (response, status) {
+        $scope.aterros = response;
+    });
 
     $scope.removeFile = function () {
         $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
@@ -29,8 +34,12 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
         $http.post('/MarcoSuperficial', marcoSuperficial).success(function (response, status) {
             callback(response, null, true);
         }).error(function (err, status) {
-            swal("Erro", "Ocorreu uma falha ao importar o marco superficial '" + marcoSuperficial.nome + "' :(", "error");
-            callback(null, err, false);
+            $http.get('/MarcoSuperficial/?nome='+marcoSuperficial.nome).success(function (response, status) {
+                callback(response[0], null, false);
+            }).error(function (err, status) {
+               console.log("Erro", "Ocorreu uma falha ao importar o marco superficial '" + marcoSuperficial.nome + "' :(");
+               callback(null, err, false);
+            });
         });
     };
 
@@ -58,14 +67,15 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
         });
     };
     
-    $scope.saveMedicaoMarcoSuperficialDetalhes = function (medicaoMarcoSuperficialDetalhes) {
+    $scope.saveMedicaoMarcoSuperficialDetalhes = function (medicao, medicaoMarcoSuperficialDetalhes) {
 
-        medicaoMarcoSuperficialDetalhes.data = getDateTime(medicaoMarcoSuperficialDetalhes.owner.data);
+        medicaoMarcoSuperficialDetalhes.data = getDateTime(medicao.data);
+        medicaoMarcoSuperficialDetalhes.owner = medicao.id;
 
         $scope.getMarcoSuperficial(medicaoMarcoSuperficialDetalhes, function (marcoSuperficial, err, criouMarcoSuperficial) {
 
             if (err) {
-                swal("Erro!", "Ocorreu uma falha ao associar o arquivo à medição :(", "error");
+                console.log("Erro!", "Ocorreu uma falha ao associar o arquivo à medição :(");
                 return;
             }
 
@@ -76,138 +86,116 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
 
                 if (undefined == medicaoMarcoSuperficialDetalhes['aterro']) {
                     if (undefined == $scope.usuario._aterro) {
-                        swal("Erro", "Não foi possível associar o aterro à medição :(", "error");
+                        console.log("Erro", "Não foi possível associar o aterro à medição :(");
                         return;
                     }
-
                     medicaoMarcoSuperficialDetalhes['aterro'] = $scope.usuario._aterro;
                 }
 
-                if (criouMarcoSuperficial == false) { //O detalhe somente será criado caso o marcoSuperficial não exista
+                if (criouMarcoSuperficial == false) { //O detalhe somente será criado caso o marcoSuperficial exista
                     $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function (data, status) {
-                        $scope.refreshChilds = true;
-                        $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
                     }).error(function (data, status) {
-                        swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+                        console.log("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(");
                     });
-                } else {
-                    $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
-                    $scope.refreshChilds = true;
                 }
+                //else {
+                //    $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
+                //   // $scope.refreshChilds = true;
+                //}
             } else {
-                swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
+                console.log("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(");
             }
         });
     };
 
-    function parseMedicao(value) {
-        if (undefined == value || null == value || value == '') return 0;
-
-        var ret = parseFloat(value.replace(',', '.').replace('\r', '').trim());
-
-        return ret;
-    }
-
-    $scope.showContent = function ($fileContent) {
-
-        var extractMedicaoMarcoSuperficialDetalhes = function (ret, err) {
-
-            if (err) {
-                swal("Erro!", "Ocorreu uma falha ao associar o arquivo à medição :(", "error");
-                return;
-            }
-
-            $scope.medicoes = ([]);
-            var linhas = $fileContent.split('\n');
-
-            for (var i = 0; i < linhas.length; i++) {
-                var linha = linhas[i];
-                var colunas = linha.split(';');
-
-                if (colunas.length < 4) continue;
-
-                var medicao = { 'nome': colunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]) };
-                var medicaoMarcoSuperficialDetalhes = { owner: $scope.data, 'nome': medicao.nome, 'norte': medicao.norte, 'leste': medicao.leste, 'cota': medicao.cota, 'aterro': $scope.data.aterro };
-
-                $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
-            }
-
-            //ENVIAR EMAIL.
-            if ($scope.mustSendEmail()) {
-                $scope.sendEmail();
-            }
-            $scope.content = $fileContent;
-        };
-
-        var erro = function (err) {
-            swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
-        };
-
-        $scope.deleteAllDetalhes({ id: $scope.data.id }, extractMedicaoMarcoSuperficialDetalhes, erro);
-    };
-
-
     $scope.insertMedicao = function (medicao) {
+        medicao.nomeTopografo= 'Admin';
+        medicao.nomeAuxiliar = 'Admin';
+        medicao.temperatura = 0;
+        medicao.usuario = $scope.usuario._id;
+        medicao.aterro = $scope.inserted.aterro;
+        medicao.detalhes = ([]);
         $scope.medicoes.push(medicao);
     }
 
     $scope.indexOfMedicao = function (medicao) {
 
         for (var i = 0; i < $scope.medicoes.length; i++) {
-            if ($scope.medicoes[i].data == medicao.data) {
+            if (getDate($scope.medicoes[i].data) == getDate(medicao.data)) {
                 return i;
             }
         }
         return - 1;
     }
 
-    //{
-    //    "_id" : ObjectId("57dbf4ad31a35c2c33880b51"),
-    //    "data" : ISODate("2016-09-16T13:29:00.000Z"),
-    //    "nomeTopografo" : "AUXI",
-    //    "nomeAuxiliar" : "LIAR",
-    //    "temperatura" : "12.3",
-    //    "obsGestor" : "",
-    //    "usuario" : ObjectId("57d338ed57217d781ad908e9"),
-    //    "aterro" : ObjectId("57d6aef78c2bc5f427871941"),
-    //    "createdAt" : ISODate("2016-09-16T13:33:33.439Z"),
-    //    "updatedAt" : ISODate("2016-09-16T13:33:33.439Z")
-    //}
-    //getDateTime
-    $scope.showContent = function ($fileContent) {
+    $scope.saveMedicoes = function () {
+        for (var i = 0; i < $scope.medicoes.length; i++) {
+            var callback = function (medicao, error) {
+                if (error) {
+                    console.log("erro ao processar a medicao:" + medicao.data);
+                }
 
-        var extractMedicaoMarcoSuperficialDetalhes = function () {
-            $scope.medicoes = ([]);
-            var linhas = $fileContent.split('\n');
-
-            for (var i = 0; i < linhas.length; i++) {
-                var linha = linhas[i];
-                var colunas = linha.split(';');
-
-                if (colunas.length < 4) continue;
-
-                //var medicao = { 'nome': colunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]) };
-
-                var medicaoMarcoSuperficialDetalhes = { owner: $scope.data, 'nome': medicaocolunas[0], 'norte': parseMedicao(colunas[1]), 'leste': parseMedicao(colunas[2]), 'cota': parseMedicao(colunas[3]), 'aterro': $scope.data.aterro };
-
-                $scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
+                for (var j = 0; j < medicao.detalhes.length; j++) {
+                    $scope.saveMedicaoMarcoSuperficialDetalhes(medicao, medicao.detalhes[j]);
+                }
             }
-
-            //ENVIAR EMAIL.
-            if ($scope.mustSendEmail()) {
-                $scope.sendEmail();
-            }
-            $scope.content = $fileContent;
-        };
-
-        var erro = function (err) {
-            swal("Erro", "Ocorreu uma falha ao importar o arquivo :(", "error");
-        };
-
-        extractMedicaoMarcoSuperficialDetalhes();
+            $scope.saveMedicao(i, callback);
+        }
     };
 
+    $scope.extractFileContent = function ($fileContent) {
 
+        $scope.medicoes = ([]);
+        $scope.medicoesProcessadas = ([]);
+            
+        var linhas = $fileContent.split('\n');
+
+        for (var i = 1; i < linhas.length; i++) {
+            var colunas = linhas[i].split(';');
+
+            if (colunas.length < 5) continue;
+            if (colunas[0] == '') continue;
+            if (colunas[1] == '') continue;
+            if (!isNumber(colunas[2])) continue;
+            if (!isNumber(colunas[3])) continue;
+            if (!isNumber(colunas[4])) continue;
+
+            var medicao = { 'data': getDateTime(colunas[1])};
+
+            var index = $scope.indexOfMedicao(medicao);
+
+            if (index < 0) {
+                $scope.insertMedicao(medicao);
+                index = $scope.medicoes.length-1;
+            }
+
+            var medicaoMarcoSuperficialDetalhes = { 'nome': colunas[0], 'norte': parseMedicao(colunas[2]), 'leste': parseMedicao(colunas[3]), 'cota': parseMedicao(colunas[4]), 'aterro': $scope.inserted.aterro };
+            $scope.medicoes[index].detalhes.push(medicaoMarcoSuperficialDetalhes);
+            $scope.medicoesProcessadas.push(medicaoMarcoSuperficialDetalhes);
+
+            //$scope.saveMedicaoMarcoSuperficialDetalhes(medicaoMarcoSuperficialDetalhes);
+        }
+
+        $scope.saveMedicoes();
+        $scope.content = $fileContent;
+
+    };
+
+    function parseMedicao(value) {
+        if (undefined == value || null == value || value == '') return 0;
+
+        var ret = parseFloat(value.replace(/\./g, '').replace(',', '.').replace('\r', '').trim());
+
+        return ret;
+    }
+
+    function isNumber(value) {
+        if (undefined == value || null == value || value == '') return false;
+
+        var ret = parseFloat(value.replace(/\./g, '').replace(',', '.').replace('\r', '').trim());
+
+        return !isNaN(ret);
+    }
 
     $scope.deleteAllDetalhes = function (data, callback) {
         $http.post('/MedicaoMarcoSuperficialDetalhes/deleteall', data).success(function (response) {
@@ -217,212 +205,37 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
         });
     };
 
-    $scope.addMedicao = function () {
-        swal({
-            title: "",
-            text: "Você tem certeza que deseja inserir a medição ?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sim",
-            cancelButtonText: "Cancelar",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-                function (isConfirm) {
-                    if (isConfirm) {
+    $scope.saveMedicao = function (indexMedicao, callback) {
 
-                        var params = $scope.inserted;
+        var params = {};
+        for (var p in $scope.medicoes[indexMedicao]) {
+            params[p] =  $scope.medicoes[indexMedicao][p];
+        }
+        delete params['detalhes'];
 
-                        params["data"] = getDateTime($scope.inserted.data);
-                        params['usuario'] = $scope.usuario._id;
-
-                        if ($scope.usuario._perfil != 'Administrador') {
-                            params['aterro'] = $scope.usuario._aterro;
-                        } else {
-                            params['aterro'] = $scope.inserted.aterro;
-                        }
-
-                        $http({
-                            method: 'POST',
-                            url: '/MedicaoMarcoSuperficial/',
-                            data: params
-                        }).then(function onSuccess(sailsResponse) {
-                            $scope.inputClass = null;
-                            $scope.inputClass = "disabled";
-                            $scope.refreshChilds = true;
-                            $scope.verMedicoes = false;
-                            fecharModal("modalView");
-                            $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
-                            swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
-                            Materialize.toast('Registro inserido com sucesso!', 4000);
-
-                            //ENVIAR EMAIL.
-                            if ($scope.mustSendEmail()) {
-                                $scope.sendEmail();
-                            }
-                        })
-                        .catch(function onError(sailsResponse) {
-
-                        })
-                        .finally(function eitherWay() {
-                            $scope.sennitForm.loading = false;
-                        });
-                    } else {
-                        swal("Cancelado", "Seu registro não foi inserido :(", "error");
-                    }
-                }
-        );
+        $http({
+            method: 'POST',
+            url: '/MedicaoMarcoSuperficial/',
+            data: params
+        }).then(function onSuccess(sailsResponse) {
+            $scope.medicoes[indexMedicao].id = sailsResponse.data.id;
+            callback($scope.medicoes[indexMedicao]);
+        })
+        .catch(function onError(error) {
+            callback($scope.medicoes[indexMedicao], error);
+        });
     };
 
     $scope.getCssClass = function (alerta) {
         if (null == alerta || undefined == alerta || '' == alerta.trim()) return;
-
         return (alerta.replace("ç", "c").replace("ã", "a").replace("á", "a")).toLowerCase();
     }
-
-    $scope.saveObsOperacional = function () {
-        swal({
-            title: "",
-            text: "Você tem certeza que deseja inserir a observação ?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sim",
-            cancelButtonText: "Cancelar",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $http({
-                            method: 'PUT',
-                            url: '/MedicaoMarcoSuperficial/' + $scope.data.id,
-                            data: { 'obsOperacional': $scope.data.obsOperacional }
-                        }).then(function onSuccess(sailsResponse) {
-                            $scope.inputClass = null;
-                            $scope.inputClass = "disabled";
-                            fecharModal("modalUpload");
-                            swal("Registro Alterado!", "Seu registro foi alterado com sucesso.", "success");
-                            Materialize.toast('Registro alterado com sucesso!', 4000);
-                        })
-                        .catch(function onError(sailsResponse) {
-
-                        })
-                        .finally(function eitherWay() {
-                            $scope.sennitForm.loading = false;
-                        })
-                    } else {
-                        swal("Cancelado", "Seu registro não foi alterado :(", "error");
-                    }
-                }
-        );
-    };
-
-    $scope.mustSendEmail = function () {
-        return $scope.me._perfil == "Gerente";
-    };
 
     $scope.getAterro = function (id, callback) {
         $http.get('/Aterro/' + id).success(function (data) {
             callback(data);
         });
     };
-
-    getEmailAdministrador = function (usuarios) {
-        var emails = [];
-
-        for (var i = 0; i < usuarios.length; i++) {
-            var usuario = usuarios[i];
-            if (usuario.perfil == "Administrador") {
-                emails.push(usuario.email);
-            }
-        }
-        return emails;
-    }
-
-    $scope.sendEmail = function () {
-
-        $scope.getAterro($scope.me._aterro, function (aterro) {
-            var emails = getEmailAdministrador(aterro.usuarios);
-
-            if (emails.length > 0) {
-                $http({
-                    method: 'POST',
-                    url: '/email/sendmarcosuperficial',
-                    data: { emails: emails, data: $scope.data.data }
-                }).then(function onSuccess(sailsResponse) {
-                });
-            }
-        });
-    },
-
-    $scope.$on('handleBroadcast', function (e, type) {
-
-        if (sennitCommunicationService.data) {
-            $scope.data = sennitCommunicationService.data;
-        }
-
-        switch (sennitCommunicationService.type) {
-            case 'select':
-                $scope.medicoes = ([]);
-                $scope.inputClass = "active";
-                $scope.verResumos = false;
-                $scope.verMedicoes = true;
-                break;
-
-            case 'delete':
-                var data = $scope.data;
-
-                $scope.deleteAllDetalhes({ id: data.id }, function () {
-                }, function () {
-                    swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição :(", "error");
-                });
-                break;
-
-            case 'save':
-                //ENVIAR EMAIL.
-                if ($scope.mustSendEmail()) {
-                    $scope.sendEmail();
-                }
-                break;
-
-            default:
-                $scope.verMedicoes = false;
-                $scope.monitoramentos.resumo = ([]);
-
-                var data = $scope.data;
-
-                var pesquisarResumo = function (medicaoId, itens) {
-                    var ms = "";
-                    var mss = [];
-
-                    angular.forEach(itens, function (value, key) {
-                        var marcoSuperficialId = typeof value.marcoSuperficial === "object" ? value.marcoSuperficial.id : value.marcoSuperficial;
-
-                        if (mss.indexOf(marcoSuperficialId) < 0) {
-                            ms += ((ms == "" ? "" : ",") + marcoSuperficialId);
-                            mss.push(marcoSuperficialId);
-                        }
-                    });
-
-                    $scope.monitoramentos.pesquisarResumo(medicaoId, ms, data.aterro, data.data, function () {
-                        $scope.verResumos = true;
-                    });
-                };
-
-                if (undefined != data.medicaoMarcoSuperficialDetalhes && data.medicaoMarcoSuperficialDetalhes.length > 0) {
-                    pesquisarResumo(data.id, data.medicaoMarcoSuperficialDetalhes);
-                }
-                else {
-                    $http.get('/MedicaoMarcoSuperficialDetalhes/?owner=' + data.id).success(function (itens, status) {
-                        pesquisarResumo(data.id, itens);
-                    }).error(function (data, status) {
-                        swal("Erro", "Ocorreu uma falha ao importar o marco '" + medicaoMarcoSuperficialDetalhes.nome + "' :(", "error");
-                    });
-                }
-                break;
-        }
-    });
-
 
     $(".dropify").on('dropify.afterClear', function (e) {
         $scope.removeFile();
@@ -442,8 +255,6 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
     };
 
     $scope.addNewMapa = function () {
-
-
         $('#modalMedicaoUpload').openModal();
     };
 

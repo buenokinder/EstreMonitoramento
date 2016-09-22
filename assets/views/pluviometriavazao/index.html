@@ -1,4 +1,4 @@
-<div class="row" ng-init="init()">
+<div class="row" ng-init="init()" ng-controller="PluviometriaVazaoController">
     <div id="modalPluviometria" class="modal modal-fixed-footer">
         <div class="modal-content">
 
@@ -108,22 +108,16 @@
                                 </span>
                             </td>-->
 
-                            <td>
-                                <span e-name="aterro" e-form="rowform">
-                                    {{ operacaoPluviometria.aterro.nome || '' }}
+                            <td ng-if="me._perfil !== 'Administrador'">
+                                <span editable-text="operacaoPluviometria.aterro" e-name="aterro" e-form="rowform" edit-disabled="true">
+                                    {{showAterro(operacaoPluviometria)}}
                                 </span>
                             </td>
-
-                            <!--<td ng-if="me._perfil !== 'Administrador'">
-                                <span e-name="aterro" e-form="rowform">
-                                    {{ operacaoPluviometria.aterro.nome || '' }}
+                            <td ng-if="me._perfil == 'Administrador'">
+                                <span editable-select="operacaoPluviometria.aterro" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
+                                    {{showAterro(operacaoPluviometria)}}
                                 </span>
-                            </td>-->
-                            <!--<td ng-if="me._perfil === 'Administrador'">
-                                <span editable-select="operacaoPluviometria.aterro" e-ng-change="changeAterro($data, $index)" e-name="aterro" e-form="rowform" e-ng-options="g.id as g.nome for g in aterros | filter: {situacao: true}">
-                                    {{ showAterro(operacaoPluviometria) }}
-                                </span>
-                            </td>-->
+                            </td>
 
                             <td style="text-align:center;">
                                 <span editable-number="operacaoPluviometria.pluviometria" e-name="pluviometria" e-form="rowform">

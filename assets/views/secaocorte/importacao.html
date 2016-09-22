@@ -8,7 +8,7 @@
         text-align: center;
     }
 </style>
-<div class="section">
+<div class="section" ng-controller="SecaoCorteImportacaoController" >
     <div class="row section">
         <div class="divider"></div>
         <div class="row">
@@ -19,7 +19,7 @@
                         <b>Aterro: </b>
                         <span class="editable-wrap editable-text ng-scope">
                             <div class="editable-controls form-group" ng-class="{'has-error': $error}">
-                                <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="aterro" required="" ng-model="inserted.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true"></select>
+                                <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="at" required="" ng-model="aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true"></select>
                                 <div class="editable-error help-block ng-binding ng-hide" ng-show="$error" ng-bind="$error" aria-hidden="true"></div>
                             </div>
                         </span>
@@ -35,43 +35,31 @@
                 </form>
             </div>
 
-
             <div class="col s6 m6 l6">
-
-                <div ng-controller="MarcoSuperficialImportacaoController" class="container">
+                <div class="container">
                     <div class="card-panel ng-scope">
 
                         <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
-
-                        <div>
-                            <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
-                                       view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador' }, { 'perfil': 'Diretor' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
-                            </grid-view>
-                        </div>
 
                         <div id="modalUpload" class="modal modal-fixed-footer">
 
                             <div class="modal-content">
                                 <input type="file" class="dropify" data-height="300" on-read-file="extractFileContent($fileContent)" />
                                 <div ng-if="content">
-                                    <h2>Marcos processado no arquivo:</h2>
+                                    <h2>Piezômetros processados no arquivo:</h2>
 
                                     <table class='striped'>
                                         <thead>
                                             <tr>
-                                                <th class='text-center ng-binding ng-scope'>Marco Superficial</th>
-                                                <th class='text-center ng-binding ng-scope'>Norte</th>
-                                                <th class='text-center ng-binding ng-scope'>Leste</th>
-                                                <th class='text-center ng-binding ng-scope'>Cota</th>
+                                                <th class='text-center ng-binding ng-scope'>Piezômetro</th>
+                                                <th class='text-center ng-binding ng-scope'>Data de Medição</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            <tr ng-repeat='medicao in medicoesProcessadas'>
+                                            <tr ng-repeat='medicao in secoesCorteProcessadas'>
                                                 <td class="ng-scope">{{medicao.nome}}</td>
-                                                <td class="ng-scope">{{medicao.norte}}</td>
-                                                <td class="ng-scope">{{medicao.leste}}</td>
-                                                <td class="ng-scope">{{medicao.cota}}</td>
+                                                <td class="ng-scope">{{medicao.dataMedicao}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -89,6 +89,21 @@ app.config(['$routeProvider', function ($routeProvider, $locationProvider) {
         controller: 'MarcoSuperficialImportacaoController'
     });
 
+    $routeProvider.when("/ImportacaoPiezometro", {
+        templateUrl: "/views/piezometro/importacao.html",
+        controller: 'PiezometroImportacaoController'
+    });
+
+    $routeProvider.when("/ImportacaoBombeamento", {
+        templateUrl: "/views/bombeamento/importacao.html",
+        controller: 'BombeamentoImportacaoController'
+    });
+
+    $routeProvider.when("/ImportacaoSecaoCorte", {
+        templateUrl: "/views/secaocorte/importacao.html",
+        controller: 'SecaoCorteImportacaoController'
+    });
+
     $routeProvider.when("/MedicaoPiezometro", {
         templateUrl: "/views/medicaopiezometro/index.html",
         controller: 'MedicaoPiezometroController'

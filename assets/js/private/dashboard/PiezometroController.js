@@ -1,5 +1,6 @@
 app.controller('PiezometroController', ['$scope', '$http', '$filter', 'sennitCommunicationService', function ($scope, $http, $filter, sennitCommunicationService) {
     $scope.data = {};
+    $scope.me = window.SAILS_LOCALS;
 
     $scope.init = function () {
         $scope.data = {

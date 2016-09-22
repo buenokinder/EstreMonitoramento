@@ -34,6 +34,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' }).on('change', function (e, date) {
                 $scope.inserted.data = getDateTimeString(date);
             });
+
             var dtIni = (new Date(new Date().setDate(new Date().getDate() - 30)));
             var dtFim = new Date();
 
@@ -77,7 +78,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
             query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
 
-            //console.log("$scope.monitoramentos.aterro", $scope.monitoramentos.aterro);
             if ($scope.monitoramentos.aterro  && typeof $scope.monitoramentos.aterro != "object") {
                 query += "&aterro=" + $scope.monitoramentos.aterro;
             }
@@ -207,7 +207,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                     medicaoMarcoSuperficialDetalhes['aterro'] = $scope.usuario._aterro;
                 }
 
-                if (criouMarcoSuperficial == false) { //O detalhe somente será criado caso o marcoSuperficial não exista
+                if (criouMarcoSuperficial == false) { //O detalhe somente será criado caso o marcoSuperficial exista
                     $http.post('/MedicaoMarcoSuperficialDetalhes', medicaoMarcoSuperficialDetalhes).success(function (data, status) {
                         $scope.refreshChilds = true;
                         $scope.medicoes.push(medicaoMarcoSuperficialDetalhes);
@@ -227,7 +227,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     function parseMedicao(value) {
         if (undefined == value || null == value || value == '') return 0;
 
-        var ret = parseFloat(value.replace(',', '.').replace('\r', '').trim());
+        var ret = parseFloat(value.replace(/\./g, '').replace(',', '.').replace('\r', '').trim());
 
         return ret;
     }

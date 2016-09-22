@@ -209,16 +209,18 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
     };
 
     //$scope.showAterro = function (data) {
-    //    if (aterro.aterro && $scope.aterros.length) {
-    //        var selected = $filter('filter')($scope.aterros, { id: aterro.aterro.id });
-    //        return selected.length ? selected[0].nome : 'Not set';
-    //    } else {
-    //        return aterro.nome || 'Not set';
+    //    var selected = [];
+    //    if (data.aterro) {
+    //        selected = $filter('filter')($scope.aterros, { id: data.aterro });
     //    }
+    //    return selected.length ? selected[0].nome : 'Não selecionado';
     //};
 
     $scope.showAterro = function (data) {
         var selected = [];
+        if (data.aterro == null) {
+            return '';
+        }
 
         if (data.aterro.id) {
             selected = $filter('filter')($scope.aterros, { id: data.aterro.id });
@@ -226,13 +228,13 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         }
 
         if (data.aterro) {
-            selected = $filter('filter')($scope.aterros, { id: data.aterro.id });
+            selected = $filter('filter')($scope.aterros, { id: data.aterro });
             return selected.length ? selected[0].nome : 'Não selecionado';
         }
+        return '';
     };
 
     $scope.changeAterro = function (aterro, index) {
-
         if (aterro) {
             selected = $filter('filter')($scope.aterros, { id: aterro });
             $scope.operacaoPluviometrias[index].aterro = selected.length > 0 ? selected[0] : $scope.aterro;
