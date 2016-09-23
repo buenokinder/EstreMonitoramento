@@ -11,18 +11,18 @@ module.exports = {
         data: {
             type: 'date',
             required: true,
-            defaultsTo: new Date(0)
+            defaultsTo: new Date()
         },
         norte: {
-            type: 'string',
+            type: 'float',
             required: true
         },
         leste: {
-            type: 'string',
+            type: 'float',
             required: true
         },
         cota: {
-            type: 'string',
+            type: 'float',
             required: true
         },
         marcoSuperficial: {

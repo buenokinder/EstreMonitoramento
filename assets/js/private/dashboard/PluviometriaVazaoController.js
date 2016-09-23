@@ -75,9 +75,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
             
         });
     };
-
-
-
+    
     $scope.loadUsuarios = function () {
         return $scope.usuarios.length ? null : $http.get('/Usuario/Search').success(function (data) {
             $scope.usuarios = data;
@@ -141,6 +139,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
           function (result) {
               $scope.totalSent += 1;
               checkStatusImport();
+              
           }, function (error) {
               swal("Erro", "Ocorreu uma falha ao importar a medição do dia '" + medicao.data + "'. Verifique se já foi inserida uma medição para essa mesma data anteriormente. :(", "error");
               $scope.totalSent += 1;
@@ -260,7 +259,6 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
 
         angular.extend(data, { id: id });
         angular.extend(data, { usuario: $scope.usuario.id });
-        console.log("data", data);
         //var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
         var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: data.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
         if (undefined == id) {
@@ -283,6 +281,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                                 swal("Registro Inserido!", "Seu registro foi inserido com sucesso.", "success");
                                 Materialize.toast('Registro inserido com sucesso!', 4000);
                                 $scope.operacaoPluviometrias[index].id = itemInserted.data.id;
+                                $scope.search();
                             }, function (error) {
                                 swal("Erro", "Seu registro não foi inserido :(", "error");
                             });
@@ -298,8 +297,6 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                     swal("Cancelado", "Seu registro não foi editado :(", "error");
                 }
             });
-
-
 
         } else {
 
@@ -318,6 +315,7 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
                     $http.put('/PluviometriaVazao/' + medicao.id, medicao).then(function () {
                         swal("Registro Editado!", "Seu registro foi editado com sucesso.", "success");
                         Materialize.toast('Registro editado com sucesso!', 4000);
+                        $scope.search();
                     }, function (error) {
                         swal("Erro", "Seu registro não foi editado :(", "error");
                     });

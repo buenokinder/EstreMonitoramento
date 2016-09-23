@@ -46,7 +46,7 @@ module.exports = {
                 "Regular": { nivel: "Regular", criterios: "Estável", velocidade: "1", periodicidade: "Semanal", next: "Atenção" },
                 "Atenção": { nivel: "Atenção", criterios: "Verificação \"in situ\" de eventuais problemas", velocidade: "4", periodicidade: "2 dias", next: "Intervenção" },
                 "Intervenção": { nivel: "Intervenção", criterios: "Paralisação imediata das operações no aterro e intervençães localizadas", velocidade: "14", periodicidade: "Diária", next: "Paralisação" },
-                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "14.01", periodicidade: "Diária", next: null }
+                "Paralisação": { nivel: "Paralisação", criterios: "Definição de estado de alerta, paralisação imediata das operaçães, acionamento da Defesa Civil para as providências cabíveis", velocidade: "100000000.01", periodicidade: "Diária", next: null }
             };
 
             var config = function (nivel){

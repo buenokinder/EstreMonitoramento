@@ -106,6 +106,13 @@ code {
     display: none;
 }
 
+.actualpage {
+    font-weight: bold;
+}
+
+.notactualpage {
+    font-weight:normal;
+}
 
 .iframe-container {
   position: relative;

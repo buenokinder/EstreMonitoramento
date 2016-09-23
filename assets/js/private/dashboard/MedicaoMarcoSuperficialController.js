@@ -136,16 +136,36 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
         }
     };
 
+    $scope.deleteDetalhesMedicao = function () {
+        swal({
+            title: "",
+            text: "Você tem certeza que deseja remover as medições ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function (isConfirm) {
+                if (isConfirm) {
+                    $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
+                        $scope.medicoes = ([]);
+                        $scope.refreshChilds = true;
+                        $scope.content = null;
+                        swal("Registros Removidos!", "Os detalhes da medição foram removidos com sucesso.", "success");
+                        Materialize.toast('Registros removidos com sucesso!', 4000);
+                    }, function () {
+                        swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição:(", "error");
+                    });
+
+                } else {
+                    swal("Cancelado", "Seus registros não foram removidos :(", "error");
+                }
+        });
+    };
 
     $scope.removeFile = function () {
-        $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
-            $scope.medicoes = ([]);
-            $scope.refreshChilds = true;
-            $scope.content = null;
-            swal("Arquivo Removido!", "Arquivo removido com sucesso.", "success");
-        }, function () {
-            swal("Erro", "Ocorreu uma falha ao remover o arquivo :(", "error");
-        });
+        $scope.deleteDetalhesMedicao();
     };
 
     $scope.createMarcoSuperficial = function (marcoSuperficial, callback) {

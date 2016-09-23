@@ -20,6 +20,7 @@ module.exports = {
 
         MedicaoMarcoSuperficialDetalhes.find(filtro)
 		.populate('owner')
+        .sort('nome asc')
 		.exec(function result(err, ret) {
 		    if (err) {
 		        return res.negotiate(err);

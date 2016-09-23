@@ -178,9 +178,10 @@
                     <div class="card-panel ng-scope">
 
                         <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
+                        <a ng-show="perfil=='Administrador'" class="btn-floating btn-large waves-effect waves-light" ng-click="deleteDetalhesMedicao()" title="Remover detalhes da medição"><i class="mdi-content-remove"></i></a>
 
                         <div>
-                            <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
+                            <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte','uiFilter':'number' } ,{'name': 'leste' , 'value': 'Leste','uiFilter':'number' }  ,{'name': 'cota' , 'value': 'Cota','uiFilter':'number' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
                                        view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador' }, { 'perfil': 'Diretor' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
                             </grid-view>
                         </div>

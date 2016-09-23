@@ -287,9 +287,9 @@ module.exports = {
 
                         var medicao = piezometro.medicoes[j];
 
-                        if (medicao.dataMedicao < dataInicial
-							|| medicao.dataMedicao > dataFinal)
-                            continue;
+                        //if (medicao.dataMedicao < dataInicial
+						//	|| medicao.dataMedicao > dataFinal)
+                        //    continue;
 
                         medicao.owner = { id: piezometro.id, nome: piezometro.nome };
                         medicao.saliencia = parseFloat(medicao.saliencia);
@@ -421,7 +421,17 @@ module.exports = {
                     }
                 }
 
-                return resolve(itens);
+                var itensFiltrados = [];
+                for (var i = 0; i < itens.length; i++) {
+                    var medicao = itens[i];
+
+                    if (medicao.dataMedicao < dataInicial
+                    	|| medicao.dataMedicao > dataFinal)
+                        continue;
+
+                    itensFiltrados.push(medicao);
+                }
+                return resolve(itensFiltrados);
             });
 
         });

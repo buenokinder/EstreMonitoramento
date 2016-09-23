@@ -8,11 +8,18 @@
 
 var Promise = require('bluebird');
 
+Number.prototype.format = function (n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+};
+
 module.exports = {
     _alertas: ([]),
     _alertaAceitavel: {},
     _alertaRegular: {},
-    _rearrange: function (marcoSuperficiais) {
+    _rearrange: function (marcoSuperficiais, req) {
 
         var ret = [];
         var detalhes = [];
@@ -69,6 +76,7 @@ module.exports = {
 
         var owners = _extractOwners();
         var detalhes = _extractDetalhes();
+        var filtroDatas = this._getFiltroDatas(req);
 
         for (var item in owners) {
             var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: [] };
@@ -76,6 +84,12 @@ module.exports = {
             for (var i = 0; i < detalhes.length; i++) {
 
                 if (detalhes[i].owner == owners[item].id) {
+
+
+                    if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
+                        if (detalhes[i].data < filtroDatas.dataInicial || detalhes[i].data > filtroDatas.dataFinal) continue;
+                    }
+
                     var detalhe = {
                         id: detalhes[i].id,
                         nome: detalhes[i].nome,
@@ -92,7 +106,7 @@ module.exports = {
         return ret;
     },
 
-    _summarizeMonitoramentoNotificacao: function (_marcoSuperficiaisNotificacao) {
+    _summarizeMonitoramentoNotificacao: function (_marcoSuperficiaisNotificacao, req) {
         var result = [];
         var _that = this;
 
@@ -133,16 +147,21 @@ module.exports = {
                 var deslocamentoHorizontalParcial = parseFloat(Math.sqrt(parseFloat(deltaParcialNorte) + parseFloat(deltaParcialEste)) * 100).toFixed(4);
                 var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(parseFloat(deslocamentoHorizontalParcial) / parseFloat(diferencaDatas).toFixed(4)));
                 var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(parseFloat(deslocamentoVerticalParcial) / parseFloat(diferencaDatas))).toFixed(4));
+                var velocidadeMinima = 0;
 
                 for (k = 0; k < this._alertas.length; k++) {
-                    if (parseFloat(velocidadeHorizontal) > parseFloat(this._alertas[k].velocidade)) {
+
+                    velocidadeMinima = k == 0 ? -1 : parseFloat(this._alertas[k].velocidade);
+
+                    if (parseFloat(velocidadeHorizontal) > velocidadeMinima && parseFloat(velocidadeHorizontal) <= parseFloat(this._alertas[k].velocidade)) {
                         marcoSuperficial.medicoes[i].criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
                     }
 
-                    if (parseFloat(velocidadeVertical) > parseFloat(this._alertas[k].velocidade)) {
+                    if (parseFloat(velocidadeVertical) > velocidadeMinima && parseFloat(velocidadeVertical) <= parseFloat(this._alertas[k].velocidade)) {
                         marcoSuperficial.medicoes[i].criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
                     }
                 }
+
 
                 if (first) {
                     first = false;
@@ -160,12 +179,14 @@ module.exports = {
             result.push(ms);
         }
 
-        return this._rearrange(result);
+        return this._rearrange(result, req);
     },
 
-    _summarizeMonitoramento: function (marcosSuperficiais, owner) {
+    _summarizeMonitoramento: function (marcosSuperficiais, req) {
 
         var result = [];
+        var filtroDatas = this._getFiltroDatas(req);
+        var owner = req.param('owner');
 
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
@@ -178,9 +199,9 @@ module.exports = {
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
                 item.data = marcosSuperficiais[i].data;
-                item.norte = marcosSuperficiais[i].norte;
-                item.leste = marcosSuperficiais[i].leste;
-                item.cota = marcosSuperficiais[i].cota;
+                item.norte = parseFloat(marcosSuperficiais[i].norte).format(2, 3, '.', ',');
+                item.leste = parseFloat(marcosSuperficiais[i].leste).format(2, 3, '.', ',');
+                item.cota = parseFloat(marcosSuperficiais[i].cota).format(2, 3, '.', ',');
                 item.deslocamentoHorizontalParcial = 0;
                 item.deslocamentoHorizontalTotal = 0;
                 item.velocidadeHorizontal = 0;
@@ -218,26 +239,30 @@ module.exports = {
 
                 if (owner && detalhe.owner.id != owner) continue;
 
+                if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
+                    if (item.data < filtroDatas.dataInicial || item.data > filtroDatas.dataFinal) continue;
+                }
+
                 var item = {};
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
-                item.norte = detalhe.norte;
-                item.leste = detalhe.leste;
-                item.cota = detalhe.cota;
+                item.norte = parseFloat(detalhe.norte).format(4, 3, '.', ',');;
+                item.leste = parseFloat(detalhe.leste).format(4, 3, '.', ','); ;
+                item.cota = parseFloat(detalhe.cota).format(4, 3, '.', ','); ;
                 item.data = detalhe.data
                 item.nomeTopografo = detalhe.owner.nomeTopografo;
                 item.temperatura = detalhe.owner.temperatura;
                 item.nomeAuxiliar = detalhe.owner.nomeAuxiliar;
-                item.deslocamentoHorizontalParcial = detalhe.monitoramento.deslocamentoHorizontalParcial;
-                item.deslocamentoHorizontalTotal = detalhe.monitoramento.deslocamentoHorizontalTotal;
-                item.velocidadeHorizontal = detalhe.monitoramento.velocidadeHorizontal;
-                item.velocidadeVertical = detalhe.monitoramento.velocidadeVertical;
+                item.deslocamentoHorizontalParcial = parseFloat(detalhe.monitoramento.deslocamentoHorizontalParcial).format(2, 3, '.', ',');
+                item.deslocamentoHorizontalTotal = parseFloat(detalhe.monitoramento.deslocamentoHorizontalTotal).format(2, 3, '.', ',');
+                item.velocidadeHorizontal = parseFloat(detalhe.monitoramento.velocidadeHorizontal).format(2, 3, '.', ',');
+                item.velocidadeVertical = parseFloat(detalhe.monitoramento.velocidadeVertical).format(2, 3, '.', ',');
                 item.criterioAlerta = detalhe.monitoramento.criterioAlerta;
-                item.deslocamentoVerticalParcial = detalhe.monitoramento.deslocamentoVerticalParcial;
-                item.deslocamentoVerticalTotal = detalhe.monitoramento.deslocamentoVerticalTotal;
-                item.sentidoDeslocamentoDirerencaNorte = detalhe.monitoramento.sentidoDeslocamentoDirerencaNorte;
-                item.sentidoDeslocamentoDirerencaEste = detalhe.monitoramento.sentidoDeslocamentoDirerencaEste;
-                item.sentidoDeslocamentoNorteSul = detalhe.monitoramento.sentidoDeslocamentoNorteSul;
-                item.sentidoDeslocamentoLesteOeste = detalhe.monitoramento.sentidoDeslocamentoLesteOeste;
+                item.deslocamentoVerticalParcial = parseFloat(detalhe.monitoramento.deslocamentoVerticalParcial).format(2, 3, '.', ',');
+                item.deslocamentoVerticalTotal = parseFloat(detalhe.monitoramento.deslocamentoVerticalTotal).format(2, 3, '.', ',');
+                item.sentidoDeslocamentoDirerencaNorte = parseFloat(detalhe.monitoramento.sentidoDeslocamentoDirerencaNorte).format(2, 3, '.', ',');
+                item.sentidoDeslocamentoDirerencaEste = parseFloat(detalhe.monitoramento.sentidoDeslocamentoDirerencaEste).format(2, 3, '.', ',');
+                item.sentidoDeslocamentoNorteSul = parseFloat(detalhe.monitoramento.sentidoDeslocamentoNorteSul).format(2, 3, '.', ',');
+                item.sentidoDeslocamentoLesteOeste = parseFloat(detalhe.monitoramento.sentidoDeslocamentoLesteOeste).format(2, 3, '.', ',');
                 item.sentido = detalhe.monitoramento.sentido;
                 item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
@@ -258,9 +283,11 @@ module.exports = {
         return result;
     },
 
-    _summarizeMonitoramentoMapa: function (marcosSuperficiais) {
+    _summarizeMonitoramentoMapa: function (marcosSuperficiais, req) {
 
         var result = [];
+        var filtroDatas = this._getFiltroDatas(req);
+        var owner = req.param('owner');
 
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
@@ -280,6 +307,15 @@ module.exports = {
 
             for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
                 var item = {};
+
+
+                if (owner && marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.owner.id != owner) continue;
+
+                if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
+                    if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data < filtroDatas.dataInicial || marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data > filtroDatas.dataFinal) continue;
+                }
+
+
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
                 item.norte = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].norte;
                 item.leste = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].leste;
@@ -412,7 +448,7 @@ module.exports = {
     },
 
     _getDate: function (value, hr, min, sec) {
-        var ret = value.split('-');
+        var ret = value.indexOf('-') > 0 ? value.split('-') : value.split('/');
         var ano = ret[0];
         var mes = parseInt(ret[1]) - 1;
 
@@ -432,6 +468,29 @@ module.exports = {
 
         return new Date(ano, mes, dia, hora, minuto, segundos);
 
+    },
+
+    _getFiltroDatas: function (req) {
+
+        var filtro = { 'dataInicial': undefined, 'dataFinal': undefined };
+
+        if (undefined != req.param('data') && '' != req.param('data')) {
+            dt = req.param('data').split('-');
+            filtro.dataInicial = this._getDate(req.param('data'), 0, 0, 0);
+            filtro.dataFinal = this._getDate(req.param('data'), 23, 59, 59);
+
+            return filtro;
+        }
+
+        if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
+            filtro.dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
+        }
+
+        if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
+            filtro.dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
+        }
+
+        return filtro;
     },
 
     _getFiltrosMarco: function (req) {
@@ -461,42 +520,38 @@ module.exports = {
             filtro.aterro = req.param('aterro').split(',');
         }
 
-        //if (req.param('owner') != undefined) {
-        //    filtro.owner = req.param('owner');
+        //var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+        //var dataFinal = new Date();
+
+        //if (undefined != req.param('data') && '' != req.param('data')) {
+        //    dt = req.param('data').split('-');
+        //    dataInicial = this._getDate(req.param('data'), 0, 0, 0);
+        //    dataFinal = this._getDate(req.param('data'), 23, 59, 59);
+
+        //    filtro.data = { '>=': dataInicial, '<=': dataFinal };
+        //    return filtro;
         //}
 
-        var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        var dataFinal = new Date();
+        //if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
+        //    dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
+        //}
+        //else {
+        //    dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+        //    dataInicial.setHours(0);
+        //    dataInicial.setMinutes(0);
+        //    dataInicial.setSeconds(0);
+        //}
 
-        if (undefined != req.param('data') && '' != req.param('data')) {
-            dt = req.param('data').split('-');
-            dataInicial = this._getDate(req.param('data'), 0, 0, 0);
-            dataFinal = this._getDate(req.param('data'), 23, 59, 59);
+        //if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
+        //    dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
+        //} else {
+        //    dataFinal = new Date();
+        //    dataInicial.setHours(23);
+        //    dataInicial.setMinutes(59);
+        //    dataInicial.setSeconds(59);
+        //}
 
-            filtro.data = { '>=': dataInicial, '<=': dataFinal };
-            return filtro;
-        }
-
-        if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-            dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
-        }
-        else {
-            dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-            dataInicial.setHours(0);
-            dataInicial.setMinutes(0);
-            dataInicial.setSeconds(0);
-        }
-
-        if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-            dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
-        } else {
-            dataFinal = new Date();
-            dataInicial.setHours(23);
-            dataInicial.setMinutes(59);
-            dataInicial.setSeconds(59);
-        }
-
-        filtro.data = { '>=': dataInicial, '<=': dataFinal };
+        //filtro.data = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;
     },
@@ -576,16 +631,19 @@ module.exports = {
                 }
             }
 
-            monitoramento.criterioAlertaHorizontalMetodologia1 = "Aceitável";
-            monitoramento.criterioAlertaVerticalMetodologia1 = "Aceitável";
-
+            monitoramento.criterioAlertaHorizontalMetodologia1 = "Paralisação";
+            monitoramento.criterioAlertaVerticalMetodologia1 = "Paralisação";
+            var velocidadeMinima = 0;
+            
             for (k = 0; k < this._alertas.length; k++) {
 
-                if (parseFloat(monitoramento.velocidadeHorizontal) > parseFloat(this._alertas[k].velocidade)) {
+                velocidadeMinima = k == 0 ? -1 : parseFloat(this._alertas[k].velocidade);
+
+                if (parseFloat(monitoramento.velocidadeHorizontal) > velocidadeMinima && parseFloat(monitoramento.velocidadeHorizontal) <= parseFloat(this._alertas[k].velocidade)) {
                     monitoramento.criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;
                 }
 
-                if (parseFloat(monitoramento.velocidadeVertical) > parseFloat(this._alertas[k].velocidade)) {
+                if (parseFloat(monitoramento.velocidadeVertical) > velocidadeMinima && parseFloat(monitoramento.velocidadeVertical) <= parseFloat(this._alertas[k].velocidade)) {
                     monitoramento.criterioAlertaVerticalMetodologia1 = this._alertas[k].nivel;
                 }
             }
@@ -701,7 +759,7 @@ module.exports = {
                     });
 
                     executeMedicoes.then(function () {
-                        return resolve(_that._summarizeMonitoramentoNotificacao(_marcoSuperficiaisNotificacao));
+                        return resolve(_that._summarizeMonitoramentoNotificacao(_marcoSuperficiaisNotificacao, req));
                     });
 
                 };
@@ -770,6 +828,7 @@ module.exports = {
                             filtroDetalhes = _that._getFiltrosDetalhes(req);
                         }
 
+                        
                         filtroDetalhes.marcoSuperficial = marcosSuperficiais[i].id;
                         marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes = [];
                         marcosSuperficiais[i].data = marcosSuperficiais[i].dataInstalacao;
@@ -800,10 +859,10 @@ module.exports = {
 
                             if (_totalMarcosSuperficias == _totalMarcosSuperficiasCarregados) {
                                 if (undefined != req.param("tipo") && req.param("tipo") == "mapa") {
-                                    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais));
+                                    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais, req));
                                 }
 
-                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais, req.param('owner')));
+                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais,req));
                             }
                         });
 
@@ -877,6 +936,7 @@ module.exports = {
         MarcoSuperficial.find(filtro)
 		.populate('aterro')
 		.populate('usuario')
+        .sort('nome asc')
 		.exec(function result(err, ret) {
 		    if (err) {
 		        return res.negotiate(err);

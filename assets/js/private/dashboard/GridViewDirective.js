@@ -122,7 +122,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                     HtmlFormBody += "</div>";
                 }
                 HtmlFormBody += "</td>";
-
+                
                 HtmlFormBody += "</tr>";
                 HtmlFormBody += "</tbody>";
                 HtmlFormBody += "<tfoot>";
@@ -131,7 +131,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<div>";
                 HtmlFormBody += "<ul class='pagination'>";
                 HtmlFormBody += "<li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li>";
-                HtmlFormBody += "<li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+                HtmlFormBody += "<li  ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
                 HtmlFormBody += "<li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li>";
                 HtmlFormBody += "</ul>";
                 HtmlFormBody += "</div>";
@@ -188,7 +188,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
-                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "</tfoot>";
             }
@@ -447,6 +447,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                             if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
                                 params['aterro'] = $scope.me._aterro;
+                            }
+
+                            if (params.aterro && params.aterro.id) {
+                                params['aterro'] = params['aterro']['id']
                             }
 
                             $http({
@@ -1444,6 +1448,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             params['aterro']= $scope.me._aterro;
                                         }
 
+                                        if (params.aterro && params.aterro.id) {
+                                            params['aterro'] = params['aterro']['id']
+                                        }
 
                                         $(".datepicker").each(function (i, el) {
                                             var value = $(this).val().split("/");
@@ -1512,6 +1519,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                                     if (undefined == params['aterro'] && $scope.me._aterro != undefined && $scope.me._aterro != "") {
                                         params['aterro'] = $scope.me._aterro;
+                                    }
+
+                                    if (params.aterro && params.aterro.id) {
+                                        params['aterro'] = params['aterro']['id']
                                     }
 
                                     $(".datepicker").each(function (i, el) {
