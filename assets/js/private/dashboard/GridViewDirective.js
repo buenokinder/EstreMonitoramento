@@ -449,6 +449,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 params['aterro'] = $scope.me._aterro;
                             }
 
+                            if (params.aterro.aterro || params.aterro.nome) {
+                                params.aterro = params.aterro.id;
+                            }
+
                             $http({
                                 method: 'PUT',
                                 url: '/' + $scope.listaname + '/' + data.id,
@@ -1444,6 +1448,9 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             params['aterro']= $scope.me._aterro;
                                         }
 
+                                        if (params.aterro.aterro || params.aterro.nome) {
+                                            params.aterro = params.aterro.id;
+                                        }
 
                                         $(".datepicker").each(function (i, el) {
                                             var value = $(this).val().split("/");

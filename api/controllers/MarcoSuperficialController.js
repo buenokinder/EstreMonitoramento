@@ -163,10 +163,10 @@ module.exports = {
         return this._rearrange(result);
     },
 
-    _summarizeMonitoramento: function (marcosSuperficiais, owner) {
+    _summarizeMonitoramento: function (marcosSuperficiais, owner, req) {
 
         var result = [];
-
+       // var filtroDatas = this._getFiltroData(req);
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
@@ -174,6 +174,8 @@ module.exports = {
             var exibirMarcosSuperficiais = (owner == undefined);
 
             if (exibirMarcosSuperficiais) {
+
+             //   if (marcosSuperficiais[i].data < filtroDatas.dataInicial || marcosSuperficiais[i].data >filtroDatas.dataFinal) continue;
 
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
@@ -258,7 +260,7 @@ module.exports = {
         return result;
     },
 
-    _summarizeMonitoramentoMapa: function (marcosSuperficiais) {
+    _summarizeMonitoramentoMapa: function (marcosSuperficiais, req) {
 
         var result = [];
 
@@ -461,10 +463,6 @@ module.exports = {
             filtro.aterro = req.param('aterro').split(',');
         }
 
-        //if (req.param('owner') != undefined) {
-        //    filtro.owner = req.param('owner');
-        //}
-
         var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
         var dataFinal = new Date();
 
@@ -499,6 +497,43 @@ module.exports = {
         filtro.data = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;
+    },
+
+    _getFiltroData:function(req){
+
+
+        var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+        var dataFinal = new Date();
+
+        if (undefined != req.param('data') && '' != req.param('data')) {
+            dt = req.param('data').split('-');
+            dataInicial = this._getDate(req.param('data'), 0, 0, 0);
+            dataFinal = this._getDate(req.param('data'), 23, 59, 59);
+
+            filtro.data = { '>=': dataInicial, '<=': dataFinal };
+            return filtro;
+        }
+
+        if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
+            dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
+        }
+        else {
+            dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
+            dataInicial.setHours(0);
+            dataInicial.setMinutes(0);
+            dataInicial.setSeconds(0);
+        }
+
+        if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
+            dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
+        } else {
+            dataFinal = new Date();
+            dataInicial.setHours(23);
+            dataInicial.setMinutes(59);
+            dataInicial.setSeconds(59);
+        }
+
+        return { 'dataInicial': dataInicial, 'dataFinal': dataFinal };
     },
 
     _loadMedicoesDetalhes: function (marcoSuperficial) {
@@ -800,10 +835,10 @@ module.exports = {
 
                             if (_totalMarcosSuperficias == _totalMarcosSuperficiasCarregados) {
                                 if (undefined != req.param("tipo") && req.param("tipo") == "mapa") {
-                                    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais));
+                                    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais, req));
                                 }
 
-                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais, req.param('owner')));
+                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais, req.param('owner'), req));
                             }
                         });
 
