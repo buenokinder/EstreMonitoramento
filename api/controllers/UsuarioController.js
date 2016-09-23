@@ -84,6 +84,7 @@ module.exports = {
         //     console.log(users);
 
         // })
+        console.log(".param('email')", req.param('email'));
 
         Usuario.findOne({
             email: req.param('email')

@@ -10,7 +10,8 @@
  */
 
 module.exports.models = {
-	connection: 'mongodb',
-	migrate: 'drop'
+    connection: 'mongodb',
+    migrate: 'safe'
+	//migrate: 'drop'
 
 };
