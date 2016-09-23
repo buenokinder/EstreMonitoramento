@@ -449,13 +449,8 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                 params['aterro'] = $scope.me._aterro;
                             }
 
-<<<<<<< HEAD
                             if (params.aterro && params.aterro.id) {
                                 params['aterro'] = params['aterro']['id']
-=======
-                            if (params.aterro.aterro || params.aterro.nome) {
-                                params.aterro = params.aterro.id;
->>>>>>> 1c885dd972cc4982e5fdd7b3ebc875598e513341
                             }
 
                             $http({
@@ -1453,14 +1448,11 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             params['aterro']= $scope.me._aterro;
                                         }
 
-<<<<<<< HEAD
+
                                         if (params.aterro && params.aterro.id) {
                                             params['aterro'] = params['aterro']['id']
-=======
-                                        if (params.aterro.aterro || params.aterro.nome) {
-                                            params.aterro = params.aterro.id;
->>>>>>> 1c885dd972cc4982e5fdd7b3ebc875598e513341
                                         }
+
 
                                         $(".datepicker").each(function (i, el) {
                                             var value = $(this).val().split("/");

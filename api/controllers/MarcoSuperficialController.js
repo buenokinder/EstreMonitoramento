@@ -182,19 +182,12 @@ module.exports = {
         return this._rearrange(result, req);
     },
 
-<<<<<<< HEAD
     _summarizeMonitoramento: function (marcosSuperficiais, req) {
 
         var result = [];
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
 
-=======
-    _summarizeMonitoramento: function (marcosSuperficiais, owner, req) {
-
-        var result = [];
-       // var filtroDatas = this._getFiltroData(req);
->>>>>>> 1c885dd972cc4982e5fdd7b3ebc875598e513341
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
@@ -202,8 +195,6 @@ module.exports = {
             var exibirMarcosSuperficiais = (owner == undefined);
 
             if (exibirMarcosSuperficiais) {
-
-             //   if (marcosSuperficiais[i].data < filtroDatas.dataInicial || marcosSuperficiais[i].data >filtroDatas.dataFinal) continue;
 
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
@@ -529,7 +520,6 @@ module.exports = {
             filtro.aterro = req.param('aterro').split(',');
         }
 
-<<<<<<< HEAD
         //var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
         //var dataFinal = new Date();
 
@@ -537,10 +527,6 @@ module.exports = {
         //    dt = req.param('data').split('-');
         //    dataInicial = this._getDate(req.param('data'), 0, 0, 0);
         //    dataFinal = this._getDate(req.param('data'), 23, 59, 59);
-=======
-        var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        var dataFinal = new Date();
->>>>>>> 1c885dd972cc4982e5fdd7b3ebc875598e513341
 
         //    filtro.data = { '>=': dataInicial, '<=': dataFinal };
         //    return filtro;
@@ -568,43 +554,6 @@ module.exports = {
         //filtro.data = { '>=': dataInicial, '<=': dataFinal };
 
         return filtro;
-    },
-
-    _getFiltroData:function(req){
-
-
-        var dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-        var dataFinal = new Date();
-
-        if (undefined != req.param('data') && '' != req.param('data')) {
-            dt = req.param('data').split('-');
-            dataInicial = this._getDate(req.param('data'), 0, 0, 0);
-            dataFinal = this._getDate(req.param('data'), 23, 59, 59);
-
-            filtro.data = { '>=': dataInicial, '<=': dataFinal };
-            return filtro;
-        }
-
-        if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-            dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
-        }
-        else {
-            dataInicial = new Date(new Date().setDate(new Date().getDate() - 30));
-            dataInicial.setHours(0);
-            dataInicial.setMinutes(0);
-            dataInicial.setSeconds(0);
-        }
-
-        if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-            dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
-        } else {
-            dataFinal = new Date();
-            dataInicial.setHours(23);
-            dataInicial.setMinutes(59);
-            dataInicial.setSeconds(59);
-        }
-
-        return { 'dataInicial': dataInicial, 'dataFinal': dataFinal };
     },
 
     _loadMedicoesDetalhes: function (marcoSuperficial) {
@@ -913,11 +862,7 @@ module.exports = {
                                     return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais, req));
                                 }
 
-<<<<<<< HEAD
                                 return resolve(_that._summarizeMonitoramento(_marcosSuperficiais,req));
-=======
-                                return resolve(_that._summarizeMonitoramento(_marcosSuperficiais, req.param('owner'), req));
->>>>>>> 1c885dd972cc4982e5fdd7b3ebc875598e513341
                             }
                         });
 
