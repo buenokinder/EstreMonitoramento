@@ -3,14 +3,27 @@
         <div class='card-panel' ng-init='init()'>
             <nav>
                 <div class="nav-wrapper  light-green">
-                    <a href="#" class="brand-logo"> Editando - {{paginas[editPageId].nome }}</a>
-                    <ul class="right hide-on-med-and-down">
-                        <li><a ng-href=""><i class="material-icons" ng-click="novaPagina()">note_add</i></a></li>
-                        <li><a ng-href=""><i class="material-icons" ng-click="savePage()">done</i></a></li>
-                        <li><a ng-href=""><i class="material-icons" ng-click="verPagina()">refresh</i></a></li>
-                        <li><a href="/visualizacao?id={{id}}" target="_blank"><i class="material-icons" ng-click="imprimir()">print</i></a></li>
-                        <li><a class="modal-trigger" href="#modal1"><i class="material-icons" ng-click="imprimir()">assessment</i></a></li>
-                    </ul>
+                    <div class='row'>
+                        <div class='col s12'>
+                            <a href="javascript:void(0)" class="brand-logo"> Editando - {{paginas[editPageId].nome }}</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <nav>
+                <div class="nav-wrapper  light-green">
+                    <div class='row'>
+                        <div class='col s12'>
+                            <ul class="right hide-on-med-and-down">
+                                <li><a ng-href=""><i class="material-icons" ng-click="novaPagina()">note_add</i></a></li>
+                                <li><a ng-href=""><i class="material-icons" ng-click="savePage()">done</i></a></li>
+                                <li><a ng-href=""><i class="material-icons" ng-click="verPagina()">refresh</i></a></li>
+                                <li><a href="/visualizacao?id={{id}}" target="_blank"><i class="material-icons" ng-click="imprimir()">print</i></a></li>
+                                <li><a class="modal-trigger" href="#modal1"><i class="material-icons" ng-click="imprimir()">assessment</i></a></li>
+                            </ul>
+                        </div>
+                    </div>      
                 </div>
             </nav>
 
@@ -53,7 +66,7 @@
                                 <i class="material-icons dp48" ng-click="deletePagina(pagina)">delete</i>
                                 <span class="editable-wrap editable-text ng-scope">
                                     <div class="editable-controls form-group" ng-class="{'has-error': $error}">
-                                        <input type="text" name="nomeTopografo" ng-model="pagina.nome" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false">
+                                        <input type="text" name="nomePagina" ng-model="pagina.nome" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" maxlength="20" />
                                     </div>
                                 </span>
                             </p>
@@ -105,16 +118,16 @@
                             id="ordenacao" required="" ng-model="componenteTabela" aria-invalid="true">
 
                         <option value="?" selected="selected"></option>
-                        <option label="Boskov" value="boskov">Boskov</option>
+                        <option label="Boscov" value="boscov">Boscov</option>
                         <option label="Deselocamento Marco Superficial" value="marcosuperficialdeslocamento">marcosuperficialdeslocamento</option>
-                        <option label="Fator de Segurança Seção'" value="fatorsegurancasecao">fatorsegurancasecao</option>
-                        <option label="Fator de Segurança Mes'" value="fatorsegurancames">fatorsegurancames</option>
-                        <option label="Fator de Segurança'" value="fatorseguranca">fatorseguranca</option>
-                        <option label="Kaiamoto'" value="kaiamoto">kaiamoto</option>
+                        <option label="Fator de Segurança Seção" value="fatorsegurancasecao">fatorsegurancasecao</option>
+                        <option label="Fator de Segurança Mes" value="fatorsegurancames">fatorsegurancames</option>
+                        <option label="Fator de Segurança" value="fatorseguranca">fatorseguranca</option>
+                        <option label="Kaimoto" value="kaimoto">kaimoto</option>
                         <option label="Critérios de Alerta Maciço" value="criteriosalertamacico">criteriosalertamacico</option>
                         <option label="Acompanhamento Marco Superficial Deslocamento" value="acompanhamentomarcosuperficialdeslocamento">acompanhamentomarcosuperficialdeslocamento</option>
                         <option label="Acompanhamento Marco Superficial" value="acompanhamentomarcosuperficial">acompanhamentomarcosuperficial</option>
-                        <option label="Fator Segurança NBR'" value="fatorsegurancanbr">fatorsegurancanbr</option>
+                        <option label="Fator Segurança NBR" value="fatorsegurancanbr">fatorsegurancanbr</option>
                     </select>
 
                     <select ng-show="(componenteTipo == 'grafico')" class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
@@ -160,12 +173,15 @@
         .header-estre img {
             border: 0;
             float: right;
+            width: 166px;
+            height: 50px;            
         }
 
     .content-estre {
         position: relative;
         top: 135px;
         margin-left: 15px;
+        margin-right: 15px;
     }
 
     page[size="A4"] {
@@ -260,7 +276,7 @@
 
 
 
- tr.estregray, td.estregray, thead.estregray {
+    tr.estregray, td.estregray, thead.estregray {
         background-color: #f5f5f5 !important;
         -webkit-print-color-adjust: exact;
     }
@@ -273,6 +289,13 @@
     tr.estregray {
         background-color: #f5f5f5 !important;
         -webkit-print-color-adjust: exact;
+    }
+
+    td.estregreen, th.estregreen {
+        background-color: green !important;
+        text-align: center;
+        -webkit-print-color-adjust: exact;
+        font-color: white !important;
     }
 
     td.estreyellow, th.estreyellow {

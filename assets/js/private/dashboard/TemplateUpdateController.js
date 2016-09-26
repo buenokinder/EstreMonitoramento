@@ -5,7 +5,10 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
     $scope.init = function () {
         $scope.inputClass = "active";
         $http.get("/Template/" + $routeParams.id).then(function (results) {
+
             $scope.data = angular.fromJson(results.data);
+
+            $scope.loadAterros();
 
             if ($scope.data.dataInicio != "" && $scope.data.dataInicio != undefined) {
                 $scope.data.dataInicio = getDate($scope.data.dataInicio);
@@ -20,7 +23,19 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             $('.modal-trigger').leanModal();
             $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
             $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
+        });
+    };
 
+    $scope.loadAterros = function () {
+        $http.get('/Aterro/Search').success(function (data) {
+            $scope.aterros = angular.fromJson(data);
+
+            for (var i = 0; i < $scope.aterros.length; i++) {
+                if ($scope.aterros[i].id == $scope.data.aterro) {
+                    $scope.data.aterro = $scope.aterros[i];
+                    break;
+                }
+            }
         });
     };
 
@@ -34,6 +49,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
     $scope.componenteGrafico = "";
     $scope.componenteTabela = "";
     $scope.componenteValor = "";
+    $scope.aterros = ([]);
 
     $scope.editarPagina = function (pagina, index) {
         $scope.editPageId = index;
@@ -44,6 +60,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         }
 
     };
+
     $scope.deletePagina = function (pagina) {
         swal({
             title: "Você tem certeza que deseja excluir?",
@@ -85,8 +102,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             location.assign("#/Template");
         }
     };
-
-
 
     $scope.savePage = function () {
         swal({
@@ -141,6 +156,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
 
     }
+
     $scope.novaPagina = function () {
         var model = {
             conteudo: '',
@@ -168,7 +184,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
 			});
     }
-
 
     $scope.addComponente = function (value) {
 
@@ -225,6 +240,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         respostas.forEach(myFunction);
         return value;
     }
+
     $scope.verPagina = function () {
         $scope.paginas[$scope.editPageId].conteudo = $scope.selectedPage;
     };
@@ -272,11 +288,12 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
         }
     }
+
     $scope.save = function () {
         // $scope.sennitForm.loading = true;
         swal({
             title: "",
-            text: "Você tem certeza que deseja alterar este registro?",
+            text: "Você tem certeza que deseja alterar este registro ?",
             type: "warning",
             showCancelButton: true,
             confirmButtonText: "Sim",

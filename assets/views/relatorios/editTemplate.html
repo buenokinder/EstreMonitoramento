@@ -1,14 +1,15 @@
 
 <div class='row'>
     <div class='col s12'>
-        <div class='card-panel' ng-init='init()'>
-            <h4 class='header2'>Formulário de Template - Editando Página {{paginas[editPageId].nome }}</h4>
+        <div class='card-panel'>
+            <!--<h4 class='header2'>Formulário de Template - Editando Página {{paginas[editPageId].nome }}</h4>-->
+            <h4 class='header2'>Formulário de Template - Modo Edição</h4>
             <div class='row'>
                 <div class='col s12'>
                     <form ng-submit='save()' id='sign-up-form'>
                         <div class='row'>
                             <div class='input-field col s12'>
-                                <input type='text' ng-model="data.nome"></input>
+                                <input type='text' ng-model="data.nome" />
                                 <label ng-class='inputClass'>Nome</label>
                             </div>
                             <div class='input-field col s12'>
@@ -20,6 +21,10 @@
                                 <label ng-class='inputClass'>Data Final</label>
                             </div>
 
+                            <div class='input-field col s12'>
+                                <label ng-class='inputClass'>Aterro</label>
+                                <select class='browser-default active' id='' required ng-model='data.aterro' ng-options='x.id as x.nome for x in aterros track by x.id'></select>
+                            </div>
                         </div>
 
                         <div class='row'>&nbsp;</div>
@@ -146,6 +151,13 @@
         background-color: #f5f5f5 !important;
         -webkit-print-color-adjust: exact;
     }
+
+    td.estregreen, th.estregreen {
+        background-color: green !important;
+        text-align: center;
+        -webkit-print-color-adjust: exact;
+        font-color: white !important;
+    }    
 
     td.estreyellow, th.estreyellow {
         background-color: yellow !important;

@@ -84,7 +84,6 @@ module.exports = {
         //     console.log(users);
 
         // })
-        console.log(".param('email')", req.param('email'));
 
         Usuario.findOne({
             email: req.param('email')
@@ -151,19 +150,21 @@ module.exports = {
     },
 
     logout: function (req, res) {
-
         if (undefined == req.session || undefined == req.session.me) {
             return res.redirect('/#/login');
         }
 
         Usuario.findOne({ id: req.session.me.id }, function foundUser(err, user) {
-            if (err) return res.negotiate(err);
+            if (err) {
+                return res.negotiate(err);
+            }
 
             if (!user) {
                 return res.redirect('/#/login');
             }
 
             req.session.destroy(function (err) {
+             
                 setTimeout(function () {
                     
                     //sails.sockets.emit({}, 'logout', { });
@@ -173,11 +174,9 @@ module.exports = {
                     //}
                     //sails.sockets.broadcast('message', 'logout', { message: 'Sessão finalizada.' }, req);
                     //sails.sockets.broadcast('artsAndEntertainment', { greeting: 'Sessão finalizada' });
-
                     return res.redirect('/#/login');
                 }, 1000);
             });
-
         });
     },
 

@@ -94,7 +94,7 @@
 
 <p>&nbsp;</p>
 
-<p>{{ tabela(&#39;boskov&#39;) }}</p>
+<p>{{ tabela(&#39;boscov&#39;) }}</p>
 
 <p>&nbsp;</p>
 
@@ -104,7 +104,7 @@
 
 <p>Tabela 2 - Critérios de alerta definidos por Kaimoto (2008)</p>
 
-<p>{{ tabela(&#39;kaiamoto&#39;) }}</p>
+<p>{{ tabela(&#39;kaimoto&#39;) }}</p>
 
 <p>3.4. ANÁLISE DO COMPORTAMENTO DOS INSTRUMENTOS INSTALADOS</p>
 
