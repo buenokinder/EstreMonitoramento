@@ -119,7 +119,11 @@ module.exports = {
 
             return 0;
         }
-
+        
+        //for (var item in _marcoSuperficiaisNotificacao) {
+        //    console.log("_marcoSuperficiaisNotificacao", _marcoSuperficiaisNotificacao[item].medicoes);
+        //    break;
+        //}
 
         for (var item in _marcoSuperficiaisNotificacao) {
             var marcoSuperficial = _marcoSuperficiaisNotificacao[item];
@@ -148,6 +152,7 @@ module.exports = {
                 var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(parseFloat(deslocamentoHorizontalParcial) / parseFloat(diferencaDatas).toFixed(4)));
                 var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(parseFloat(deslocamentoVerticalParcial) / parseFloat(diferencaDatas))).toFixed(4));
                 var velocidadeMinima = 0;
+
 
                 for (k = 0; k < this._alertas.length; k++) {
 
@@ -372,6 +377,8 @@ module.exports = {
     },
 
     _joinMedicoesDetalhesNotificacoes: function (detalhes, notificacoes, _marcoSuperficiaisNotificacao, aterros) {
+
+        //console.log("detalhes", detalhes);
         for (var i = 0; i < detalhes.length; i++) {
             var registroOrfao = (detalhes[i].owner == undefined || detalhes[i].aterro == undefined); //TODO: Ao remover a medicao remover os detalhes.
             if (registroOrfao) continue;
@@ -418,8 +425,8 @@ module.exports = {
                 leste: detalhes[i].leste,
                 cota: detalhes[i].cota,
                 data: new Date(detalhes[i].owner.data),
-                criterioAlertaHorizontalMetodologia1: 'Aceitável',
-                criterioAlertaVerticalMetodologia1: 'Aceitável',
+                criterioAlertaHorizontalMetodologia1: 'Paralisação',
+                criterioAlertaVerticalMetodologia1: 'Paralisação',
                 owner: medicao
             };
             _marcoSuperficiaisNotificacao[key].medicoes.push(detalhe);
