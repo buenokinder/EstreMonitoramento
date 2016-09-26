@@ -355,6 +355,7 @@
 
     _inspectMonitoramentos: function (context, monitoramentos) {
         var dataBase = new Date();
+        console.log("monitoramentos", monitoramentos);
 
         for (var i = 0; i < monitoramentos.length; i++) {
 
