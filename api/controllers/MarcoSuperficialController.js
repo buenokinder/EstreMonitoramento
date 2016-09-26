@@ -199,9 +199,9 @@ module.exports = {
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
                 item.data = marcosSuperficiais[i].data;
-                item.norte = parseFloat(marcosSuperficiais[i].norte).format(2, 3, '.', ',');
-                item.leste = parseFloat(marcosSuperficiais[i].leste).format(2, 3, '.', ',');
-                item.cota = parseFloat(marcosSuperficiais[i].cota).format(2, 3, '.', ',');
+                item.norte = parseFloat(marcosSuperficiais[i].norte).format(4, 3, '.', ',');
+                item.leste = parseFloat(marcosSuperficiais[i].leste).format(4, 3, '.', ',');
+                item.cota = parseFloat(marcosSuperficiais[i].cota).format(4, 3, '.', ',');
                 item.deslocamentoHorizontalParcial = 0;
                 item.deslocamentoHorizontalTotal = 0;
                 item.velocidadeHorizontal = 0;
@@ -261,8 +261,10 @@ module.exports = {
                 item.deslocamentoVerticalTotal = parseFloat(detalhe.monitoramento.deslocamentoVerticalTotal).format(2, 3, '.', ',');
                 item.sentidoDeslocamentoDirerencaNorte = parseFloat(detalhe.monitoramento.sentidoDeslocamentoDirerencaNorte).format(2, 3, '.', ',');
                 item.sentidoDeslocamentoDirerencaEste = parseFloat(detalhe.monitoramento.sentidoDeslocamentoDirerencaEste).format(2, 3, '.', ',');
-                item.sentidoDeslocamentoNorteSul = parseFloat(detalhe.monitoramento.sentidoDeslocamentoNorteSul).format(2, 3, '.', ',');
-                item.sentidoDeslocamentoLesteOeste = parseFloat(detalhe.monitoramento.sentidoDeslocamentoLesteOeste).format(2, 3, '.', ',');
+
+                item.sentidoDeslocamentoNorteSul = detalhe.monitoramento.sentidoDeslocamentoNorteSul;
+                item.sentidoDeslocamentoLesteOeste = detalhe.monitoramento.sentidoDeslocamentoLesteOeste;
+
                 item.sentido = detalhe.monitoramento.sentido;
                 item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
@@ -270,11 +272,10 @@ module.exports = {
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
 
-                item.vetorDeslocamentoSeno = detalhe.monitoramento.vetorDeslocamentoSeno;
-                item.vetorDeslocamentoAngulo = detalhe.monitoramento.vetorDeslocamentoAngulo;
+                item.vetorDeslocamentoSeno = parseFloat(detalhe.monitoramento.vetorDeslocamentoSeno).format(2, 3, '.', ',');
+                item.vetorDeslocamentoAngulo = parseFloat(detalhe.monitoramento.vetorDeslocamentoAngulo).format(2, 3, '.', ',');
 
                 item.medicaoMarcoSuperficial = { id: detalhe.owner.id, obsGestor: detalhe.owner.obsGestor, notificacao: detalhe.owner.notificacoes };
-
 
                 result.push(item);
             }
