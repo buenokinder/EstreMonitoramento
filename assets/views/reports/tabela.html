@@ -54,31 +54,26 @@
     <div style="width: 100%;" ng-show="(tipo=='fatorsegurancasecao')">
         <table class="table-medium">
             <thead>
-
-                <tr style="background-color: #666;">
+                <tr style="background-color: #ccc;">
                     <th rowspan="2" style="text-align: center;">SEÇÃO </th>
-                    <th rowspan="2" style="text-align: center;">FACE</th>
                     <th rowspan="2" style="text-align: center;">CENÁRIO DE SATURAÇÃO</th>
-                    <th colspan="3" style="text-align: center;">FATORES DE SEGURANÇA - 2016</th>
+                    <th colspan="3" style="text-align: center;">FATOR DE SEGURANÇA</th>
                 </tr>
+
                 <tr style="background-color: #ddd;">
-                    <th style="text-align: center;">FEVEREIRO</th>
-                    <th style="text-align: center;">MARÇO</th>
-                    <th style="text-align: center;">ABRIL</th>
+                    <th ng-repeat="mes in fatorsegurancaMeses" style="text-align: center;">{{mes}}</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr>
-                    <th style="text-align: center;">AA</th>
-                    <th style="text-align: center;">NORDESTE</th>
-                    <th style="text-align: center;">30%</th>
-                    <th style="text-align: center;">30%</th>
-                    <th style="text-align: center;">30%</th>
-                    <th style="text-align: center;">30%</th>
+                <tr ng-repeat="fator in fatorseguranca">
+                    <td style="text-align: center;">{{fator.secao}}</td>
+                    <td style="text-align: center;">{{fator.saturacao}}</td>
 
+                    <td ng-repeat="item in fator.meses"  style="text-align: center;">
+                        {{item.valorLp}}
+                    </td>
                 </tr>
-
-
             </tbody>
         </table>
     </div>
@@ -107,34 +102,32 @@
             </tbody>
         </table>
     </div>
-    <div style="width: 100%;" ng-show="(tipo=='fatorseguranca')">
+   
+    <div style="width: 100%;" ng-show="(tipo=='fatorseguranca')"> <!-- AO LONGO DO ANO-->
+
         <table class="table-medium">
             <thead>
-                <tr>
-                    <th colspan="2" style="text-align: center;">FATOR DE SEGURANÇA POR TEMPO</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" rowspan="2">Mês/2015</th>
 
-                    <th style="text-align: center;">FATOR DE SEGURANÇA</th>
+                <tr style="background-color: #ccc;">
+                    <th rowspan="2" style="text-align: center;">SEÇÃO </th>
+                    <th rowspan="2" style="text-align: center;">CENÁRIO DE SATURAÇÃO</th>
+                    <th colspan="3" style="text-align: center;">FATOR DE SEGURANÇA</th>
                 </tr>
-                <tr>
-                    <th style="text-align: center;">Valor</th>
 
+                <tr  style="background-color: #ddd;">
+                    <th ng-repeat="mes in fatorsegurancaMeses" style="text-align: center;">{{mes}}</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr ng-repeat="fator in fatorsegurancaMes">
-                    <th style="text-align: center;">
-                        {{fator.mes.nome}}
-                    </th>
+                <tr ng-repeat="fator in fatorseguranca">
+                    <td style="text-align: center;">{{fator.secao}}</td>
+                    <td style="text-align: center;">{{fator.saturacao}}</td>
 
-                    <th style="text-align: center;">
-                        {{fator.valorLp}}
-                    </th>
+                    <td ng-repeat="item in fator.meses" style="text-align: center;">
+                        {{item.valorLp}}
+                    </td>
                 </tr>
-
-
             </tbody>
         </table>
     </div>

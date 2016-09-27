@@ -5,14 +5,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
     $scope.init = function () {
         $scope.inputClass = "active";
 
-        $('.modal-trigger').leanModal({
-            dismissible: false,
-            opacity: .5, 
-            in_duration: 300, 
-            out_duration: 200,
-            starting_top: '4%',
-            ending_top: '10%', 
-        });
 
         $http.get("/Template/" + $routeParams.id).then(function (results) {
 
@@ -29,7 +21,16 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
             $scope.paginas = angular.fromJson(results.data.paginas);
             $scope.corpo = $scope.data.corpo;
-            $('.modal-trigger').leanModal();
+
+            $('.modal-trigger').leanModal({
+                dismissible: false,
+                opacity: .5,
+                in_duration: 300,
+                out_duration: 200,
+                starting_top: '4%',
+                ending_top: '10%',
+            });
+
             $('.datepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY' });
             $('.datetimepicker').bootstrapMaterialDatePicker({ format: 'DD/MM/YYYY HH:mm' });
         });

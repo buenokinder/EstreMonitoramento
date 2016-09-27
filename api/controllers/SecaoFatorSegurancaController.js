@@ -40,6 +40,11 @@ module.exports = {
 	    var filtroPorPeriodo = false;
 
 	    for (key in req.allParams()) {
+
+	        if (key == 'aterro') {
+	            continue;
+	        }
+
 	        if (key == 'nome') {
 	            filtro.nome = { 'contains': req.param('nome') };
 	            continue;
@@ -77,14 +82,16 @@ module.exports = {
 
 		            for (var i = 0; i < ret.length; i++) {
 		                var secaoFatorSeguranca = ret[i];
-		                var secaoFatorResult = { id: secaoFatorSeguranca.id, nome: secaoFatorSeguranca.nome, aterro: secaoFatorSeguranca.aterro, fatorSeguranca: [] };
+		                //var secaoFatorResult = { id: secaoFatorSeguranca.id, nome: secaoFatorSeguranca.nome, aterro: secaoFatorSeguranca.aterro, fatorSeguranca: [] };
+		                var secaoFatorResult = [];
 
 		                for (var j = 0; j < secaoFatorSeguranca.fatorSeguranca.length; j++) {
 		                    var fatorSeguranca = ret[i].fatorSeguranca[j];
 		                    if (fatorSeguranca.mesSearch < filtroFatorSeguranca.mesInicial || fatorSeguranca.mesSearch > filtroFatorSeguranca.mesFinal) continue;
 		                    if (fatorSeguranca.ano < filtroFatorSeguranca.anoInicial || fatorSeguranca.ano > filtroFatorSeguranca.anoFinal) continue;
+		                    if (fatorSeguranca.aterro != req.param('aterro')) continue;
 
-		                    secaoFatorResult.fatorSeguranca.push({ saturacao: fatorSeguranca.saturacao, mes: fatorSeguranca.mes, ano: fatorSeguranca.ano, valorRu: fatorSeguranca.valorRu, valorLp: fatorSeguranca.valorLp });
+		                    secaoFatorResult.push({ id: fatorSeguranca.id, secao: secaoFatorSeguranca.nome, saturacao: fatorSeguranca.saturacao, mes: fatorSeguranca.mes, ano: fatorSeguranca.ano, valorRu: fatorSeguranca.valorRu, valorLp: fatorSeguranca.valorLp });
 		                }
 
 		                result.push(secaoFatorResult);
