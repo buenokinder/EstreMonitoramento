@@ -10,7 +10,7 @@
                     </div>
                 </div>
             </nav>
-            
+
             <nav>
                 <div class="nav-wrapper  light-green">
                     <div class='row'>
@@ -20,10 +20,10 @@
                                 <li><a ng-href=""><i class="material-icons" ng-click="savePage()">done</i></a></li>
                                 <li><a ng-href=""><i class="material-icons" ng-click="verPagina()">refresh</i></a></li>
                                 <li><a href="/visualizacao?id={{id}}" target="_blank"><i class="material-icons" ng-click="imprimir()">print</i></a></li>
-                                <li><a class="modal-trigger" href="#modal1"><i class="material-icons" ng-click="imprimir()">assessment</i></a></li>
+                                <li><a class="modal-trigger" ng-href="#modalView"><i class="material-icons">assessment</i></a></li>
                             </ul>
                         </div>
-                    </div>      
+                    </div>
                 </div>
             </nav>
 
@@ -92,64 +92,71 @@
             </div>
         </div>
     </div>
-    <div id="modal1" class="modal modal-fixed-footer">
-        <div class="modal-content">
-            <h4>Adicionar Componente</h4>
-            <div class="row">
-                <div class="form-group col m2" id="sign-up-form">
-                    <label ng-class="inputClass" for="nome" class="">Label</label>
-                    <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataInicial" name="componenteNome"
-                           ng-model="componenteNome" aria-invalid="false">
+
+    <div class="row">
+        <div class="col s12 m12 l6">
+
+            <div id="modalView" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <h4>Adicionar Componente</h4>
+                    <div class="row">
+                        <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Label</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataInicial" name="componenteNome"
+                                   ng-model="componenteNome" aria-invalid="false">
+                        </div>
+
+                        <div class="form-group col m3" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Componente</label>
+                            <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
+                                    id="ordenacao" required="" ng-model="componenteTipo" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Grafico" value="grafico">Grafico</option>
+                                <option label="Tabela" value="tabela">Tabela</option>
+                            </select>
+                        </div>
+                        <div class="form-group col m3" id="sign-up-form">
+                            <label ng-class="inputClass" for="aterro">Componente</label>
+                            <select ng-show="(componenteTipo == 'tabela')" class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
+                                    id="ordenacao" required="" ng-model="componenteTabela" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Boscov" value="boscov">Boscov</option>
+                                <option label="Deselocamento Marco Superficial" value="marcosuperficialdeslocamento">marcosuperficialdeslocamento</option>
+                                <option label="Fator de Segurança Seção" value="fatorsegurancasecao">fatorsegurancasecao</option>
+                                <option label="Fator de Segurança Mes" value="fatorsegurancames">fatorsegurancames</option>
+                                <option label="Fator de Segurança" value="fatorseguranca">fatorseguranca</option>
+                                <option label="Kaimoto" value="kaimoto">kaimoto</option>
+                                <option label="Critérios de Alerta Maciço" value="criteriosalertamacico">criteriosalertamacico</option>
+                                <option label="Acompanhamento Marco Superficial Deslocamento" value="acompanhamentomarcosuperficialdeslocamento">acompanhamentomarcosuperficialdeslocamento</option>
+                                <option label="Acompanhamento Marco Superficial" value="acompanhamentomarcosuperficial">acompanhamentomarcosuperficial</option>
+                                <option label="Fator Segurança NBR" value="fatorsegurancanbr">fatorsegurancanbr</option>
+                            </select>
+
+                            <select ng-show="(componenteTipo == 'grafico')" class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
+                                    id="ordenacao" required="" ng-model="componenteGrafico" aria-invalid="true">
+
+                                <option value="?" selected="selected"></option>
+                                <option label="Marco Horizontal" value="marcohorizontal">Marco Horizontal</option>
+                                <option label="Marco Vertical" value="marcovertical">Marco Vertical</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group col m2" id="sign-up-form">
+                            <label ng-class="inputClass" for="nome" class="">Parametro</label>
+                            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataFinal" name="monitoramentos.dataFinal"
+                                   ng-model="componenteValor" aria-invalid="false">
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="form-group col m3" id="sign-up-form">
-                    <label ng-class="inputClass" for="aterro">Componente</label>
-                    <select class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
-                            id="ordenacao" required="" ng-model="componenteTipo" aria-invalid="true">
-
-                        <option value="?" selected="selected"></option>
-                        <option label="Grafico" value="grafico">Grafico</option>
-                        <option label="Tabela" value="tabela">Tabela</option>
-                    </select>
-                </div>
-                <div class="form-group col m3" id="sign-up-form">
-                    <label ng-class="inputClass" for="aterro">Componente</label>
-                    <select ng-show="(componenteTipo == 'tabela')" class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
-                            id="ordenacao" required="" ng-model="componenteTabela" aria-invalid="true">
-
-                        <option value="?" selected="selected"></option>
-                        <option label="Boscov" value="boscov">Boscov</option>
-                        <option label="Deselocamento Marco Superficial" value="marcosuperficialdeslocamento">marcosuperficialdeslocamento</option>
-                        <option label="Fator de Segurança Seção" value="fatorsegurancasecao">fatorsegurancasecao</option>
-                        <option label="Fator de Segurança Mes" value="fatorsegurancames">fatorsegurancames</option>
-                        <option label="Fator de Segurança" value="fatorseguranca">fatorseguranca</option>
-                        <option label="Kaimoto" value="kaimoto">kaimoto</option>
-                        <option label="Critérios de Alerta Maciço" value="criteriosalertamacico">criteriosalertamacico</option>
-                        <option label="Acompanhamento Marco Superficial Deslocamento" value="acompanhamentomarcosuperficialdeslocamento">acompanhamentomarcosuperficialdeslocamento</option>
-                        <option label="Acompanhamento Marco Superficial" value="acompanhamentomarcosuperficial">acompanhamentomarcosuperficial</option>
-                        <option label="Fator Segurança NBR" value="fatorsegurancanbr">fatorsegurancanbr</option>
-                    </select>
-
-                    <select ng-show="(componenteTipo == 'grafico')" class="browser-default active ng-pristine ng-invalid ng-invalid-required ng-touched ng-valid ng-not-empty ng-valid-required"
-                            id="ordenacao" required="" ng-model="componenteGrafico" aria-invalid="true">
-
-                        <option value="?" selected="selected"></option>
-                        <option label="Marco Horizontal" value="marcohorizontal">Marco Horizontal</option>
-                        <option label="Marco Vertical" value="marcovertical">Marco Vertical</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group col m2" id="sign-up-form">
-                    <label ng-class="inputClass" for="nome" class="">Parametro</label>
-                    <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="dataFinal" name="monitoramentos.dataFinal"
-                           ng-model="componenteValor" aria-invalid="false">
+                <div class="modal-footer">
+                    <button ng-click="addComponente()" class="modal-action modal-close waves-effect waves-green btn-flat ">Adicionar</button>
+                    <button ng-click="closeBoxComponent()" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancelar</button>
                 </div>
             </div>
-
-        </div>
-        <div class="modal-footer">
-            <button ng-click="addComponente()" class="modal-action modal-close waves-effect waves-green btn-flat ">Adicionar</button>
         </div>
     </div>
 </div>
@@ -174,7 +181,7 @@
             border: 0;
             float: right;
             width: 166px;
-            height: 50px;            
+            height: 50px;
         }
 
     .content-estre {
@@ -206,15 +213,15 @@
         margin-right: 15%;
     }
 
-   .table-medium tr td {
-        font-size: 7pt !important;
-        font-weight: normal !important;
-    }
+        .table-medium tr td {
+            font-size: 7pt !important;
+            font-weight: normal !important;
+        }
 
-   .table-medium tr th {
-        font-size: 8pt !important;
-        font-weight: normal !important;
-    }
+        .table-medium tr th {
+            font-size: 8pt !important;
+            font-weight: normal !important;
+        }
 
     /*table tr td {
         font-size: 7pt !important;
@@ -231,15 +238,15 @@
         margin-right: 1%;
     }
 
-   .table-large tr th {
-        font-size: 7pt !important;
-        font-weight: normal !important;
-    }
+        .table-large tr th {
+            font-size: 7pt !important;
+            font-weight: normal !important;
+        }
 
-    .table-large tr td {
-        font-size: 5pt !important;
-        font-weight: bold !important;
-    }
+        .table-large tr td {
+            font-size: 5pt !important;
+            font-weight: bold !important;
+        }
 
     table tr:nth-of-type(even) {
         background: #f9f9f9;
@@ -284,7 +291,7 @@
     thead.estregray {
         background-color: #f5f5f5 !important;
         -webkit-print-color-adjust: exact;
-    }    
+    }
 
     tr.estregray {
         background-color: #f5f5f5 !important;

@@ -4,10 +4,19 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
     $scope.init = function () {
         $scope.inputClass = "active";
+
+        $('.modal-trigger').leanModal({
+            dismissible: false,
+            opacity: .5, 
+            in_duration: 300, 
+            out_duration: 200,
+            starting_top: '4%',
+            ending_top: '10%', 
+        });
+
         $http.get("/Template/" + $routeParams.id).then(function (results) {
 
             $scope.data = angular.fromJson(results.data);
-
             $scope.loadAterros();
 
             if ($scope.data.dataInicio != "" && $scope.data.dataInicio != undefined) {
@@ -30,12 +39,12 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         $http.get('/Aterro/Search').success(function (data) {
             $scope.aterros = angular.fromJson(data);
 
-            for (var i = 0; i < $scope.aterros.length; i++) {
-                if ($scope.aterros[i].id == $scope.data.aterro) {
-                    $scope.data.aterro = $scope.aterros[i];
-                    break;
-                }
-            }
+            //for (var i = 0; i < $scope.aterros.length; i++) {
+            //    if ($scope.aterros[i].id == $scope.data.aterro) {
+            //        $scope.data.aterro = $scope.aterros[i];
+            //        break;
+            //    }
+            //}
         });
     };
 
@@ -101,6 +110,13 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         if (redirect==true) {
             location.assign("#/Template");
         }
+    };
+
+   
+
+    $scope.closeBoxComponent = function () {
+        $('#modalView').closeModal();
+        $(".lean-overlay").hide();
     };
 
     $scope.savePage = function () {
@@ -223,15 +239,15 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     var parametro = tipo.split('&#39;')[1];
 
 
-                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.aterro + '\'   inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\' ></tabela>  ');
+                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.data.aterro.id + '\'   inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\' ></tabela>  ');
                 }
                 if (tipo.indexOf('grafico(') !== -1) {
                     var parametro = tipo.split('&#39;')[1];
                     var parametro2 = tipo.split('&#39;')[3];
                     if (parametro == 'marcohorizontal') {
-                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficohorizontal>  ');
+                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficohorizontal  tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.data.aterro.id + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficohorizontal>  ');
                     } else {
-                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.aterro + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficovertical>  ');
+                        value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<graficovertical tipado=\'' + parametro2 + '\'  aterro=\'' + $scope.data.aterro.id + '\'  inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\'  ></graficovertical>  ');
                     }
                 }
             }
@@ -253,23 +269,40 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         var totalResponses = 0;
         var hasError = false;
 
-        $scope.paginasAux = $scope.data.paginas;
+       var paginasAux = $scope.data.paginas;
 
-        for (var i = 0; i < $scope.paginasAux.length; i++) {
-            var conteudo = $scope.paginasAux[i].conteudo;
+       for (var i = 0; i < $scope.data.paginas.length; i++) {
+
+            var conteudo = paginasAux[i].conteudo;
+
+
+            var conteudo = paginasAux[i].conteudo;
+            var indexAterro = conteudo.indexOf("aterro=");
+            var lengthOfIdAndSpaceAndDoubleQuotes = 34;
+            if (indexAterro >= 0) {
+                conteudo = conteudo.substr(0, indexAterro) + 'aterro="' + $scope.data.aterro.id + '" ' + conteudo.substr(indexAterro + lengthOfIdAndSpaceAndDoubleQuotes);
+            }
+
             var indexOfInicio = conteudo.indexOf("inicio=");
-            if (indexOfInicio < 0) continue;
-            var indexOfFim = conteudo.indexOf("fim=");
-            conteudo = conteudo.substr(0, indexOfInicio) + 'inicio="' + getDate($scope.data.dataInicio) + '" ' + conteudo.substr(indexOfInicio + 20);
-            $scope.paginasAux[i].conteudo = conteudo.substr(0, indexOfFim) + 'fim="' + getDate($scope.data.dataFim) + '" ' + conteudo.substr(indexOfFim + 17);
+            if (indexOfInicio >= 0) {
+                var indexOfFim = conteudo.indexOf("fim=");
+                var lengthOfStringStartDateAndSpaceAndDoubleQuotes = 20;
+                var lengthOfStringEndDateAndSpaceAndDoubleQuotes = 17;
 
+                conteudo = conteudo.substr(0, indexOfInicio) + 'inicio="' + getDate($scope.data.dataInicio) + '" ' + conteudo.substr(indexOfInicio + lengthOfStringStartDateAndSpaceAndDoubleQuotes);
+                conteudo = conteudo.substr(0, indexOfFim) + 'fim="' + getDate($scope.data.dataFim) + '" ' + conteudo.substr(indexOfFim + lengthOfStringEndDateAndSpaceAndDoubleQuotes);
+            }
+
+            if (indexAterro < 0 && indexAterro < 0) continue;
+
+            paginasAux[i].conteudo = conteudo;
 
             totalRequests += 1;
 
             $http({
                 method: 'PUT',
-                url: '/Pagina/' + $scope.paginasAux[i].id,
-                data: $scope.paginasAux[i]
+                url: '/Pagina/' + paginasAux[i].id,
+                data: paginasAux[i]
             }).then(function onSuccess(sailsResponse) {
                 totalResponses += 1;
                 if (totalResponses == totalRequests) {
@@ -288,6 +321,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
         }
     }
+
 
     $scope.save = function () {
         // $scope.sennitForm.loading = true;
