@@ -260,7 +260,18 @@ app.controller('PluviometriaVazaoController', ['$scope', '$http', '$filter', fun
         angular.extend(data, { id: id });
         angular.extend(data, { usuario: $scope.usuario.id });
         //var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: $scope.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
+
+        if (data.aterro == undefined) {
+            if ($scope.aterro == undefined) {
+                swal("Erro!", "O registro precisa estar associado a um aterro :(", "error");
+                return;
+            }
+
+            data.aterro = $scope.aterro.id != undefined ? $scope.aterro.id : $scope.aterro;
+        }
+
         var medicao = { data: data.dia + '/' + $scope.mes.id + '/' + $scope.ano.id, dia: data.dia, pluviometria: data.pluviometria, vazao: data.vazao, aterro: data.aterro, usuario: $scope.usuario.id, mes: $scope.mes.id, ano: $scope.ano.id };
+
         if (undefined == id) {
 
             swal({

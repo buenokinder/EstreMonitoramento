@@ -289,7 +289,7 @@ module.exports = {
         var result = [];
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
-        var meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
@@ -310,7 +310,7 @@ module.exports = {
 
                 var item = {};
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
-                item.mes = meses[(new Date(detalhe.data).getMonth())];
+                item.mes = (new Date(detalhe.data).getMonth()) + 1;
                 item.criterioAlertaHorizontalMetodologia1 = detalhe.monitoramento.criterioAlertaHorizontalMetodologia1;
                 item.criterioAlertaVerticalMetodologia1 = detalhe.monitoramento.criterioAlertaVerticalMetodologia1;
 
@@ -907,7 +907,7 @@ module.exports = {
                                         break;
 
                                     case "relatorio":
-                                        return resolve(_that._summarizeMonitoramentoRelatorio(_marcosSuperficiais, req));
+                                        return resolve(_that._summarizeMonitoramentoRelatorio(_marcosSuperficiais, req);
                                         break;
 
                                     default:
