@@ -61,10 +61,10 @@ module.exports = {
 	        filtro[key] = req.param(key);
 	    }
 
-	    if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
-	        filtro.aterro = req.session.me.aterro.id;
+	    //if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+	    //    filtro.aterro = req.session.me.aterro.id;
 	        
-	    }
+	    //}
 
 	    SecaoFatorSeguranca.find({ where: filtro })
 		.populate('fatorSeguranca')
@@ -112,9 +112,9 @@ module.exports = {
 			filtro[key] = req.param(key);
 		}
 
-		if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
-		    filtro.aterro = req.session.me.aterro.id;
-		}
+		//if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
+		//    filtro.aterro = req.session.me.aterro.id;
+		//}
 
 		
 		SecaoFatorSeguranca.count(filtro)
