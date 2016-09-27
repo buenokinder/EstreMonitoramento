@@ -8,7 +8,7 @@
 module.exports = {
     search: function (req, res) {
         var filtro = {};
-
+        var filtroMes = false;
         for (key in req.allParams()) {
             if (key == 'nome') {
                 filtro.nome = { 'contains': req.param('nome') };
@@ -23,16 +23,32 @@ module.exports = {
                 continue;
             }
 
+            if (key == 'dtIni' || key == 'dtFim') {
+
+                if (filtroMes) continue;
+
+                var mesInicial = parseInt(req.param('dtIni').split('-')[1]);
+                var mesFinal = parseInt(req.param('dtFim').split('-')[1]);
+
+                var anoInicial = parseInt(req.param('dtIni').split('-')[0]);
+                var anoFinal = parseInt(req.param('dtFim').split('-')[0]);
+
+                filtro.mesSearch = { '>=': mesInicial, '<=': mesFinal };
+                filtro.ano = { '>=': anoInicial, '<=': anoFinal };
+
+                filtroMes = true;
+                continue;
+            }
+
             if (req.param(key) == undefined) continue;
             filtro[key] = req.param(key);
         }
 
         if (req.session.me.perfil == "Gerente" || req.session.me.perfil == "Operacional") {
-
             filtro.aterro = req.session.me.aterro.id;
         }
 
-        FatorSeguranca.find(filtro)
+        FatorSeguranca.find({ where: filtro })
 		.populate('aterro')
 		.populate('secao')
 		.exec(function result(err, ret) {

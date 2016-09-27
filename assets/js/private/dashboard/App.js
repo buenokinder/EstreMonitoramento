@@ -96,7 +96,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.criterioRegularVelocidadeVertical = [];
 
 
-            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
+            $http.get("/MarcoSuperficial/monitoramentos/?aterro=" + $scope.aterro + "&order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
                 angular.forEach($scope.data, function (value, key) {
                     $scope.deslocamentoHorizontal.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoHorizontalTotal)]);
@@ -204,7 +204,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.criterioAceitavelVelocidadeVertical = [];
             $scope.criterioRegularVelocidadeVertical = [];
 
-            $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni="+getDateQuery($scope.inicio)+"&dtFim="+getDateQuery($scope.fim)+"&marcoSuperficial=" + $scope.tipado).then(function (results) {
+            $http.get("/MarcoSuperficial/monitoramentos/?aterro=" + $scope.aterro + "&order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
                 $scope.data = results.data;
 
 
@@ -317,10 +317,11 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.fatorsegurancaMes = ({});
             $scope.aterroNome;
             $scope.marcosuperficialdeslocamento = ({});
-            //var date = new Date($scope.inicio);
 
             if ($scope.tipo == 'fatorsegurancames') {
-                $http.get("/FatorSeguranca/").then(function (results) {
+                console.log("aterro", $scope.aterro);
+
+                $http.get("/FatorSeguranca/search/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
                     $scope.fatorsegurancaMes = results.data;
                 });
             }
@@ -332,7 +333,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             }
 
             if ($scope.tipo == 'acompanhamentomarcosuperficialdeslocamento' || $scope.tipo == 'acompanhamentomarcosuperficial') {
-                $http.get("/MarcoSuperficial/monitoramentos/?order=dataInstalacao%20ASC&dtIni="+getDateQuery($scope.inicio)+"&dtFim="+getDateQuery($scope.fim)).then(function (results) {
+                $http.get("/MarcoSuperficial/monitoramentos/?aterro=" + $scope.aterro + "&order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
                     $scope.marcosuperficialdeslocamento = results.data;
                     if ($scope.marcosuperficialdeslocamento.length > 0)
                         $scope.aterroNome = $scope.marcosuperficialdeslocamento[0].aterro.nome;
@@ -341,7 +342,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
 
             $scope.init = function () {
                 if ($scope.tipo == 'fatorsegurancames') {
-                    $http.get("/FatorSeguranca/").then(function (results) {
+                    $http.get("/FatorSeguranca/?aterro=" + $scope.aterro).then(function (results) {
                         $scope.fatorsegurancaMes = results.data;
                     });
                 }

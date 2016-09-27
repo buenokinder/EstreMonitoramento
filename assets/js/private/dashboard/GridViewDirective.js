@@ -1364,11 +1364,6 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                 }
 
-
-
-                
-
-
                 $scope.unSelectMultiCombo();
                 $scope.formatDateFields();
                 $scope.setSelectedItensMultiCombo();
@@ -1412,6 +1407,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
 
             $scope.save = function () {
+                var meses = ['','Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro','Dezembro'];
 
                 $scope.sennitForm.loading = true;
                 //if ($scope.data.mes && $scope.fields["mes"].hasid==undefined) {
@@ -1441,6 +1437,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                                 params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name].id;
                                             } else {
                                                 params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                            }
+
+                                            if ($scope.fields[field].name.toLowerCase() == "mes") {
+                                                params["mesSearch"] = meses.indexOf($scope.data[$scope.fields[field].name].id);
                                             }
                                         }
 
@@ -1516,6 +1516,10 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                                             params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name].id;
                                         } else {
                                             params[$scope.fields[field].name] = $scope.data[$scope.fields[field].name];
+                                        }
+
+                                        if ($scope.fields[field].name.toLowerCase() == "mes") {
+                                            params["mesSearch"] = meses.indexOf($scope.data[$scope.fields[field].name].id);
                                         }
                                     }
 

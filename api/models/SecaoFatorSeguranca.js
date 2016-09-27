@@ -23,6 +23,10 @@ module.exports = {
         },
         usuario: {
             model: 'Usuario'
-        }
+        },
+        fatorSeguranca: {
+            collection: 'fatorSeguranca',
+            via: 'secao'
+        },
     }
 };

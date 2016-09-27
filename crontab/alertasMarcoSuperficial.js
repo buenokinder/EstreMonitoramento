@@ -355,6 +355,10 @@
 
     _inspectMonitoramentos: function (context, monitoramentos) {
         var dataBase = new Date();
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 2016_09_26__2016_09_30
 
         for (var i = 0; i < monitoramentos.length; i++) {
 

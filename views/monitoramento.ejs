@@ -83,6 +83,24 @@
 </head>
 
 <body id="layouts-horizontal" ng-app="DashboardModule" ng-controller="MonitoramentoAterroController">
+
+    <header>
+        <div class="row">
+            <table style="width:100%" border="0">
+                <thead>
+                    <tr>
+                        <th style="background-color:#858484"></th>
+
+                        <th style="background-color:#9acd32"></th>
+
+                        <th style="background-color:#c5c1c1"></th>
+
+                        <th style="background-color:#dddddd"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </header>
     <div>
         <div id="loader-wrapper">
             <div id="loader"></div>
@@ -97,21 +115,7 @@
                     <div class="container">
 
                         <div class="section">
-                            <div class="row">
-                                <table style="width:100%" border="0">
-                                    <thead>
-                                        <tr>
-                                            <th style="background-color:#858484"></th>
 
-                                            <th style="background-color:#9acd32"></th>
-
-                                            <th style="background-color:#c5c1c1"></th>
-
-                                            <th style="background-color:#dddddd"></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
                             <div class="row aterro">
                                 <div class="col s12 m12">
                                     <h2 id="nomeaterro" class="ng-binding" style="text-align:center">{{dashboard.current.aterro.nome}}</h2>
