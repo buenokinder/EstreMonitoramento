@@ -19,6 +19,13 @@
         background: rgb(0, 0, 0);
         color: white;
     }
+
+    code {
+        font-size: 7pt !important;
+        font-weight: normal !important;
+        line-height: 1.5;
+        font-family: "Roboto", sans-serif !important;
+    }
 </style>
 
 
@@ -86,19 +93,27 @@
             </thead>
 
             <tbody>
-                <tr ng-repeat="item in fatorsegurancaRelatorioAnual">
-                    <td rowspan="{{item.saturacao.length}}" style="text-align: center;">{{item.secao}}</td>
-                    <p ng-repeat="saturacao in item.saturacao">
-                        <td style="text-align: center;">{{saturacao.nome}}</td>
-                        <td ng-repeat="mes in saturacao.meses"  style="text-align: center;">
-                            <p ng-repeat="fator in mes.fatores">
-                                {{fator.valorLp}}
-                            </p>
-                        </td>
-                    </p>
+                <tr ng-repeat="item in fatorsegurancaRelatorioTrimestral">
+                    <td rowspan="1" style="text-align: center;border-top: 1px solid #ddd;">{{item.secao}}</td>
+                    <td colspan="4" style="border-bottom: 1px solid #ddd;">
+                        <table>
+                            <tbody>
+                                <tr ng-repeat="saturacao in item.saturacao">
+                                    <td>{{saturacao.nome}}</td>
+                                    <td ng-repeat="mes in saturacao.meses" style="text-align: right;">
+                                        <code ng-repeat="fator in mes.fatores">
+                                            {{fator.valorLp}}
+                                        </code>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
             </tbody>
+
         </table>
+
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='fatorsegurancames')">
@@ -124,63 +139,47 @@
             </tbody>
         </table>
     </div>
-   
-    <div style="width: 100%;" ng-show="(tipo=='fatorseguranca')"> <!-- AO LONGO DO ANO-->
 
+    <div style="width: 100%;" ng-show="(tipo=='fatorseguranca')">
+        <!-- AO LONGO DO ANO-->
         <table class="table-medium">
             <thead>
                 <tr style="background-color: #ccc;">
-                    <th rowspan="2" style="text-align: center;">SEÇÃO </th>
-                    <th rowspan="2" style="text-align: center;">CENÁRIO DE SATURAÇÃO</th>
-                    <th colspan="3" style="text-align: center;">FATOR DE SEGURANÇA</th>
-                </tr>
-
-                <tr style="background-color: #ddd;">
-                    <th ng-repeat="mes in fatorsegurancaMeses" style="text-align: center;">{{mes}}</th>
+                    <th style="text-align: center;">MÊS</th>
+                    <th style="text-align: center;" colspan="2">SEÇÃO</th>
+                    <th style="text-align: center;" colspan="2">CENÁRIO DE SATURAÇÃO</th>
+                    <th style="text-align: center;">FATOR DE SEGURANÇA</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr ng-repeat="item in fatorsegurancaRelatorioAnual">
-                    <td rowspan="{{item.saturacao.length}}" style="text-align: center;">{{item.secao}}</td>
-                    {{item.saturacao}}
-                    <p ng-repeat="saturacao in item.saturacao">
-                        <td style="text-align: center;">{{saturacao.nome}}</td>
-                        <td ng-repeat="mes in saturacao.meses" style="text-align: center;">
-                            <p ng-repeat="fator in mes.fatores">
-                                {{fator.valorLp}}
-                            </p>
-                        </td>
-                    </p>
-                </tr>
-            </tbody>
-        </table>
-
-        <!--<table class="table-medium">
-            <thead>
-
-                <tr style="background-color: #ccc;">
-                    <th rowspan="2" style="text-align: center;">SEÇÃO </th>
-                    <th rowspan="2" style="text-align: center;">CENÁRIO DE SATURAÇÃO</th>
-                    <th colspan="3" style="text-align: center;">FATOR DE SEGURANÇA</th>
-                </tr>
-
-                <tr  style="background-color: #ddd;">
-                    <th ng-repeat="mes in fatorsegurancaMeses" style="text-align: center;">{{mes}}</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr ng-repeat="fator in fatorseguranca">
-                    <td style="text-align: center;">{{fator.secao}}</td>
-                    <td style="text-align: center;">{{fator.saturacao}}</td>
-
-                    <td ng-repeat="item in fator.meses" style="text-align: center;">
-                        {{item.valorLp}}
+                    <td rowspan="1" style="text-align: center;border-top: 1px solid #ddd;">{{item.mes}}</td>
+                    <td colspan="4" style="border-bottom: 1px solid #ddd;">
+                        <table>
+                            <tbody>
+                                <tr ng-repeat="secao in item.secoes">
+                                    <td style="text-align:center">{{secao.nome}}</td>
+                                    <td>
+                                        <table>
+                                            <tbody>
+                                                <tr ng-repeat="saturacao in secao.saturacoes">
+                                                    <td style="text-align:center" colspan="2">{{saturacao.nome}}</td>
+                                                    <td style="text-align:center">{{saturacao.fator}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
             </tbody>
-        </table>-->
+
+        </table>
+
+       
     </div>
 
     <div style="width: 100%;" ng-show="(tipo=='kaimoto')">

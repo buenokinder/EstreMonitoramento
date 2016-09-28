@@ -168,6 +168,7 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
             }
 
             var aterro = $("#aterro").val().replace("string:", "");
+
             if ($scope.inserted.aterro) {
                 aterro = $scope.inserted.aterro;
                 if ($scope.inserted.aterro.id) {
