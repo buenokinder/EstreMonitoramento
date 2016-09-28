@@ -10,7 +10,6 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
     $scope.perfil = '';
 
     //$scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
-
     $scope.inserted = { data: null, nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '10', obsGestor: '', usuario: $scope.usuario._id, aterro: null };
     $scope.aterros = ([]);
 
@@ -168,7 +167,14 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
                 index = $scope.medicoes.length-1;
             }
 
-            var medicaoMarcoSuperficialDetalhes = { 'nome': colunas[0], 'norte': parseMedicao(colunas[2]), 'leste': parseMedicao(colunas[3]), 'cota': parseMedicao(colunas[4]), 'aterro': $scope.inserted.aterro };
+            var aterro = $("#aterro").val().replace("string:", "");
+            if ($scope.inserted.aterro) {
+                aterro = $scope.inserted.aterro;
+                if ($scope.inserted.aterro.id) {
+                    aterro = $scope.inserted.aterro.id;
+                }
+            } 
+            var medicaoMarcoSuperficialDetalhes = { 'nome': colunas[0], 'norte': parseMedicao(colunas[2]), 'leste': parseMedicao(colunas[3]), 'cota': parseMedicao(colunas[4]), 'aterro': aterro};
             $scope.medicoes[index].detalhes.push(medicaoMarcoSuperficialDetalhes);
             $scope.medicoesProcessadas.push(medicaoMarcoSuperficialDetalhes);
 

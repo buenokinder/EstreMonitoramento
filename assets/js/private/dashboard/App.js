@@ -365,21 +365,73 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             if ($scope.tipo == 'fatorseguranca') {
                 $http.get("/SecaoFatorSeguranca/relatorio/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
                     $scope.fatorseguranca = ([]);
+                    $scope.fatorsegurancaMeses = ([]);
+                    $scope.fatorsegurancaSaturacao = ([]);
+                    $scope.fatorsegurancaSecoes = ([]);
+                    $scope.fatorsegurancaRelatorioAnual = ([]);
 
-                    //if (results.data.length == 0) {
-                    //    return;
-                    //}
+                    if (results.data.length == 0) {
+                        return;
+                    }
 
-                    //$scope.fatorseguranca = results.data[0];
+                    $scope.fatorseguranca = results.data[0];
+                    
+                    var loadDistinctMeses = function () {
+                        for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+                            if ($scope.fatorsegurancaMeses.indexOf($scope.fatorseguranca[i].mes) < 0) {
+                                $scope.fatorsegurancaMeses.push($scope.fatorseguranca[i].mes);
+                            }
+                        }
+                    };
 
-                    //var getMeses = function () {
+                    var loadDistinctSecoes = function () {
+                        for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+                            if ($scope.fatorsegurancaSecoes.indexOf($scope.fatorseguranca[i].secao) < 0) {
+                                $scope.fatorsegurancaSecoes.push($scope.fatorseguranca[i].secao);
+                            }
+                        }
+                    };
 
-                    //    for (var i = 0; i < $scope.fatorseguranca.length; i++) {
-                    //        if ($scope.fatorsegurancaMeses.indexOf($scope.fatorseguranca[i].mes) < 0) {
-                    //            $scope.fatorsegurancaMeses.push($scope.fatorseguranca[i].mes);
-                    //        }
-                    //    }
-                    //};
+                    var loadDistinctSaturacoes = function () {
+                        for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+                            if ($scope.fatorsegurancaSaturacao.indexOf($scope.fatorseguranca[i].saturacao) < 0) {
+                                $scope.fatorsegurancaSaturacao.push($scope.fatorseguranca[i].saturacao);
+                            }
+                        }
+                    };
+
+                    loadDistinctMeses();
+                    loadDistinctSecoes();
+                    loadDistinctSaturacoes();
+
+                    for (var i = 0; i < $scope.fatorsegurancaSecoes.length; i++) {
+                        var secao =  $scope.fatorsegurancaSecoes[i];
+                        var item = {id:i, secao: $scope.fatorsegurancaSecoes[i], saturacao: []};
+
+                        for (var j = 0; j < $scope.fatorsegurancaSaturacao.length; j++) {
+                            var saturacao = {nome: $scope.fatorsegurancaSaturacao[j], meses:[]};
+
+                            for (var k = 0; k < $scope.fatorsegurancaMeses.length; k++) {
+                                var mes = { nome: $scope.fatorsegurancaMeses[k], fatores: [] };
+
+                                for (var l = 0; l < $scope.fatorseguranca.length; l++) {
+                                    var fatorS =$scope.fatorseguranca[l];
+                                    if (fatorS.secao == item.secao && fatorS.mes == mes.nome && fatorS.saturacao == saturacao.nome) {
+                                        mes.fatores.push({id:fatorS.id, valorRu: fatorS.valorRu, valorLp: fatorS.valorLp })
+                                    }
+                                }
+
+                                saturacao.meses.push(mes);
+                            }
+
+                            item.saturacao.push(saturacao);
+
+                        }
+
+                        $scope.fatorsegurancaRelatorioAnual.push(item);
+                    }
+
+
 
                     //var getSecoes = function () {
                     //    var secoes = [];
