@@ -311,6 +311,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
         restrict: 'AE',
         scope: {
             aterro: '@',
+            tipado: '@',
             inicio: '@',
             fim: '@',
             id: '=',
@@ -328,9 +329,70 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             $scope.aterroNome;
             $scope.marcosuperficialdeslocamento = ({});
 
+            if ($scope.tipo == 'marcosuperficialanomalia') {
+                $http.get("/marcosuperficial/monitoramentos/?tipo=relatorio&aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + "&marcoSuperficial=" + $scope.tipado).then(function (results) {
+                    $scope.marcosuperficialanomalia = ([]);
+                    $scope.marcosuperficialanomaliaMeses = ([]);
+                    $scope.marcosuperficialanomaliaMS = ([]);
+                    $scope.marcosuperficialanomaliaRelatorio = ([]);
+
+                    if (results.data.length == 0) {
+                        return;
+                    }
+
+                    for (var i = 0; i < results.data.length; i++) {
+                        $scope.marcosuperficialanomalia.push(results.data[i]);
+                    }
+
+                    var loadDistinctMeses = function () {
+                        for (var i = 0; i < $scope.marcosuperficialanomalia.length; i++) {
+                            if ($scope.marcosuperficialanomaliaMeses.indexOf($scope.marcosuperficialanomalia[i].mes) < 0) {
+                                $scope.marcosuperficialanomaliaMeses.push($scope.marcosuperficialanomalia[i].mes);
+                            }
+                        }
+                    };
+
+                    var loadDistinctMS = function () {
+                        for (var i = 0; i < $scope.marcosuperficialanomalia.length; i++) {
+                            if ($scope.marcosuperficialanomaliaMS.indexOf($scope.marcosuperficialanomalia[i].marcoSuperficial) < 0) {
+                                $scope.marcosuperficialanomaliaMS.push($scope.marcosuperficialanomalia[i].marcoSuperficial);
+                            }
+                        }
+                    };
+
+                    loadDistinctMeses();
+                    loadDistinctMS();
+
+                    for (var i = 0; i < $scope.marcosuperficialanomaliaMeses.length; i++) {
+                        var mes = $scope.marcosuperficialanomaliaMeses[i];
+                        var item = { id: i, mes: mes, marcosSuperficiais: [] };
+
+                        for (var j = 0; j < $scope.marcosuperficialanomaliaMS.length; j++) {
+                            var adicionouMarco = false;
+                            var marcoSuperficial = {nome: $scope.marcosuperficialanomaliaMS[j], criterioAlertaHorizontalMetodologia1: null, criterioAlertaVerticalMetodologia1: null };
+
+                            for (var k = 0; k < $scope.marcosuperficialanomalia.length; k++) {
+                                var marco = $scope.marcosuperficialanomalia[k];
+                                if (marco.marcoSuperficial == marcoSuperficial.nome && marco.mes == mes) {
+                                    adicionouMarco = true;
+                                    marcoSuperficial.criterioAlertaHorizontalMetodologia1 = marco.criterioAlertaHorizontalMetodologia1;
+                                    marcoSuperficial.criterioAlertaVerticalMetodologia1 = marco.criterioAlertaVerticalMetodologia1;
+                                }
+                            }
+                            if (adicionouMarco) {
+                                item.marcosSuperficiais.push(marcoSuperficial);
+                            }
+                        }
+
+                        $scope.marcosuperficialanomaliaRelatorio.push(item);
+                    }
+
+                });
+            }
+
             if ($scope.tipo == 'fatorsegurancames') {
+
                 $http.get("/FatorSeguranca/search/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
-                    //$scope.fatorsegurancaMes = results.data;
                     var result = ([]);
                     var f = [];
 
@@ -498,13 +560,12 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                             var adicionouFatores = false;
 
                             for (var k = 0; k < $scope.fatorsegurancaSaturacao.length; k++) {
-                                var saturacao = { nome: $scope.fatorsegurancaSaturacao[k], fator:null, fatores: [] };
+                                var saturacao = { nome: $scope.fatorsegurancaSaturacao[k], fator:null };
 
                                 for (var l = 0; l < $scope.fatorseguranca.length; l++) {
                                     var fatorS =$scope.fatorseguranca[l];
                                     if (fatorS.secao == secao.nome && fatorS.mes == mes && fatorS.saturacao == saturacao.nome) {
                                         adicionouFatores = true;
-                                        //saturacao.fatores.push({ id: fatorS.id, valorRu: fatorS.valorRu, valorLp: fatorS.valorLp })
                                         saturacao.fator = fatorS.valorLp;
                                     }
                                 }

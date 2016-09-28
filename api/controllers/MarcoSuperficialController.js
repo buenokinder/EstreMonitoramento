@@ -541,7 +541,7 @@ module.exports = {
         }
 
         if (req.param('marcoSuperficial') != undefined) {
-            filtro.nome = req.param('marcoSuperficial');
+            filtro.nome = req.param('marcoSuperficial').split(',');
         }
 
         if (req.param('aterro') != undefined) {

@@ -99,7 +99,7 @@
                         <table>
                             <tbody>
                                 <tr ng-repeat="saturacao in item.saturacao">
-                                    <td>{{saturacao.nome}}</td>
+                                    <td style="text-align:center">{{saturacao.nome}}</td>
                                     <td ng-repeat="mes in saturacao.meses" style="text-align: right;">
                                         <code ng-repeat="fator in mes.fatores">
                                             {{fator.valorLp}}
@@ -140,17 +140,31 @@
 
     
     <div style="width: 100%;" ng-show="(tipo=='marcosuperficialanomalia')">
-        
         <table class="table-medium">
             <thead>
                 <tr style="background-color: #ccc;">
                     <th style="text-align: center;">MÊS</th>
-                    <th style="text-align: center;">MS</th>
-                    <th style="text-align: center;">CRITÉRIO DE ALERTA</th>
+                    <th style="text-align: center;" colspan="1">MS</th>
+                    <th style="text-align: center;" colspan="2">CRITÉRIO DE ALERTA HORIZONTAL</th>
+                    <th style="text-align: center;" colspan="2">CRITÉRIO DE ALERTA VERTICAL</th>
                 </tr>
             </thead>
 
             <tbody>
+                <tr ng-repeat="item in marcosuperficialanomaliaRelatorio">
+                    <td rowspan="1" style="text-align: center;border-top: 1px solid #ddd;">{{item.mes}}</td>
+                    <td colspan="5" style="border-bottom: 1px solid #ddd;">
+                        <table>
+                            <tbody>
+                                <tr ng-repeat="marcoSuperficial in item.marcosSuperficiais">
+                                    <td style="text-align:center" colspan="3">{{marcoSuperficial.nome}}</td>
+                                    <td style="text-align:center" class="{{getClass(marcoSuperficial.criterioAlertaHorizontalMetodologia1)}}">{{marcoSuperficial.criterioAlertaHorizontalMetodologia1}}</td>
+                                    <td style="text-align:center" colspan="2" class="{{getClass(marcoSuperficial.criterioAlertaVerticalMetodologia1)}}">{{marcoSuperficial.criterioAlertaVerticalMetodologia1}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
