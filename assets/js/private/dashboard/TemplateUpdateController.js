@@ -238,9 +238,9 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                 var tipo = item.split('}}')[0];
                 if (tipo.indexOf('tabela(') !== -1) {
                     var parametro = tipo.split('&#39;')[1];
+                    var parametro2 = tipo.split('&#39;')[3];
 
-
-                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipo=\'' + parametro + '\' aterro=\'' + $scope.data.aterro.id + '\'   inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\' ></tabela>  ');
+                    value = value.replaceAll('{{' + item.split('}}')[0] + '}}', '<tabela tipado=\'' + parametro2 + '\'  tipo=\'' + parametro + '\' aterro=\'' + $scope.data.aterro.id + '\'   inicio=\'' + getDate($scope.data.dataInicio) + '\' fim=\'' + getDate($scope.data.dataFim) + '\' ></tabela>  ');
                 }
                 if (tipo.indexOf('grafico(') !== -1) {
                     var parametro = tipo.split('&#39;')[1];
