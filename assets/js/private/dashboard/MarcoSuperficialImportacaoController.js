@@ -12,7 +12,6 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
     //$scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
 
     $scope.inserted = { data: null, nomeTopografo: 'Admin', nomeAuxiliar: 'Admin', temperatura: '10', obsGestor: '', usuario: $scope.usuario._id, aterro: null };
-
     $scope.aterros = ([]);
 
     $http.get('/Aterro').success(function (response, status) {
