@@ -315,20 +315,108 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
         link: function ($scope, $element, attrs) {
 
             $scope.fatorsegurancaMes = ({});
+            $scope.fatorseguranca = ({});
+            $scope.fatorsegurancaMeses = ([]);
+            $scope.fatorsegurancaSecoes = ([]);
             $scope.aterroNome;
             $scope.marcosuperficialdeslocamento = ({});
 
             if ($scope.tipo == 'fatorsegurancames') {
-                console.log("aterro", $scope.aterro);
-
                 $http.get("/FatorSeguranca/search/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
                     $scope.fatorsegurancaMes = results.data;
                 });
             }
 
+            //if ($scope.tipo == 'fatorseguranca') {
+            //    $http.get("/SecaoFatorSeguranca/relatorio/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
+            //        //$scope.fatorseguranca = results.data;
+            //        $scope.fatorseguranca = ([]);
+
+            //        if (results.data.length == 0) {
+            //            return;
+            //        }
+
+            //        $scope.fatorseguranca = results.data[0];
+
+            //        for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+            //            if ($scope.fatorsegurancaMeses.indexOf($scope.fatorseguranca[i].mes) < 0) {
+            //                $scope.fatorsegurancaMeses.push($scope.fatorseguranca[i].mes);
+            //            }
+            //        }
+                    
+            //        var fs = $scope.fatorseguranca;
+            //        for (var i = 0; i < $scope.fatorsegurancaMeses.length; i++) {
+
+            //            for (var j = 0; j < fs.length; j++) {
+            //                if ($scope.fatorseguranca[j].meses == undefined) {
+            //                    $scope.fatorseguranca[j].meses = [];
+            //                }
+            //                if (fs[j].mes == $scope.fatorsegurancaMeses[i]) {
+            //                    $scope.fatorseguranca[j].meses.push({ mes: $scope.fatorsegurancaMeses[i], valorLp: fs[j].valorLp, valorRu: fs[j].valorRu });
+            //                } else {
+            //                    $scope.fatorseguranca[j].meses.push({ mes: $scope.fatorsegurancaMeses[i], valorLp: '', valorRu: '' });
+            //                }
+            //            }
+            //        }
+
+            //    });
+            //}
+
             if ($scope.tipo == 'fatorseguranca') {
-                $http.get("/FatorSeguranca/").then(function (results) {
-                    $scope.fatorsegurancaMes = results.data;
+                $http.get("/SecaoFatorSeguranca/relatorio/?aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim)).then(function (results) {
+                    $scope.fatorseguranca = ([]);
+
+                    //if (results.data.length == 0) {
+                    //    return;
+                    //}
+
+                    //$scope.fatorseguranca = results.data[0];
+
+                    //var getMeses = function () {
+
+                    //    for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+                    //        if ($scope.fatorsegurancaMeses.indexOf($scope.fatorseguranca[i].mes) < 0) {
+                    //            $scope.fatorsegurancaMeses.push($scope.fatorseguranca[i].mes);
+                    //        }
+                    //    }
+                    //};
+
+                    //var getSecoes = function () {
+                    //    var secoes = [];
+                    //    for (var i = 0; i < $scope.fatorseguranca.length; i++) {
+                    //        if (secoes.indexOf($scope.fatorseguranca[i].secao) < 0) {
+                    //            $scope.fatorsegurancaSecoes.push({ secao: $scope.fatorseguranca[i].secao, saturacoes: []});
+                    //            secoes.push($scope.fatorseguranca[i].secao);
+                    //        } 
+                            
+                    //        if ($scope.fatorsegurancaSecoes[secoes.indexOf($scope.fatorseguranca[i].mes)].saturacoes.length == 0) {
+                    //            $scope.fatorsegurancaSecoes[secoes.indexOf($scope.fatorseguranca[i].mes)].saturacoes = [];
+                    //        }
+
+                    //        $scope.fatorsegurancaSecoes[secoes.indexOf($scope.fatorseguranca[i].mes)].saturacoes.push({ saturacao: $scope.fatorseguranca[i].saturacao })
+                    //    }
+                    //};
+
+
+                    //getMeses();
+                    //getSecoes();
+
+
+                    //var fs = $scope.fatorseguranca;
+                    //for (var i = 0; i < $scope.fatorsegurancaMeses.length; i++) {
+
+                    //    for (var j = 0; j < fs.length; j++) {
+                    //        if ($scope.fatorseguranca[j].meses == undefined) {
+                    //            $scope.fatorseguranca[j].meses = [];
+                    //        }
+                    //        if (fs[j].mes == $scope.fatorsegurancaMeses[i]) {
+                    //            $scope.fatorseguranca[j].meses.push({ mes: $scope.fatorsegurancaMeses[i], valorLp: fs[j].valorLp, valorRu: fs[j].valorRu });
+                    //        } else {
+                    //            $scope.fatorseguranca[j].meses.push({ mes: $scope.fatorsegurancaMeses[i], valorLp: '', valorRu: '' });
+                    //        }
+                    //    }
+                    //}
+
                 });
             }
 
@@ -340,13 +428,13 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                 });
             }
 
-            $scope.init = function () {
-                if ($scope.tipo == 'fatorsegurancames') {
-                    $http.get("/FatorSeguranca/?aterro=" + $scope.aterro).then(function (results) {
-                        $scope.fatorsegurancaMes = results.data;
-                    });
-                }
-            };
+            //$scope.init = function () {
+            //    //if ($scope.tipo == 'fatorsegurancames') {
+            //    //    $http.get("/FatorSeguranca/?aterro=" + $scope.aterro).then(function (results) {
+            //    //        $scope.fatorsegurancaMes = results.data;
+            //    //    });
+            //    //}
+            //};
 
             $scope.getClass = function (criterio) {
                 var name = criterio.toLowerCase();
