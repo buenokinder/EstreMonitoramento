@@ -113,8 +113,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         }
     };
 
-   
-
     $scope.closeBoxComponent = function () {
         $('#modalView').closeModal();
         $(".lean-overlay").hide();
@@ -262,6 +260,44 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         $scope.paginas[$scope.editPageId].conteudo = $scope.selectedPage;
     };
 
+    $scope.imprimir = function () {
+        $("#relatorio").prop('class','col s7 l7 m7');
+        $("#editor").hide();
+        $("#relatorio-conteudo").css('height', '100%');
+        $(".hideonprint").hide();
+
+        var svgs = $("svg");
+        $.each(svgs, function (i, svg) {
+            var canvas = document.createElement('canvas');
+            canvas.width = $(svg).width();
+            canvas.height = $(svg).height();
+            var ctx = canvas.getContext('2d');
+            var img = document.createElement('img');
+            img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>'))));
+            
+            var loadImg = function (svg, ctx, img) {
+                img.onload = function () {
+                    ctx.drawImage(img, 0, 0);
+                    svg.parent().html("<img src='" + canvas.toDataURL('image/png') + "' />");
+                };
+            }
+            loadImg($(svg), ctx, img);
+        });
+
+
+        html2canvas($("#relatorio"), {
+            onrendered: function (canvas) {
+                $("#relatorio").prop('class', 'col s6 l6 m6');
+                $("#relatorio-conteudo").css('height', '850px');
+                $("#editor").show();
+                $(".hideonprint").show();
+
+                var dataUrl = canvas.toDataURL();
+                window.open(dataUrl, "toDataURL() image", "width=800, height=800");
+            }
+        });
+    };
+    
     $scope.init();
 
     $scope.atualizarPaginasParametrizadasComDatas = function () {
@@ -322,7 +358,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
         }
     }
-
 
     $scope.save = function () {
         // $scope.sennitForm.loading = true;

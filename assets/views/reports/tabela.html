@@ -99,8 +99,8 @@
                         <table>
                             <tbody>
                                 <tr ng-repeat="saturacao in item.saturacao">
-                                    <td style="text-align:center">{{saturacao.nome}}</td>
-                                    <td ng-repeat="mes in saturacao.meses" style="text-align: right;">
+                                    <td style="text-align:center;width:69px">{{saturacao.nome}}</td>
+                                    <td ng-repeat="mes in saturacao.meses" style="text-align: right;width:97px">
                                         <code ng-repeat="fator in mes.fatores">
                                             {{fator.valorLp}}
                                         </code>
