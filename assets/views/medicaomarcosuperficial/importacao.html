@@ -26,30 +26,14 @@
                             </div>
                         </span>
                     </p>
-
-                    <div class="buttons">
-                        <button type="button" class="btn btn-default ng-hide">Adicionar</button>
-
-                        <span class="">
-                            <button type="submit" class="btn btn-primary" style="margin-right:10px;" ng-click="addMedicao()">Salvar</button>
-                        </span>
-                    </div>
                 </form>
             </div>
 
-
             <div class="col s6 m6 l6">
-
-                <div  class="container">
+                <div class="container">
                     <div class="card-panel ng-scope">
 
                         <a class="btn-floating btn-large waves-effect waves-light" ng-click="uploadDetalhes()" title="Inclusão automática via arquivo"><i class="mdi-file-cloud-upload"></i></a>
-
-                        <div>
-                            <grid-view fields="[{'name': 'nome' , 'value': 'Marco', 'readonly':true},{'name': 'norte' , 'value': 'Norte' } ,{'name': 'leste' , 'value': 'Leste' }  ,{'name': 'cota' , 'value': 'Cota' } ]" listaname="MedicaoMarcoSuperficialDetalhes" autopage="true" adicionar="" add="false" strupdate="false" popup="true" label="Lista de Detalhes de Medições"
-                                       view="MedicaoMarcoSuperficialDetalhes" parentkey="owner" pagesize="5" editinline="true" deleteperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}]" updateperfil="[{ 'perfil': 'Administrador' }, { 'perfil': 'Diretor' }]" viewperfil="[{ 'perfil': 'Administrador'}, { 'perfil': 'Diretor'}, { 'perfil': 'Operacional'}]">
-                            </grid-view>
-                        </div>
 
                         <div id="modalUpload" class="modal modal-fixed-footer">
 
@@ -84,6 +68,17 @@
                     </div>
                 </div>
             </div>
+
+            <div id="modalLoading" class="modal modal-fixed-footer">
+                <p style="text-align:center">Aguarde, ainda trabalhando...</p>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+
+                <p ng-model="statusImportacao" style="text-align:center;color:red"></p>
+
+            </div>
+
         </div>
     </div>
 </div>	
