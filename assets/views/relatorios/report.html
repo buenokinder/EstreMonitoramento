@@ -1,6 +1,6 @@
 <div class='row'>
-    <div class='col s6'>
-        <div class='card-panel' ng-init='init()'>
+    <div class='col s6' id="editor">
+        <div class='card-panel'>
             <nav>
                 <div class="nav-wrapper  light-green">
                     <div class='row'>
@@ -19,7 +19,7 @@
                                 <li><a ng-href=""><i class="material-icons" ng-click="novaPagina()">note_add</i></a></li>
                                 <li><a ng-href=""><i class="material-icons" ng-click="savePage()">done</i></a></li>
                                 <li><a ng-href=""><i class="material-icons" ng-click="verPagina()">refresh</i></a></li>
-                                <li><a href="/visualizacao?id={{id}}" target="_blank"><i class="material-icons" ng-click="imprimir()">print</i></a></li>
+                                <li><a ng-href=""><i class="material-icons" ng-click="imprimir()">print</i></a></li>
                                 <li><a class="modal-trigger" ng-href="#modalView"><i class="material-icons">assessment</i></a></li>
                             </ul>
                         </div>
@@ -53,19 +53,19 @@
         </div>
     </div>
 
-    <div class='col s6'>
+    <div class='col s6' id="relatorio">
         <div class='card-panel'>
-            <h4 class='header2'>Preview Relatório</h4>
+            <h4 class='header2 hideonprint'>Preview Relatório</h4>
             <div class='row'>
-                <div class='col s12' style="overflow: auto; height: 850px;">
+                <div id="relatorio-conteudo" class='col s12' style="overflow: auto; height: 850px;">
 
                     <div class="reportEstre">
                         <div ng-repeat="pagina in paginas">
-                            <p>
+                            <p class="hideonprint">
 
-                                <i class="material-icons dp48" ng-click="deletePagina(pagina)">delete</i>
-                                <span class="editable-wrap editable-text ng-scope">
-                                    <div class="editable-controls form-group" ng-class="{'has-error': $error}">
+                                <i class="material-icons dp48 hideonprint" ng-click="deletePagina(pagina)">delete</i>
+                                <span class="editable-wrap editable-text ng-scope hideonprint">
+                                    <div class="editable-controls form-group hideonprint" ng-class="{'has-error': $error}">
                                         <input type="text" name="nomePagina" ng-model="pagina.nome" class="editable-input form-control ng-pristine ng-valid ng-not-empty ng-touched" aria-invalid="false" maxlength="20" />
                                     </div>
                                 </span>
