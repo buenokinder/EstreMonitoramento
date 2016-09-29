@@ -275,13 +275,26 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             var img = document.createElement('img');
             img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>'))));
             
-            var loadImg = function (svg, ctx, img) {
+            var loadImg = function (canvas, svg, ctx, img) {
                 img.onload = function () {
+                    var cw = canvas.width;
+                    var ch = canvas.height;
+
+                    canvas.width = ch;
+                    canvas.height = cw;
+                    cw = canvas.width;
+                    ch = canvas.height;
+
+                    ctx.save();
+                    ctx.translate(cw, ch / cw);
+                    ctx.rotate(Math.PI / 2); //rotaciona 90º
                     ctx.drawImage(img, 0, 0);
+                    ctx.restore();
+
                     svg.parent().html("<img src='" + canvas.toDataURL('image/png') + "' />");
                 };
             }
-            loadImg($(svg), ctx, img);
+            loadImg(canvas, $(svg), ctx, img);
         });
 
 

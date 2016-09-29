@@ -108,7 +108,6 @@ module.exports = {
                                 medicao.prolongamentoCorte = parseFloat(medicao.prolongamentoCorte);
 
                                 if (first == true) {
-
                                     medicao.profundidadeDescontandoCortes = medicao.prolongamentoCorte == "-" || medicao.prolongamentoCorte == 0 ?
                                                                                 parseFloat(medicao.profundidadeTotalInicial) :
                                                                                 parseFloat(parseFloat(medicao.profundidadeTotalInicial) + parseFloat(medicao.prolongamentoCorte));
