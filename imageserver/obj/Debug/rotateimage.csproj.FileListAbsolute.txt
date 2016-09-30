@@ -1,0 +1,6 @@
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\bin\Debug\rotateimage.exe.config
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\bin\Debug\rotateimage.exe
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\bin\Debug\rotateimage.pdb
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\obj\Debug\rotateimage.csprojResolveAssemblyReference.cache
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\obj\Debug\rotateimage.exe
+C:\Users\michel.oliveira\Desktop\rotate image\rotateimage\rotateimage\obj\Debug\rotateimage.pdb

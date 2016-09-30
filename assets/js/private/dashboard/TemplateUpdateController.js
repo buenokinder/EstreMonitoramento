@@ -39,13 +39,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
     $scope.loadAterros = function () {
         $http.get('/Aterro/Search').success(function (data) {
             $scope.aterros = angular.fromJson(data);
-
-            //for (var i = 0; i < $scope.aterros.length; i++) {
-            //    if ($scope.aterros[i].id == $scope.data.aterro) {
-            //        $scope.data.aterro = $scope.aterros[i];
-            //        break;
-            //    }
-            //}
         });
     };
 
@@ -260,6 +253,16 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         $scope.paginas[$scope.editPageId].conteudo = $scope.selectedPage;
     };
 
+
+    function getObjMatrix(obj) {
+        var matrix = obj.css("-webkit-transform") ||
+            obj.css("-moz-transform") ||
+            obj.css("-ms-transform") ||
+            obj.css("-o-transform") ||
+            obj.css("transform");
+        return matrix;
+    }
+
     $scope.imprimir = function () {
         $("#relatorio").prop('class', 'col s7 l7 m7');
         $("#editor").hide();
@@ -276,47 +279,84 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             var ctx = canvas.getContext('2d');
             var img = document.createElement('img');
             img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>'))));
+            //img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="595" height="842">' + $(svg).html() + '</svg>'))));
+
             //img.setAttribute("style", "-webkit-transform: rotate(90deg)");
             //$(".grafico-rotate").prop("style", "min-width: 500px;max-width: 750px ; height: 400px; margin: 0 auto");
 
             var loadImg = function (canvas, svg, ctx, img) {
                 img.onload = function () {
+
                     var parent = svg.parent();
-                    // var cw = canvas.width;
-                    // var ch = canvas.height;
+                    canvas.width = $(svg).height();
+                    canvas.height = $(svg).width();
 
-                    //var cw = A4.width;
-                    //var ch = A4.height;
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
 
-                    canvas.width = A4.height;
-                    canvas.height = A4.width;
-                    //cw = canvas.width;
-                    //ch = canvas.height;
+                    // roate the canvas by +90% 
+                    ctx.rotate(Math.PI / 2);
 
-                    ctx.save();
-                    //ctx.translate(cw, ch / cw);
-                    ctx.translate(A4.width, A4.height / A4.width);
-                    ctx.rotate(Math.PI / 2); //rotaciona 90º
-                    ctx.drawImage(img, 0, 0);
+                    // since images draw from top-left offset the draw by 1/2 width & height
+                    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
                     parent.html("<img src='" + canvas.toDataURL('image/png') + "' />");
+                    // un-rotate the canvas by -90% (== -Math.PI/2)
+                    ctx.rotate(-Math.PI / 2);
 
-                    //parent.html("<div style='width: 100%;-webkit-transform: rotate(90deg);position: relative;top: 150px;'><img src='" + canvas.toDataURL('image/png') + "' /></div>");
-                    ctx.restore();
+                    // un-translate the canvas back to origin==top-left canvas
+                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    //canvas.width = $(svg).height();
+                    //canvas.height = $(svg).width();
+                    //ctx.save();
+                    //var x = $(svg).width();
+                    //var y = $(svg).height() / $(svg).width();
+                    //ctx.translate(x, y);
+                    //ctx.rotate(Math.PI / 2); //rotaciona 90º
+                    //ctx.webkitImageSmoothingEnabled = false;
+                    //ctx.mozImageSmoothingEnabled = false;
+                    //ctx.imageSmoothingEnabled = false;
+                    //ctx.drawImage(img, 0, 0);
+                    //parent.html("<img src='" + canvas.toDataURL('image/png') + "' />");
+                    //ctx.restore();
+
+
+
+
+
+
+
+
+
+                    //window.open(canvas.toDataURL('image/png'), "to", "width=1024,height=768");
                 };
             }
             loadImg(canvas, $(svg), ctx, img);
         });
 
-
         html2canvas($("#relatorio"), {
             onrendered: function (canvas) {
+
                 $("#relatorio").prop('class', 'col s6 l6 m6');
                 $("#relatorio-conteudo").css('height', '850px');
                 $("#editor").show();
                 $(".hideonprint").show();
 
                 var dataUrl = canvas.toDataURL();
-                window.open(dataUrl, "toDataURL() image", "width=800, height=800");
+
+                window.open(dataUrl, "to", "width=1024,height=768");
+
+                //$("body").css({
+                //    'transform': 'scale(1)',
+                //    '-ms-transform': 'scale(1)',
+                //    '-webkit-transform': 'scale(1)'
+                //});
+
+                //var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"
+                //$("body").html(el);
+                //window.print();
+                //location.reload();
             }
         });
     };
