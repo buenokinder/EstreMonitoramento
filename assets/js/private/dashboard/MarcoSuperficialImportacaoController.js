@@ -123,6 +123,7 @@ app.controller('MarcoSuperficialImportacaoController', ['$scope', '$http', '$fil
 
             for (var j = 0; j < medicao.detalhes.length; j++) {
                 var item = medicao.detalhes[j];
+                item.data = getDateTime(medicao.data);
                 var key = item.aterro + "|" + item.nome;
                 if (keys.indexOf(key) >= 0) continue;
 
