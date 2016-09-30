@@ -188,13 +188,27 @@ module.exports = {
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
 
+        console.log("filtroDatas.dataInicial", filtroDatas.dataInicial);
+        console.log("filtroDatas.dataFinal", filtroDatas.dataFinal);
+
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
             var item = {};
-            var exibirMarcosSuperficiais = (owner == undefined) && marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length>0;
+            var possuiDetalhesNoPeriodo = false;
+
+            for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
+
+                if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
+                    if (item.data < filtroDatas.dataInicial || item.data > filtroDatas.dataFinal) continue;
+                    possuiDetalhesNoPeriodo = true;
+                }
+            }
+
+            var exibirMarcosSuperficiais = (owner == undefined) && possuiDetalhesNoPeriodo;
 
             if (exibirMarcosSuperficiais ) {
+                console.log(marcosSuperficiais[i].nome + " - data", marcosSuperficiais[i].data);
 
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
@@ -239,8 +253,11 @@ module.exports = {
 
                 if (owner && detalhe.owner.id != owner) continue;
 
+                console.log(marcosSuperficiais[i].nome + " - data", marcosSuperficiais[i].data);
+                console.log(marcosSuperficiais[i].nome + " - data", marcosSuperficiais[i].data);
+
                 if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
-                    if (item.data < filtroDatas.dataInicial || item.data > filtroDatas.dataFinal) continue;
+                    if (detalhe.data < filtroDatas.dataInicial || detalhe.data > filtroDatas.dataFinal) continue;
                 }
 
                 var item = {};
