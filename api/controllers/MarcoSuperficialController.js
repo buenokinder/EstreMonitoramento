@@ -198,9 +198,10 @@ module.exports = {
             var possuiDetalhesNoPeriodo = false;
 
             for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
+                var detalhe = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
 
                 if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
-                    if (item.data < filtroDatas.dataInicial || item.data > filtroDatas.dataFinal) continue;
+                    if (detalhe.data < filtroDatas.dataInicial || detalhe.data > filtroDatas.dataFinal) continue;
                     possuiDetalhesNoPeriodo = true;
                 }
             }
