@@ -274,6 +274,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             var ctx = canvas.getContext('2d');
             var img = document.createElement('img');
             img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>'))));
+            img.setAttribute("style", "-webkit-transform: rotate(90deg)");
 
             var loadImg = function (canvas, svg, ctx, img) {
                 img.onload = function () {
@@ -285,12 +286,14 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     //canvas.height = cw;
                     //cw = canvas.width;
                     //ch = canvas.height;
-
+                    
                     //ctx.save();
                     //ctx.translate(cw/2, ch / cw);
                     //ctx.rotate(Math.PI / 2); //rotaciona 90º
                     ctx.drawImage(img, 0, 0);
                     parent.html("<img src='" + canvas.toDataURL('image/png') + "' />");
+
+                    //parent.html("<div style='width: 100%;-webkit-transform: rotate(90deg);position: relative;top: 150px;'><img src='" + canvas.toDataURL('image/png') + "' /></div>");
                     //ctx.restore();
                 };
             }

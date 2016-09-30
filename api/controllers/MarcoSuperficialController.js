@@ -192,9 +192,9 @@ module.exports = {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
             var item = {};
-            var exibirMarcosSuperficiais = (owner == undefined);
+            var exibirMarcosSuperficiais = (owner == undefined) && marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length>0;
 
-            if (exibirMarcosSuperficiais) {
+            if (exibirMarcosSuperficiais ) {
 
                 item.id = marcosSuperficiais[i].id;
                 item.marcoSuperficial = marcosSuperficiais[i].nome;
@@ -522,11 +522,24 @@ module.exports = {
         }
 
         if (undefined != req.param('dtIni') && '' != req.param('dtIni')) {
-            filtro.dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
+
+            var possuiHoras = req.param('dtIni').indexOf(' ') > 0 && req.param('dtIni').indexOf(':') > 0;
+            if (possuiHoras) {
+                filtro.dataInicial = this._getDate(req.param('dtIni'));
+            } else {
+                filtro.dataInicial = this._getDate(req.param('dtIni'), 0, 0, 0);
+            }
+            
         }
 
         if (undefined != req.param('dtFim') && '' != req.param('dtFim')) {
-            filtro.dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
+            var possuiHoras = req.param('dtFim').indexOf(' ') > 0 && req.param('dtFim').indexOf(':') > 0;
+
+            if (possuiHoras) {
+                filtro.dataFinal = this._getDate(req.param('dtFim'));
+            } else {
+                filtro.dataFinal = this._getDate(req.param('dtFim'), 23, 59, 59);
+            }
         }
 
         return filtro;
