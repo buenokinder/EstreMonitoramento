@@ -61,7 +61,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         if (!$scope.$$phase) {
             $scope.$apply();
         }
-
     };
 
     $scope.deletePagina = function (pagina) {
@@ -446,9 +445,16 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
             if (totalResponses == totalRequests) {
                 clearInterval(itv);
+
+                var totalPages = $("page[size='A4']").length;
+                var index = 0;
+
                 $.each($("page[size='A4']"),
 					function (i, o) {
-					    $(o).css("height", "33cm");
+					    index += 1;
+					    if (index != totalPages) {
+					        $(o).css("height", "33cm");
+					    }
 					}
 				);
 
@@ -463,9 +469,9 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                         var dataUrl = canvas.toDataURL();
 
                         // $("body").css({
-                        // 'transform': 'scale(0)',
-                        // '-ms-transform': 'scale(0)',
-                        // '-webkit-transform': 'scale(0)'
+                        // 'transform': 'scale(1)',
+                        // '-ms-transform': 'scale(1)',
+                        // '-webkit-transform': 'scale(1)'
                         // });
 
                         var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"

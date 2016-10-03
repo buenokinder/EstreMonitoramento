@@ -122,15 +122,6 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                         text: $scope.tipado + ' - Horizontal',
                         x: -20 //center
                     },
-                    chart:{
-                        events: {
-                            load: function (event) {
-
-
-
-                            }
-                        }    
-                    },
                     yAxis: [{ // Primary yAxis
                         labels: {
                             format: '{value}',

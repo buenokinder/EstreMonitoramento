@@ -5,7 +5,7 @@
     protected void Application_BeginRequest()
     {
 
-        string[] allowedOrigin = new string[] { "http://localhost:1337" };
+        string[] allowedOrigin = new string[] { "http://localhost:1337", "http://geotecnia.estre.com.br:1337/", "http://geotecnia.estre.com.br" };
         var origin = HttpContext.Current.Request.Headers["Origin"];
 
         if (origin != null && allowedOrigin.Contains(origin))
