@@ -1,3 +1,0 @@
-C:\projetos\estre\EstreMonitoramento\imageserver\bin\Debug\rotateimage.exe.config
-C:\projetos\estre\EstreMonitoramento\imageserver\obj\Debug\rotateimage.exe
-C:\projetos\estre\EstreMonitoramento\imageserver\obj\Debug\rotateimage.pdb

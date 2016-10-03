@@ -262,8 +262,21 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
             obj.css("transform");
         return matrix;
     }
+    //  function setDPI(canvas, dpi) {
+    //if (!canvas.style.width)
+    //    canvas.style.width = canvas.width + 'px';
+    //if (!canvas.style.height)
+    //    canvas.style.height = canvas.height + 'px';
 
-    $scope.imprimir = function () {
+    //var scaleFactor = dpi / 96;
+    //canvas.width = Math.ceil(canvas.width * scaleFactor);
+    //canvas.height = Math.ceil(canvas.height * scaleFactor);
+    //var ctx = canvas.getContext('2d');
+    //ctx.scale(scaleFactor, scaleFactor);
+    // }
+
+
+    $scope.imprimir_printscreen = function () {
         $("#relatorio").prop('class', 'col s7 l7 m7');
         $("#editor").hide();
         $("#relatorio-conteudo").css('height', '100%');
@@ -271,64 +284,53 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
         var svgs = $("svg");
         var A4 = { width: 595, height: 842 };
+        var scaleFactor = 72 / 96;
 
         $.each(svgs, function (i, svg) {
+
             var canvas = document.createElement('canvas');
             canvas.width = $(svg).width();
             canvas.height = $(svg).height();
+
             var ctx = canvas.getContext('2d');
             var img = document.createElement('img');
-            img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>'))));
-            //img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="595" height="842">' + $(svg).html() + '</svg>'))));
+            var base64 = btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>')));
 
-            //img.setAttribute("style", "-webkit-transform: rotate(90deg)");
-            //$(".grafico-rotate").prop("style", "min-width: 500px;max-width: 750px ; height: 400px; margin: 0 auto");
+            img.setAttribute('src', 'data:image/svg+xml;base64,' + base64);
 
             var loadImg = function (canvas, svg, ctx, img) {
                 img.onload = function () {
 
                     var parent = svg.parent();
-                    canvas.width = $(svg).height();
-                    canvas.height = $(svg).width();
+
+                    if (!canvas.style.width)
+                        canvas.style.width = canvas.width + 'px';
+                    if (!canvas.style.height)
+                        canvas.style.height = canvas.height + 'px';
 
                     ctx.translate(canvas.width / 2, canvas.height / 2);
 
                     // roate the canvas by +90% 
                     ctx.rotate(Math.PI / 2);
 
+                    ctx.webkitImageSmoothingEnabled = false;
+                    ctx.mozImageSmoothingEnabled = false;
+                    ctx.imageSmoothingEnabled = false;
+
                     // since images draw from top-left offset the draw by 1/2 width & height
                     ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
+
                     parent.html("<img src='" + canvas.toDataURL('image/png') + "' />");
-                    // un-rotate the canvas by -90% (== -Math.PI/2)
+                    // un-rotate -90% (== -Math.PI/2)
                     ctx.rotate(-Math.PI / 2);
 
-                    // un-translate the canvas back to origin==top-left canvas
+                    // un-translate - origin==top-left canvas
                     ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    //canvas.width = $(svg).height();
-                    //canvas.height = $(svg).width();
-                    //ctx.save();
-                    //var x = $(svg).width();
-                    //var y = $(svg).height() / $(svg).width();
-                    //ctx.translate(x, y);
-                    //ctx.rotate(Math.PI / 2); //rotaciona 90º
-                    //ctx.webkitImageSmoothingEnabled = false;
-                    //ctx.mozImageSmoothingEnabled = false;
-                    //ctx.imageSmoothingEnabled = false;
-                    //ctx.drawImage(img, 0, 0);
-                    //parent.html("<img src='" + canvas.toDataURL('image/png') + "' />");
-                    //ctx.restore();
 
-
-
-
-
-
-
-
-
+                    // ctx.scale(scaleFactor, scaleFactor);
                     //window.open(canvas.toDataURL('image/png'), "to", "width=1024,height=768");
                 };
             }
@@ -345,21 +347,138 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
                 var dataUrl = canvas.toDataURL();
 
-                window.open(dataUrl, "to", "width=1024,height=768");
+                $("body").css({
+                    'transform': 'scale(1)',
+                    '-ms-transform': 'scale(1)',
+                    '-webkit-transform': 'scale(1)'
+                });
 
-                //$("body").css({
-                //    'transform': 'scale(1)',
-                //    '-ms-transform': 'scale(1)',
-                //    '-webkit-transform': 'scale(1)'
-                //});
-
-                //var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"
-                //$("body").html(el);
-                //window.print();
-                //location.reload();
+                var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"
+                $("body").html(el);
+                window.print();
+                location.reload();
             }
         });
     };
+
+
+    $scope.imprimir = function () {
+        $("#relatorio").prop('class', 'col s7 l7 m7');
+        $("#editor").hide();
+        $("#relatorio-conteudo").css('height', '100%');
+        $(".hideonprint").hide();
+
+        $(".grafico-rotate").each(function (i, rotate) {
+            $(rotate).prop("style", "width: 100%;-webkit-transform: position: relative;top: 150px;");
+        });
+
+        $(".highcharts-container").each(function (i, rotate) {
+            $(rotate).css("height", "916px");
+        });
+
+        $(".horizontal").each(function (i, rotate) {
+            $(rotate).css("height", "916px");
+        });
+
+        var svgs = $("svg");
+        var A4 = { width: 595, height: 842 };
+        var totalRequests = 0;
+        var totalResponses = 0;
+
+        $.each(svgs, function (i, svg) {
+
+            var canvas = document.createElement('canvas');
+            canvas.width = $(svg).width();
+            canvas.height = $(svg).height();
+
+            var ctx = canvas.getContext('2d');
+            var img = document.createElement('img');
+            var base64 = btoa(unescape(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + $(svg).width() + '" height="' + $(svg).height() + '">' + $(svg).html() + '</svg>')));
+
+            img.setAttribute('src', 'data:image/svg+xml;base64,' + base64);
+
+            var loadImg = function (canvas, svg, ctx, img) {
+                img.onload = function () {
+
+                    var parent = svg.parent();
+
+                    if (!canvas.style.width)
+                        canvas.style.width = canvas.width + 'px';
+                    if (!canvas.style.height)
+                        canvas.style.height = canvas.height + 'px';
+
+
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+
+                    ctx.webkitImageSmoothingEnabled = false;
+                    ctx.mozImageSmoothingEnabled = false;
+                    ctx.imageSmoothingEnabled = false;
+                    //ctx.drawImage(img, 0, 0);
+                    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+                    var rotateImage = function (canvas, parent) {
+                        totalRequests += 1;
+                        $.ajax({
+                            url: 'http://localhost:3537/getimage.ashx',
+                            type: "POST",
+                            beforeSend: function (jqXHR, settings) {
+                                return true;
+                            },
+                            data: { content: canvas.toDataURL('image/png') },
+                            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                            success: function (result) {
+                                totalResponses += 1;
+                                var src = 'data:image/png;base64,' + result.image;
+                                parent.html("<img src='" + src + "' />");
+                            }
+                        });
+
+                    };
+
+                    rotateImage(canvas, parent);
+                };
+            }
+            loadImg(canvas, $(svg), ctx, img);
+        });
+
+
+        var itv = setInterval(function () {
+
+            if (totalResponses == totalRequests) {
+                clearInterval(itv);
+                $.each($("page[size='A4']"),
+					function (i, o) {
+					    $(o).css("height", "33cm");
+					}
+				);
+
+                html2canvas($("#relatorio"), {
+                    onrendered: function (canvas) {
+
+                        $("#relatorio").prop('class', 'col s6 l6 m6');
+                        $("#relatorio-conteudo").css('height', '850px');
+                        $("#editor").show();
+                        $(".hideonprint").show();
+
+                        var dataUrl = canvas.toDataURL();
+
+                        // $("body").css({
+                        // 'transform': 'scale(0)',
+                        // '-ms-transform': 'scale(0)',
+                        // '-webkit-transform': 'scale(0)'
+                        // });
+
+                        var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"
+                        $("body").html(el);
+                        window.print();
+                        location.reload();
+                    }
+                });
+            }
+        }, 500);
+
+    };
+
 
     $scope.init();
 
