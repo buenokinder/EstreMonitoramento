@@ -419,7 +419,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     var rotateImage = function (canvas, parent) {
                         totalRequests += 1;
                         $.ajax({
-                            url: 'http://localhost:3537/getimage.ashx',
+                            url: 'http://geotecnia.estre.com.br:81/getimage.ashx',
                             type: "POST",
                             beforeSend: function (jqXHR, settings) {
                                 return true;
