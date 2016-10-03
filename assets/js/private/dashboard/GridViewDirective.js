@@ -48,13 +48,12 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 if ($scope.fields[key].combo == 'true') {
                     $scope.habilitaBotao = true;
                     $scope.getCombo($scope.fields[key]);
-                    var className = $scope.fields[key].name == 'aterro' ? 'form-group col m4 l4 s4':'form-group col m2 l2 s2';
+                    var className = $scope.fields[key].name == 'aterro' ? 'form-group col m5 l5 s5':'form-group col m2 l2 s2';
 
                     HtmlFormBody += "<div class='" + className + "' id='sign-up-form'>";
                     HtmlFormBody += "<label ng-class='inputClass' for='" + $scope.fields[key].name + "'>" + $scope.fields[key].value + "</label>";
                     HtmlFormBody += "<select class='browser-default active' id='" + $scope.fields[key].name + "' required ng-model='querydapesquisa." + $scope.fields[key].name + "' ng-options='x." + $scope.fields[key].fieldid + " as x." + $scope.fields[key].fieldname + " for x in " + $scope.fields[key].model + "'><option value='Todos'></option></select>";
                     HtmlFormBody += "</div>";
-
                 }
             }
 
@@ -130,9 +129,23 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<td colspan='3' class='row'>";
                 HtmlFormBody += "<div>";
                 HtmlFormBody += "<ul class='pagination'>";
-                HtmlFormBody += "<li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li>";
-                HtmlFormBody += "<li  ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
-                HtmlFormBody += "<li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li>";
+
+
+                HtmlFormBody += "<li><a href='' ng-click='(ActualPage == 1) || Pagina(1)'>«</a></li>";
+                // HtmlFormBody += "<li  ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPagina(ActualPage)'>‹</a></li>";
+                HtmlFormBody += "<li><a  style='font-size: 15px;!important'>{{ActualPage}} de {{TotalPages.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPagina(ActualPage)'>›</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='(ActualPage == TotalPages.length) || Pagina(TotalPages.length)'>»</a></li>";
+
+
+                //HtmlFormBody += "<li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li>";
+                //HtmlFormBody += "<li  ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+                //HtmlFormBody += "<li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li>";
+
+
                 HtmlFormBody += "</ul>";
                 HtmlFormBody += "</div>";
                 HtmlFormBody += "</td>";
@@ -146,9 +159,15 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<td colspan='3' class='row'>";
                 HtmlFormBody += "<div>";
                 HtmlFormBody += "<ul class='pagination'>";
-                HtmlFormBody += "<li><a>«</a></li>";
-                HtmlFormBody += "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
-                HtmlFormBody += "<li><a >»</a></li>";
+                HtmlFormBody += "<li><a  href='' ng-click='Pagina(1)'>«</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPagina(ActualPage)'>‹</a></li>";
+                HtmlFormBody += "<li><a style='font-size: 15px;!important'>{{ActualPage}} de {{TotalPagesSearch.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPagina(ActualPage)'>›</a></li>";
+                //HtmlFormBody += "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
+
+
+                HtmlFormBody += "<li><a href='' ng-click='Pagina(TotalPagesSearch.length)'>»</a></li>";
                 HtmlFormBody += "</ul>";
                 HtmlFormBody += "</div>";
                 HtmlFormBody += "</td>";
@@ -188,7 +207,18 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
-                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div>";
+                HtmlFormBody += " <ul class='pagination'>";
+
+                HtmlFormBody += " <li><a href='' ng-click='(ActualPage == 1) || Pagina(1)'>«</a></li>";
+                //HtmlFormBody += " <li ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPagina(ActualPage)'>‹</a></li>";
+                HtmlFormBody += "<li><a style='font-size: 15px;!important'>{{ActualPage}} de {{TotalPages.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPagina(ActualPage)'>›</a></li>";
+                HtmlFormBody += " <li><a href='' ng-click='(ActualPage == TotalPages.length) || Pagina(TotalPages.length)'>»</a></li>";
+
+                HtmlFormBody += "</ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "</tfoot>";
             }
@@ -646,11 +676,16 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 $scope.refreshPage();
             };
             $scope.voltaUmaPagina = function (page) {
+                if ((page - 1) <=0) return;
+
                 var anterior = page - 1;
                 $scope.Pagina(anterior);
             };
 
             $scope.avancaUmaPagina = function (page) {
+                if ((page + 1) > $scope.TotalPages.length) return;
+
+
                 var posterior = page + 1;
 
                 $scope.Pagina(posterior);

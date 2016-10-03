@@ -61,6 +61,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
         if (!$scope.$$phase) {
             $scope.$apply();
         }
+
     };
 
     $scope.deletePagina = function (pagina) {
@@ -466,12 +467,13 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                         $("#editor").show();
                         $(".hideonprint").show();
 
+
                         var dataUrl = canvas.toDataURL();
 
                         // $("body").css({
-                        // 'transform': 'scale(1)',
-                        // '-ms-transform': 'scale(1)',
-                        // '-webkit-transform': 'scale(1)'
+                        // 'transform': 'scale(0)',
+                        // '-ms-transform': 'scale(0)',
+                        // '-webkit-transform': 'scale(0)'
                         // });
 
                         var el = "<div style='width:100%;height:100%'><img style='width:100%;height:100%' src='" + dataUrl + "'/></div>"
