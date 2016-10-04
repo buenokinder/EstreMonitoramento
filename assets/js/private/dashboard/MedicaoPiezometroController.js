@@ -94,7 +94,9 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
     $scope.changeAterro = function () {
         if ($scope.monitoramentos.aterro) {
+            $("#modalLoading").openModal();
             $scope.monitoramentos.piezometrosAterro = $filter('filter')($scope.monitoramentos.piezometros, { aterro: { id: $scope.monitoramentos.aterro } });
+            $("#modalLoading").closeModal();
         }
     };
 
