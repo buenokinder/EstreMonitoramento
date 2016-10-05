@@ -434,7 +434,7 @@
     },
 
     run: function () {
-        this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
+//        this._listMonitoramentos(this._inspectMonitoramentos, this._logError);
     }
 }
 

@@ -72,7 +72,7 @@ app.directive('ckEditor', function () {
             };
         }
     };
-});;
+});
 
 app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $http) {
     return {
@@ -83,7 +83,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             inicio: '@',
             fim: '@'
         },
-        templateUrl: 'views/reports/grafico.html',
+        templateUrl: 'views/reports/graficoh.html',
 
         link: function ($scope, $element, attrs) {
             $scope.data = ([]);
@@ -117,71 +117,75 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                 });
 
                 $scope.categorias = [$scope.array];
-                $('#' + $scope.getContentHorizontal()).highcharts({
-                    title: {
-                        text: $scope.tipado + ' - Horizontal',
-                        x: -20 //center
-                    },
+                $('#' + $scope.getContentHorizontal()).highcharts(
+				{
+				    title: {
+				        text: ($scope.tipado == '' || $scope.tipado == null ? '' : ' - ') + 'Horizontal',
+				        x: -20 //center
+				    },
+				    xAxis: {
+				        type: 'datetime',
+				        tickInterval: 24 * 7 * 3600 * 1000,
+				    },
+				    yAxis: [{ // Primary yAxis
+				        labels: {
+				            format: '{value}',
+				            style: {
+				                color: Highcharts.getOptions().colors[1]
+				            }
+				        },
+				        title: {
+				            text: 'Deslocamentos (cm)',
+				            style: {
+				                color: Highcharts.getOptions().colors[1]
+				            }
+				        }
+				    }, { // Secondary yAxis
+				        title: {
+				            text: 'Velocidade (cm/dia)',
+				            style: {
+				                color: Highcharts.getOptions().colors[0]
+				            }
+				        },
+				        labels: {
+				            format: '{value}',
+				            style: {
+				                color: Highcharts.getOptions().colors[0]
+				            }
+				        },
+				        opposite: true
+				    }],
 
-                    yAxis: [{ // Primary yAxis
-                        labels: {
-                            format: '{value}',
-                            style: {
-                                color: Highcharts.getOptions().colors[1]
-                            }
-                        },
-                        title: {
-                            text: 'Deslocamentos (cm)',
-                            style: {
-                                color: Highcharts.getOptions().colors[1]
-                            }
-                        }
-                    }, { // Secondary yAxis
-                        title: {
-                            text: 'Velocidade (cm/dia)',
-                            style: {
-                                color: Highcharts.getOptions().colors[0]
-                            }
-                        },
-                        labels: {
-                            format: '{value}',
-                            style: {
-                                color: Highcharts.getOptions().colors[0]
-                            }
-                        },
-                        opposite: true
-                    }],
 
+				    series: [{
+				        name: 'DESLOCAMENTO HORIZONTAL TOTAL',
+				        data: $scope.deslocamentoHorizontal
 
-                    series: [{
-                        name: 'DESLOCAMENTO HORIZONTAL TOTAL',
-                        data: $scope.deslocamentoHorizontal
+				    }, {
+				        name: 'DESLOCAMENTO HORIZONTAL PARCIAL',
+				        data: $scope.deslocamentoHorizontalParcial
 
-                    }, {
-                        name: 'DESLOCAMENTO HORIZONTAL PARCIAL',
-                        data: $scope.deslocamentoHorizontalParcial
+				    }, {
+				        name: 'VELOCIDADE HORIZONTAL',
+				        data: $scope.velocidadeHorizontal,
+				        yAxis: 1
 
-                    }, {
-                        name: 'VELOCIDADE HORIZONTAL',
-                        data: $scope.velocidadeHorizontal,
-                        yAxis: 1
+				    }, {
+				        name: 'CRITÉRIO DE ALERTA 2',
+				        color: 'red',
+				        dashStyle: 'ShortDash',
+				        data: $scope.criterioAceitavelVelocidadeHorizontal,
+				        yAxis: 1
 
-                    }, {
-                        name: 'CRITÉRIO DE ALERTA 2',
-                        color: 'red',
-                        dashStyle: 'ShortDash',
-                        data: $scope.criterioAceitavelVelocidadeHorizontal,
-                        yAxis: 1
+				    }, {
+				        name: 'CRITÉRIO DE ALERTA 3',
+				        color: 'red',
+				        dashStyle: 'ShortDash',
+				        data: $scope.criterioRegularVelocidadeHorizontal,
+				        yAxis: 1
 
-                    }, {
-                        name: 'CRITÉRIO DE ALERTA 3',
-                        color: 'red',
-                        dashStyle: 'ShortDash',
-                        data: $scope.criterioRegularVelocidadeHorizontal,
-                        yAxis: 1
-
-                    }]
-                });
+				    }]
+				});
             });
 
 
@@ -189,6 +193,8 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
         }
     }
 }]).directive('graficovertical', ['$compile', '$http', function ($compile, $http) {
+
+
     return {
         restrict: 'E',
         scope: {
@@ -197,122 +203,111 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
             inicio: '@',
             fim: '@'
         },
+        templateUrl: 'views/reports/graficov.html',
 
-        templateUrl: 'views/reports/grafico.html',
         link: function ($scope, $element, attrs) {
             $scope.data = ([]);
-
-
-            $scope.getContentHorizontal = function () {
-                return $scope.tipado + "vertical";
-            }
-
             $scope.velocidadeVertical = [];
             $scope.deslocamentoVerticalParcial = [];
+
+
+            $scope.getContentVertical = function () {
+                return $scope.tipado + "vertical";
+            }
             $scope.deslocamentoVertical = [];
             $scope.array = "";
             $scope.criterioAceitavelVelocidadeVertical = [];
             $scope.criterioRegularVelocidadeVertical = [];
-            var marcoSuperficial = '';
 
+            var marcoSuperficial = '';
             if ($scope.tipado && $scope.tipado != '') {
                 marcoSuperficial = "&marcoSuperficial=" + $scope.tipado
             }
             $http.get("/MarcoSuperficial/monitoramentos/?aterro=" + $scope.aterro + "&order=dataInstalacao%20ASC&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + marcoSuperficial).then(function (results) {
                 $scope.data = results.data;
-
-
                 angular.forEach($scope.data, function (value, key) {
                     $scope.deslocamentoVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalTotal)]);
                     $scope.deslocamentoVerticalParcial.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.deslocamentoVerticalParcial)]);
                     $scope.velocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.velocidadeVertical)]);
-                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
-                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
+                    $scope.criterioAceitavelVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioAceitavelVelocidade)]);
+                    $scope.criterioRegularVelocidadeVertical.push([Date.UTC(value.data.substring(0, 4), parseFloat(value.data.substring(5, 7)) - 1, value.data.substring(8, 10)), parseFloat(value.criterioRegularVelocidade)]);
                 });
+
                 $scope.categorias = [$scope.array];
+                $('#' + $scope.getContentVertical()).highcharts(
+				{
+				    title: {
+				        text: ($scope.tipado == '' || $scope.tipado == null ? '' : ' - ') + 'Vertical',
+				        x: -20 //center
+				    },
+				    xAxis: {
+				        type: 'datetime',
+				        tickInterval: 24 * 7 * 3600 * 1000
+				    },
+				    yAxis: [{ // Primary yAxis
+				        labels: {
+				            format: '{value}',
+				            style: {
+				                color: Highcharts.getOptions().colors[1]
+				            }
+				        },
+				        title: {
+				            text: 'Deslocamentos (cm)',
+				            style: {
+				                color: Highcharts.getOptions().colors[1]
+				            }
+				        }
+				    }, { // Secondary yAxis
+				        title: {
+				            text: 'Velocidade (cm/dia)',
+				            style: {
+				                color: Highcharts.getOptions().colors[0]
+				            }
+				        },
+				        labels: {
+				            format: '{value}',
+				            style: {
+				                color: Highcharts.getOptions().colors[0]
+				            }
+				        },
+				        opposite: true
+				    }],
 
 
-                $('#' + $scope.getContentHorizontal()).highcharts({
-                    title: {
-                        text: $scope.tipado + ' - Vertical',
-                        x: -20 //center
-                    },
+				    series: [{
+				        name: 'DESLOCAMENTO VERTICAL TOTAL',
+				        data: $scope.deslocamentoVertical
 
-                    xAxis: {
-                        type: 'datetime',
-                        dateTimeLabelFormats: { // don't display the dummy year
-                            month: '%e. %b',
-                            year: '%b'
-                        },
-                        title: {
-                            text: 'Date'
-                        }
-                    },
-                    yAxis: [{ // Primary yAxis
-                        labels: {
-                            format: '{value}',
-                            style: {
-                                color: Highcharts.getOptions().colors[1]
-                            }
-                        },
-                        title: {
-                            text: 'Deslocamentos (cm)',
-                            style: {
-                                color: Highcharts.getOptions().colors[1]
-                            }
-                        }
-                    }, { // Secondary yAxis
-                        title: {
-                            text: 'Velocidade (cm/dia)',
-                            style: {
-                                color: Highcharts.getOptions().colors[0]
-                            }
-                        },
-                        labels: {
-                            format: '{value}',
-                            style: {
-                                color: Highcharts.getOptions().colors[0]
-                            }
-                        },
-                        opposite: true
-                    }],
-                    tooltip: {
-                        valueSuffix: '°C'
-                    },
+				    }, {
+				        name: 'DESLOCAMENTO VERTICAL PARCIAL',
+				        data: $scope.deslocamentoVerticalParcial
 
-                    series: [{
-                        name: 'DESLOCAMENTO VERTICAL TOTAL',
-                        data: $scope.deslocamentoVertical
+				    }, {
+				        name: 'VELOCIDADE VERTICAL',
+				        data: $scope.velocidadeVertical,
+				        yAxis: 1
 
-                    }, {
-                        name: 'DESLOCAMENTO VERTICAL PARCIAL',
-                        data: $scope.deslocamentoVerticalParcial
+				    }, {
+				        name: 'CRITÉRIO DE ALERTA 2',
+				        color: 'red',
+				        dashStyle: 'ShortDash',
+				        data: $scope.criterioAceitavelVelocidadeVertical,
+				        yAxis: 1
 
-                    }, {
-                        name: 'VELOCIDADE VERTICAL',
-                        data: $scope.velocidadeVertical
+				    }, {
+				        name: 'CRITÉRIO DE ALERTA 3',
+				        color: 'red',
+				        dashStyle: 'ShortDash',
+				        data: $scope.criterioRegularVelocidadeVertical,
+				        yAxis: 1
 
-                    }, {
-                        name: 'CRITÉRIO DE ALERTA 2',
-                        data: $scope.criterioRegularVelocidadeVertical,
-                        color: 'red',
-                        dashStyle: 'ShortDash',
-                        yAxis: 1
-
-                    }, {
-                        name: 'CRITÉRIO DE ALERTA 3',
-                        data: $scope.criterioAceitavelVelocidadeVertical,
-                        color: 'red',
-                        dashStyle: 'ShortDash',
-                        yAxis: 1
-                    }]
-                });
+				    }]
+				});
             });
-
-
 
         }
     }
+
 }]).directive('tabela', ['$compile', '$http', function ($compile, $http) {
     return {
         restrict: 'AE',
@@ -342,7 +337,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                 if ($scope.tipado && $scope.tipado != '') {
                     marcoSuperficial = "&marcoSuperficial=" + $scope.tipado
                 }
-                
+
 
                 $http.get("/marcosuperficial/monitoramentos/?tipo=relatorio&aterro=" + $scope.aterro + "&dtIni=" + getDateQuery($scope.inicio) + "&dtFim=" + getDateQuery($scope.fim) + marcoSuperficial).then(function (results) {
                     $scope.marcosuperficialanomalia = ([]);
@@ -383,7 +378,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
 
                         for (var j = 0; j < $scope.marcosuperficialanomaliaMS.length; j++) {
                             var adicionouMarco = false;
-                            var marcoSuperficial = {nome: $scope.marcosuperficialanomaliaMS[j], criterioAlertaHorizontalMetodologia1: null, criterioAlertaVerticalMetodologia1: null };
+                            var marcoSuperficial = { nome: $scope.marcosuperficialanomaliaMS[j], criterioAlertaHorizontalMetodologia1: null, criterioAlertaVerticalMetodologia1: null };
 
                             for (var k = 0; k < $scope.marcosuperficialanomalia.length; k++) {
                                 var marco = $scope.marcosuperficialanomalia[k];
@@ -536,7 +531,7 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                             $scope.fatorseguranca.push(results.data[i][j]);
                         }
                     }
-                    
+
                     var loadDistinctMeses = function () {
                         for (var i = 0; i < $scope.fatorseguranca.length; i++) {
                             if ($scope.fatorsegurancaMeses.indexOf($scope.fatorseguranca[i].mes) < 0) {
@@ -574,10 +569,10 @@ app.directive('graficohorizontal', ['$compile', '$http', function ($compile, $ht
                             var adicionouFatores = false;
 
                             for (var k = 0; k < $scope.fatorsegurancaSaturacao.length; k++) {
-                                var saturacao = { nome: $scope.fatorsegurancaSaturacao[k], fator:null };
+                                var saturacao = { nome: $scope.fatorsegurancaSaturacao[k], fator: null };
 
                                 for (var l = 0; l < $scope.fatorseguranca.length; l++) {
-                                    var fatorS =$scope.fatorseguranca[l];
+                                    var fatorS = $scope.fatorseguranca[l];
                                     if (fatorS.secao == secao.nome && fatorS.mes == mes && fatorS.saturacao == saturacao.nome) {
                                         adicionouFatores = true;
                                         saturacao.fator = fatorS.valorLp;
