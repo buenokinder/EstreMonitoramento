@@ -66,11 +66,16 @@
         }
 
         #nomeaterro{
-            color: #9acd32;
+            color: #fff;
+        }
+
+        .aterro
+        {
+            background-color:#9acd32
         }
 
         h2{
-            margin: 0px 6px 24px 607px;
+            margin: 13px 3px 14px 2px;
             font-size:25px;
         }
     </style>
@@ -113,8 +118,6 @@
 
                             <div class="row aterro">
                                 <div class="col s12 m12">
-                                    <img src="images/logo_estre_xs.png" alt="estre logo">
-
                                     <h2 id="nomeaterro" class="ng-binding" style="text-align:center">{{dashboard.current.aterro.nome}}</h2>
                                 </div>
                             </div>
@@ -180,11 +183,11 @@
                                             <th></th>
                                         </tr>
                                         <tr class="alerta-description">
-                                            <td>Velocidade &le; 0,25 (cm/dia)</td>
-                                            <td>Velocidade &gt; 0,25 e &le; 1 (cm/dia)</td>
-                                            <td>Velocidade &gt; 1 e &le; 4 (cm/dia)</td>
-                                            <td>Velocidade &gt; 4 e &le; 14 (cm/dia)</td>
-                                            <td>Velocidade &gt; 14 (cm/dia)</td>
+                                            <td>Velocidade menor do que 0,25</td>
+                                            <td>Velocidade menor do que 1</td>
+                                            <td>Velocidade menor do que 4</td>
+                                            <td>Velocidade menor do que 14</td>
+                                            <td>Velocidade maior do que 14</td>
                                         </tr>
                                     </tbody>
                                 </table>

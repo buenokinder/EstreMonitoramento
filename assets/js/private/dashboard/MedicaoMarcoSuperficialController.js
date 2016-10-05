@@ -46,12 +46,10 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
             $http.get('/MarcoSuperficial').success(function (response, status) {
                 var marcosSuperficiais = [];
-                $("#modalLoading").openModal();
                 for (var i = 0; i < response.length; i++) {
                     marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
-                $("#modalLoading").closeModal();
             });
 
             $("#btMonitoramentos").on("click", function (e) {

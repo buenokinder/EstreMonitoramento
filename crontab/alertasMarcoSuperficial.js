@@ -237,7 +237,7 @@
 
     },
 
-    _sendEmailGerenteAdministrador: function (aterro, usuarios, medicao) {
+    _sendEmailGerenteAdministrador: function (usuarios, medicao) {
         var emails = this._getEmailAdministrador(usuarios);
         emails.push(this._getEmailGerente(usuarios));
         var _that = this;
@@ -250,7 +250,6 @@
             {
                 link: _that._urlBase,
                 logo: _that._urlBase + "/images/logo_estre_xs.png",
-                aterro:aterro,
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -271,7 +270,7 @@
         );
     },
 
-    _sendEmailGerenteAdministradorDiretor: function (aterro, usuarios, medicao) {
+    _sendEmailGerenteAdministradorDiretor: function (usuarios, medicao) {
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
         emails.push(this._getEmailGerente(usuarios));
@@ -285,7 +284,6 @@
             {
                 link: _that._urlBase,
                 logo: _that._urlBase + "/images/logo_estre_xs.png",
-                aterro: aterro,
                 medicoes: body,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -304,7 +302,7 @@
         );
     },
 
-    _sendEmailDiretor: function (aterro, usuarios, medicao) {
+    _sendEmailDiretor: function (usuarios, medicao) {
         var emails = this._getEmailDiretor(usuarios);
         emails.push(this._getEmailAdministrador(usuarios));
 
@@ -314,7 +312,6 @@
             {
                 link: _that._urlBase,
                 logo: _that._urlBase + "/images/logo_estre_xs.png",
-                aterro: aterro,
                 observacoes: medicao.obsGestor,
                 data: _that.Utils._getDateTimeString(medicao.data)
             },
@@ -373,13 +370,13 @@
                 //context._notificacoes[medicao.id] = "";
                 context._notificacoes[medicao.id] = { data: new Date(), emailgerenteadmin: false, emailgerenteadmindiretor: false, emaildiretor: false };
 
-                var item = { aterro: monitoramentos[i].aterro, usuariosAterro: monitoramentos[i].usuariosAterro, medicao: medicao };
+                var item = { usuariosAterro: monitoramentos[i].usuariosAterro, medicao: medicao };
 
                 context._createNoticacao(item, function (err, ret) {
                     if (err) return;
 
                     if (context._sentEmailToday(ret.medicao, "GA") == false && ret.medicao.notificacao.emailgerenteadmin == false) {
-                        context._sendEmailGerenteAdministrador(ret.aterro, ret.usuariosAterro, ret.medicao);
+                        context._sendEmailGerenteAdministrador(ret.usuariosAterro, ret.medicao);
                         context._setEmailEnviado(ret.medicao, "GA");
                     }
                 });
@@ -414,7 +411,7 @@
                 if (preencheuObs) {
 
                     if (context._sentEmailToday(medicao, "D") == false && medicao.notificacao.emaildiretor == false) {
-                        context._sendEmailDiretor(monitoramentos[i].aterro, monitoramentos[i].usuariosAterro, medicao);
+                        context._sendEmailDiretor(monitoramentos[i].usuariosAterro, medicao);
                         context._closeNoticacao(medicao);
                         context._setEmailEnviado(medicao, "D");
                     }
@@ -422,7 +419,7 @@
                     //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Sim > Gerente preencheu a observação > Não > Notifica o Diretor, Administrador e Gerente
                     if (diferencaDatas >= 1) {
                         if (context._sentEmailToday(medicao, "GAD") == false && medicao.notificacao.emailgerenteadmindiretor == false) {
-                            context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].aterro, monitoramentos[i].usuariosAterro, medicao);
+                            context._sendEmailGerenteAdministradorDiretor(monitoramentos[i].usuariosAterro, medicao);
                             context._setEmailEnviado(medicao, "GAD");
                         }
                     } //Existe notificações > Sim > O Status está como pendente > Sim > Já se passou mais do que 1 dia do envio do envio da notificação > Não > Fim;

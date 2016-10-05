@@ -17,7 +17,6 @@ Number.prototype.format = function (n, x, s, c) {
 
 module.exports = {
     _alertas: ([]),
-    _aterros: ([]),
     _alertaAceitavel: {},
     _alertaRegular: {},
     _rearrange: function (marcoSuperficiais, req) {
@@ -68,8 +67,7 @@ module.exports = {
                         data: medicao.data,
                         criterioAlertaHorizontalMetodologia1: medicao.criterioAlertaHorizontalMetodologia1,
                         criterioAlertaVerticalMetodologia1: medicao.criterioAlertaVerticalMetodologia1,
-                        owner: medicao.owner.id,
-                        aterro: medicao.aterro
+                        owner: medicao.owner.id
                     });
                 }
             }
@@ -81,24 +79,15 @@ module.exports = {
         var filtroDatas = this._getFiltroDatas(req);
 
         for (var item in owners) {
-            var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: []};
-            var aterro = "";
+            var medicao = { id: owners[item].id, obsGestor: owners[item].obsGestor, data: owners[item].data, notificacao: owners[item].notificacao, detalhes: [] };
 
             for (var i = 0; i < detalhes.length; i++) {
 
                 if (detalhes[i].owner == owners[item].id) {
-                    
+
 
                     if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
                         if (detalhes[i].data < filtroDatas.dataInicial || detalhes[i].data > filtroDatas.dataFinal) continue;
-                    }
-                    
-                    if (aterro == "") {
-                        for (var j = 0; j < this._aterros.length; j++) {
-                            if (detalhes[i].aterro == this._aterros[j].id) {
-                                aterro = this._aterros[j].nome;
-                            }
-                        }
                     }
 
                     var detalhe = {
@@ -111,7 +100,7 @@ module.exports = {
                     medicao.detalhes.push(detalhe);
                 }
             }
-            ret.push({ usuariosAterro: owners[item].usuariosAterro, medicoes: medicao, aterro: aterro });
+            ret.push({ usuariosAterro: owners[item].usuariosAterro, medicoes: medicao });
         }
 
         return ret;
@@ -137,7 +126,6 @@ module.exports = {
             if (undefined == marcoSuperficial) continue;
 
             var first = true;
-
 
             marcoSuperficial.medicoes.sort(sortDateAsc);
             // var ms = { marcoSuperficial: marcoSuperficial.nome, usuariosAterro: marcoSuperficial.usuariosaterro, medicoes: [] };
@@ -481,7 +469,6 @@ module.exports = {
                 norte: detalhes[i].norte,
                 leste: detalhes[i].leste,
                 cota: detalhes[i].cota,
-                aterro: detalhes[i].marcoSuperficial.aterro,
                 data: new Date(detalhes[i].owner.data),
                 criterioAlertaHorizontalMetodologia1: 'Paralisação',
                 criterioAlertaVerticalMetodologia1: 'Paralisação',
@@ -797,7 +784,6 @@ module.exports = {
                 }
 
                 _aterros = aterros;
-                _that._aterros = aterros;
 
                 var _monitoramentosNotificacao = function () {
                     var executeMedicoes = new Promise(function (resolveMedicoes, rejectMedicoes) {

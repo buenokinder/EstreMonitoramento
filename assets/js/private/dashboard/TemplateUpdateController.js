@@ -419,7 +419,7 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                     var rotateImage = function (canvas, parent) {
                         totalRequests += 1;
                         $.ajax({
-                            url: 'http://geotecnia.estre.com.br:81/getimage.ashx',
+                            url: 'http://localhost:3537/getimage.ashx',
                             type: "POST",
                             beforeSend: function (jqXHR, settings) {
                                 return true;
@@ -446,16 +446,9 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
 
             if (totalResponses == totalRequests) {
                 clearInterval(itv);
-
-                var totalPages = $("page[size='A4']").length;
-                var index = 0;
-
                 $.each($("page[size='A4']"),
 					function (i, o) {
-					    index += 1;
-					    if (index != totalPages) {
-					        $(o).css("height", "33cm");
-					    }
+					    $(o).css("height", "33cm");
 					}
 				);
 
@@ -466,7 +459,6 @@ app.controller('TemplateUpdateController', ['$location', '$routeParams', '$scope
                         $("#relatorio-conteudo").css('height', '850px');
                         $("#editor").show();
                         $(".hideonprint").show();
-
 
                         var dataUrl = canvas.toDataURL();
 
