@@ -46,12 +46,21 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
             $http.get('/MarcoSuperficial').success(function (response, status) {
                 var marcosSuperficiais = [];
-              //  $("#modalLoading").openModal();
+                var showLoading = ($("#modalLoading").length > 0);
+
+                if (showLoading) {
+                    $("#modalLoading").openModal();
+                }
+
                 for (var i = 0; i < response.length; i++) {
                     marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
-               // $("#modalLoading").closeModal();
+
+                if (showLoading) {
+                    $("#modalLoading").closeModal();
+                }
+
             });
 
             $("#btMonitoramentos").on("click", function (e) {
@@ -132,10 +141,20 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     $scope.monitoramentos.init();
 
     $scope.changeAterro = function () {
+        var showLoading = ($("#modalLoading").length > 0);
+
+
         if ($scope.monitoramentos.aterro) {
-           // $("#modalLoading").openModal();
+            if (showLoading) {
+                $("#modalLoading").openModal();
+            }
+
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
-            //$("#modalLoading").closeModal();
+
+            if (showLoading) {
+                $("#modalLoading").closeModal();
+            }
+
         }
     };
 
