@@ -133,9 +133,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
     $scope.changeAterro = function () {
         if ($scope.monitoramentos.aterro) {
-            $("#modalLoading").openModal();
+           // $("#modalLoading").openModal();
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
-            $("#modalLoading").closeModal();
+            //$("#modalLoading").closeModal();
         }
     };
 
