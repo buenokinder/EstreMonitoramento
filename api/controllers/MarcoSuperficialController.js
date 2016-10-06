@@ -159,11 +159,11 @@ module.exports = {
                 var velocidadeHorizontal = (diferencaDatas == 0 ? 0 : parseFloat(parseFloat(deslocamentoHorizontalParcial) / parseFloat(diferencaDatas).toFixed(4)));
                 var velocidadeVertical = (diferencaDatas == 0 ? 0 : parseFloat(Math.abs(parseFloat(deslocamentoVerticalParcial) / parseFloat(diferencaDatas))).toFixed(4));
                 var velocidadeMinima = 0;
-
-
+                
                 for (k = 0; k < this._alertas.length; k++) {
 
-                    velocidadeMinima = k == 0 ? -1 : parseFloat(this._alertas[k].velocidade);
+                    //velocidadeMinima = k == 0 ? -1 : parseFloat(this._alertas[k].velocidade);
+                    velocidadeMinima = k == 0 ? -1 : parseFloat(this._alertas[k - 1].velocidade);
 
                     if (parseFloat(velocidadeHorizontal) > velocidadeMinima && parseFloat(velocidadeHorizontal) <= parseFloat(this._alertas[k].velocidade)) {
                         marcoSuperficial.medicoes[i].criterioAlertaHorizontalMetodologia1 = this._alertas[k].nivel;

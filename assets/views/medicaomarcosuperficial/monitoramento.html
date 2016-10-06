@@ -171,23 +171,16 @@
             </div>
 
 
-            <div id="modalLoading" ng-show="loading" class="modal modal-fixed-footer" style="z-index: 1003;  opacity: 1; transform: scaleX(1); top: 10%;">
-                <p style="text-align:center">Aguarde, carregando a lista de piezômetros...</p>
-                <div class="progress">
-                    <div class="indeterminate"></div>
+            <div id="modalLoading" style="display: none;">
+                <div class="modal modal-fixed-footer" style="z-index: 1003; display: block; opacity: 1; transform: scaleX(1); top: 10%;">
+                    <p style="text-align:center">Aguarde, carregando a lista de marcos superficiais...</p>
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>
                 </div>
-
-                <p ng-model="status" style="text-align:center;color:#000" class="ng-pristine ng-untouched ng-valid ng-empty" aria-invalid="false"></p>
             </div>
 
-            <!--<div id="modalLoading" class="modal modal-fixed-footer">
-                <p style="text-align:center">Aguarde, carregando a lista de marcos superficiais...</p>
-                <div class="progress">
-                    <div class="indeterminate"></div>
-                </div>
-
-                <p ng-model="status" style="text-align:center;color:#000"></p>
-            </div>-->
+            <div id="overlayModalLoading" class="lean-overlay" style="z-index: 1002; display: none; opacity: 0.5"></div>
         </div>
     </div>
 </div>

@@ -10,7 +10,6 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     $scope.me = window.SAILS_LOCALS;
     $scope.perfil = '';
     $scope.inserted = { data: getDateTimeString(new Date()), nomeTopografo: '', nomeAuxiliar: '', temperatura: '', obsGestor: '', usuario: $scope.usuario._id, aterro: $scope.usuario._aterro };
-    $scope.loading = false;
 
     if ($scope.usuario._aterro != undefined && $scope.usuario._aterro != '') {
         $scope.inserted.aterro = $scope.usuario._aterro;
@@ -50,8 +49,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                 var showLoading = ($("#modalLoading").length > 0);
 
                 if (showLoading) {
-                    $scope.loading = true;
-                    //$("#modalLoading").openModal();
+                    $("#modalLoading").show();
+                    $("#overlayModalLoading").show();
+                    
                 }
 
                 for (var i = 0; i < response.length; i++) {
@@ -60,8 +60,8 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                 $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
 
                 if (showLoading) {
-                    $scope.loading = false;
-                    //$("#modalLoading").closeModal();
+                    $("#modalLoading").hide();
+                    $("#overlayModalLoading").hide();
                 }
 
             });
@@ -149,15 +149,17 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
         if ($scope.monitoramentos.aterro) {
             if (showLoading) {
-                //$("#modalLoading").openModal();
-                $scope.loading = true;
+                $("#modalLoading").show();
+                $("#overlayModalLoading").show();
             }
 
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
 
             if (showLoading) {
                 //$("#modalLoading").closeModal();
-                $scope.loading = false;
+                //$scope.loading = false;
+                $("#modalLoading").hide();
+                $("#overlayModalLoading").hide();
             }
 
         }
