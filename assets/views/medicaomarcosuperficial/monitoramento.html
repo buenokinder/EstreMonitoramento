@@ -170,14 +170,24 @@
                 </div>
             </div>
 
-            <div id="modalLoading" class="modal modal-fixed-footer">
+
+            <div id="modalLoading" ng-show="loading" class="modal modal-fixed-footer" style="z-index: 1003;  opacity: 1; transform: scaleX(1); top: 10%;">
+                <p style="text-align:center">Aguarde, carregando a lista de piezômetros...</p>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+
+                <p ng-model="status" style="text-align:center;color:#000" class="ng-pristine ng-untouched ng-valid ng-empty" aria-invalid="false"></p>
+            </div>
+
+            <!--<div id="modalLoading" class="modal modal-fixed-footer">
                 <p style="text-align:center">Aguarde, carregando a lista de marcos superficiais...</p>
                 <div class="progress">
                     <div class="indeterminate"></div>
                 </div>
 
                 <p ng-model="status" style="text-align:center;color:#000"></p>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
