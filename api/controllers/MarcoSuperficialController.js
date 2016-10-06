@@ -387,7 +387,7 @@ module.exports = {
                 item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
-
+                item.datinha = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data;
                 result.push(item);
             }
         }

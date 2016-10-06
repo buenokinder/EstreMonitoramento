@@ -31,6 +31,12 @@ app.controller('MapaController', ['$scope', '$http', '$sce', function ($scope, $
 
 
     $scope.open = function () {
+        var src = $scope.getSrc();
+        if (null == src) {
+            swal("Erro!", "Para prosseguir é necessário que informe a data da medição e selecione um mapa.", "error");
+            return;
+        }
+
         window.open($scope.getSrc(), '_blank');
     }
 
@@ -101,21 +107,22 @@ app.controller('MapaController', ['$scope', '$http', '$sce', function ($scope, $
     $scope.mapa = [];
 
     $scope.carregarMapa = function () {
+    }
 
+    $scope.canOpen = function () {
+        if ($("#datainicial").val() == "") return false;
+        if ($scope.mapa == null) return false;
 
+        return true;
     }
 
     $scope.getSrc = function () {
-
-        if ($("#datainicial").val() == "") return;
+        if ($("#datainicial").val() == "") return null;
         var bits = $("#datainicial").val().split('/');
         var dataFinal = bits[2] + '-' + bits[1] + '-' + bits[0];
         if ($scope.mapa != null) {
-
-            var testes = $scope.mapa.mapaFile;
-
-            var url = "/mapas?id=" + testes + "&aterro=" + $scope.aterro.id + "&data=" + dataFinal + "&tipo=" + $scope.medicaoTipo.name;
-            console.log(url);
+            var mapaFile = $scope.mapa.mapaFile;
+            var url = "/mapas?id=" + mapaFile + "&aterro=" + $scope.aterro.id + "&data=" + dataFinal + "&tipo=" + $scope.medicaoTipo.name;
             return $sce.trustAsResourceUrl(url);
         }
         return null;
