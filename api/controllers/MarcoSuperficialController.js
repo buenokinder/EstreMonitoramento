@@ -366,6 +366,7 @@ module.exports = {
                 item.criterioAlertaVerticalMetodologia1 = "";
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
+                console.log("marcosSuperficiais[i]", marcosSuperficiais[i]);
                 result.push(item);
             }
 
@@ -387,7 +388,7 @@ module.exports = {
                 item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
-                item.datinha = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data;
+                item.datinha = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data;
                 result.push(item);
             }
         }
@@ -941,6 +942,7 @@ module.exports = {
                                 //if (undefined != req.param("tipo") && req.param("tipo") == "mapa") {
                                 //    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais, req));
                                 //}
+                                console.log("req.param('tipo')", req.param("tipo"));
 
                                 switch (req.param("tipo")) {
                                     case "mapa":
