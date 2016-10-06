@@ -38,28 +38,34 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
             $scope.monitoramentos.dataInicial = getDatePtBr(dtIni);
             $scope.monitoramentos.dataFinal = getDatePtBr(dtFim);
 
-            $http.get('/Aterro').success(function (response, status) {
-                $scope.aterros = response;
-            });
+            var showLoading = ($("#modalLoading").length > 0);
 
+            if (showLoading) {
+                $("#modalLoading").show();
+                $("#overlayModalLoading").show();
+            }
+
+
+            
             $http.get('/Piezometro').success(function (response, status) {
                 var piezometros = [];
-
-                var showLoading = ($("#modalLoading").length > 0);
-
-                if (showLoading) {
-                    $("#modalLoading").show();
-                    $("#overlayModalLoading").show();
-                }
-                
+      
                 for (var i = 0; i < response.length; i++) {
                     piezometros.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
+
                 $scope.monitoramentos.piezometros = piezometros;
-                if (showLoading) {
-                    $("#modalLoading").hide();
-                    $("#overlayModalLoading").hide();
-                }
+
+                $http.get('/Aterro').success(function (response, status) {
+                    $scope.aterros = response;
+
+                    if (showLoading) {
+                        $("#modalLoading").hide();
+                        $("#overlayModalLoading").hide();
+                    }
+                });
+
+
             });
 
             $("#btMonitoramentos").on("click", function (e) {
