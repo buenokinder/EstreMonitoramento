@@ -44,10 +44,18 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
             $http.get('/Piezometro').success(function (response, status) {
                 var piezometros = [];
+<<<<<<< HEAD
+=======
+              //  $("#modalLoading").openModal();
+>>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
                 for (var i = 0; i < response.length; i++) {
                     piezometros.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.piezometros = piezometros;
+<<<<<<< HEAD
+=======
+               // $("#modalLoading").closeModal();
+>>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
             });
 
             $("#btMonitoramentos").on("click", function (e) {
@@ -92,7 +100,9 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
 
     $scope.changeAterro = function () {
         if ($scope.monitoramentos.aterro) {
+            //$("#modalLoading").openModal();
             $scope.monitoramentos.piezometrosAterro = $filter('filter')($scope.monitoramentos.piezometros, { aterro: { id: $scope.monitoramentos.aterro } });
+            //$("#modalLoading").closeModal();
         }
     };
 

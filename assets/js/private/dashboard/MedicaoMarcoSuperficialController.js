@@ -46,10 +46,18 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
             $http.get('/MarcoSuperficial').success(function (response, status) {
                 var marcosSuperficiais = [];
+<<<<<<< HEAD
+=======
+              //  $("#modalLoading").openModal();
+>>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
                 for (var i = 0; i < response.length; i++) {
                     marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
+<<<<<<< HEAD
+=======
+               // $("#modalLoading").closeModal();
+>>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
             });
 
             $("#btMonitoramentos").on("click", function (e) {
@@ -131,8 +139,9 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
     $scope.changeAterro = function () {
         if ($scope.monitoramentos.aterro) {
+           // $("#modalLoading").openModal();
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
-
+            //$("#modalLoading").closeModal();
         }
     };
 
