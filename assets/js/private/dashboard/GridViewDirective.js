@@ -146,9 +146,21 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "<td colspan='3' class='row'>";
                 HtmlFormBody += "<div>";
                 HtmlFormBody += "<ul class='pagination'>";
+<<<<<<< HEAD
                 HtmlFormBody += "<li><a>«</a></li>";
                 HtmlFormBody += "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
                 HtmlFormBody += "<li><a >»</a></li>";
+=======
+                HtmlFormBody += "<li><a  href='' ng-click='Pagina(1)'>«</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPaginaSearch(ActualPageSearch)'>‹</a></li>";
+                HtmlFormBody += "<li><a style='font-size: 15px;!important'>{{ActualPageSearch}} de {{TotalPagesSearch.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPaginaSearch(ActualPageSearch)'>›</a></li>";
+                //HtmlFormBody += "<li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
+
+
+                HtmlFormBody += "<li><a href='' ng-click='Pagina(TotalPagesSearch.length)'>»</a></li>";
+>>>>>>> 92a57f5d4e2ebf01d54dee9c8fa706913fefd9f1
                 HtmlFormBody += "</ul>";
                 HtmlFormBody += "</div>";
                 HtmlFormBody += "</td>";
@@ -188,8 +200,39 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 HtmlFormBody += "</td>";
                 HtmlFormBody += "<td class='col-lg-3 col-md-4 col-sm-5 text-center'  ng-show='exibir(\"" + $scope.view + "\" == \"Relatorio\")' style='text-align:center;'><a href='#/" + $scope.view + '/' + "{{datum.id}}' ng-click='select(datum)'><i class='mdi-image-edit  estre-darkgreen-icon small  icon-demo' aria-hidden='true'></i></a></td"
                 HtmlFormBody += "</tr></tbody><tfoot>";
+<<<<<<< HEAD
                 HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a href='' ng-click='(ActualPage == 1) || voltaUmaPagina(ActualPage)'>«</a></li><li ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li><li><a href='' ng-click='(ActualPage == TotalPages.length) || avancaUmaPagina(ActualPage)'>»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
                 HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div><ul class='pagination'><li><a>«</a></li><li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li><li><a >»</a></li></ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+=======
+                HtmlFormBody += " <tr ng-hide='habilitaPaginacao'><td colspan='3' class='row'><div>";
+                HtmlFormBody += " <ul class='pagination'>";
+
+                HtmlFormBody += " <li><a href='' ng-click='(ActualPage == 1) || Pagina(1)'>«</a></li>";
+                //HtmlFormBody += " <li ng-repeat='page in TotalPages' ><a ng-class='{actualpage: ActualPage == page, notactualpage: ActualPage != page}' href='' ng-click='Pagina(page)'>{{page}}</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPagina(ActualPage)'>‹</a></li>";
+                HtmlFormBody += "<li><a style='font-size: 15px;!important'>{{ActualPage}} de {{TotalPages.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPagina(ActualPage)'>›</a></li>";
+
+                HtmlFormBody += " <li><a href='' ng-click='(ActualPage == TotalPages.length) || Pagina(TotalPages.length)'>»</a></li>";
+
+                HtmlFormBody += "</ul></div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+                HtmlFormBody += "<tr ng-show='habilitaPaginacao'><td colspan='3' class='row'><div>";
+
+                HtmlFormBody += "<ul class='pagination'>";
+                HtmlFormBody += "   <li><a>«</a></li>";
+
+                HtmlFormBody += "<li><a href='' ng-click='voltaUmaPaginaSearch(ActualPageSearch)'>‹</a></li>";
+                HtmlFormBody += "<li><a style='font-size: 15px;!important'>{{ActualPageSearch}} de {{TotalPagesSearch.length}}</a></li>";
+                HtmlFormBody += "<li><a href='' ng-click='avancaUmaPaginaSearch(ActualPageSearch)'>›</a></li>";
+
+              //  HtmlFormBody += "   <li ng-repeat='page in TotalPagesSearch' ><a href='' ng-click='PaginaSearch(page)'>{{page}}</a></li>";
+
+                HtmlFormBody += "   <li><a >»</a></li>";
+                HtmlFormBody += "</ul>";
+
+                HtmlFormBody += "</div></td><td><div class='row pull-right'><div class='input-field col s2'><a href='#/" + $scope.view + '/' + "new' ng-show='exibir(relatorio)' class='btn-floating btn-large waves-effect waves-light'><i class='mdi-content-add'></i></a></div></td></tr>";
+>>>>>>> 92a57f5d4e2ebf01d54dee9c8fa706913fefd9f1
                 HtmlFormBody += "</tfoot>";
             }
             HtmlFormBody += "</table></div></div>";
@@ -645,6 +688,7 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
                 $scope.ActualPage = page;
                 $scope.refreshPage();
             };
+
             $scope.voltaUmaPagina = function (page) {
                 var anterior = page - 1;
                 $scope.Pagina(anterior);
@@ -655,6 +699,21 @@ app.directive('gridView', ['$compile', 'sennitCommunicationService', function ($
 
                 $scope.Pagina(posterior);
             };
+
+
+            $scope.voltaUmaPaginaSearch = function (page) {
+                if ((page - 1) <= 0) return;
+                var anterior = page - 1;
+                $scope.PaginaSearch(anterior);
+            };
+
+            $scope.avancaUmaPaginaSearch = function (page) {
+                if ((page + 1) > $scope.TotalPagesSearch.length) return;
+                var posterior = page + 1;
+                $scope.PaginaSearch(posterior);
+            };
+
+
             $scope.$on('handleBroadcastItem', function () {
                 $scope.data.push(angular.fromJson(sennitCommunicationService.datum.data));
                 $scope.refreshPage();

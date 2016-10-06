@@ -188,8 +188,6 @@ module.exports = {
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
 
-        console.log("filtroDatas.dataInicial", filtroDatas.dataInicial);
-        console.log("filtroDatas.dataFinal", filtroDatas.dataFinal);
 
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
@@ -340,7 +338,6 @@ module.exports = {
         var result = [];
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
-
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
@@ -364,7 +361,7 @@ module.exports = {
                 if (owner && marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.owner.id != owner) continue;
 
                 if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
-                    if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data < filtroDatas.dataInicial || marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data > filtroDatas.dataFinal) continue;
+                    if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data < filtroDatas.dataInicial || marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data > filtroDatas.dataFinal) continue;
                 }
 
 
@@ -375,7 +372,6 @@ module.exports = {
                 item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
-
                 result.push(item);
             }
         }

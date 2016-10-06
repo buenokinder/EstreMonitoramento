@@ -47,17 +47,34 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             $http.get('/MarcoSuperficial').success(function (response, status) {
                 var marcosSuperficiais = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
               //  $("#modalLoading").openModal();
 >>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
+=======
+                var showLoading = ($("#modalLoading").length > 0);
+
+                if (showLoading) {
+                    $("#modalLoading").openModal();
+                }
+
+>>>>>>> 92a57f5d4e2ebf01d54dee9c8fa706913fefd9f1
                 for (var i = 0; i < response.length; i++) {
                     marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
                 }
                 $scope.monitoramentos.marcosSuperficiais = marcosSuperficiais;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                // $("#modalLoading").closeModal();
 >>>>>>> 069d4f9228c1fcc0035b7ee9466e08dc9f4db46b
+=======
+
+                if (showLoading) {
+                    $("#modalLoading").closeModal();
+                }
+
+>>>>>>> 92a57f5d4e2ebf01d54dee9c8fa706913fefd9f1
             });
 
             $("#btMonitoramentos").on("click", function (e) {
@@ -138,10 +155,20 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
     $scope.monitoramentos.init();
 
     $scope.changeAterro = function () {
+        var showLoading = ($("#modalLoading").length > 0);
+
+
         if ($scope.monitoramentos.aterro) {
-           // $("#modalLoading").openModal();
+            if (showLoading) {
+                $("#modalLoading").openModal();
+            }
+
             $scope.monitoramentos.marcosSuperficiaisAterro = $filter('filter')($scope.monitoramentos.marcosSuperficiais, { aterro: { id: $scope.monitoramentos.aterro } });
-            //$("#modalLoading").closeModal();
+
+            if (showLoading) {
+                $("#modalLoading").closeModal();
+            }
+
         }
     };
 

@@ -56,7 +56,7 @@
                   <td>{{mapa.dataCriacao  | asDate |date:&quot;dd/MM/yyyy&quot; }}</td>
                   <td>{{mapa.usuarioCriador.name}}</td>
                   <td></td>
-                  <td><a ng-click='selecionarMapa(mapa)' ><i class='mdi-action-search' aria-hidden='true'></i></a></td>
+                  <td><a title="Selecionar mapa" ng-click='selecionarMapa(mapa)' style="cursor:pointer;" ><i title="Selecionar mapa" class='mdi-action-search' aria-hidden='true'></i></a></td>
                 </tr>
               </tbody>
             </table>
@@ -70,13 +70,13 @@
               <i class="mdi-content-add"></i>
             </a>
           </div>
-          <div class="input-field  right">             
-            <input name="group1" type="radio" value="horizontal"   ng-model="medicaoTipo.name" id="test1" />
-            <label for="test1" style="padding-left: 25px;">Horizontal</label>
-            <input name="group1" type="radio" value="vertical" ng-model="medicaoTipo.name" id="test2" />
-            <label for="test2" style="padding-left: 25px;">Vertical</label><br><br>
-            <a  href="" ng-click="open()" class="btn btn-small waves-effect waves-light">Visualizar Mapa</a>                     
-          </div>
+            <div class="input-field  right" ng-show="canOpen()">
+                <input name="group1" type="radio" value="horizontal" ng-model="medicaoTipo.name" id="test1" />
+                <label for="test1" style="padding-left: 25px;">Horizontal</label>
+                <input name="group1" type="radio" value="vertical" ng-model="medicaoTipo.name" id="test2" />
+                <label for="test2" style="padding-left: 25px;">Vertical</label><br><br>
+                <a href="" ng-click="open()" class="btn btn-small waves-effect waves-light">Visualizar Mapa</a>
+            </div>
         </div>
       </form>
     </div>
