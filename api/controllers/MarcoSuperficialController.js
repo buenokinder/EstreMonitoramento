@@ -350,7 +350,6 @@ module.exports = {
         var result = [];
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
-        console.log("filtroDatas", filtroDatas);
         for (var i in marcosSuperficiais) {
             if (undefined == marcosSuperficiais[i] || undefined == marcosSuperficiais[i].aterro) continue;
 
@@ -374,11 +373,7 @@ module.exports = {
                 if (owner && marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.owner.id != owner) continue;
 
                 if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
-                    console.log("marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data < filtroDatas.dataInicial ", marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data < filtroDatas.dataInicial);
-                    console.log("new Date(marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data) < new Date(filtroDatas.dataInicial) ", new Date(marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data) < new Date(filtroDatas.dataInicial));
-
-
-                    if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data < filtroDatas.dataInicial || marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.data > filtroDatas.dataFinal) continue;
+                    if (marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data < filtroDatas.dataInicial || marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data > filtroDatas.dataFinal) continue;
                 }
 
 
@@ -389,7 +384,6 @@ module.exports = {
                 item.criterioAlertaVerticalMetodologia1 = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].monitoramento.criterioAlertaVerticalMetodologia1;
                 item.criterioAceitavelVelocidade = this._alertaAceitavel.velocidade;
                 item.criterioRegularVelocidade = this._alertaRegular.velocidade;
-                item.datinha = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j].data;
                 result.push(item);
             }
         }
@@ -943,7 +937,6 @@ module.exports = {
                                 //if (undefined != req.param("tipo") && req.param("tipo") == "mapa") {
                                 //    return resolve(_that._summarizeMonitoramentoMapa(_marcosSuperficiais, req));
                                 //}
-                                console.log("req.param('tipo')", req.param("tipo"));
 
                                 switch (req.param("tipo")) {
                                     case "mapa":
