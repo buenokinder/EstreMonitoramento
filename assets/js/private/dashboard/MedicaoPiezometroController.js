@@ -19,8 +19,23 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
         monitoramentos: ([]),
         pesquisa: null,
         ordenacao: 'asc',
+        skip: 0,
+        limit: 20,
+        isLoading: false,
+        carregarMais: function () {
+            if (null == $scope.monitoramentos.pesquisa || $scope.monitoramentos.isLoading == true) return;
+            $scope.monitoramentos.skip += 20;
+            $scope.monitoramentos.pesquisar($scope.monitoramentos.skip, $scope.monitoramentos.limit, true);
+        },
 
         init: function () {
+
+            $(window).scroll(function () {
+                var diff = ($(document).height() - $(window).height()) - $(window).scrollTop();
+                if (diff <= 200) {
+                    $scope.monitoramentos.carregarMais();
+                }
+            });
 
             var getDatePtBr = function (date) {
                 if (null == date || undefined == date || '' == date)
@@ -41,12 +56,11 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
             var showLoading = ($("#modalLoading").length > 0);
 
             if (showLoading) {
+                $("#modalLoadingText").text("Aguarde, carregando a lista de piezômetros...");
                 $("#modalLoading").show();
                 $("#overlayModalLoading").show();
             }
 
-
-            
             $http.get('/Piezometro').success(function (response, status) {
                 var piezometros = [];
       
@@ -74,11 +88,22 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
             });
         },
 
-        pesquisar: function () {
+        pesquisar: function (skip, limit, carregarMais) {
+            $scope.monitoramentos.isLoading = true;
+
+            var showLoading = ($("#modalLoading").length > 0) && !carregarMais;
+            if (showLoading) {
+                $("#modalLoadingText").text("Aguarde, carregando a lista de monitoramentos...");
+                $("#modalLoading").show();
+                $("#overlayModalLoading").show();
+            }
+
             var query = "?order=" + $scope.monitoramentos.ordenacao;
 
             query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
             query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
+            query += "&skip=" + (skip || 0);
+            query += "&limit=" + (limit || 10000000);
 
             if ($scope.monitoramentos.aterro) {
                 query += "&aterro=" + $scope.monitoramentos.aterro;
@@ -93,7 +118,22 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
             }
 
             $http.get('/piezometro/monitoramentos/' + query).success(function (response, status) {
-                $scope.monitoramentos.pesquisa = response;
+                var ret = [];
+
+                for (var i = 0; i < response.length; i++) {
+                    var item = response[i];
+
+                    if (carregarMais) {
+                        $scope.monitoramentos.pesquisa.push(item);
+                    } else {
+                        ret.push(item);
+                    }
+                }
+
+                if (!carregarMais) {
+                    $scope.monitoramentos.pesquisa = ret;
+                }
+
                 setInterval(function () {
                     var $fixedColumn = $('#fixed');
                     var $pesquisa = $('#pesquisa');
@@ -101,6 +141,15 @@ app.controller('MedicaoPiezometroController', ['$scope', '$interval', '$http', '
                         $(this).height($pesquisa.find('tbody  tr:eq(' + i + ')').height());
                     });
                 }, 0);
+
+
+                var showLoading = ($("#modalLoading").length > 0);
+                if (showLoading) {
+                    $("#modalLoading").hide();
+                    $("#overlayModalLoading").hide();
+                }
+                $scope.monitoramentos.isLoading = false;
+
             });
         }
     };

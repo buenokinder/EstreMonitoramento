@@ -196,6 +196,32 @@ module.exports = {
 
     _summarizeMonitoramento: function (marcosSuperficiais, req) {
 
+        _orderByNomeDataAsc = function (a, b) {
+
+            if (a.marcoSuperficial < b.marcoSuperficial)
+                return -1;
+            if (a.marcoSuperficial > b.marcoSuperficial)
+                return 1;
+
+            return 0;
+
+
+            //var aMS = a.marcoSuperficial;
+            //var bMS = b.marcoSuperficial;
+            //var aData = a.data;
+            //var bData = b.data;
+
+            //if (aData == bData) {
+            //    return (aMS < bMS) ? -1 : (aMS > bMS) ? 1 : 0;
+            //}
+            //else {
+            //    return (aData < bData) ? -1 : 1;
+            //}
+
+           // return (aMS < bMS) ? -1 : (aMS > bMS) ? 1 : (aData < bData) ? -1 : (aData > bData) ? 1 : 0;
+
+        };
+
         var result = [];
         var filtroDatas = this._getFiltroDatas(req);
         var owner = req.param('owner');
@@ -213,6 +239,7 @@ module.exports = {
                 if (filtroDatas.dataInicial && filtroDatas.dataFinal) {
                     if (detalhe.data < filtroDatas.dataInicial || detalhe.data > filtroDatas.dataFinal) continue;
                     possuiDetalhesNoPeriodo = true;
+                    break;
                 }
             }
 
@@ -257,7 +284,7 @@ module.exports = {
             for (var j = 0; j < marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes.length; j++) {
 
                 var detalhe = marcosSuperficiais[i].medicaoMarcoSuperficialDetalhes[j];
-                var registroOrfao = (detalhe.owner == undefined); //TODO: Ao remover a medicao remover os detalhes.
+                var registroOrfao = (detalhe.owner == undefined);
 
                 if (registroOrfao) continue;
 
@@ -304,6 +331,8 @@ module.exports = {
                 result.push(item);
             }
         }
+
+        result.sort(_orderByNomeDataAsc);
 
         return result;
     },
@@ -882,11 +911,12 @@ module.exports = {
 
             var _monitoramentos = function () {
                 var filtro = _that._getFiltrosMarco(req);
+                var sortString = req.param('order') || 'asc';
+                var skip = req.param('skip') || 0;
+                var limit = req.param('limit') || 20;
+                var marcoSuperficial = MarcoSuperficial.find({ where: filtro, skip: skip, limit: limit}).populate('aterro');
 
-                var marcoSuperficial = MarcoSuperficial.find(filtro).populate('aterro');
-                var sortString = req.param('order') || 'dataInstalacao asc';
-
-                marcoSuperficial.sort(sortString);
+                marcoSuperficial.sort({ nome: 'asc', dataInstalacao: ((sortString.indexOf('desc') >= 0)?'desc':'asc') });
 
                 marcoSuperficial.exec(function result(err, marcosSuperficiais) {
 

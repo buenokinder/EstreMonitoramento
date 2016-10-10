@@ -26,8 +26,23 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
         monitoramentos: ([]),
         pesquisa: null,
         ordenacao: 'dataInstalacao ASC',
+        skip: 0,
+        limit: 20,
+        isLoading: false,
+        carregarMais: function () {
+            if (null == $scope.monitoramentos.pesquisa || $scope.monitoramentos.isLoading==true) return;
+            $scope.monitoramentos.skip += 20;
+            $scope.monitoramentos.pesquisar($scope.monitoramentos.skip, $scope.monitoramentos.limit, true);
+        },
 
         init: function () {
+
+            $(window).scroll(function () {
+                var diff = ($(document).height() - $(window).height()) - $(window).scrollTop();
+                if (diff <= 200) {
+                    $scope.monitoramentos.carregarMais();
+                }
+            });
 
             $scope.perfil = $scope.me._perfil;
 
@@ -43,15 +58,14 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
             var showLoading = ($("#modalLoading").length > 0);
             if (showLoading) {
+                $("#modalLoadingText").text("Aguarde, carregando a lista de marcos superficiais...");
                 $("#modalLoading").show();
                 $("#overlayModalLoading").show();
-
             }
-
 
             $http.get('/MarcoSuperficial').success(function (response, status) {
                 var marcosSuperficiais = [];
-   
+
 
                 for (var i = 0; i < response.length; i++) {
                     marcosSuperficiais.push({ id: response[i].id, name: response[i].nome, marker: response[i].nome, icon: '', ticked: false, aterro: response[i].aterro });
@@ -84,17 +98,29 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
 
             $http.get('/MarcoSuperficial/monitoramentos/' + query).success(function (response, status) {
                 $scope.monitoramentos.resumo = response;
-
                 callback();
             });
         },
 
-        pesquisar: function () {
+        pesquisar: function (skip, limit, carregarMais) {
+            $scope.monitoramentos.isLoading = true;
+
+            var showLoading = ($("#modalLoading").length > 0) && !carregarMais;
+            if (showLoading) {
+                $("#modalLoadingText").text("Aguarde, carregando a lista de monitoramentos...");
+                $("#modalLoading").show();
+                $("#overlayModalLoading").show();
+            }
+
+            if (null == $scope.monitoramentos.pesquisa) $scope.monitoramentos.pesquisa = [];
+
             var query = "?order=" + $scope.monitoramentos.ordenacao;
             query += "&dtIni=" + getDateTimeStringQuery($("#dataInicial").val());
             query += "&dtFim=" + getDateTimeStringQuery($("#dataFinal").val());
+            query += "&skip=" + (skip || 0);
+            query += "&limit=" + (limit || 10000000);
 
-            if ($scope.monitoramentos.aterro  && typeof $scope.monitoramentos.aterro != "object") {
+            if ($scope.monitoramentos.aterro && typeof $scope.monitoramentos.aterro != "object") {
                 query += "&aterro=" + $scope.monitoramentos.aterro;
             }
 
@@ -127,11 +153,17 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                         item.vetorDeslocamentoAngulo = undefined;
                     }
 
-                    ret.push(item);
+                    if (carregarMais) {
+                        $scope.monitoramentos.pesquisa.push(item);
+                    } else {
+                        ret.push(item);
+                    }
                 }
 
-        
-                $scope.monitoramentos.pesquisa = ret;
+                if (!carregarMais) {
+                    $scope.monitoramentos.pesquisa = ret;
+                }
+
                 setInterval(function () {
                     var $fixedColumn = $('#fixed');
                     var $pesquisa = $('#pesquisa');
@@ -139,6 +171,13 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
                         $(this).height($pesquisa.find('tbody  tr:eq(' + i + ')').height());
                     });
                 }, 0);
+
+                var showLoading = ($("#modalLoading").length > 0);
+                if (showLoading) {
+                    $("#modalLoading").hide();
+                    $("#overlayModalLoading").hide();
+                }
+                $scope.monitoramentos.isLoading = false;
             });
         }
     };
@@ -178,20 +217,20 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             closeOnConfirm: false,
             closeOnCancel: false
         }, function (isConfirm) {
-                if (isConfirm) {
-                    $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
-                        $scope.medicoes = ([]);
-                        $scope.refreshChilds = true;
-                        $scope.content = null;
-                        swal("Registros Removidos!", "Os detalhes da medição foram removidos com sucesso.", "success");
-                        Materialize.toast('Registros removidos com sucesso!', 4000);
-                    }, function () {
-                        swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição:(", "error");
-                    });
+            if (isConfirm) {
+                $scope.deleteAllDetalhes({ id: $scope.data.id }, function () {
+                    $scope.medicoes = ([]);
+                    $scope.refreshChilds = true;
+                    $scope.content = null;
+                    swal("Registros Removidos!", "Os detalhes da medição foram removidos com sucesso.", "success");
+                    Materialize.toast('Registros removidos com sucesso!', 4000);
+                }, function () {
+                    swal("Erro", "Ocorreu uma falha ao remover os detalhes da medição:(", "error");
+                });
 
-                } else {
-                    swal("Cancelado", "Seus registros não foram removidos :(", "error");
-                }
+            } else {
+                swal("Cancelado", "Seus registros não foram removidos :(", "error");
+            }
         });
     };
 
@@ -231,7 +270,7 @@ app.controller('MedicaoMarcoSuperficialController', ['$scope', '$http', '$filter
             callback(null, err);
         });
     };
-    
+
     $scope.saveMedicaoMarcoSuperficialDetalhes = function (medicaoMarcoSuperficialDetalhes) {
 
         //medicaoMarcoSuperficialDetalhes.owner = $scope.data;
