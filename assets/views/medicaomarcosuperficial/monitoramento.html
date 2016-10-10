@@ -12,8 +12,17 @@
         min-height: 46px !important;
     }
 
-    th{
-        text-align:center;
+    th {
+        text-align: center;
+    }
+
+    .modal.modal-fixed-footer {
+        padding: 0;
+        height: 47% !important;
+    }
+
+    #pesquisa thead{
+        background-color:#ddd;
     }
 </style>
 
@@ -28,8 +37,7 @@
 
                         <div class="form-group col m5 s5 l5" id="sign-up-form">
                             <label ng-class="inputClass" for="aterro">Aterro</label>
-                            <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" ng-change="changeAterro()" id="aterro" required="" ng-model="monitoramentos.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true">
-                            </select>
+                            <select class="browser-default active ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" ng-change="changeAterro()" id="aterro" required="" ng-model="monitoramentos.aterro" ng-options="x.id as x.nome for x in aterros" aria-invalid="true"></select>
                         </div>
 
                         <div class="form-group col m3 s3" id="sign-up-form">
@@ -63,7 +71,7 @@
                         </div>
 
                         <div class="right col s1" aria-hidden="false">
-                            <a ng-click="monitoramentos.pesquisar()" class="btn-floating btn-small waves-effect waves-light">
+                            <a ng-click="monitoramentos.pesquisar(0,20)" class="btn-floating btn-small waves-effect waves-light">
                                 <i class="mdi-action-search"></i>
                             </a>
                         </div>
@@ -78,7 +86,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
+                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope" ng-show="monitoramento.deslocamentoHorizontalParcial!='' && monitoramento.deslocamentoHorizontalParcial!=null">
                                         <td>{{monitoramento.marcoSuperficial}}</td>
                                     </tr>
                                 </tbody>
@@ -97,8 +105,8 @@
                                         <th colspan="2">VELOCIDADE</th>
                                         <th rowspan="2" colspan="2">CRITÉRIO DE ALERTA</th>
                                         <th rowspan="2" colspan="2">NOME</th>
-                                        <th rowspan="3" >TEMPERATURA(ºC)</th>
-                                        <th colspan="5" >Sentido deslocamento dos Marcos Superficiais</th>
+                                        <th rowspan="3">TEMPERATURA(ºC)</th>
+                                        <th colspan="5">Sentido deslocamento dos Marcos Superficiais</th>
                                         <th rowspan="2" colspan="2">Ângulo Vetor Deslocamento</th>
                                     </tr>
 
@@ -135,13 +143,12 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope">
-
+                                    <tr ng-repeat="monitoramento in monitoramentos.pesquisa" class="ng-scope" ng-show="monitoramento.deslocamentoHorizontalParcial!='' && monitoramento.deslocamentoHorizontalParcial!=null">
                                         <td>{{monitoramento.data | date:'dd/MM/yyyy HH:mm'}}</td>
                                         <td>{{monitoramento.norte}}</td>
                                         <td>{{monitoramento.leste}}</td>
                                         <td>{{monitoramento.cota}}</td>
-                                        
+
                                         <td>{{monitoramento.deslocamentoHorizontalParcial}}</td>
                                         <td>{{monitoramento.deslocamentoHorizontalTotal}}</td>
                                         <td>{{monitoramento.deslocamentoVerticalParcial}}</td>
@@ -170,10 +177,9 @@
                 </div>
             </div>
 
-
             <div id="modalLoading" style="display: none;">
                 <div class="modal modal-fixed-footer" style="z-index: 1003; display: block; opacity: 1; transform: scaleX(1); top: 10%;">
-                    <p style="text-align:center">Aguarde, carregando a lista de marcos superficiais...</p>
+                    <p style="text-align:center" id="modalLoadingText">Aguarde, carregando a lista de marcos superficiais...</p>
                     <div class="progress">
                         <div class="indeterminate"></div>
                     </div>

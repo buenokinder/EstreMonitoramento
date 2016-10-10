@@ -1,19 +1,29 @@
 
- <style>
+<style>
     .table-responsive table, .table-responsive th, .table-responsive td {
         font-size: 10px;
     }
-      #pesquisa table, #pesquisa th, #pesquisa td {
+
+    #pesquisa table, #pesquisa th, #pesquisa td {
         border: solid 1px;
-  }  
+    }
 
-  .fixed table tr {
-      border-bottom: 1px solid;      
-  }  
+    .fixed table tr {
+        border-bottom: 1px solid;
+    }
 
-  th {
-      text-align:center;
-  }
+    th {
+        text-align: center;
+    }
+
+    .modal.modal-fixed-footer {
+        padding: 0;
+        height: 47% !important;
+    }
+
+    #pesquisa thead{
+        background-color:#ddd;
+    }
 </style>
 
 <div class="section">
@@ -62,7 +72,7 @@
                         </div>
 
                         <div class="right col s1" aria-hidden="false">
-                            <a ng-click="monitoramentos.pesquisar()" class="btn-floating btn-small waves-effect waves-light">
+                            <a ng-click="monitoramentos.pesquisar(0,20)" class="btn-floating btn-small waves-effect waves-light">
                                 <i class="mdi-action-search"></i>
                             </a>
                         </div>
@@ -99,7 +109,7 @@
                                         <th colspan="4">PRESSÃO</th>
                                     </tr>
 
-                                    <tr>                                        
+                                    <tr>
                                         <th colspan="2"> Com pressão (Rg.Fechado)</th>
                                         <th colspan="2">Sem Pressão(Rg.Aberto)</th>
                                         <th rowspan="2">Chorume(mca)</th>
@@ -110,7 +120,7 @@
                                         <th>Nível medido (m)</th>
                                         <th>Nível efetivo (m)</th>
                                         <th>Nível medido (m)</th>
-                                        <th>Nível efetivo (m)</th>                                        
+                                        <th>Nível efetivo (m)</th>
                                         <th>Pio(mca)</th>
                                         <th>Manômetro(mca)</th>
                                         <th>Manômetro(kPa)</th>
@@ -130,7 +140,7 @@
                                         <td style="text-align:center">{{monitoramento.medicoesNivelChorumeSemPressaoNivelEfetivo}}</td>
                                         <td class='{{getCssClass(monitoramento.ru)}}' style="text-align:center">{{monitoramento.ru}}</td>
                                         <td style="text-align:center" class="{{getClass(monitoramento.criterioAlertaRu)}}">{{monitoramento.criterioAlertaRu}}</td>
-                                        <td style="text-align:center">{{monitoramento.pressaoMcaChorume}}</td>                                      
+                                        <td style="text-align:center">{{monitoramento.pressaoMcaChorume}}</td>
                                         <td style="text-align:center">{{monitoramento.pressaoMcaGasPio}}</td>
                                         <td style="text-align:center">{{monitoramento.pressaoGasMca}}</td>
                                         <td style="text-align:center">{{monitoramento.pressaoGasKpa}}</td>
@@ -145,13 +155,13 @@
 
             <div id="modalLoading" style="display: none;">
                 <div class="modal modal-fixed-footer" style="z-index: 1003; display: block; opacity: 1; transform: scaleX(1); top: 10%;">
-                    <p style="text-align:center">Aguarde, carregando a lista de piezômetros...</p>
+                    <p id="modalLoadingText" style="text-align:center">Aguarde, carregando a lista de piezômetros...</p>
                     <div class="progress">
                         <div class="indeterminate"></div>
                     </div>
                 </div>
             </div>
-            
+
             <div id="overlayModalLoading" class="lean-overlay" style="z-index: 1002; display: none; opacity: 0.5"></div>
 
         </div>

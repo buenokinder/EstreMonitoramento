@@ -68,6 +68,10 @@
     },
 
     run: function () {
+<<<<<<< HEAD
  //       this._listAterros(this._inspectAterros, this._logError);
+=======
+       // this._listAterros(this._inspectAterros, this._logError);
+>>>>>>> 38a3b047856b704d3517e9d9654eea94d3a95ed0
     }
 }

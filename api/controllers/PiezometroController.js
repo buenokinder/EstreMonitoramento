@@ -6,6 +6,13 @@
  */
 var Promise = require('bluebird');
 
+Number.prototype.format = function (n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+};
+
 module.exports = {
 
     getDate: function (value) {
@@ -270,8 +277,10 @@ module.exports = {
             if (req.param('aterro') != undefined) {
                 filtro.aterro = req.param('aterro').split(',');
             }
+            var skip = req.param('skip') || 0;
+            var limit = req.param('limit') || 20;
 
-            var piezometro = Piezometro.find(filtro).
+            var piezometro = Piezometro.find({ where:filtro, skip:skip, limit:limit}).
 								populate('aterro').
 								populate('medicoes');
 
@@ -400,28 +409,28 @@ module.exports = {
                         medicao.pressaoMcaGasPio = parseFloat(medicao.pressaoMcaColunaComPressao) - parseFloat(medicao.pressaoMcaColunaSemPressao);
 
 
-                        medicao.saliencia = medicao.saliencia.toFixed(2);
-                        medicao.salienciaInicial = medicao.salienciaInicial.toFixed(2);
-                        medicao.celulaPiezometrica = medicao.celulaPiezometrica.toFixed(2);
-                        medicao.salienciaInicialEstimada = medicao.salienciaInicialEstimada.toFixed(2);
-                        medicao.profundidadeMediaCamaraCargaInicial = medicao.profundidadeMediaCamaraCargaInicial.toFixed(2);
-                        medicao.profundidadeTotalInicial = medicao.profundidadeTotalInicial.toFixed(2);
+                        medicao.saliencia = medicao.saliencia.format(2, 3, '.', ',');;
+                        medicao.salienciaInicial = medicao.salienciaInicial.format(2, 3, '.', ',');;
+                        medicao.celulaPiezometrica = medicao.celulaPiezometrica.format(2, 3, '.', ',');;
+                        medicao.salienciaInicialEstimada = medicao.salienciaInicialEstimada.format(2, 3, '.', ',');;
+                        medicao.profundidadeMediaCamaraCargaInicial = medicao.profundidadeMediaCamaraCargaInicial.format(2, 3, '.', ',');;
+                        medicao.profundidadeTotalInicial = medicao.profundidadeTotalInicial.format(2, 3, '.', ',');;
 
-                        medicao.profundidadeDescontandoCortes = parseFloat(medicao.profundidadeDescontandoCortes).toFixed(2);
+                        medicao.profundidadeDescontandoCortes = parseFloat(medicao.profundidadeDescontandoCortes).format(2, 3, '.', ',');;
 
-                        medicao.prolongamentoCorte = medicao.prolongamentoCorte.toFixed(2);
-                        medicao.pressaoMcaChorume = parseFloat(medicao.pressaoMcaChorume).toFixed(2);
-                        medicao.pressaoMcaColunaComPressao = medicao.pressaoMcaColunaComPressao.toFixed(2);
-                        medicao.pressaoMcaColunaSemPressao = medicao.pressaoMcaColunaSemPressao.toFixed(2);
-                        medicao.pressaoMcaGasPio = medicao.pressaoMcaGasPio.toFixed(2);
-                        medicao.profundidadeDescontandoCortes = parseFloat(medicao.profundidadeDescontandoCortes).toFixed(2);
-                        medicao.profundidadeTotalAtual = medicao.profundidadeTotalAtual.toFixed(2);
-                        medicao.profundidadeMediaCamaradeCargaDescontandoCortes = medicao.profundidadeMediaCamaradeCargaDescontandoCortes.toFixed(2);
-                        medicao.profundidadeMediaCamaradeCarga = medicao.profundidadeMediaCamaradeCarga.toFixed(2);
-                        medicao.medicoesNivelChorumeComPressaoNivelEfetivo = medicao.medicoesNivelChorumeComPressaoNivelEfetivo.toFixed(2);
-                        medicao.medicoesNivelChorumeSemPressaoNivelEfetivo = medicao.medicoesNivelChorumeSemPressaoNivelEfetivo.toFixed(2);
-                        medicao.baseAteNivelU = medicao.baseAteNivelU.toFixed(2);
-                        medicao.profundidadeEnterradaZ = medicao.profundidadeEnterradaZ.toFixed(2);
+                        medicao.prolongamentoCorte = medicao.prolongamentoCorte.format(2, 3, '.', ',');;
+                        medicao.pressaoMcaChorume = parseFloat(medicao.pressaoMcaChorume).format(2, 3, '.', ',');;
+                        medicao.pressaoMcaColunaComPressao = medicao.pressaoMcaColunaComPressao.format(2, 3, '.', ',');;
+                        medicao.pressaoMcaColunaSemPressao = medicao.pressaoMcaColunaSemPressao.format(2, 3, '.', ',');;
+                        medicao.pressaoMcaGasPio = medicao.pressaoMcaGasPio.format(2, 3, '.', ',');;
+                        medicao.profundidadeDescontandoCortes = parseFloat(medicao.profundidadeDescontandoCortes).format(2, 3, '.', ',');;
+                        medicao.profundidadeTotalAtual = medicao.profundidadeTotalAtual.format(2, 3, '.', ',');;
+                        medicao.profundidadeMediaCamaradeCargaDescontandoCortes = medicao.profundidadeMediaCamaradeCargaDescontandoCortes.format(2, 3, '.', ',');;
+                        medicao.profundidadeMediaCamaradeCarga = medicao.profundidadeMediaCamaradeCarga.format(2, 3, '.', ',');;
+                        medicao.medicoesNivelChorumeComPressaoNivelEfetivo = medicao.medicoesNivelChorumeComPressaoNivelEfetivo.format(2, 3, '.', ',');;
+                        medicao.medicoesNivelChorumeSemPressaoNivelEfetivo = medicao.medicoesNivelChorumeSemPressaoNivelEfetivo.format(2, 3, '.', ',');;
+                        medicao.baseAteNivelU = medicao.baseAteNivelU.format(2, 3, '.', ',');;
+                        medicao.profundidadeEnterradaZ = medicao.profundidadeEnterradaZ.format(2, 3, '.', ',');;
 
                         itens.push(medicao);
                     }
