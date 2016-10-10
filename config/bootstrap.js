@@ -18,10 +18,10 @@ module.exports.bootstrap = function(cb) {
     ////////////////////
     //Schedule
     _.extend(sails.hooks.http.app.locals, sails.config.http.locals);
-    var schedule = require('node-schedule');
-    sails.config.crontab.crons().forEach(function (item) {
-        schedule.scheduleJob(item.interval, sails.config.crontab[item.method]);
-    });
+  //  var schedule = require('node-schedule');
+    //sails.config.crontab.crons().forEach(function (item) {
+      //  schedule.scheduleJob(item.interval, sails.config.crontab[item.method]);
+    //});
     ////////////////////
 
 

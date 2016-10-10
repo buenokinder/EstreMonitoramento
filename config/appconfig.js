@@ -1,3 +1,3 @@
 module.exports.appconfig = {
-    url: 'http://localhost:1337/'
+    url: 'http://geotecnia.estre.com.br:1337/'
 };
